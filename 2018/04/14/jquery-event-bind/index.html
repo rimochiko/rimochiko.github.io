@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>源码小记：jQueryの事件绑定 | 年糕酱</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言这篇笔记很大的帮助来源于慕课网上jQuery源码解读课程，虽然jQuery现在已经慢慢衰退了，但是作为一个学习者，我自己还是很愿意去琢磨琢磨其中的原理。如果有错误欢迎指出，谢谢了^0^。">
+<meta name="keywords" content="jQuery">
+<meta property="og:type" content="article">
+<meta property="og:title" content="源码小记：jQueryの事件绑定">
+<meta property="og:url" content="https://www.mochiko.cn/2018/04/14/jquery-event-bind/index.html">
+<meta property="og:site_name" content="年糕酱">
+<meta property="og:description" content="前言这篇笔记很大的帮助来源于慕课网上jQuery源码解读课程，虽然jQuery现在已经慢慢衰退了，但是作为一个学习者，我自己还是很愿意去琢磨琢磨其中的原理。如果有错误欢迎指出，谢谢了^0^。">
+<meta property="og:locale" content="zh">
+<meta property="og:image" content="https://wx4.sinaimg.cn/mw690/0069luTRgy1fqci7ysslhj30fr02sdfs.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/mw690/0069luTRgy1fqci7ysww4j30fl01mjrb.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/mw1024/0069luTRgy1fqci7yvv0hj30kr01wweh.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/mw1024/0069luTRgy1fqci7yvii6j30kn02gdfw.jpg">
+<meta property="og:updated_time" content="2018-04-17T01:06:12.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="源码小记：jQueryの事件绑定">
+<meta name="twitter:description" content="前言这篇笔记很大的帮助来源于慕课网上jQuery源码解读课程，虽然jQuery现在已经慢慢衰退了，但是作为一个学习者，我自己还是很愿意去琢磨琢磨其中的原理。如果有错误欢迎指出，谢谢了^0^。">
+<meta name="twitter:image" content="https://wx4.sinaimg.cn/mw690/0069luTRgy1fqci7ysslhj30fr02sdfs.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="年糕酱" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">年糕酱</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://www.mochiko.cn"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-jquery-event-bind" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/04/14/jquery-event-bind/" class="article-date">
+  <time datetime="2018-04-14T13:22:41.000Z" itemprop="datePublished">2018-04-14</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/学习小记/">学习小记</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      源码小记：jQueryの事件绑定
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>这篇笔记很大的帮助来源于慕课网上<a href="https://www.imooc.com/learn/222" target="_blank" rel="noopener">jQuery源码解读</a>课程，虽然jQuery现在已经慢慢衰退了，但是作为一个学习者，我自己还是很愿意去琢磨琢磨其中的原理。如果有错误欢迎指出，谢谢了^0^。</p>
+<a id="more"></a>
+
+<h1 id="事件绑定"><a href="#事件绑定" class="headerlink" title="事件绑定"></a>事件绑定</h1><p>大家肯定都熟悉JavaScript中的浏览器事件模型——事件冒泡和事件捕获。在DOM2级事件处理程序中，我们可以使用<code>addEventListener</code>方法来添加事件监听，第三个参数可以指定是捕获阶段(true)还是冒泡阶段(false)，在IE中对应的方法是<code>attachEvent</code>，且只支持冒泡事件。</p>
+<p><strong>Q：为什么我们要使用addEventListener？</strong><br>我们以往的写法是<code>XX.onclick=function(){}</code>，这样不能绑定多个相同事件（会覆盖），也不能选择是在冒泡阶段/捕获阶段。</p>
+<p><strong>Q：这样的绑定可能会出现什么问题？</strong></p>
+<ol>
+<li>绑定的元素必须存在；</li>
+<li>后期动态生成的HTML元素不会被自动加上绑定；</li>
+<li>绑定过多会影响性能；</li>
+<li>语法繁杂；</li>
+</ol>
+<p><strong>Q：什么是事件委托？</strong><br>注意看上面问题的第3点，假设我们的页面上有100个p标签，那我们就要添加100个事件监听，这样会影响页面的运行性能。<br>但是如果我们给body一个click监听，当用户点击的页面中的p标签，实质上也是点击body，所以body的这个click事件会从<code>target</code>开始进行层层冒泡，如果target就是我们的目标元素，那么就相应去运行我们想调用的函数，这样功效不也等同于监听了p标签吗？<br>所以<strong>事件委托</strong>的定义是：</p>
+<blockquote>
+<p>事件目标自身不处理事件，而是把处理任务委托给其父元素或者祖先元素，甚至根元素（document）</p>
+</blockquote>
+<p>这样一来，就算目标目前不存在它的容器里也不会发生错误，也同样减少了绑定次数。<br>所以模拟给a加上事件委托代码如下:</p>
+<pre><code>(function() {
+  var parent = document.getElementById(&apos;parent&apos;);
+  //给祖先元素绑定监听
+  parent.addEventListener(&apos;click&apos;, handler, false);
+
+  function handler(e) {
+    //或许触发冒泡的元素，如果元素是a，就做想做的事情
+    var x = e.target;
+    if (x.nodeName.toLowerCase() === &apos;a&apos;) {
+      alert(&apos;a被点击了！&apos;);
+      e.preventDefault();
+    }
+  };
+})();</code></pre><h2 id="jQuery的事件绑定方法"><a href="#jQuery的事件绑定方法" class="headerlink" title="jQuery的事件绑定方法"></a>jQuery的事件绑定方法</h2><p>在jQuery中，与事件绑定相关的方法有以下几种：</p>
+<ol>
+<li>事件名方法（比如click()）</li>
+<li>bind()</li>
+<li>delegate()</li>
+<li>on()</li>
+<li><del>live()</del> </li>
+</ol>
+<p><strong>Tips：</strong>live()在1.9版本已被废除。<br>而以上的几种方法，bind() ,live() ,delegate()都是调用了on()来实现的，而归根结底都是使用了<code>addEventListener</code>以及事件冒泡来实现的。</p>
+<h3 id="bind"><a href="#bind" class="headerlink" title="bind()"></a>bind()</h3><p><strong>调用：</strong></p>
+<pre><code>$(&quot;#test&quot;).bind(&quot;click&quot;,function(){
+  console.log(1);
+});</code></pre><p><strong>源码</strong><br><img src="https://wx4.sinaimg.cn/mw690/0069luTRgy1fqci7ysslhj30fr02sdfs.jpg" alt="图片描述"></p>
+<p>bind()方法实际直接调用了on()方法，types是事件类型，data是传入的要执行函数，更详细的我们一起放到on()方法去看。但是先说清楚，它<strong>没有用委托机制</strong>，<strong>元素必须要存在</strong>。</p>
+<h3 id="live"><a href="#live" class="headerlink" title="live()"></a>live()</h3><p><strong>调用：</strong></p>
+<pre><code>$(&quot;#test&quot;).bind(&quot;click&quot;,function(){
+  console.log(1);
+});</code></pre><p><strong>源码：</strong><br><img src="https://wx3.sinaimg.cn/mw690/0069luTRgy1fqci7ysww4j30fl01mjrb.jpg" alt="图片描述"></p>
+<p>live()方法使用了事件委托机制，把所有的委托都交给了this.context（相当于<code>document</code>）来完成。</p>
+<h3 id="delegate"><a href="#delegate" class="headerlink" title="delegate()"></a>delegate()</h3><p><strong>调用：</strong></p>
+<pre><code>$(&quot;body&quot;).delegate(&quot;#test&quot;,&quot;click&quot;,function(){
+  console.log(1);
+ })</code></pre><p><strong>源码：</strong><br><img src="https://wx4.sinaimg.cn/mw1024/0069luTRgy1fqci7yvv0hj30kr01wweh.jpg" alt="图片描述"></p>
+<p>这里看到其实delegate和live是类似的，只是live是this.context调用on方法，delegate是自己可以指定委托对象，所以直接this调用on方法</p>
+<h3 id="on"><a href="#on" class="headerlink" title="on()"></a>on()</h3><p><strong>调用：</strong></p>
+<pre><code>//直接调用
+$(&quot;#test&quot;).on(&quot;click&quot;,function(){
+  console.log(1);
+ })
+
+//委托调用 
+$(&quot;body&quot;).on(&quot;click&quot;,&quot;#test&quot;,function(){
+  console.log(1);
+ })</code></pre><p><strong>源码：</strong><br><img src="https://wx1.sinaimg.cn/mw1024/0069luTRgy1fqci7yvii6j30kn02gdfw.jpg" alt="图片描述"><br>值得一提，one方法也是调用了on方法，不过它是只调用一次事件，随后就解绑。</p>
+<pre><code>/* on()方法，参数可能会错位，所以需要处理
+* elem: 被委托元素(调用on方法选择元素) 
+* types：事件类型（我们举例子传入的都是click）
+* selector：可选，真正的目标元素
+* data： 可选，额外数据
+* fn: 可选，监听到后要调用的函数
+* one：内部传入，是否是one()方法调用的
+*/
+function on( elem, types, selector, data, fn, one ) {
+    var origFn, type;
+
+    //传入的types可能是一个数组（可以同时绑定多个事件）
+    if ( typeof types === &quot;object&quot; ) {
+        //如果selector不是string，说明传入了types,data
+        if ( typeof selector !== &quot;string&quot; ) {
+            //所以这修正一下data和selector的值
+            data = data || selector;
+            selector = undefined;
+        }
+        //遍历每一个事件，去分别添加绑定
+        for ( type in types ) {
+            on( elem, type, selector, data, types[ type ], one );
+        }
+        //返回elem，以支持链式调用
+        return elem;
+    }
+
+    //如果只传了三个参数，说明是传入了types,fn
+    if ( data == null &amp;&amp; fn == null ) {
+
+        // 把参数归位
+        fn = selector;
+        data = selector = undefined;
+    } else if ( fn == null ) {
+        // 如果只有fn是null，且selector是string，说明是传入了types,fn,selector
+        if ( typeof selector === &quot;string&quot; ) {
+            //参数归位
+            fn = data;
+            data = undefined;
+        } else {
+            //否则是传入了types,data,fn
+            fn = data;
+            data = selector;
+            selector = undefined;
+        }
+    }
+
+    if ( fn === false ) {
+        fn = returnFalse;
+    } else if ( !fn ) {
+        return elem;
+    }
+
+    //如果是one()方法
+    if ( one === 1 ) {
+       //保存要调用的函数
+        origFn = fn;
+        fn = function( event ) {
+
+            //解绑事件
+            jQuery().off( event );
+            //调用函数
+            return origFn.apply( this, arguments );
+        };
+
+        //给origFn和fn使用同样的记录函数的guid，方便移除
+        fn.guid = origFn.guid || ( origFn.guid = jQuery.guid++ );
+    }
+
+    //给每个元素注册事件处理程序
+    return elem.each( function() {
+        jQuery.event.add( this, types, fn, data, selector );
+    } );
+}</code></pre><p>这里的guid和event.add()就涉及到了jQuery的事件机制，比较复杂，所以另再开坑来学习。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://www.mochiko.cn/2018/04/14/jquery-event-bind/" data-id="ck2sre6hf003104whb3oivtzt" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jQuery/">jQuery</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/04/17/css-gradient/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          小探究：CSSの渐变
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/04/07/hajime-https/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">初识HTTPS</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/demo/">demo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/呆萌の实践/">呆萌の实践</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/呆萌の研究/">呆萌の研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/学习小记/">学习小记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/巨人花园/">巨人花园</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂/">杂</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/禅道花园/">禅道花园</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计与前端/">设计与前端</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AngularJS/">AngularJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS/">CSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS3/">CSS3</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Canvas/">Canvas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/D3-js/">D3.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ES6/">ES6</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/">Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTML/">HTML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Houdini/">Houdini</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JAVA/">JAVA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Node-js/">Node.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PWA/">PWA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sass/">Sass</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Three-js/">Three.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TweenMax/">TweenMax</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript/">TypeScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue-js/">Vue.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WebAssembly/">WebAssembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Webpack/">Webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/canvas/">canvas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jQuery/">jQuery</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/koa2/">koa2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-native/">react-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-js/">react.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redux/">redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/svg/">svg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue-js/">vue.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webAR/">webAR</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webAssembly/">webAssembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安装体验/">安装体验</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/小结/">小结</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/浏览器/">浏览器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/计算机网络/">计算机网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/认真做事/">认真做事</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书笔记/">读书笔记</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AngularJS/" style="font-size: 10px;">AngularJS</a> <a href="/tags/CSS/" style="font-size: 16.67px;">CSS</a> <a href="/tags/CSS3/" style="font-size: 18.33px;">CSS3</a> <a href="/tags/Canvas/" style="font-size: 10px;">Canvas</a> <a href="/tags/D3-js/" style="font-size: 10px;">D3.js</a> <a href="/tags/ES6/" style="font-size: 10px;">ES6</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/HTML/" style="font-size: 13.33px;">HTML</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Houdini/" style="font-size: 10px;">Houdini</a> <a href="/tags/JAVA/" style="font-size: 10px;">JAVA</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/PWA/" style="font-size: 10px;">PWA</a> <a href="/tags/Sass/" style="font-size: 11.67px;">Sass</a> <a href="/tags/Three-js/" style="font-size: 11.67px;">Three.js</a> <a href="/tags/TweenMax/" style="font-size: 10px;">TweenMax</a> <a href="/tags/TypeScript/" style="font-size: 10px;">TypeScript</a> <a href="/tags/Vue-js/" style="font-size: 15px;">Vue.js</a> <a href="/tags/WebAssembly/" style="font-size: 10px;">WebAssembly</a> <a href="/tags/Webpack/" style="font-size: 10px;">Webpack</a> <a href="/tags/canvas/" style="font-size: 13.33px;">canvas</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/jQuery/" style="font-size: 15px;">jQuery</a> <a href="/tags/koa2/" style="font-size: 11.67px;">koa2</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/react-native/" style="font-size: 10px;">react-native</a> <a href="/tags/react-js/" style="font-size: 10px;">react.js</a> <a href="/tags/redux/" style="font-size: 10px;">redux</a> <a href="/tags/svg/" style="font-size: 10px;">svg</a> <a href="/tags/vue-js/" style="font-size: 15px;">vue.js</a> <a href="/tags/webAR/" style="font-size: 10px;">webAR</a> <a href="/tags/webAssembly/" style="font-size: 10px;">webAssembly</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a> <a href="/tags/安装体验/" style="font-size: 11.67px;">安装体验</a> <a href="/tags/小结/" style="font-size: 11.67px;">小结</a> <a href="/tags/浏览器/" style="font-size: 10px;">浏览器</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/计算机网络/" style="font-size: 15px;">计算机网络</a> <a href="/tags/认真做事/" style="font-size: 10px;">认真做事</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/读书笔记/" style="font-size: 10px;">读书笔记</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/11/10/191110-vue-3-data/">Vue 3中的数据监听</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/27/css-181227/">【CodePen分析】Day 2：燃烧的火焰</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/26/css-181226/">【CodePen分析】Day 1：流星+圣诞树</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/17/fronted-end-frontier-tech/">前端前沿技术</a>
+          </li>
+        
+          <li>
+            <a href="/2018/11/15/event-loop/">JS小结之事件循环</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 MOCHIKo<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>《图解HTTP》小结+实践理解 | 年糕酱</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言计算机网络课程的学习已经是在大二下学期的时候了，过去了半年多，有很多东西似乎都忘记了QAQ。况且当时上课的时候就感觉专业术语多，很多知识也难以理解，但是还是硬着头皮学了下来，如今阅读《HTTP图解》这本书发现很好理解，但是需要加强印象还得自己总结与实践，所以写了这篇文章。">
+<meta name="keywords" content="计算机网络,小结">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《图解HTTP》小结+实践理解">
+<meta property="og:url" content="https://www.mochiko.cn/2018/02/09/note-http/index.html">
+<meta property="og:site_name" content="年糕酱">
+<meta property="og:description" content="前言计算机网络课程的学习已经是在大二下学期的时候了，过去了半年多，有很多东西似乎都忘记了QAQ。况且当时上课的时候就感觉专业术语多，很多知识也难以理解，但是还是硬着头皮学了下来，如今阅读《HTTP图解》这本书发现很好理解，但是需要加强印象还得自己总结与实践，所以写了这篇文章。">
+<meta property="og:locale" content="zh">
+<meta property="og:image" content="https://wx4.sinaimg.cn/mw690/0069luTRgy1foahlr2uvsj30fi07zt98.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/mw690/0069luTRgy1foahlqtlu3j30m805rgmb.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/mw690/0069luTRgy1foahlqxbprj30lj0e6aay.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/mw690/0069luTRgy1foahly6ub6j30m8068dg9.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/mw690/0069luTRgy1fn5k0z12mpj30nd0ak3z1.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/mw690/0069luTRgy1foahly6jufj30dp0bfaat.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/mw690/0069luTRgy1fn5k11fm9pj30n70at3z3.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/mw690/0069luTRgy1foahlyad45j30bz01qdfq.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/mw690/0069luTRgy1foahlyadg9j30m80awq4s.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/mw690/0069luTRgy1foahm6sgguj30a602ajrd.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/mw690/0069luTRgy1foahm6ncz8j30e7097t9g.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/mw690/0069luTRgy1foahp80i91j30g70bmgmm.jpg">
+<meta property="og:updated_time" content="2018-03-18T02:25:22.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="《图解HTTP》小结+实践理解">
+<meta name="twitter:description" content="前言计算机网络课程的学习已经是在大二下学期的时候了，过去了半年多，有很多东西似乎都忘记了QAQ。况且当时上课的时候就感觉专业术语多，很多知识也难以理解，但是还是硬着头皮学了下来，如今阅读《HTTP图解》这本书发现很好理解，但是需要加强印象还得自己总结与实践，所以写了这篇文章。">
+<meta name="twitter:image" content="https://wx4.sinaimg.cn/mw690/0069luTRgy1foahlr2uvsj30fi07zt98.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="年糕酱" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">年糕酱</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://www.mochiko.cn"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-note-http" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/02/09/note-http/" class="article-date">
+  <time datetime="2018-02-09T12:53:00.000Z" itemprop="datePublished">2018-02-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/学习小记/">学习小记</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      《图解HTTP》小结+实践理解
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>计算机网络课程的学习已经是在大二下学期的时候了，过去了半年多，有很多东西似乎都忘记了QAQ。况且当时上课的时候就感觉专业术语多，很多知识也难以理解，但是还是硬着头皮学了下来，如今阅读《HTTP图解》这本书发现很好理解，但是需要加强印象还得自己总结与实践，所以写了这篇文章。</p>
+<a id="more"></a>
+
+<h1 id="网络基础"><a href="#网络基础" class="headerlink" title="网络基础"></a>网络基础</h1><p><strong>最初的念想</strong><br>借助多文档之间的关联形成的超文本连成可互相参阅的万维网。</p>
+<p><strong>三项WWW构建技术:</strong></p>
+<ol>
+<li>SGML作为页面的文本标记语言的HTML（HTML5已不在SGML基础上）</li>
+<li>作为文档传递协议的HTTP</li>
+<li>指定文档所在地址的URL</li>
+</ol>
+<p><strong>HTTP（超文本传输协议，书上说称为超文本转移协议更严谨）</strong><br>破壳日：1989年3月<br>客户端到服务器通信的流程是建立在HTTP协议之上的。</p>
+<p><strong>TCP/IP的协议模型</strong><br><img src="https://wx4.sinaimg.cn/mw690/0069luTRgy1foahlr2uvsj30fi07zt98.jpg" alt="图片描述"><br>在每次进行信息传输的时候，信息都要从高层传到底层，会经过不断的“包装”。再从对方的底层传到高层，这时会不断的“拆包装”。<br>在这之中也会用到各个层的一些很重要的协议，在一次HTTP请求发送中：<br>应用层（应用层、表示层、会话层）：HTTP、DNS<br>传输层：TCP<br>网络层：IP、ARP<br>其中DNS协议用于解析域名，TCP协议用于确定目标计算机资源端口，IP协议用于确定目标计算机的IP地址，ARP协议用于把IP地址转换为真正的物理地址MAC。</p>
+<p><strong>TCP协议</strong><br>TCP提供可靠的字节流服务，会把数据分割成报文段进行发送。<br>TCP用SYN和ACK标志来确认对方是否成功送达：<br>1.发送端发送：SYN。<br>2.接收端接收后，发送SYN和ACK。<br>3.发送端接收后，再次发送ACK，握手结束。</p>
+<p><strong>综上，当我们从浏览器输入一个URL后，发生了这些事：</strong><br>客户端想浏览URL为 <a href="http://www.mochiko.cn">http://www.mochiko.cn</a> 的页面，HTTP协议生成请求页面资源报文，TCP协议把HTTP请求报文分割为多个文段，把文段可靠的传给对方。随后IP协议搜索对方的地址，一遍中转，一遍传送。（省略了网络层以下的了）随后TCP协议把收到的报文段重新组合成原来的顺序，然后HTTP协议把WEB服务器请求的内容进行处理，并返回请求的结果和内容。<br><img src="https://wx2.sinaimg.cn/mw690/0069luTRgy1foahlqtlu3j30m805rgmb.jpg" alt="图片描述"><br>wireshark抓包结果可看到，首先发生了三次握手，建立起了TCP链接。随后发出HTTP请求，TCP再把报文分成了四段发送，其中收到了三个数据接收回复，最后HTTP返回200 OK表示成功发送完了主页的HTML文件。<br><img src="https://wx3.sinaimg.cn/mw690/0069luTRgy1foahlqxbprj30lj0e6aay.jpg" alt="图片描述"><br>在此次抓包中，这里的x=0,y=0,第二次x=1，第三次，x=y=1，符合图中的规则。</p>
+<p><strong>URL</strong><br>URI 统一资源标识符（在《HTTP权威指南》里面对URI的解释更充分一点）</p>
+<blockquote>
+<p>协议方案名://登录信息@服务器地址:端口号/带层次的文件路径?查询字符串#片段标识符</p>
+</blockquote>
+<h1 id="初识HTTP"><a href="#初识HTTP" class="headerlink" title="初识HTTP"></a>初识HTTP</h1><ul>
+<li>HTTP协议用于客户端和服务器端之间的通信，请求必定由客户端发出，服务器端被动回复。</li>
+<li>HTTP协议不保存状态，是无状态协议。</li>
+<li>HTTP协议使用URI定位互联网资源。</li>
+</ul>
+<h2 id="请求报文"><a href="#请求报文" class="headerlink" title="请求报文"></a>请求报文</h2><p><img src="https://wx3.sinaimg.cn/mw690/0069luTRgy1foahly6ub6j30m8068dg9.jpg" alt="图片描述"></p>
+<p>开头GET是请求服务器的类型，即方法，随后的“/”表示请求访问的资源对象。最后的HTTP1.1是版本号。</p>
+<p><strong>请求报文结构</strong>：<br><img src="https://wx3.sinaimg.cn/mw690/0069luTRgy1fn5k0z12mpj30nd0ak3z1.jpg" alt="0069luTRgy1fn5k0z12mpj30nd0ak3z1.jpg"></p>
+<h2 id="响应报文"><a href="#响应报文" class="headerlink" title="响应报文"></a>响应报文</h2><p><img src="https://wx2.sinaimg.cn/mw690/0069luTRgy1foahly6jufj30dp0bfaat.jpg" alt="图片描述"></p>
+<p>开头是HTTP的版本，200是状态码，OK是短语。下面（没截）还带有HTML的主体代码。</p>
+<p><strong>响应报文结构</strong>：<br><img src="https://wx2.sinaimg.cn/mw690/0069luTRgy1fn5k11fm9pj30n70at3z3.jpg" alt="0069luTRgy1fn5k11fm9pj30n70at3z3.jpg"></p>
+<h2 id="HTTP方法"><a href="#HTTP方法" class="headerlink" title="HTTP方法"></a>HTTP方法</h2><p><strong>GET：获取资源</strong><br>指定的资源经过服务器解析后返回相应内容，即文本直接返回，CGI返回经过执行后的结果。</p>
+<p><strong>POST: 传输实体主题</strong><br>PUT和GET功能相似，但是POST的主要目的不是获取响应的主题内容</p>
+<p><strong>PUT：传输文件</strong><br>像FTP文件上传一样，要把请求报文主题包含在文件内容，保存在请求URI的指定位置上。<br>HTTP/1.1的PUT自身不带验证，任何人都可以上传，存在安全性问题，一般不使用。若配合WEB应用程序的验证机制或架构设计采用REST标准则可能开放使用。</p>
+<p><strong>HEAD：获得报文首部</strong><br>和GET方法一样，但不返回报文主体部分。用于确认URI有效性和资源更新的日期等。</p>
+<p><strong>DELETE：删除文件</strong><br>与PUT相反的方法，同样存在安全性问题。</p>
+<p><strong>OPTIONS：询问支持的方法</strong><br>查询针对请求URI指定的资源支持方法。<br>1.1版本才支持。</p>
+<p><strong>TRACE：追踪路径</strong><br>让WEB服务器端将之前的请求通信环回给客户端，发送请求把Max-Forwards首部字段填入数值，每经过一个服务器端就把该数字减1，是0时停止传输。容易引发XST攻击，通常不会用到。<br>1.1版本才支持。</p>
+<p><strong>CONNECT：用隧道协议连接代理</strong><br>主要用SSL和TSL协议把通信内容加密经网络隧道传输。<br>1.1版本才支持。</p>
+<h2 id="其他特性"><a href="#其他特性" class="headerlink" title="其他特性"></a>其他特性</h2><p><strong>持久链接节省通信量</strong><br>HTTP 1.1和部分HTTP 1.0提供持久链接，只要任意一段没有提出断开链接，就保持TCP链接状态。<br><img src="https://wx1.sinaimg.cn/mw690/0069luTRgy1foahlyad45j30bz01qdfq.jpg" alt="图片描述"></p>
+<p>可以查看抓包数据，发送成功一个请求后没有断开TCP连接，此图也适用于管线化的说明，同时发送几个HTTP请求。</p>
+<p><strong>管线化</strong><br>从前必须要收到响应才发送新的请求，而管线化技术不需要等待，可以同时发送多个请求。</p>
+<p><strong>Cookie管理状态</strong><br>因为HTTP是无状态的协议，所以需要Cookie来管理状态：<br>1.客户端发送请求。<br>2.服务器对这个客户端生成一个Cookie，保存下来，并发送回去。<br>3.客户端保存这个Cookie。<br>4.客户端第二次发送请求，带着Cookie一起发送。<br>5.服务器坚持Cookie，分析出是刚才那个客户端。</p>
+<h1 id="了解HTTP"><a href="#了解HTTP" class="headerlink" title="了解HTTP"></a>了解HTTP</h1><p>HTTP报文本身是由多行（CR+LF换行符）数据构成的文本。[这点上头的示例报文很明显了]。</p>
+<p><strong>压缩内容编码</strong><br>原貌传输速度没有压缩后的编码速度快，但是相应会消耗资源。<br>常见编码有：</p>
+<ol>
+<li>gzip(GUN zip)</li>
+<li>compress</li>
+<li>deflate</li>
+<li>identity</li>
+</ol>
+<p><strong>报文主体和实体主体</strong><br>报文主体用于传输请求或者响应实体主体。</p>
+<p><strong>分块传输编码</strong><br>把实体主体分成多个部分，每一块用十六进制标记块大小，最后一块用“0（CR+LF）”标记。</p>
+<p><strong>发送多种数据多对象集合</strong><br>MINE机制允许多个不同类型的二进制数据以ASCII码指明。<br>多部分对象集合包含：<br>1.multipart/form-data<br>2.multipart/byteranges<br>3.multipart/form-data<br>用boundary字符串（指定各个实体开始和结束加入–）划分多部分对象集合类型。<br><img src="https://wx1.sinaimg.cn/mw690/0069luTRgy1foahlyadg9j30m80awq4s.jpg" alt="图片描述"></p>
+<p><strong>range获取指定范围数据</strong><br><img src="https://wx1.sinaimg.cn/mw690/0069luTRgy1foahm6sgguj30a602ajrd.jpg" alt="图片描述"></p>
+<p>图为一个大图的GET请求，Range表示请求933343~2151819之间的字节</p>
+<p><img src="https://wx2.sinaimg.cn/mw690/0069luTRgy1foahm6ncz8j30e7097t9g.jpg" alt="图片描述"></p>
+<p>针对范围请求，会有206状态码返回。若服务器无法响应，就是返回200状态码。</p>
+<p><strong>Accept内容协商</strong><br>包括服务器驱动协商，客户端驱动协商和透明协商<br>Accept<br>Accept-Charset<br>Accept-Encoding<br>Accept-Language<br>Content-Language</p>
+<h1 id="状态码和短语"><a href="#状态码和短语" class="headerlink" title="状态码和短语"></a>状态码和短语</h1><h2 id="1XX-Information"><a href="#1XX-Information" class="headerlink" title="1XX Information"></a>1XX Information</h2><p>接受的请求正在处理</p>
+<h2 id="2XX-Success"><a href="#2XX-Success" class="headerlink" title="2XX Success"></a>2XX Success</h2><p>请求正常处理完毕</p>
+<p><strong>200 OK</strong><br>客户端发来的请求被正常处理了，返回的信息因为方法不同而不同。</p>
+<p><strong>204 No Content</strong><br>客户端发来的请求被正常处理了，但不包含实体的主体部分。</p>
+<p><strong>206 Partial Content</strong><br>客户端进行了范围请求，且服务器正确执行了请求，响应报文中包含由Content-Range指定范围的主体。</p>
+<h2 id="3XX-Redirection"><a href="#3XX-Redirection" class="headerlink" title="3XX Redirection"></a>3XX Redirection</h2><p>重定向，需要进行附加操作</p>
+<p><strong>301 Move Permanently</strong><br>永久性重定位，状态码表示请求的资源已经被分配了新的URI，以后应用现在指定的URI。如果URI保存书签了，也应该按照Location首部字段提示保存。<br><img src="https://wx4.sinaimg.cn/mw690/0069luTRgy1foahp80i91j30g70bmgmm.jpg" alt="图片描述"><br>输入URL最后不加/会产生301状态码</p>
+<p><strong>302 Found</strong><br>临时性重定向，请求的资源被分配了新的URI，希望用户用新的URI访问。推荐仅在响应GET或 HEAD 方法时采用302状态码，而在其他时候使用 307 Temporary Redirect 来替代，因为在这些场景下方法变换是明确禁止的</p>
+<p><strong>303 See Other</strong><br>与302有相同的功能，但是303明确表示客户端用GET方法获取资源。在确实需要将重定向请求的方法转换为 GET的场景下，可以使用303。</p>
+<p><strong>304 Not Modified</strong><br>客户端发送附带条件的GET请求：If-Match、If-Modified-Since、If-None-Match、If-Range、If-Unmodified-Since，服务器允许请求资源，但因发生请求不满足条件而返回。</p>
+<p><strong>307 Temporary Redirect</strong><br>临时重定向，与302 Found相同含义。307不会从POST变成GET，不过要看具体浏览器。</p>
+<blockquote>
+<p> 当发送重定向请求的时候，307状态码可以确保请求方法和消息主体不会发生变化。当响应状态码为302的时候，一些旧有的用户代理会错误地将请求方法转换为 GET：使用非 GET 请求方法而返回302状态码，Web应用的运行状况是不可预测的。而返回307状态码时则是可预测的。对于GET请求来说，两种情况没有区别</p>
+</blockquote>
+<h2 id="4XX-Client-Error"><a href="#4XX-Client-Error" class="headerlink" title="4XX Client Error"></a>4XX Client Error</h2><p>客户端错误</p>
+<p><strong>400 Bad Request</strong><br>请求报文中存在语法错误。</p>
+<p><strong>401 Unauthorized</strong><br>发送请求需要通过HTTP认证的认证信息。头部必须包含一个WWW-Authentiate首部质询用户信息</p>
+<p><strong>403 Forbidden</strong><br>访问请求资源被拒绝。</p>
+<p><strong>404 Not Found</strong><br>无法找到资源或者服务器拒绝请求且不想说明理由。</p>
+<h2 id="5XX-Server-Error"><a href="#5XX-Server-Error" class="headerlink" title="5XX Server Error"></a>5XX Server Error</h2><p><strong>500 Internal Service Error</strong><br>服务器在执行请求时发生了错误。</p>
+<p><strong>502 Bad Gateway</strong><br>错误网关 </p>
+<p><strong>503 Service Unvaliable</strong><br>服务器暂时超载或正在进行停机维护，无法进行处理。若事先知道时间，返回Retry-after字段。</p>
+<h1 id="HTTP-1-1通用首部字段"><a href="#HTTP-1-1通用首部字段" class="headerlink" title="HTTP/1.1通用首部字段"></a>HTTP/1.1通用首部字段</h1><p>即响应报文和请求报文都可以用的字段<br><strong>Cache-Control</strong><br>操作缓存，参数可选，逗号分隔<br>public：其他用户也可以利用缓存。<br>private：特定用户可以利用缓存。<br>no-cache：<strong>不是不缓存</strong>，是客户端不接受缓存过的响应，所以缓存服务器必须要把请求转发出去。若对它赋值（如no-cache=Location），表示客户端接收到这个参数的响应报文后不能使用缓存。<br>no-store：按时请求或响应中包含机密信息。规定缓存不能在本地存储请求或响应的部分。<br>s-maxage： 功能和max-age相同，但这个适用于多位用户使用的公共缓存服务器。<br>max-age： 单位秒，缓存时间比指定时间数值小则接收数据。HTTP/1.1还存在Expires首部字段，会优先处理max-age，而HTTP/1.0中max-age会被忽略。<br>min-fresh：缓存服务器返回至少还未过指定时间的缓存资源。<br>max-stale：过期缓存资源也接收。<br>only-if-cached：客户端仅在缓存服务器本地缓存目标资源的情况下返回，若请求缓存服务器本地缓存无反应，返回504。<br>must-revalidate：代理向源服务器再次验证即将返回响应缓存是否有效。无法连接服务器返回504。用这条会忽略max-stale。<br>proxy-revalidate：所有缓存服务器在收到客户端指令请求返回时，再次验证缓存有效性。<br>no-transform：请求或相应中都不能改变主体媒体类型。</p>
+<p><strong>Connection</strong></p>
+<ol>
+<li><p>控制不再转发给代理的首部字段</p>
+</li>
+<li><p>管理持久连接：HTTP/1.1默认是持久链接，想断开连接指定Connection:Close。旧版本默认是非持久，所以需要指明Connection：Keep-Alive。</p>
+<p>Connection:不再转发的首部字段名<br>Connection:close</p>
+</li>
+</ol>
+<p><strong>Date</strong><br>创建HTTP报文的日期时间</p>
+<p><strong>Pragma</strong><br>历史遗留字段，为了兼容而存在<br>Pragma:no-cacheyao要求中间缓存服务器不返回缓存。</p>
+<p><strong>Trailer</strong><br>事先说明在报文主体后记录了哪些首部字段。</p>
+<p><strong>Transfer-Encoading</strong><br>规定报文主体采用的编码方式。进队分块传输编码有效。</p>
+<p><strong>Upgrade</strong><br>检测HTTP协议及其他协议是否可使用高版本进行通信，参数可以指定一个完全不同的通信协议。</p>
+<p><strong>Via</strong><br>追踪客户端与服务器之间的请求和响应报文的传输路径。</p>
+<p><strong>Warning</strong><br>从1.0版本的Retry-After演变过来的，通常会告知用户一些缓存相关的问题警告。<br>1.1版本定义了7种警告：<br>110 Response is stale 代理返回已过过期资源<br>111 Revalidation failed 代理再验证资源有效失败<br>112 Disconnection operation 断开连接操作<br>113 Heuristic expiration 试探性过期，响应试用期超过24小时<br>199 Miscellaneous warning 任意的警告内容<br>214 Transformation applied 代理对内容编码或媒体类型执行了某些处理<br>299 Miscellaneous persistent warning 任意的警告内容</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://www.mochiko.cn/2018/02/09/note-http/" data-id="ck2sre6lo007w04wh2b6r9qjp" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/小结/">小结</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/计算机网络/">计算机网络</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/02/12/note-js-type/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          【读书笔记】JavaScriptの类型
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/02/07/react-native-notes/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">【react-native】近期做项目の小结</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/demo/">demo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/呆萌の实践/">呆萌の实践</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/呆萌の研究/">呆萌の研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/学习小记/">学习小记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/巨人花园/">巨人花园</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂/">杂</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/禅道花园/">禅道花园</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计与前端/">设计与前端</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AngularJS/">AngularJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS/">CSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS3/">CSS3</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Canvas/">Canvas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/D3-js/">D3.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ES6/">ES6</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/">Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTML/">HTML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Houdini/">Houdini</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JAVA/">JAVA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Node-js/">Node.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PWA/">PWA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sass/">Sass</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Three-js/">Three.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TweenMax/">TweenMax</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript/">TypeScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue-js/">Vue.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WebAssembly/">WebAssembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Webpack/">Webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/canvas/">canvas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jQuery/">jQuery</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/koa2/">koa2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-native/">react-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-js/">react.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redux/">redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/svg/">svg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue-js/">vue.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webAR/">webAR</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webAssembly/">webAssembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安装体验/">安装体验</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/小结/">小结</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/浏览器/">浏览器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/计算机网络/">计算机网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/认真做事/">认真做事</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书笔记/">读书笔记</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AngularJS/" style="font-size: 10px;">AngularJS</a> <a href="/tags/CSS/" style="font-size: 16.67px;">CSS</a> <a href="/tags/CSS3/" style="font-size: 18.33px;">CSS3</a> <a href="/tags/Canvas/" style="font-size: 10px;">Canvas</a> <a href="/tags/D3-js/" style="font-size: 10px;">D3.js</a> <a href="/tags/ES6/" style="font-size: 10px;">ES6</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/HTML/" style="font-size: 13.33px;">HTML</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Houdini/" style="font-size: 10px;">Houdini</a> <a href="/tags/JAVA/" style="font-size: 10px;">JAVA</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/PWA/" style="font-size: 10px;">PWA</a> <a href="/tags/Sass/" style="font-size: 11.67px;">Sass</a> <a href="/tags/Three-js/" style="font-size: 11.67px;">Three.js</a> <a href="/tags/TweenMax/" style="font-size: 10px;">TweenMax</a> <a href="/tags/TypeScript/" style="font-size: 10px;">TypeScript</a> <a href="/tags/Vue-js/" style="font-size: 15px;">Vue.js</a> <a href="/tags/WebAssembly/" style="font-size: 10px;">WebAssembly</a> <a href="/tags/Webpack/" style="font-size: 10px;">Webpack</a> <a href="/tags/canvas/" style="font-size: 13.33px;">canvas</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/jQuery/" style="font-size: 15px;">jQuery</a> <a href="/tags/koa2/" style="font-size: 11.67px;">koa2</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/react-native/" style="font-size: 10px;">react-native</a> <a href="/tags/react-js/" style="font-size: 10px;">react.js</a> <a href="/tags/redux/" style="font-size: 10px;">redux</a> <a href="/tags/svg/" style="font-size: 10px;">svg</a> <a href="/tags/vue-js/" style="font-size: 15px;">vue.js</a> <a href="/tags/webAR/" style="font-size: 10px;">webAR</a> <a href="/tags/webAssembly/" style="font-size: 10px;">webAssembly</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a> <a href="/tags/安装体验/" style="font-size: 11.67px;">安装体验</a> <a href="/tags/小结/" style="font-size: 11.67px;">小结</a> <a href="/tags/浏览器/" style="font-size: 10px;">浏览器</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/计算机网络/" style="font-size: 15px;">计算机网络</a> <a href="/tags/认真做事/" style="font-size: 10px;">认真做事</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/读书笔记/" style="font-size: 10px;">读书笔记</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/11/10/191110-vue-3-data/">Vue 3中的数据监听</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/27/css-181227/">【CodePen分析】Day 2：燃烧的火焰</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/26/css-181226/">【CodePen分析】Day 1：流星+圣诞树</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/17/fronted-end-frontier-tech/">前端前沿技术</a>
+          </li>
+        
+          <li>
+            <a href="/2018/11/15/event-loop/">JS小结之事件循环</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 MOCHIKo<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

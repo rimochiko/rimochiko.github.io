@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>Vue+SSH商城小项目の小结 | 年糕酱</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言这一切都关于我们JAVA老师布置的一个商城系统大作业，因为年糕君主攻前端方面啦，所以在JAVA框架上绝对是一个萌新，不过秉着老师说的学会一个框架只要半天的说法，最后大概一个礼拜的时间，还是马马虎虎达到了这样那样的功能。这其中出了很多BUG（而且做的进度曾让我感觉很崩溃😭）~好不容易结课了，所以来好好总结一下。【P.S】当然我这应该有一些不合理的设计和开发方法（严肃）！希望各位看官能温柔一点，">
+<meta name="keywords" content="Vue.js,JAVA">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue+SSH商城小项目の小结">
+<meta property="og:url" content="https://www.mochiko.cn/2018/06/23/hajime-vue-ssh/index.html">
+<meta property="og:site_name" content="年糕酱">
+<meta property="og:description" content="前言这一切都关于我们JAVA老师布置的一个商城系统大作业，因为年糕君主攻前端方面啦，所以在JAVA框架上绝对是一个萌新，不过秉着老师说的学会一个框架只要半天的说法，最后大概一个礼拜的时间，还是马马虎虎达到了这样那样的功能。这其中出了很多BUG（而且做的进度曾让我感觉很崩溃😭）~好不容易结课了，所以来好好总结一下。【P.S】当然我这应该有一些不合理的设计和开发方法（严肃）！希望各位看官能温柔一点，">
+<meta property="og:locale" content="zh">
+<meta property="og:image" content="https://wx1.sinaimg.cn/mw690/0069luTRgy1fsl7yjgj41j305e064aa2.jpg">
+<meta property="og:updated_time" content="2018-06-23T09:15:36.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Vue+SSH商城小项目の小结">
+<meta name="twitter:description" content="前言这一切都关于我们JAVA老师布置的一个商城系统大作业，因为年糕君主攻前端方面啦，所以在JAVA框架上绝对是一个萌新，不过秉着老师说的学会一个框架只要半天的说法，最后大概一个礼拜的时间，还是马马虎虎达到了这样那样的功能。这其中出了很多BUG（而且做的进度曾让我感觉很崩溃😭）~好不容易结课了，所以来好好总结一下。【P.S】当然我这应该有一些不合理的设计和开发方法（严肃）！希望各位看官能温柔一点，">
+<meta name="twitter:image" content="https://wx1.sinaimg.cn/mw690/0069luTRgy1fsl7yjgj41j305e064aa2.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="年糕酱" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">年糕酱</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://www.mochiko.cn"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-hajime-vue-ssh" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/06/23/hajime-vue-ssh/" class="article-date">
+  <time datetime="2018-06-23T09:00:13.000Z" itemprop="datePublished">2018-06-23</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/学习小记/">学习小记</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Vue+SSH商城小项目の小结
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>这一切都关于我们JAVA老师布置的一个商城系统大作业，因为年糕君主攻前端方面啦，所以在JAVA框架上绝对是一个萌新，不过秉着老师说的学会一个框架只要半天的说法，最后大概一个礼拜的时间，还是马马虎虎达到了这样那样的功能。<br>这其中出了很多BUG（而且做的进度曾让我感觉很崩溃😭）~好不容易结课了，所以来好好总结一下。<br><em>【P.S】当然我这应该有一些不合理的设计和开发方法（严肃）！希望各位看官能温柔一点，有错误或更好意见欢迎告诉我。</em></p>
+<a id="more"></a>
+
+<h1 id="技术和工具"><a href="#技术和工具" class="headerlink" title="技术和工具"></a>技术和工具</h1><p>前端相关：Vue.js、Vue-cli、webpack<br>后端相关：struts2.0、Spring 3.1、Hibernate 3、JUnit 4、MyEclipese<br>数据库相关：MySQL 5.5</p>
+<h1 id="实现的需求"><a href="#实现的需求" class="headerlink" title="实现的需求"></a>实现的需求</h1><p><strong>页面需求：</strong><br>页面我是在网易云商城的基础上进行了修改（因为我热爱音乐呀），写了一个首页、商品详细页面、购物车页、我的订单页和登录注册页。</p>
+<p><strong>功能需求：</strong></p>
+<ul>
+<li>登录、注册（判断输入合法）</li>
+<li>首页显示、分类显示、搜索</li>
+<li>购物车、订单显示</li>
+</ul>
+<h1 id="前端相关"><a href="#前端相关" class="headerlink" title="前端相关"></a>前端相关</h1><p><strong>情况1</strong>：使用Vue-cli搭建了多页面的应用<br>我这个小项目虽然使用了Vue来做，但是还是想做成多页面的。因为我感觉这几个页面之间可复用的组件很少，重新空一个页面出来写也没关系。<br>因为也看过一些类似的文章来讲解如何配置，所以这里修改一下Vue-cli的配置就容易达成目的。不过也感觉到这样在每次启动webpack进行第一次打包的时候会很慢。</p>
+<p><strong>情况2</strong>：未使用vue-router进行跳转<br>因为是多页面所以直接跳转就可以了，但是在某些页面内可以局部根据URL的改变来改变内容。这里用了vue-router的原理来进行检测，根据URL的哈希改变和监听就可以完成预期的想法（噗后来回想起来用?来GET方法不也差不多啊…不过这样就会有明显的页面跳转）。</p>
+<p>window.location常用的属性： </p>
+<blockquote>
+<p>hash  从井号 (#) 开始的 URL（锚）<br>host  主机名和当前 URL 的端口号<br>hostname  当前URL的主机名<br>href  完整的URL<br>pathname  当前URL的路径部分<br>port  当前URL的端口号<br>protocol  当前 URL 的协议<br>search  从问号 (?) 开始的 URL</p>
+</blockquote>
+<p><strong>情况3</strong>：关于vuex的使用<br>因为是多页面，所以vuex可以说是没啥作用QAQ，因为每一个页面都是自己有一个根store，所以它们之间的数据变化是交互不了的，于是最后这个小项目没有使用vuex。</p>
+<p><strong>情况4</strong>：跨域的问题<br>虽然使用了axios，但是跨域的问题还是会有的，并且后面发现很棘手的就是cookie都是不携带的，小项目使用了后台进行CORS设置来帮助它跨域。</p>
+<pre><code>axios.defaults.withCredentials = true</code></pre><p><strong>情况5</strong>：无关系的组件间通信<br>在根部加入一个Vue实例，通过它来进行一个事件传播的中转，也就是所谓的EventBus，同样的网上也有很多类似的文章。（不一定是$root，也可能是$root.$root，要见具体情况而言）<br><a href="https://www.jb51.net/article/114575.htm" target="_blank" rel="noopener">详解Vue 非父子组件通信方法（非Vuex）</a></p>
+<p><strong>情况6</strong>：localStorage<br>localStorage只能存字符串，所以要用<code>JSON.parse</code>和<code>JSON.stringify</code>进行相互转换然后操作。</p>
+<p><strong>情况7</strong>：Vue和style<br>这个我总是没记清楚，直接嵌入绑定的时候，有<code>[...]</code>，也有<code>{...}</code>。<br>数组的形式</p>
+<pre><code>:class=&quot;[classA, classB]&quot;
+:class=&quot;[&apos;tip&apos;, usernameTip.length &lt;= 0 ? &apos;hidden &apos;: &apos;&apos;]
+:class=&quot;[classA, { classB: isB, classC: isC }]</code></pre><p>对象的形式</p>
+<pre><code>:class=&quot;{ &apos;class-a&apos;: isA, &apos;class-b&apos;: isB }</code></pre><p><strong>情况8</strong>：给数组包含的对象的属性赋值，Vue不会检测到更新<br>使用在内部就是使用<code>this.$set(数组成员[索引], &#39;属性名&#39;, 值)</code>可以实现。</p>
+<p><strong>情况9</strong>：多个异步<br>也就是想发送多个异步请求，最后整合它们的结果。但是往往是直接执行后面的同步代码了，所以会出现渲染的时候拿到的东西是空。因为时间不够，我用了以前的做法，就是递归调用来解决。</p>
+<p><strong>情况10</strong>：this的指向<br>在调用别的组件后，在它的内部这个this很可能就会被修改了，这个时候箭头函数的好处就来了，不需要再定义一个临时变量来存着vue的this。</p>
+<p><strong>情况11</strong>：对于前端安全的理解<br>做的时候，我就想着，对象数据之类的在控制台都似乎可以很容易的改变，这样可以绕过去发送请求。但是在以前也是这样的啊，所以说前端本来就是不安全的，所以在后台也一定要做相应的处理措施。而之所以前台也要做一些验证控制，也同样是可以方便正常用户的体验和使用，不用等待后台发回消息的时间这样。</p>
+<p><strong>情况12</strong>：font-awesome的使用<br>打包出来的时候，会显示不了图标，还要自己在页面引入一个链接。</p>
+<h1 id="后端相关"><a href="#后端相关" class="headerlink" title="后端相关"></a>后端相关</h1><p>下面以一个萌新的视角来阐述关于SSH的种种：</p>
+<ul>
+<li>struts：它的action相当于是servlet的作用，也就是我们访问后台配置的URL（默认是.action）都是它提供的。</li>
+<li>Spring：一般情况下，我们都是调用某个类的某个方法，这样总要创建一个对象来调用，有了它去注入接口，就可以直接调用<code>接口.方法</code>来完成任务。</li>
+<li>Hibernate：简化也更安全化了对数据库的操作。</li>
+</ul>
+<h2 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h2><p><img src="https://wx1.sinaimg.cn/mw690/0069luTRgy1fsl7yjgj41j305e064aa2.jpg" alt="图片描述"></p>
+<ul>
+<li>mysho下放了Hibernate默认创建的类<code>HibernateSessionFactory</code>；</li>
+<li>mysho.action放了所有的Action类，包括UserAction、CartAction和ShowAction，它们会有一个service的成员来调用对应的方法；</li>
+<li>mysho.service放的是service类，这里直接调用Dao类进行相应的操作。</li>
+<li>mysho.dao放的是所有和数据库进行操作的Dao类；</li>
+<li>mysho.model放的是所有类原型，包括User、Item（商品）、Order（订单）和Type；</li>
+<li>mysho.utils是工具类，辅助操作。</li>
+</ul>
+<h2 id="框架的整合"><a href="#框架的整合" class="headerlink" title="框架的整合"></a>框架的整合</h2><p>建议使用IDE自己的配置~这样方便统一换包啥的。如果出现配置文件和框架jar包都没啥错误的情况下还是出现了问题，而且怎么百度都搜不到，请考虑以下方法：</p>
+<ul>
+<li>更换JDK的版本</li>
+<li>更换某个框架的版本</li>
+<li>如果不管怎么改还是出现了同样的错误，请点击Project -&gt; clean，清除缓存。如果没用，就打开Tomcat的文件夹看看里面部署的内容修改了吗，如果一直不改，就换一个workspace吧。</li>
+</ul>
+<h3 id="配置Hibernate"><a href="#配置Hibernate" class="headerlink" title="配置Hibernate"></a>配置Hibernate</h3><p>这里我没有用逆向工程，Spring的注入方式也是setter注入。<br>除了默认给配置的，还需要写hbm.xml文件的映射：</p>
+<pre><code>&lt;mapping resource=&quot;com/mysho/model/User.hbm.xml&quot; /&gt;</code></pre><p>如果在项目中使用了openSession，还需要配置：</p>
+<pre><code>&lt;property name=&quot;hibernate.current_session_context_class&quot;&gt;thread&lt;/property&gt;</code></pre><p>配置以UTF-8编码进行连接，防止中文乱码：</p>
+<pre><code>&lt;property name=&quot;connection.characterEncoding&quot;&gt;utf-8&lt;/property&gt;</code></pre><h3 id="配置Spring"><a href="#配置Spring" class="headerlink" title="配置Spring"></a>配置Spring</h3><p>因为使用的是setter注入，所以在这里必须要写清楚所有要注入的数据的内容。比如：</p>
+<pre><code>&lt;bean id=&quot;sessionFactory&quot;
+    class=&quot;org.springframework.orm.hibernate3.LocalSessionFactoryBean&quot;&gt;
+    &lt;property name=&quot;configLocation&quot; value=&quot;classpath:hibernate.cfg.xml&quot;&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;
+
+&lt;bean id=&quot;userDao&quot; class=&quot;com.mysho.dao.UserDaoImp&quot;&gt;
+    &lt;property name=&quot;sessionFactory&quot; ref=&quot;sessionFactory&quot; /&gt;
+&lt;/bean&gt;</code></pre><p>这里配置了两个bean，一个叫做sessionFactory，一个叫做userDao，userDao里面配置了一个sessionFactory的属性，它指向(ref)id是sessionFactory的东西，所以这样运行的时候Spring就知道应该注入什么。</p>
+<h3 id="配置Struts"><a href="#配置Struts" class="headerlink" title="配置Struts"></a>配置Struts</h3><p>这里有一个巨大的坑！而且之前百度了好久都没有搜索到正确的答案。<br>如果配置好项目，但是发现所有的接口成员都是null，那么请考虑是不是这个问题:</p>
+<pre><code>&lt;action name=&quot;showIndexItem&quot; class=&quot;showAction&quot; method=&quot;showIndexItem&quot;/&gt;</code></pre><p>配置action的时候，它所指向的class，请写Spring中id对应的那个action的class，不能写成包.class，因为这样，Struts就不会经过Spring的注入，因为你更本没把它们两个联系起来。<br>另外还有配置编码：</p>
+<pre><code>&lt;constant name=&quot;struts.i18n.encoding&quot; value=&quot;utf8&quot; /&gt; </code></pre><h3 id="配置web-xml"><a href="#配置web-xml" class="headerlink" title="配置web.xml"></a>配置web.xml</h3><pre><code>&lt;!-- ***Spring 容器初始化*** --&gt;
+&lt;context-param&gt;        
+    &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;        
+    &lt;param-value&gt;classpath:applicationContext.xml&lt;/param-value&gt;
+&lt;/context-param&gt;
+
+&lt;listener&gt;
+    &lt;listener-class&gt;
+        org.springframework.web.context.ContextLoaderListener
+    &lt;/listener-class&gt;
+&lt;/listener&gt;
+
+&lt;listener&gt;
+    &lt;listener-class&gt;
+        org.springframework.web.util.IntrospectorCleanupListener
+    &lt;/listener-class&gt;
+&lt;/listener&gt;
+
+&lt;!-- 配置编码 --&gt;
+  &lt;filter&gt;
+&lt;filter-name&gt;characterEncodingFilter&lt;/filter-name&gt;  
+    &lt;filter-class&gt;org.springframework.web.filter.CharacterEncodingFilter&lt;/filter-class&gt;  
+    &lt;init-param&gt;  
+        &lt;param-name&gt;encoding&lt;/param-name&gt;  
+        &lt;param-value&gt;utf-8&lt;/param-value&gt;  
+    &lt;/init-param&gt;  
+    &lt;init-param&gt;  
+        &lt;param-name&gt;forceEncoding&lt;/param-name&gt;  
+        &lt;param-value&gt;true&lt;/param-value&gt;  
+    &lt;/init-param&gt;  
+&lt;/filter&gt;  
+ &lt;filter-mapping&gt;  
+    &lt;filter-name&gt;characterEncodingFilter&lt;/filter-name&gt;  
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;  
+&lt;/filter-mapping&gt;  
+
+ &lt;!-- ******Struts2核心过滤器*****  --&gt;
+&lt;filter&gt;
+    &lt;filter-name&gt;struts2&lt;/filter-name&gt;
+    &lt;filter-class&gt;org.apache.struts2.dispatcher.FilterDispatcher&lt;/filter-class&gt;
+&lt;/filter&gt;
+
+&lt;filter-mapping&gt;
+    &lt;filter-name&gt;struts2&lt;/filter-name&gt;
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+&lt;/filter-mapping&gt;  </code></pre><p>注意啦，这里的<code>org.apache.struts2.dispatcher.FilterDispatcher</code>是因为我的strut是2.0版本的，版本很低，高版本的写法不是这样的。</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p><strong>情况1</strong>：配置跨域</p>
+<pre><code>response.setHeader(&quot;Access-Control-Allow-Credentials&quot;, &quot;true&quot;);
+response.setHeader(&quot;Access-Control-Allow-Origin&quot;, 你的URL);
+response.setHeader(&quot;Access-Control-Allow-Methods&quot;, 你的方法);</code></pre><p>这里如果<code>Access-Control-Allow-Credentials</code>为true的话，<code>Access-Control-Allow-Origin</code>不允许设置为<code>*</code>，必须精确填一个地址。</p>
+<p><strong>情况2</strong>：以JSON形式返回</p>
+<pre><code>response.setHeader(&quot;Content-Type&quot;, &quot;application/json&quot;);</code></pre><p>因为使用了前后端分离，所以必然要返回JSON了~这样虽然struts有一个JSON插件包，但是由于我的版本一直匹配不上，我就找到了一种最原始的方法来实现，但是实际上并不建议这样做。另一方面action进行配置：</p>
+<pre><code>&lt;package name=&quot;default&quot; namespace=&quot;/&quot; extends=&quot;struts-default&quot;&gt;
+    &lt;action name=&quot;checkname&quot; class=&quot;userAction&quot; method=&quot;checkUsername&quot;/&gt;
+&lt;/package&gt;</code></pre><p>向checkname.action发送请求即可，虽然控制台会出现一个警告说未设置成功/失败的跳转页面，但是实际上不影响使用。</p>
+<p><strong>情况3</strong>：报错难以排除问题根源<br>那么请使用JUnit来编写测试用例吧！<br>这个方法真的超级好使，不过在测试Spring的时候，需要手动从配置文件中去提取出容器来,或者使用注入的方式来实现提取容器，百度都有很多文章。</p>
+<p><strong>情况4</strong>：关于setter注入<br>每个要被注入的接口成员需要有对应的setter方法，另外所在的类也需要一个没有参数的构造函数。</p>
+<p><strong>情况5</strong>：关于hql语句<br>注意:=这个符号，它的前后不要留空格：</p>
+<pre><code>from com.mysho.model.User user where user.username=:usernam</code></pre><p>设置开始寻找的位置，以及获取的条数:</p>
+<pre><code>query.setFirstResult(start);
+query.setMaxResults(size);</code></pre><p>如果未求使用事务，控制台报错，改成事务的形式就行了：</p>
+<pre><code>Session s = sessionFactory.getCurrentSession();
+Transaction  transaction = s.beginTransaction();
+...
+transaction.commit();</code></pre><p><strong>情况6</strong>：session获取不一致<br>就是在这里设置了session的值，但在另一个地方却拿到的是空，<br>这个时候就要考虑应该是因为它们根本就不在一个容器内，<br>因为发送请求的时候必须要带上相应的cookie才能识别~<br>但也有办法让所有容器共享数据，使用：</p>
+<pre><code>ServletActionContext.getServletContext().getAttribute(...)
+ServletActionContext.getServletContext().setAttribute(..., ...)</code></pre><p><strong>情况7</strong>：JSON转换的问题<br>JSONArray.fromObject(…)：把一个list转换为JSON。<br>JSONObject.fromObject(…)：把一个Object转换为JSON。<br>另外对象中存在Date类型的JSON会报异常，需要另外做更多特殊处理才行，并且使用java.sql.Date和java.util.Date来操作的话又会有不同结果。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://www.mochiko.cn/2018/06/23/hajime-vue-ssh/" data-id="ck2sre6j4005o04wh7caiaul5" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JAVA/">JAVA</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Vue-js/">Vue.js</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/06/24/hajime-css-doodle/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          css-doodle初认识
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/06/08/es6-promise/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Promiseの相关小结</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/demo/">demo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/呆萌の实践/">呆萌の实践</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/呆萌の研究/">呆萌の研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/学习小记/">学习小记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/巨人花园/">巨人花园</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂/">杂</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/禅道花园/">禅道花园</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计与前端/">设计与前端</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AngularJS/">AngularJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS/">CSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS3/">CSS3</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Canvas/">Canvas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/D3-js/">D3.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ES6/">ES6</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/">Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTML/">HTML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Houdini/">Houdini</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JAVA/">JAVA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Node-js/">Node.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PWA/">PWA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sass/">Sass</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Three-js/">Three.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TweenMax/">TweenMax</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript/">TypeScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue-js/">Vue.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WebAssembly/">WebAssembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Webpack/">Webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/canvas/">canvas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jQuery/">jQuery</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/koa2/">koa2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-native/">react-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-js/">react.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redux/">redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/svg/">svg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue-js/">vue.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webAR/">webAR</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webAssembly/">webAssembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安装体验/">安装体验</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/小结/">小结</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/浏览器/">浏览器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/计算机网络/">计算机网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/认真做事/">认真做事</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书笔记/">读书笔记</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AngularJS/" style="font-size: 10px;">AngularJS</a> <a href="/tags/CSS/" style="font-size: 16.67px;">CSS</a> <a href="/tags/CSS3/" style="font-size: 18.33px;">CSS3</a> <a href="/tags/Canvas/" style="font-size: 10px;">Canvas</a> <a href="/tags/D3-js/" style="font-size: 10px;">D3.js</a> <a href="/tags/ES6/" style="font-size: 10px;">ES6</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/HTML/" style="font-size: 13.33px;">HTML</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Houdini/" style="font-size: 10px;">Houdini</a> <a href="/tags/JAVA/" style="font-size: 10px;">JAVA</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/PWA/" style="font-size: 10px;">PWA</a> <a href="/tags/Sass/" style="font-size: 11.67px;">Sass</a> <a href="/tags/Three-js/" style="font-size: 11.67px;">Three.js</a> <a href="/tags/TweenMax/" style="font-size: 10px;">TweenMax</a> <a href="/tags/TypeScript/" style="font-size: 10px;">TypeScript</a> <a href="/tags/Vue-js/" style="font-size: 15px;">Vue.js</a> <a href="/tags/WebAssembly/" style="font-size: 10px;">WebAssembly</a> <a href="/tags/Webpack/" style="font-size: 10px;">Webpack</a> <a href="/tags/canvas/" style="font-size: 13.33px;">canvas</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/jQuery/" style="font-size: 15px;">jQuery</a> <a href="/tags/koa2/" style="font-size: 11.67px;">koa2</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/react-native/" style="font-size: 10px;">react-native</a> <a href="/tags/react-js/" style="font-size: 10px;">react.js</a> <a href="/tags/redux/" style="font-size: 10px;">redux</a> <a href="/tags/svg/" style="font-size: 10px;">svg</a> <a href="/tags/vue-js/" style="font-size: 15px;">vue.js</a> <a href="/tags/webAR/" style="font-size: 10px;">webAR</a> <a href="/tags/webAssembly/" style="font-size: 10px;">webAssembly</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a> <a href="/tags/安装体验/" style="font-size: 11.67px;">安装体验</a> <a href="/tags/小结/" style="font-size: 11.67px;">小结</a> <a href="/tags/浏览器/" style="font-size: 10px;">浏览器</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/计算机网络/" style="font-size: 15px;">计算机网络</a> <a href="/tags/认真做事/" style="font-size: 10px;">认真做事</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/读书笔记/" style="font-size: 10px;">读书笔记</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/11/10/191110-vue-3-data/">Vue 3中的数据监听</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/27/css-181227/">【CodePen分析】Day 2：燃烧的火焰</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/26/css-181226/">【CodePen分析】Day 1：流星+圣诞树</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/17/fronted-end-frontier-tech/">前端前沿技术</a>
+          </li>
+        
+          <li>
+            <a href="/2018/11/15/event-loop/">JS小结之事件循环</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 MOCHIKo<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

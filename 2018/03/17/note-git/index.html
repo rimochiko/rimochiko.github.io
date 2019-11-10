@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>Git相关小结 | 年糕酱</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言虽然会一些基本的Git应用，但是没有深入了解下去过，所以这又是一个慢慢更新和不断学习以及小结的坑。主要是学习了廖雪峰老师的Git教程，确实是简单易懂。">
+<meta name="keywords" content="Git">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git相关小结">
+<meta property="og:url" content="https://www.mochiko.cn/2018/03/17/note-git/index.html">
+<meta property="og:site_name" content="年糕酱">
+<meta property="og:description" content="前言虽然会一些基本的Git应用，但是没有深入了解下去过，所以这又是一个慢慢更新和不断学习以及小结的坑。主要是学习了廖雪峰老师的Git教程，确实是简单易懂。">
+<meta property="og:locale" content="zh">
+<meta property="og:updated_time" content="2018-03-19T13:11:14.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Git相关小结">
+<meta name="twitter:description" content="前言虽然会一些基本的Git应用，但是没有深入了解下去过，所以这又是一个慢慢更新和不断学习以及小结的坑。主要是学习了廖雪峰老师的Git教程，确实是简单易懂。">
+  
+    <link rel="alternate" href="/atom.xml" title="年糕酱" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">年糕酱</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://www.mochiko.cn"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-note-git" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/03/17/note-git/" class="article-date">
+  <time datetime="2018-03-17T02:13:20.000Z" itemprop="datePublished">2018-03-17</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/学习小记/">学习小记</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Git相关小结
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>虽然会一些基本的Git应用，但是没有深入了解下去过，所以这又是一个慢慢更新和不断学习以及小结的坑。主要是学习了<a href="https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000" target="_blank" rel="noopener">廖雪峰老师的Git教程</a>，确实是简单易懂。</p>
+<a id="more"></a>
+
+<h1 id="基本知识"><a href="#基本知识" class="headerlink" title="基本知识"></a>基本知识</h1><p><strong>Q：什么是Git？</strong></p>
+<blockquote>
+<p>一款分布式版本控制系统，集中式版本控制系统必须联网才能工作。分布式版本控制系统根本没有“中央服务器”，每个人的电脑上都是一个完整的版本库。<br>注意：<strong>Git管理的是修改</strong>。</p>
+</blockquote>
+<p><strong>Q：版本库里有什么？</strong></p>
+<blockquote>
+<p>工作区有一个隐藏目录.git，是Git的版本库，存了很多东西，其中最重要的就是称为stage（或者叫index）的暂存区，还有Git为我们自动创建的第一个分支master，以及指向master的一个指针叫HEAD。</p>
+</blockquote>
+<p><strong>Q: 一般的分支类型有哪些？</strong></p>
+<blockquote>
+<p>master分支是主分支，因此要时刻与远程同步；<br>dev分支是开发分支，团队所有成员都需要在上面工作，所以也需要与远程同步；<br>bug分支只用于在本地修复bug，就没必要推到远程了，除非老板要看看你每周到底修复了几个bug；<br>feature分支是否推到远程，取决于你是否和你的小伙伴合作在上面开发。</p>
+</blockquote>
+<h1 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h1><p><strong>git init</strong><br>创建版本库。使用后目录下会多一个.git的目录，用于跟踪管理版本库（Repository）。</p>
+<p><strong>git add</strong><br>添加文件到仓库。git add 文件名。</p>
+<p><strong>git commit</strong><br>提交到仓库，一次性提交多个，选项-m “说明”，来添加改动的说明。</p>
+<p><strong>git diff</strong><br>查看改动。</p>
+<p><strong>git status</strong><br>显示仓库的版本状态。</p>
+<p><strong>git log</strong><br>历史记录<br><code>git log --graph</code>用于查看历史合并图。</p>
+<p><strong>git reflog</strong><br>记录历史操作</p>
+<p><strong>git reset</strong></p>
+<pre><code>git reset --hard HEAD^</code></pre><p>可以用于退回到上一个版本。</p>
+<p><strong>git checkout</strong><br>撤销修改，如:<code>git checkout -- readme.txt</code>。<br>切换分支，如:<code>git checkout dev</code>。<br>创建并且切换分支，如:<code>git chekoout -b dev</code>。</p>
+<p><strong>git rm</strong><br>删除文件，如：<code>git rm test.txt</code>。</p>
+<p><strong>git branch</strong><br>创建分支。后面加分支名。<br><code>git branch -d 分支名</code>表示删除分支。<br><code>git branch -D 分支名</code>表示强行删除分支。</p>
+<p><strong>git merge</strong><br>合并分支。如：<code>git merge dev</code>。Fast-forward是指是快进模式，直接把master指向dev的当前提交。不是每次合并都能Fast-forward。<br>–no-ff参数用于禁止快进模式。</p>
+<p><strong>git push</strong><br>推送分支。<br><code>git push origin :refs/tags/标签名</code>，删除远程标签。</p>
+<p><strong>git clone</strong><br>克隆仓库。</p>
+<p><strong>git stash</strong><br>如果有两个地方改动了，但是只想提交其中一个，可以把当前工作现场保存起来，等恢复现场后继续工作。<br><code>git stash list</code>查看所有保存的工作现场。<br><code>git stash apply</code>恢复工作现场。<br><code>git stash drop</code>删除保存工作现场。<br><code>git stash pop</code>恢复并删除。</p>
+<p><strong>git remote</strong><br>查看远程库的信息。<br><code>git remote -v</code>可以显示更加详细的信息。</p>
+<p><strong>git tag</strong><br>添加/查看标签。<br><code>git tag 标签名 commitID</code>可以给指定commit添加标签。<br><code>git tag -d 标签名</code>删除标签名。</p>
+<p><strong>git show</strong><br><code>git show 标签名</code>可以查看标签信息。<br><code>git tag -a 标签名 -m &quot;...&quot;</code>指定标签信息。<br><code>git tag -s 标签名 -m &quot;...&quot;</code>用PGP签名标签；</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://www.mochiko.cn/2018/03/17/note-git/" data-id="ck2sre6k6006j04whgskio3z8" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Git/">Git</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/03/24/hajime-redux/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          redux初认识
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/03/11/js-design-mode-factory/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">JavaScript设计模式（工厂系列）</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/demo/">demo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/呆萌の实践/">呆萌の实践</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/呆萌の研究/">呆萌の研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/学习小记/">学习小记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/巨人花园/">巨人花园</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂/">杂</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/禅道花园/">禅道花园</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计与前端/">设计与前端</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AngularJS/">AngularJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS/">CSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS3/">CSS3</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Canvas/">Canvas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/D3-js/">D3.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ES6/">ES6</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/">Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTML/">HTML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Houdini/">Houdini</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JAVA/">JAVA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Node-js/">Node.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PWA/">PWA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sass/">Sass</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Three-js/">Three.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TweenMax/">TweenMax</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript/">TypeScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue-js/">Vue.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WebAssembly/">WebAssembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Webpack/">Webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/canvas/">canvas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jQuery/">jQuery</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/koa2/">koa2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-native/">react-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-js/">react.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redux/">redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/svg/">svg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue-js/">vue.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webAR/">webAR</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webAssembly/">webAssembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安装体验/">安装体验</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/小结/">小结</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/浏览器/">浏览器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/计算机网络/">计算机网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/认真做事/">认真做事</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书笔记/">读书笔记</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AngularJS/" style="font-size: 10px;">AngularJS</a> <a href="/tags/CSS/" style="font-size: 16.67px;">CSS</a> <a href="/tags/CSS3/" style="font-size: 18.33px;">CSS3</a> <a href="/tags/Canvas/" style="font-size: 10px;">Canvas</a> <a href="/tags/D3-js/" style="font-size: 10px;">D3.js</a> <a href="/tags/ES6/" style="font-size: 10px;">ES6</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/HTML/" style="font-size: 13.33px;">HTML</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Houdini/" style="font-size: 10px;">Houdini</a> <a href="/tags/JAVA/" style="font-size: 10px;">JAVA</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/PWA/" style="font-size: 10px;">PWA</a> <a href="/tags/Sass/" style="font-size: 11.67px;">Sass</a> <a href="/tags/Three-js/" style="font-size: 11.67px;">Three.js</a> <a href="/tags/TweenMax/" style="font-size: 10px;">TweenMax</a> <a href="/tags/TypeScript/" style="font-size: 10px;">TypeScript</a> <a href="/tags/Vue-js/" style="font-size: 15px;">Vue.js</a> <a href="/tags/WebAssembly/" style="font-size: 10px;">WebAssembly</a> <a href="/tags/Webpack/" style="font-size: 10px;">Webpack</a> <a href="/tags/canvas/" style="font-size: 13.33px;">canvas</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/jQuery/" style="font-size: 15px;">jQuery</a> <a href="/tags/koa2/" style="font-size: 11.67px;">koa2</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/react-native/" style="font-size: 10px;">react-native</a> <a href="/tags/react-js/" style="font-size: 10px;">react.js</a> <a href="/tags/redux/" style="font-size: 10px;">redux</a> <a href="/tags/svg/" style="font-size: 10px;">svg</a> <a href="/tags/vue-js/" style="font-size: 15px;">vue.js</a> <a href="/tags/webAR/" style="font-size: 10px;">webAR</a> <a href="/tags/webAssembly/" style="font-size: 10px;">webAssembly</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a> <a href="/tags/安装体验/" style="font-size: 11.67px;">安装体验</a> <a href="/tags/小结/" style="font-size: 11.67px;">小结</a> <a href="/tags/浏览器/" style="font-size: 10px;">浏览器</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/计算机网络/" style="font-size: 15px;">计算机网络</a> <a href="/tags/认真做事/" style="font-size: 10px;">认真做事</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/读书笔记/" style="font-size: 10px;">读书笔记</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/11/10/191110-vue-3-data/">Vue 3中的数据监听</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/27/css-181227/">【CodePen分析】Day 2：燃烧的火焰</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/26/css-181226/">【CodePen分析】Day 1：流星+圣诞树</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/17/fronted-end-frontier-tech/">前端前沿技术</a>
+          </li>
+        
+          <li>
+            <a href="/2018/11/15/event-loop/">JS小结之事件循环</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 MOCHIKo<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

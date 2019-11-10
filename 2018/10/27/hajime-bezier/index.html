@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>初识贝塞尔曲线 | 年糕酱</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="贝塞尔曲线在CSS动画中和canvas、svg绘图中都是比较重要的一个东西！所以我来好好的小结一下关于它的一些东西。">
+<meta name="keywords" content="CSS,canvas,svg">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初识贝塞尔曲线">
+<meta property="og:url" content="https://www.mochiko.cn/2018/10/27/hajime-bezier/index.html">
+<meta property="og:site_name" content="年糕酱">
+<meta property="og:description" content="贝塞尔曲线在CSS动画中和canvas、svg绘图中都是比较重要的一个东西！所以我来好好的小结一下关于它的一些东西。">
+<meta property="og:locale" content="zh">
+<meta property="og:image" content="https://wx2.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u4sjlj30aa03bdfo.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u4sylj306d03l3ya.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u4pl2j3069052jr6.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u4xosj309w05ijr8.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u5x1bj30jl0790su.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u5w19j309n099gll.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u6ucgj30fv03z0so.jpg">
+<meta property="og:updated_time" content="2018-10-27T03:24:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="初识贝塞尔曲线">
+<meta name="twitter:description" content="贝塞尔曲线在CSS动画中和canvas、svg绘图中都是比较重要的一个东西！所以我来好好的小结一下关于它的一些东西。">
+<meta name="twitter:image" content="https://wx2.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u4sjlj30aa03bdfo.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="年糕酱" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">年糕酱</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://www.mochiko.cn"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-hajime-bezier" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/10/27/hajime-bezier/" class="article-date">
+  <time datetime="2018-10-27T03:40:18.000Z" itemprop="datePublished">2018-10-27</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/设计与前端/">设计与前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      初识贝塞尔曲线
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>贝塞尔曲线在CSS动画中和canvas、svg绘图中都是比较重要的一个东西！所以我来好好的小结一下关于它的一些东西。</p>
+<a id="more"></a>
+<h1 id="什么是贝塞尔曲线"><a href="#什么是贝塞尔曲线" class="headerlink" title="什么是贝塞尔曲线"></a>什么是贝塞尔曲线</h1><blockquote>
+<p>贝塞尔曲线于1962，由法国工程师皮埃尔·贝塞尔（Pierre Bézier）所广泛发表，他运用贝塞尔曲线来为汽车的主体进行设计。贝塞尔曲线最初由Paul de Casteljau于1959年运用de Casteljau演算法开发，以稳定数值的方法求出贝兹曲线。</p>
+</blockquote>
+<p>贝塞尔曲线被广泛用于制图软件中。<br>以前描述曲线并没有很好的方法，直到它的出现。<br>如果你用过PS、AI之类的制图软件，想必一定会很好理解。</p>
+<p>你可以登录<a href="https://bezier.method.ac/" target="_blank" rel="noopener">https://bezier.method.ac/</a>这个网站，在线学习体验使用PS中的钢笔工具，进行绘制各种形状的图案。</p>
+<h1 id="二次贝塞尔曲线"><a href="#二次贝塞尔曲线" class="headerlink" title="二次贝塞尔曲线"></a>二次贝塞尔曲线</h1><p><img src="https://wx2.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u4sjlj30aa03bdfo.jpg" alt="图片描述"></p>
+<p>二次贝塞尔曲线，我们要绘制出来需要指定：</p>
+<ul>
+<li>起点</li>
+<li>终点</li>
+<li>控制点</li>
+</ul>
+<p>我们可以看到如图所示，在控制点和起点的中点，连接上了控制点与终点的中点，这根线的终点，就是与曲线相交的一个点。<br>可以认为控制点像一个磁铁一样，把线吸了过去。</p>
+<p><img src="https://wx3.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u4sylj306d03l3ya.jpg" alt="图片描述"></p>
+<p><em>多边二次贝塞尔曲线</em><br>可以看到有两个控制点，这样连续画出来了。<br>如果想要连贯的曲线，那么它们的控制点应该是中心对称的。<br><img src="https://wx4.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u4pl2j3069052jr6.jpg" alt="图片描述"></p>
+<h1 id="三次贝塞尔曲线"><a href="#三次贝塞尔曲线" class="headerlink" title="三次贝塞尔曲线"></a>三次贝塞尔曲线</h1><p>三次贝塞尔曲线可以包括一个拐点。<br>它拥有两个控制点，两个控制点中间的中点，分别连接控制点与起点、终点的连线的中点。这两根线的中点分别相连接，这个中点就是和曲线相交的地方（有点绕，看图就明白了！）<br><img src="https://wx1.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u4xosj309w05ijr8.jpg" alt="图片描述"></p>
+<p>这一般也是绘图软件里常用的：<br><img src="https://wx4.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u5x1bj30jl0790su.jpg" alt="图片描述"></p>
+<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="在CSS中的应用"><a href="#在CSS中的应用" class="headerlink" title="在CSS中的应用"></a>在CSS中的应用</h2><p>我们可以指定动画的运动曲线。在CSS中运用的也是三次贝塞尔曲线。</p>
+<pre><code>cubic-bezier(控制点x1, 控制点y1, 控制点x2, 控制点y2)</code></pre><p>这个代表的是速度曲线，也就是y值是速度，可以看到粉红色和蓝色的圆点就是两个控制点：<br><img src="https://wx2.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u5w19j309n099gll.jpg" alt="图片描述"></p>
+<p>而我们CSS中内置的一些默认的属性值，实际上是存了贝塞尔曲线的一些预设:<br><img src="https://wx2.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u6ucgj30fv03z0so.jpg" alt="图片描述"></p>
+<p>更多可以在：<a href="http://cubic-bezier.com/#.17,.67,1,.63" target="_blank" rel="noopener">贝塞尔CSS在线体验</a> 这里进行体验。</p>
+<h2 id="SVG"><a href="#SVG" class="headerlink" title="SVG"></a>SVG</h2><p>在SVG中定义一个二次贝塞尔曲线，用字母Q来表示，紧跟控制点和终点坐标：</p>
+<pre><code>&lt;path d=&quot;M30 75 Q240 30, 300 120&quot; style=&quot;stroke: black; fill: none;&quot;/&gt;</code></pre><p>意思是，我们绘制一条路径，先把点Move（M）移动到(30, 75)的位置，然后开始绘制！<br>以(240, 30)为控制点，曲线的终点是(300, 120)。</p>
+<p>如果我们要绘制多边二次贝塞尔曲线，直接在Q后面继续跟两组坐标：</p>
+<pre><code>Q 80 30, 100 100, 130 65, 200 80</code></pre><p>比如这组数据，就是在(100, 100)画完一边后，继续以(130, 65)为控制点，画到(200, 80)为终点。</p>
+<p>然后，我们提到之前的中心对称问题，可以直接使用T字母来表示中心对称的控制点。</p>
+<pre><code>Q 80 30, 100 100, T, 200 80</code></pre><p>如果我们要绘制<strong>三次贝塞尔曲线</strong>，后面跟着的坐标组就有3个，分别就是起点的控制点、终点的控制点和端点（终点）。用字母C来开头指定。</p>
+<pre><code>M20 80, C 50 20, 150 60, 200 120</code></pre><p>另外还有字母S开头，S x2 y2 x y，表示用x2 y2作为控制点，第一个控制点是前一个C命令的终点控制点的中心对称点。（如果前一个曲线不存在，当前点就是第一个控制点）</p>
+<h2 id="canvas"><a href="#canvas" class="headerlink" title="canvas"></a>canvas</h2><p>在canvas中使用quadraticCurveTo绘制二次贝塞尔曲线，参数分别为控制点和终点的x,y值。</p>
+<pre><code>ctx.beginPath();
+ctx.moveTo(20, 20);
+ctx.quadraticCurveTo(20, 100, 200, 20)&apos;
+ctx.stroke();</code></pre><p>bezierCurveTo绘制三次贝塞尔曲线。参数为起点控制点、终点控制点和终点的x、y值。</p>
+<pre><code>ctx.beginPath();
+ctx.moveTo(20, 20);
+ctx.bezierCurveTo(20, 100, 200, 100, 200, 20)&apos;
+ctx.stroke();</code></pre><h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>本文是根据自己的一些小积累和资料查找总结出来的，如果有错误欢迎指正^_^，谢谢。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://www.mochiko.cn/2018/10/27/hajime-bezier/" data-id="ck2sre6gv002a04whpdz1gmyz" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CSS/">CSS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/canvas/">canvas</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/svg/">svg</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/11/10/hajime-webassembly/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          WebAssembly初印象
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/10/02/threejs-learn-2nd/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Three.js自学碎碎叨（Day 2）</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/demo/">demo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/呆萌の实践/">呆萌の实践</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/呆萌の研究/">呆萌の研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/学习小记/">学习小记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/巨人花园/">巨人花园</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂/">杂</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/禅道花园/">禅道花园</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计与前端/">设计与前端</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AngularJS/">AngularJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS/">CSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS3/">CSS3</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Canvas/">Canvas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/D3-js/">D3.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ES6/">ES6</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/">Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTML/">HTML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Houdini/">Houdini</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JAVA/">JAVA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Node-js/">Node.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PWA/">PWA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sass/">Sass</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Three-js/">Three.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TweenMax/">TweenMax</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript/">TypeScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue-js/">Vue.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WebAssembly/">WebAssembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Webpack/">Webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/canvas/">canvas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jQuery/">jQuery</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/koa2/">koa2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-native/">react-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-js/">react.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redux/">redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/svg/">svg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue-js/">vue.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webAR/">webAR</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webAssembly/">webAssembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安装体验/">安装体验</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/小结/">小结</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/浏览器/">浏览器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/计算机网络/">计算机网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/认真做事/">认真做事</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书笔记/">读书笔记</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AngularJS/" style="font-size: 10px;">AngularJS</a> <a href="/tags/CSS/" style="font-size: 16.67px;">CSS</a> <a href="/tags/CSS3/" style="font-size: 18.33px;">CSS3</a> <a href="/tags/Canvas/" style="font-size: 10px;">Canvas</a> <a href="/tags/D3-js/" style="font-size: 10px;">D3.js</a> <a href="/tags/ES6/" style="font-size: 10px;">ES6</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/HTML/" style="font-size: 13.33px;">HTML</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Houdini/" style="font-size: 10px;">Houdini</a> <a href="/tags/JAVA/" style="font-size: 10px;">JAVA</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/PWA/" style="font-size: 10px;">PWA</a> <a href="/tags/Sass/" style="font-size: 11.67px;">Sass</a> <a href="/tags/Three-js/" style="font-size: 11.67px;">Three.js</a> <a href="/tags/TweenMax/" style="font-size: 10px;">TweenMax</a> <a href="/tags/TypeScript/" style="font-size: 10px;">TypeScript</a> <a href="/tags/Vue-js/" style="font-size: 15px;">Vue.js</a> <a href="/tags/WebAssembly/" style="font-size: 10px;">WebAssembly</a> <a href="/tags/Webpack/" style="font-size: 10px;">Webpack</a> <a href="/tags/canvas/" style="font-size: 13.33px;">canvas</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/jQuery/" style="font-size: 15px;">jQuery</a> <a href="/tags/koa2/" style="font-size: 11.67px;">koa2</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/react-native/" style="font-size: 10px;">react-native</a> <a href="/tags/react-js/" style="font-size: 10px;">react.js</a> <a href="/tags/redux/" style="font-size: 10px;">redux</a> <a href="/tags/svg/" style="font-size: 10px;">svg</a> <a href="/tags/vue-js/" style="font-size: 15px;">vue.js</a> <a href="/tags/webAR/" style="font-size: 10px;">webAR</a> <a href="/tags/webAssembly/" style="font-size: 10px;">webAssembly</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a> <a href="/tags/安装体验/" style="font-size: 11.67px;">安装体验</a> <a href="/tags/小结/" style="font-size: 11.67px;">小结</a> <a href="/tags/浏览器/" style="font-size: 10px;">浏览器</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/计算机网络/" style="font-size: 15px;">计算机网络</a> <a href="/tags/认真做事/" style="font-size: 10px;">认真做事</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/读书笔记/" style="font-size: 10px;">读书笔记</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/11/10/191110-vue-3-data/">Vue 3中的数据监听</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/27/css-181227/">【CodePen分析】Day 2：燃烧的火焰</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/26/css-181226/">【CodePen分析】Day 1：流星+圣诞树</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/17/fronted-end-frontier-tech/">前端前沿技术</a>
+          </li>
+        
+          <li>
+            <a href="/2018/11/15/event-loop/">JS小结之事件循环</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 MOCHIKo<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

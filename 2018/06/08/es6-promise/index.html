@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>Promiseの相关小结 | 年糕酱</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言网上关于Promise的文章确实是非常多了，但是自己实践的并不多，这里是针对自己的一个知识点小结和梳理，而且由Promise延伸出的关于事件循环的机制也是可以挖出很多东西的，不过这个总结可能就是涉及到一些皮毛，当然啦如果有错误欢迎提出^_^。">
+<meta name="keywords" content="JavaScript,ES6">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Promiseの相关小结">
+<meta property="og:url" content="https://www.mochiko.cn/2018/06/08/es6-promise/index.html">
+<meta property="og:site_name" content="年糕酱">
+<meta property="og:description" content="前言网上关于Promise的文章确实是非常多了，但是自己实践的并不多，这里是针对自己的一个知识点小结和梳理，而且由Promise延伸出的关于事件循环的机制也是可以挖出很多东西的，不过这个总结可能就是涉及到一些皮毛，当然啦如果有错误欢迎提出^_^。">
+<meta property="og:locale" content="zh">
+<meta property="og:updated_time" content="2018-06-08T09:08:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Promiseの相关小结">
+<meta name="twitter:description" content="前言网上关于Promise的文章确实是非常多了，但是自己实践的并不多，这里是针对自己的一个知识点小结和梳理，而且由Promise延伸出的关于事件循环的机制也是可以挖出很多东西的，不过这个总结可能就是涉及到一些皮毛，当然啦如果有错误欢迎提出^_^。">
+  
+    <link rel="alternate" href="/atom.xml" title="年糕酱" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">年糕酱</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://www.mochiko.cn"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-es6-promise" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/06/08/es6-promise/" class="article-date">
+  <time datetime="2018-06-08T08:58:39.000Z" itemprop="datePublished">2018-06-08</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/学习小记/">学习小记</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Promiseの相关小结
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>网上关于Promise的文章确实是非常多了，但是自己实践的并不多，这里是针对自己的一个知识点小结和梳理，而且由Promise延伸出的关于事件循环的机制也是可以挖出很多东西的，不过这个总结可能就是涉及到一些皮毛，当然啦如果有错误欢迎提出^_^。</p>
+<a id="more"></a>
+
+<h1 id="初定义"><a href="#初定义" class="headerlink" title="初定义"></a>初定义</h1><p><strong>定义</strong>：Promise对象用于一个异步操作的最终完成/失败及其结果值的表示。<br><strong>使用原因：</strong>避免回调嵌套层次过多。<br><strong>拥有状态：</strong></p>
+<ul>
+<li>pending：初始/未定状态，初始化Promise时，调用executor函数后的状态。</li>
+<li>fulfilled：成功状态。</li>
+<li>rejected：失败状态。</li>
+</ul>
+<p><strong>状态转化：</strong></p>
+<ul>
+<li>pending -&gt; fulfilled：操作成功</li>
+<li>pending -&gt; rejected：操作失败<br>状态转化是单向的，不可逆转。</li>
+</ul>
+<p><strong>最基本用法：</strong><br>可以看到创建一个Promise实例，传入的参数是一个函数，这个函数称为executor/执行器。</p>
+<pre><code>new Promise((resolve, reject) =&gt; {
+    if (success) {
+        resolve(a) // pending to resolved
+    } else {
+        reject(err) // pending to rejectd
+    }
+})</code></pre><h1 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h1><p>Promise对象本身，有一些方法： </p>
+<ul>
+<li>race()</li>
+<li>reject()</li>
+<li>resolve()</li>
+<li>all()</li>
+</ul>
+<p>查看Promise的原型，发现它内置有几个方法：</p>
+<ul>
+<li>catch()</li>
+<li>finally()</li>
+<li>then()</li>
+</ul>
+<h1 id="Promise-prototype-then"><a href="#Promise-prototype-then" class="headerlink" title="Promise.prototype.then()"></a>Promise.prototype.then()</h1><ul>
+<li>参数：处理成功的函数，处理错误的函数</li>
+<li>返回值：返回一个Promise对象，所以可以链式调用。</li>
+</ul>
+<pre><code>promise.then(
+    () =&gt; { console.log(&apos;我是成功后被执行的&apos;) },
+    () =&gt; { console.log(&apos;我是失败后被执行的&apos;) })</code></pre><h1 id="Promise-prototype-catch"><a href="#Promise-prototype-catch" class="headerlink" title="Promise.prototype.catch()"></a>Promise.prototype.catch()</h1><ul>
+<li>参数：捕捉的错误/reject()传来的参数</li>
+<li>返回值：返回一个Promise对象，所以可以链式调用。</li>
+<li>Promise和then()中抛出错误能够不断传递，就能够在下一个catch()中统一处理，所以一般省略then中的第二个失败执行的函数。</li>
+</ul>
+<pre><code>promise.then(
+    () =&gt; { console.log(&apos;我是成功后被执行的&apos;) }
+).catch(
+    (err) =&gt; { console.log(err) })</code></pre><blockquote>
+<p>使用rejects()方法改变状态和抛出错误 throw new Error() 的作用是相同的</p>
+</blockquote>
+<h1 id="Promise-all"><a href="#Promise-all" class="headerlink" title="Promise.all()"></a>Promise.all()</h1><ul>
+<li>参数：可迭代参数，如：数组。</li>
+<li>用途：处理一些并发的异步操作，需要保证每个都执行完毕。</li>
+<li>结果：状态全为fulfilled-&gt;fulfilled，否则-&gt;rejected。</li>
+</ul>
+<h1 id="Promise-race"><a href="#Promise-race" class="headerlink" title="Promise.race()"></a>Promise.race()</h1><ul>
+<li>参数：可迭代参数，如：数组。</li>
+<li>用途：处理一些并发的异步操作，只需要其中一个执行完毕。</li>
+<li>结果：所有异步操作中有一个状态先改变，就采纳那个最先改变的状态为结果。</li>
+</ul>
+<h1 id="Promise-resolve"><a href="#Promise-resolve" class="headerlink" title="Promise.resolve()"></a>Promise.resolve()</h1><ul>
+<li>参数：普通值、Promise对象、带有then的对象。</li>
+<li>结果：一般情况返回一个状态为fulfilled的Promise对象。解析发生错误则返回rejected的Promise对象。</li>
+</ul>
+<pre><code>Promise.resolve(&apos;success&apos;)
+// 其中[[PromiseStatus]]:&quot;resolved&quot;
+
+Promise.reject(&apos;fail&apos;) 
+// 其中[[PromiseStatus]]:&quot;rejected&quot;
+
+Promise.resolve(Promise.reject(&apos;fail&apos;))
+// 其中[[PromiseStatus]]:&quot;rejected&quot;</code></pre><p>由这个例子可以看出浏览器认为<code>resolved</code>和<code>fulfilled</code>是等价的，但<code>Promise.resolve()</code> 不一定让promise最终是<code>fulfilled</code>。所以对于<code>resolved</code>本身和<code>fulfilled</code>的区别，可以理解为<code>resolved</code>等价于<code>compiled</code>，即可能是成功也可能是失败。</p>
+<h1 id="Promise-reject"><a href="#Promise-reject" class="headerlink" title="Promise.reject()"></a>Promise.reject()</h1><ul>
+<li>参数： 发生异常的原因。</li>
+<li>结果：返回一个rejected状态的Promise对象。</li>
+</ul>
+<h1 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h1><h2 id="状态变化"><a href="#状态变化" class="headerlink" title="状态变化"></a>状态变化</h2><ul>
+<li>Promise状态只会改变一次。</li>
+<li>构造函数中的resolve()/reject()只有第一次执行有效，多次调用没有作用。</li>
+<li>Promise状态改变，并且传递了一个值，后续调用.then()/.catch()都可直接拿到该值。</li>
+</ul>
+<h2 id="参数-返回值"><a href="#参数-返回值" class="headerlink" title="参数/返回值"></a>参数/返回值</h2><ul>
+<li>.then()/.catch()的参数应该是函数，传入非函数则会发生值穿透。</li>
+</ul>
+<pre><code>Promise.resolve(1)
+  .then(2)
+  .then(Promise.resolve(3))
+  .then(console.log)  //1</code></pre><ul>
+<li>.then()/.catch()不能返回Promise本身，会造成死循环。</li>
+<li>.then()/.catch()中return一个error对象并不会抛出错误，所以无法捕捉。</li>
+</ul>
+<blockquote>
+<p>因为返回任意一个非Promise 的值都会被包裹成Promise对象，即 return new Error(‘error!!!’)等价于return Promise.resolve(new Error(‘error!!!’))</p>
+</blockquote>
+<h2 id="执行顺序"><a href="#执行顺序" class="headerlink" title="执行顺序"></a>执行顺序</h2><ul>
+<li>Promise构造函数是同步执行的，resolve()/reject()后的代码也会执行。Promise.then()中的函数是异步执行的。**<br>以下输出：1243</li>
+</ul>
+<pre><code>const promise = new Promise((resolve, reject) =&gt; {
+  console.log(1)
+  resolve()
+  console.log(2)
+})
+promise.then(() =&gt; {
+  console.log(3)
+})
+console.log(4)</code></pre><ul>
+<li><code>process.nextTick</code>和<code>promise.then</code>属于<code>microtask</code>，<code>setImmediate</code>属于 <code>macrotask</code>。在每一次事件循环中，macrotask只会提取一个执行，而microtask会一直提取，直到microsoft队列为空为止。</li>
+</ul>
+<p>以下输出：end  nextTick  then  setTimeout1 setTimeout2</p>
+<pre><code>process.nextTick(() =&gt; {
+  console.log(&apos;nextTick&apos;)
+})
+
+setTimeout(() =&gt; {
+  console.log(&apos;setTimeout1&apos;)
+})
+
+Promise.resolve()
+  .then(() =&gt; {
+    console.log(&apos;then&apos;)
+  })
+
+setTimeout(() =&gt; {
+  console.log(&apos;setTimeout2&apos;)
+})
+
+console.log(&apos;end&apos;)</code></pre><p>补充：<br><strong>macrotasks:</strong></p>
+<ul>
+<li>setTimeout</li>
+<li>setInterval</li>
+<li>setImmediate</li>
+<li>requestAnimationFrame</li>
+<li>I/O</li>
+<li>UI rendering</li>
+</ul>
+<p><strong>microtasks:</strong></p>
+<ul>
+<li>process.nextTick</li>
+<li>Promises</li>
+<li>Object.observe</li>
+<li>MutationObserver</li>
+</ul>
+<h1 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h1><p><a href="https://segmentfault.com/a/1190000011652907" target="_blank" rel="noopener">ES6关于Promise的用法</a><br><a href="https://zhuanlan.zhihu.com/p/30797777" target="_blank" rel="noopener">Promise 必知必会（十道题）</a><br><a href="https://www.cnblogs.com/tugenhua0707/p/7675185.html" target="_blank" rel="noopener">javascript中的异步 macrotask 和 microtask 简介</a><br><a href="https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/" target="_blank" rel="noopener">Tasks, microtasks, queues and schedules</a><br><a href="https://stackoverflow.com/questions/25915634/difference-between-microtask-and-macrotask-within-an-event-loop-context" target="_blank" rel="noopener">Difference between microtask and macrotask within an event loop context</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://www.mochiko.cn/2018/06/08/es6-promise/" data-id="ck2sre6g5001f04whl3ywrun7" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ES6/">ES6</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/06/23/hajime-vue-ssh/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Vue+SSH商城小项目の小结
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/06/05/vue-cli-mult/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">vue-cli项目打包为多页面</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/demo/">demo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/呆萌の实践/">呆萌の实践</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/呆萌の研究/">呆萌の研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/学习小记/">学习小记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/巨人花园/">巨人花园</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂/">杂</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/禅道花园/">禅道花园</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计与前端/">设计与前端</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AngularJS/">AngularJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS/">CSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS3/">CSS3</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Canvas/">Canvas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/D3-js/">D3.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ES6/">ES6</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/">Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTML/">HTML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Houdini/">Houdini</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JAVA/">JAVA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Node-js/">Node.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PWA/">PWA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sass/">Sass</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Three-js/">Three.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TweenMax/">TweenMax</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript/">TypeScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue-js/">Vue.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WebAssembly/">WebAssembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Webpack/">Webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/canvas/">canvas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jQuery/">jQuery</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/koa2/">koa2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-native/">react-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-js/">react.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redux/">redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/svg/">svg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue-js/">vue.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webAR/">webAR</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webAssembly/">webAssembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安装体验/">安装体验</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/小结/">小结</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/浏览器/">浏览器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/计算机网络/">计算机网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/认真做事/">认真做事</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书笔记/">读书笔记</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AngularJS/" style="font-size: 10px;">AngularJS</a> <a href="/tags/CSS/" style="font-size: 16.67px;">CSS</a> <a href="/tags/CSS3/" style="font-size: 18.33px;">CSS3</a> <a href="/tags/Canvas/" style="font-size: 10px;">Canvas</a> <a href="/tags/D3-js/" style="font-size: 10px;">D3.js</a> <a href="/tags/ES6/" style="font-size: 10px;">ES6</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/HTML/" style="font-size: 13.33px;">HTML</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Houdini/" style="font-size: 10px;">Houdini</a> <a href="/tags/JAVA/" style="font-size: 10px;">JAVA</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/PWA/" style="font-size: 10px;">PWA</a> <a href="/tags/Sass/" style="font-size: 11.67px;">Sass</a> <a href="/tags/Three-js/" style="font-size: 11.67px;">Three.js</a> <a href="/tags/TweenMax/" style="font-size: 10px;">TweenMax</a> <a href="/tags/TypeScript/" style="font-size: 10px;">TypeScript</a> <a href="/tags/Vue-js/" style="font-size: 15px;">Vue.js</a> <a href="/tags/WebAssembly/" style="font-size: 10px;">WebAssembly</a> <a href="/tags/Webpack/" style="font-size: 10px;">Webpack</a> <a href="/tags/canvas/" style="font-size: 13.33px;">canvas</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/jQuery/" style="font-size: 15px;">jQuery</a> <a href="/tags/koa2/" style="font-size: 11.67px;">koa2</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/react-native/" style="font-size: 10px;">react-native</a> <a href="/tags/react-js/" style="font-size: 10px;">react.js</a> <a href="/tags/redux/" style="font-size: 10px;">redux</a> <a href="/tags/svg/" style="font-size: 10px;">svg</a> <a href="/tags/vue-js/" style="font-size: 15px;">vue.js</a> <a href="/tags/webAR/" style="font-size: 10px;">webAR</a> <a href="/tags/webAssembly/" style="font-size: 10px;">webAssembly</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a> <a href="/tags/安装体验/" style="font-size: 11.67px;">安装体验</a> <a href="/tags/小结/" style="font-size: 11.67px;">小结</a> <a href="/tags/浏览器/" style="font-size: 10px;">浏览器</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/计算机网络/" style="font-size: 15px;">计算机网络</a> <a href="/tags/认真做事/" style="font-size: 10px;">认真做事</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/读书笔记/" style="font-size: 10px;">读书笔记</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/11/10/191110-vue-3-data/">Vue 3中的数据监听</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/27/css-181227/">【CodePen分析】Day 2：燃烧的火焰</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/26/css-181226/">【CodePen分析】Day 1：流星+圣诞树</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/17/fronted-end-frontier-tech/">前端前沿技术</a>
+          </li>
+        
+          <li>
+            <a href="/2018/11/15/event-loop/">JS小结之事件循环</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 MOCHIKo<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

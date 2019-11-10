@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>初次~Vue做项目の小结 | 年糕酱</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="最近这两个礼拜，我把Vue的文档浏览了一下，然后做了一些简单的例子后就直接开始动手做小项目了，为后面暑假的实训项目做个好的铺垫吧（￣▽￣）。想着确实也应该小结一下，要不然后面肯定很容易忘记，当然啦我是第一次做，所以如果有错误欢迎提出。">
+<meta name="keywords" content="vue.js,css">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初次~Vue做项目の小结">
+<meta property="og:url" content="https://www.mochiko.cn/2018/04/22/hajime-exercise-vue/index.html">
+<meta property="og:site_name" content="年糕酱">
+<meta property="og:description" content="最近这两个礼拜，我把Vue的文档浏览了一下，然后做了一些简单的例子后就直接开始动手做小项目了，为后面暑假的实训项目做个好的铺垫吧（￣▽￣）。想着确实也应该小结一下，要不然后面肯定很容易忘记，当然啦我是第一次做，所以如果有错误欢迎提出。">
+<meta property="og:locale" content="zh">
+<meta property="og:image" content="https://wx3.sinaimg.cn/mw690/0069luTRgy1fqlppj2bstj30ep03rdfv.jpg">
+<meta property="og:updated_time" content="2018-04-27T14:48:48.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="初次~Vue做项目の小结">
+<meta name="twitter:description" content="最近这两个礼拜，我把Vue的文档浏览了一下，然后做了一些简单的例子后就直接开始动手做小项目了，为后面暑假的实训项目做个好的铺垫吧（￣▽￣）。想着确实也应该小结一下，要不然后面肯定很容易忘记，当然啦我是第一次做，所以如果有错误欢迎提出。">
+<meta name="twitter:image" content="https://wx3.sinaimg.cn/mw690/0069luTRgy1fqlppj2bstj30ep03rdfv.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="年糕酱" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">年糕酱</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://www.mochiko.cn"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-hajime-exercise-vue" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/04/22/hajime-exercise-vue/" class="article-date">
+  <time datetime="2018-04-22T11:20:53.000Z" itemprop="datePublished">2018-04-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/杂/">杂</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      初次~Vue做项目の小结
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近这两个礼拜，我把Vue的文档浏览了一下，然后做了一些简单的例子后就直接开始动手做小项目了，为后面暑假的实训项目做个好的铺垫吧（￣▽￣）。想着确实也应该小结一下，要不然后面肯定很容易忘记，当然啦我是第一次做，所以如果有错误欢迎提出。</p>
+<a id="more"></a>
+<h1 id="推荐工具"><a href="#推荐工具" class="headerlink" title="推荐工具"></a>推荐工具</h1><p><a href="https://cn.vuejs.org/" target="_blank" rel="noopener">Vue中文文档</a><br><a href="https://www.w3cplus.com/blog/vue" target="_blank" rel="noopener">W3Cplus：Vue分类文章</a></p>
+<h1 id="入手篇"><a href="#入手篇" class="headerlink" title="入手篇"></a>入手篇</h1><p>打开我们的中文文档，跟着教程一步步来安装需要的东西，就可以了。<br>使用vue-cli这个工具，就可以自动给我们打造一个项目结构出来，包括了webpack的配置文件呀模块的依赖呀之类的东西~</p>
+<pre><code>vue init webpack 项目名</code></pre><h2 id="初始化项目"><a href="#初始化项目" class="headerlink" title="初始化项目"></a>初始化项目</h2><p>进行初始化的时候它会给我们提问，这里先列出几个不太熟悉的选择：</p>
+<pre><code>? Install vue-router? (Y/n)</code></pre><p>是否使用vue-router，因为要做的是会有“多个页面”的应用，所以肯定是yes啦~打上双引号是因为它实质上并没有跳转页面，只是网页的DOM结构随着路由地址的改变而显示不同的内容，所以这就是单页面应用，它的切换速度非常之快。</p>
+<pre><code>? Use ESLint to lint your code? (Y/n)</code></pre><p>ESLint是一个帮助你检测代码规范的小工具，如果你的代码不符合规范，它就会列出一排排的警告Σ(っ °Д °;)っ（作为处女座宝宝，一个警告都容忍不下2333），使用还是好的，可以规范文件的格式，还会让你选择一种eslint preset，默认是Standard，比如我目前碰到的规范有：</p>
+<ul>
+<li>代码最后一行结束必须要换行</li>
+<li>使用空格来缩进，不要用tab键</li>
+<li>对象{}里面最后一个值后不能有逗号</li>
+<li>函数注意留空格：函数名 () {}</li>
+</ul>
+<pre><code>? Set up unit tests (Y/n)</code></pre><p>根据字面意思就知道是“单元测试”，这个功能对我没什么需求，所以就是No啦。不过如果写了yes结构上就会多一个unit文件夹。</p>
+<pre><code>Setup e2e tests with Nightwatch?</code></pre><p>是否使用使用Nightwatch进行E2E测试，我也是No。更多详细可看下面这篇文章：<a href="https://blog.csdn.net/panda_m/article/details/66973598" target="_blank" rel="noopener">使用Nightwatch进行E2E测试</a></p>
+<p>项目创建好后，肯定就要准备动手写页面了，然后提问：<br><strong>Q：我该怎么安排项目代码的文件结构？</strong><br>项目代码都是放在src这个文件夹下面的。打开build下的webpack.base.conf.js文件：<br><img src="https://wx3.sinaimg.cn/mw690/0069luTRgy1fqlppj2bstj30ep03rdfv.jpg" alt="图片描述"><br>这里的alias是“别名”的意思，其中个我们用<code>@</code>这个符号来代表了src这个目录，所以我们在引入内容的时候，可以直接用<code>@</code>来引入src目录下的文件，这样特别方便。</p>
+<p>一般情况下src文件夹下面有assets文件夹，用来存放图片、样式等资源。<br>页面的文件夹结构安排，可以分页面来分文件夹，然后各个页面下有一个存放页面内组件文件的文件夹。当然也有的是把组件抽出来作为src的一个一级目录（默认生成的模板也是这样的），这个可以按自己的需求来确定。</p>
+<h1 id="开始写吧"><a href="#开始写吧" class="headerlink" title="开始写吧"></a>开始写吧</h1><h2 id="Vue文件"><a href="#Vue文件" class="headerlink" title="Vue文件"></a>Vue文件</h2><p>.js文件里面我们都是创建一个vue的实例，然后绑定dom。做大一点的应用这种方式其实挺不好操作的，所以一般都是直接创建一个<code>.vue</code>文件来分别写每个部分。里面的结构就是：</p>
+<pre><code>&lt;template&gt;
+&lt;/template&gt;
+&lt;script&gt;
+export default {
+}
+&lt;/script&gt;
+&lt;style&gt;
+&lt;/style&gt;</code></pre><p>template是填写结构，script填写脚本，style填写样式。<br>export default的对象其实就是一个vue实例，相当于对外扩出了一个组件，因为组件可能被很多个地方使用，所以这里的data在定义的时候要返回一个对象，这样才能让每个使用它的地方数据独立：</p>
+<pre><code>export default {
+  name: &apos;组件名&apos;,
+  data () {
+    return {
+      //your data
+    }
+  }
+}</code></pre><p><strong>Q: 如何使用这些组件？</strong><br>A：在其他地方import，然后在components中注册一下，就可以在template里面使用。</p>
+<pre><code>&lt;template&gt;
+  &lt;div&gt;
+    &lt;home-header&gt;&lt;/home-header&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+import HomeHeader from &apos;./components/Header&apos;
+export default {
+  name: &apos;Home&apos;,
+  components: {
+    HomeHeader,
+  }
+}
+&lt;/script&gt;</code></pre><h2 id="布局问题"><a href="#布局问题" class="headerlink" title="布局问题"></a>布局问题</h2><p>这里主要是用了stylus来编写样式，虽然我个人觉得这个排版真的看着太难受了。<br>因为主要是移动端的浏览，所以选择了rem来进行尺寸的衡量。并且还有一些技巧感觉也是经常用在移动端的布局上，比如用padding-bottom来做自适应高度，还有结合用flex布局（因为之前写RN，所以很疑惑为什么不直接都全用flex，不过这样要写的语句也很繁琐，因为它不支持继承嘛Σ(っ °Д °;)っ），另外就是absolute和overflow用的很多。</p>
+<h2 id="引用的代码"><a href="#引用的代码" class="headerlink" title="引用的代码"></a>引用的代码</h2><p>类似于用了一些别人封装的很好的组件，或者别人的写的代码哈哈哈，比如有轮播图呀之类的。<br>我来总结一下自己用到的组件/外部引入的东西：<br><strong>vue-awesome-swiper</strong><br>是一个移动端交互的可拖动/滑动视图组件（布吉岛怎么形容更好惹…）<br>，因为用的地方有很多，所以都是直接在根部文件就引入了。</p>
+<p><strong>fontello</strong><br>这里我用了一个以前没用过的<strong>fontello</strong>来做图标字体，这家的好处在于它综合了好几家免费图标字体，坏处在于引入的时候和font-awesome比起来稍微麻烦了一些。本来之前是准备用阿里的Icon-font，感觉网站做的不太好，经常没内容，要多刷新读缓存，于是果断换了体验感更好的产品哈哈哈。</p>
+<h2 id="模拟数据"><a href="#模拟数据" class="headerlink" title="模拟数据"></a>模拟数据</h2><p>我这次是使用了国内的<a href="https://www.eolinker.com" target="_blank" rel="noopener">eolinker</a>来模拟测试数据，这个网站还挺好用的，完全满足个人开发的需求啦。<br>创建好调试的API之后，直接使用axios来获取数据（axios确实是很简便啊，跨域也没问题&gt;_&lt;，其实我还是很想自己手动来试试解决一下跨越的，下次试试）。</p>
+<p>遇到的坑：</p>
+<ol>
+<li>JSON的严格要求：比如要用双引号把每个属性和值给包裹起来。</li>
+<li>axios的回调函数里不能直接用this来获取vue实例的东西~毕竟封装了，得重新保存一下。</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://www.mochiko.cn/2018/04/22/hajime-exercise-vue/" data-id="ck2sre6gy002f04wh84h980ov" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/css/">css</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vue-js/">vue.js</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/04/26/css-180426/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          CSS上下切换文字效果
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/04/20/lesson-transport/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">看课本学习：传输层</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/demo/">demo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/呆萌の实践/">呆萌の实践</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/呆萌の研究/">呆萌の研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/学习小记/">学习小记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/巨人花园/">巨人花园</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂/">杂</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/禅道花园/">禅道花园</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计与前端/">设计与前端</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AngularJS/">AngularJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS/">CSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS3/">CSS3</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Canvas/">Canvas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/D3-js/">D3.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ES6/">ES6</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/">Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTML/">HTML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Houdini/">Houdini</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JAVA/">JAVA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Node-js/">Node.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PWA/">PWA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sass/">Sass</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Three-js/">Three.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TweenMax/">TweenMax</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript/">TypeScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue-js/">Vue.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WebAssembly/">WebAssembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Webpack/">Webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/canvas/">canvas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jQuery/">jQuery</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/koa2/">koa2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-native/">react-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-js/">react.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redux/">redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/svg/">svg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue-js/">vue.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webAR/">webAR</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webAssembly/">webAssembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安装体验/">安装体验</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/小结/">小结</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/浏览器/">浏览器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/计算机网络/">计算机网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/认真做事/">认真做事</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书笔记/">读书笔记</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AngularJS/" style="font-size: 10px;">AngularJS</a> <a href="/tags/CSS/" style="font-size: 16.67px;">CSS</a> <a href="/tags/CSS3/" style="font-size: 18.33px;">CSS3</a> <a href="/tags/Canvas/" style="font-size: 10px;">Canvas</a> <a href="/tags/D3-js/" style="font-size: 10px;">D3.js</a> <a href="/tags/ES6/" style="font-size: 10px;">ES6</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/HTML/" style="font-size: 13.33px;">HTML</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Houdini/" style="font-size: 10px;">Houdini</a> <a href="/tags/JAVA/" style="font-size: 10px;">JAVA</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/PWA/" style="font-size: 10px;">PWA</a> <a href="/tags/Sass/" style="font-size: 11.67px;">Sass</a> <a href="/tags/Three-js/" style="font-size: 11.67px;">Three.js</a> <a href="/tags/TweenMax/" style="font-size: 10px;">TweenMax</a> <a href="/tags/TypeScript/" style="font-size: 10px;">TypeScript</a> <a href="/tags/Vue-js/" style="font-size: 15px;">Vue.js</a> <a href="/tags/WebAssembly/" style="font-size: 10px;">WebAssembly</a> <a href="/tags/Webpack/" style="font-size: 10px;">Webpack</a> <a href="/tags/canvas/" style="font-size: 13.33px;">canvas</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/jQuery/" style="font-size: 15px;">jQuery</a> <a href="/tags/koa2/" style="font-size: 11.67px;">koa2</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/react-native/" style="font-size: 10px;">react-native</a> <a href="/tags/react-js/" style="font-size: 10px;">react.js</a> <a href="/tags/redux/" style="font-size: 10px;">redux</a> <a href="/tags/svg/" style="font-size: 10px;">svg</a> <a href="/tags/vue-js/" style="font-size: 15px;">vue.js</a> <a href="/tags/webAR/" style="font-size: 10px;">webAR</a> <a href="/tags/webAssembly/" style="font-size: 10px;">webAssembly</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a> <a href="/tags/安装体验/" style="font-size: 11.67px;">安装体验</a> <a href="/tags/小结/" style="font-size: 11.67px;">小结</a> <a href="/tags/浏览器/" style="font-size: 10px;">浏览器</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/计算机网络/" style="font-size: 15px;">计算机网络</a> <a href="/tags/认真做事/" style="font-size: 10px;">认真做事</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/读书笔记/" style="font-size: 10px;">读书笔记</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/11/10/191110-vue-3-data/">Vue 3中的数据监听</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/27/css-181227/">【CodePen分析】Day 2：燃烧的火焰</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/26/css-181226/">【CodePen分析】Day 1：流星+圣诞树</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/17/fronted-end-frontier-tech/">前端前沿技术</a>
+          </li>
+        
+          <li>
+            <a href="/2018/11/15/event-loop/">JS小结之事件循环</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 MOCHIKo<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

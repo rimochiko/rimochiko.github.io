@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>【react-native】近期做项目の小结 | 年糕酱</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="大概20天的时间，我从一个react-native小白开始做一个单词记忆APP，现在已经完成了过半的内容了，在这其中碰到了很多问题，也慢慢了解熟悉了很多东西，所以我写下这篇小结来回顾整理一下。 我的机器配置是：windows 10 64位红米note2 安卓5.0">
+<meta name="keywords" content="小结,react-native">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【react-native】近期做项目の小结">
+<meta property="og:url" content="https://www.mochiko.cn/2018/02/07/react-native-notes/index.html">
+<meta property="og:site_name" content="年糕酱">
+<meta property="og:description" content="大概20天的时间，我从一个react-native小白开始做一个单词记忆APP，现在已经完成了过半的内容了，在这其中碰到了很多问题，也慢慢了解熟悉了很多东西，所以我写下这篇小结来回顾整理一下。 我的机器配置是：windows 10 64位红米note2 安卓5.0">
+<meta property="og:locale" content="zh">
+<meta property="og:updated_time" content="2018-03-12T13:52:06.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【react-native】近期做项目の小结">
+<meta name="twitter:description" content="大概20天的时间，我从一个react-native小白开始做一个单词记忆APP，现在已经完成了过半的内容了，在这其中碰到了很多问题，也慢慢了解熟悉了很多东西，所以我写下这篇小结来回顾整理一下。 我的机器配置是：windows 10 64位红米note2 安卓5.0">
+  
+    <link rel="alternate" href="/atom.xml" title="年糕酱" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">年糕酱</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://www.mochiko.cn"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-react-native-notes" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/02/07/react-native-notes/" class="article-date">
+  <time datetime="2018-02-07T14:28:21.000Z" itemprop="datePublished">2018-02-07</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/呆萌の实践/">呆萌の实践</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      【react-native】近期做项目の小结
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>大概20天的时间，我从一个react-native小白开始做一个单词记忆APP，现在已经完成了过半的内容了，在这其中碰到了很多问题，也慢慢了解熟悉了很多东西，所以我写下这篇小结来回顾整理一下。</p>
+<p>我的机器配置是：<br>windows 10 64位<br>红米note2 安卓5.0</p>
+<a id="more"></a>
+
+<h1 id="react-native的安装与调试"><a href="#react-native的安装与调试" class="headerlink" title="react-native的安装与调试"></a>react-native的安装与调试</h1><h2 id="关于安装"><a href="#关于安装" class="headerlink" title="关于安装"></a>关于安装</h2><p>大部分的过程几乎和文档一致，这里有要注意的地方就是：</p>
+<ol>
+<li>必须安装python 2版本，版本高的不支持。 </li>
+<li>安装C++编译组件，下载VS2015/VS2013能解决问题。</li>
+<li>node.js和npm的路径必须要全英文。</li>
+<li>最好以管理员权限运行cmd来npm install安装项目依赖。</li>
+</ol>
+<p>另外，因为我用的小米手机，必须要修改项目默认的几个点才能成功运行项目:</p>
+<ol>
+<li><p>手机要关闭MIUI优化。</p>
+</li>
+<li><p>项目安卓目录下：build.gradle文件部分改为如下</p>
+<p> dependencies {</p>
+<pre><code>classpath &apos;com.android.tools.build:gradle:1.2.3&apos;</code></pre><p> }</p>
+</li>
+<li><p>项目安卓目录下：gradle/wrapper/gradle-wrapper文件的版本更改为gradle-2.4-all.zip。</p>
+</li>
+</ol>
+<p>第一次在真机中启动项目调试的时候，因为要下载gradle包所以可能会等待很久，它会根据上面的配置去下载对应的包在项目中。<br>另外手机中，如果出现项目无法载入的情况，需要手动摇动手机，选择Dev Settings-&gt; Debug sever host &amp; port for device，输入本机的ip:端口号（react-native默认是8081），再退出程序重新载入就可以了。</p>
+<h2 id="关于刷新和调试"><a href="#关于刷新和调试" class="headerlink" title="关于刷新和调试"></a>关于刷新和调试</h2><p><strong>刷新编译</strong><br>每次react-native项目的启动时间都大概在1min左右，有点长，如果想要减少时间，可以直接在手机中摇动弹出菜单，选择reload，会重新编译更新。<br>如果不想手动载入，可以选择菜单中的Enable Hot Reloading开启热更新，即当代码发生改变系统会自动更新，但是这样也容易出现错误,如果是写循环的情况下还可能会卡死。</p>
+<p><strong>调试</strong><br>1.打开另一个窗口，进入项目地址，输入react-native log-android，可以对控制台进行监控。<br>2.摇晃手机出现菜单，可以选择在Chrome中进行调试，浏览器会自动弹出一个页面，然后可以在控制台进行监控。</p>
+<h1 id="react-navigation"><a href="#react-navigation" class="headerlink" title="react-navigation"></a>react-navigation</h1><p>官方的Navigator组件已被抛弃，目前市面上最常用的就是react-navigation和react-native-router-flux。我的项目中选用了react-navigation，不过react-navigation的官方文档可以说是非常简洁了，一不留神就出BUG了。</p>
+<p><strong>需求一：底部导航栏</strong><br>使用react-navigation中的TabNavigator。</p>
+<ul>
+<li>默认情况下是顶部的tabBar，要引入TabBarBottom。</li>
+<li>我在出口的文件中部署了整个项目的页面，我看很多人都是直接在这里也顺便把tabBarIcon也自定义渲染更新，但是运行项目的时候总是出错。后来试了很多次解决方法是把Icon放入单个页面的navigationOptions去渲染。 </li>
+<li>安卓默认情况下是不渲染图标，需要在tabBarOptions中设置showIcon为true。</li>
+</ul>
+<p><strong>如何自定义图标导航？</strong><br>可以自己封装一个组件，TabNavigator提供tintColor和focused属性，可以让你去判断选中状态来更改。</p>
+<pre><code>tabBarIcon: ({tintColor,focused}) =&gt; ( //你的代码 )</code></pre><p><strong>需求二：记录所有的页面，支持跳转</strong><br>使用react-navigation中的StackNavigator。<br>StackNavigator记录的页面都会有一个头部来表明这个页面的信息。<br>在总的出口文件中记录下所有的页面，取好名字，直接接触的页面都会被传入一个navigation，利用这个navigation就可以完成页面的跳转。</p>
+<p><strong>页面修改头部导航？</strong></p>
+<ul>
+<li>如果不想要这个导航，可以在那个页面的navigationOptions中写下header:null。</li>
+<li>设置headerLeft和headerRight可以修改头部左右的按钮，不要就写null。</li>
+<li>文字不居中，是因为要不左右都得没按钮，要不都得有，可以放一个空按钮占位置。</li>
+<li>消除导航阴影，在headerStyle中写：elevation: 0。</li>
+<li>想要使用navigation，就写成函数形式：static navigationOptions = ({ navigation}) =&gt; ({})</li>
+<li>想要向其中传入参数，需要在componentDidMount()中使用 this.props.navigation.setParams传入参数，然后调用[navigation.state.params.参数名]就可以用到，但是必须先判断navigation.state.params是否存在，否则会报错。可能一开始还没有传入参数但界面已经被渲染出来，若参数被更新了数据就会被重新渲染出来。（我这里还碰到了页面卡死的情况，目前原因还不明确）</li>
+</ul>
+<p><strong>需求三：欢迎页面过后，不能返回</strong><br>因为StackNavigator会记下上个经过的页面，如果不希望它保留状态，就不能使用navigate而是使用reset重置记忆，详情请看官方文档。</p>
+<p><strong>需求四：在子组件中能使用react-navigation的API</strong><br>只要把navigation传递给子组件就可以了，然后调用this.props.navigation。</p>
+<p><strong>需求五：在StackNavigator中镶嵌TabNavigator</strong><br>也就是在一个页面中，一般可能出现头部的选择来切换几个页面。<br>这种情况下我们需要多设置一个wrapper页面，把这个页面记录在出口的页面中。这个页面要渲染一个tabNavigator，包裹起来。<br>需要注意的就是在wrapper页面中，除了要传递navigation外，要把tab的router给wrapper页面，否则会报错：<br>Wrapper.router = Screen.router;</p>
+<h1 id="mobx"><a href="#mobx" class="headerlink" title="mobx"></a>mobx</h1><p>用于管理数据的一个小工具，很容易入手。<br>必须要安装解析ES7的工具来解析装饰模式，在项目的.babelrc中写入”plugins”: [“transform-decorators-legacy”]，并且安装</p>
+<pre><code>npm install babel-plugin-transform-decorators-legacy --save-dev</code></pre><p>还要安装</p>
+<pre><code>npm install babel-preset-stage-1</code></pre><p>因为编译器默认情况下并不会开启ES7支持模式。<br>在出口文件中想要调用Provider来注入所有的数据，请使用class来包裹，不要定义const来return。<br>另外在需要数据的类前加上@inject(‘rootStore’)和@observer，这样类里面就可以直接调用this.props.rootStore来获取数据了。</p>
+<h1 id="其他组件"><a href="#其他组件" class="headerlink" title="其他组件"></a>其他组件</h1><p><strong>react-native-sound</strong><br>播放的声音组件，mp3和wav格式都支持，网络链接的音频也支持。但是文件名必须要全小写。还有一个容易出错的地方就是声音载入的代码应该写在class前面，异步进行的动作，很容易出现声音未载入完就去播放声音，于是就出错了。</p>
+<p><strong>react-native-root-toast</strong><br><a href="https://github.com/magicismight/react-native-root-toast" target="_blank" rel="noopener">https://github.com/magicismight/react-native-root-toast</a><br>一款简单的黑色透明提示toast，不过如果是想点击调用，就只能使用定义变量的那种方法，另一种在ComponetDidMount()中调用的是界面一渲染成功就显示的情况。网上还有一个react-native-easy-toast，但是不知道为什么用那个在手机上运行时一直出现不了效果，所以弃用了。</p>
+<p><strong>react-native-flexi-radio-button</strong><br>radio组件，使用很简单，但是有个缺点就是在手机上看的时候有锯齿，不知道有没有解决的方法？要指定默认的值，使用selectedIndex属性。</p>
+<p><strong>react-native-popup-dialog</strong><br>是一个弹出框组件，挺好看的，但是它只能渲染到所在组件的大小，而且和ScrollView一起出现的时候，它渲染出来的大小只能遮住一个屏幕，我还在寻找看看有没有解决的方法。</p>
+<h1 id="其他思考"><a href="#其他思考" class="headerlink" title="其他思考"></a>其他思考</h1><p>这些日子，我的进度其实还是挺慢的，因为我遇到了很多自己不太知道原因的问题，出错的代码指示都不精确。身边也没有什么前辈，所以一方面除了上网搜索也没什么特别的解决方法，不过后来我加了一个群，大家在里面的讨论气氛都很好，虽然自己的大部分问题也没人能帮我T-T，不过也算是有个安慰吧。我觉得还是不能急，要想办法缩小问题出错的范围，就算用最笨的方法也能做到这点。如果实在是解决不了的小问题可以先放着，把重要的工作做完了再来查漏补缺。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://www.mochiko.cn/2018/02/07/react-native-notes/" data-id="ck2sre6lr008004whhb3kkj3x" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/react-native/">react-native</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/小结/">小结</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/02/09/note-http/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          《图解HTTP》小结+实践理解
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/11/30/about-margin/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">圣杯布局引发对margin负值的研究</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/demo/">demo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/呆萌の实践/">呆萌の实践</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/呆萌の研究/">呆萌の研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/学习小记/">学习小记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/巨人花园/">巨人花园</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂/">杂</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/禅道花园/">禅道花园</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计与前端/">设计与前端</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AngularJS/">AngularJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS/">CSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS3/">CSS3</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Canvas/">Canvas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/D3-js/">D3.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ES6/">ES6</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/">Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTML/">HTML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Houdini/">Houdini</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JAVA/">JAVA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Node-js/">Node.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PWA/">PWA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sass/">Sass</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Three-js/">Three.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TweenMax/">TweenMax</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript/">TypeScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue-js/">Vue.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WebAssembly/">WebAssembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Webpack/">Webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/canvas/">canvas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jQuery/">jQuery</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/koa2/">koa2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-native/">react-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-js/">react.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redux/">redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/svg/">svg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue-js/">vue.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webAR/">webAR</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webAssembly/">webAssembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安装体验/">安装体验</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/小结/">小结</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/浏览器/">浏览器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/计算机网络/">计算机网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/认真做事/">认真做事</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书笔记/">读书笔记</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AngularJS/" style="font-size: 10px;">AngularJS</a> <a href="/tags/CSS/" style="font-size: 16.67px;">CSS</a> <a href="/tags/CSS3/" style="font-size: 18.33px;">CSS3</a> <a href="/tags/Canvas/" style="font-size: 10px;">Canvas</a> <a href="/tags/D3-js/" style="font-size: 10px;">D3.js</a> <a href="/tags/ES6/" style="font-size: 10px;">ES6</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/HTML/" style="font-size: 13.33px;">HTML</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Houdini/" style="font-size: 10px;">Houdini</a> <a href="/tags/JAVA/" style="font-size: 10px;">JAVA</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/PWA/" style="font-size: 10px;">PWA</a> <a href="/tags/Sass/" style="font-size: 11.67px;">Sass</a> <a href="/tags/Three-js/" style="font-size: 11.67px;">Three.js</a> <a href="/tags/TweenMax/" style="font-size: 10px;">TweenMax</a> <a href="/tags/TypeScript/" style="font-size: 10px;">TypeScript</a> <a href="/tags/Vue-js/" style="font-size: 15px;">Vue.js</a> <a href="/tags/WebAssembly/" style="font-size: 10px;">WebAssembly</a> <a href="/tags/Webpack/" style="font-size: 10px;">Webpack</a> <a href="/tags/canvas/" style="font-size: 13.33px;">canvas</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/jQuery/" style="font-size: 15px;">jQuery</a> <a href="/tags/koa2/" style="font-size: 11.67px;">koa2</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/react-native/" style="font-size: 10px;">react-native</a> <a href="/tags/react-js/" style="font-size: 10px;">react.js</a> <a href="/tags/redux/" style="font-size: 10px;">redux</a> <a href="/tags/svg/" style="font-size: 10px;">svg</a> <a href="/tags/vue-js/" style="font-size: 15px;">vue.js</a> <a href="/tags/webAR/" style="font-size: 10px;">webAR</a> <a href="/tags/webAssembly/" style="font-size: 10px;">webAssembly</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a> <a href="/tags/安装体验/" style="font-size: 11.67px;">安装体验</a> <a href="/tags/小结/" style="font-size: 11.67px;">小结</a> <a href="/tags/浏览器/" style="font-size: 10px;">浏览器</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/计算机网络/" style="font-size: 15px;">计算机网络</a> <a href="/tags/认真做事/" style="font-size: 10px;">认真做事</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/读书笔记/" style="font-size: 10px;">读书笔记</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/11/10/191110-vue-3-data/">Vue 3中的数据监听</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/27/css-181227/">【CodePen分析】Day 2：燃烧的火焰</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/26/css-181226/">【CodePen分析】Day 1：流星+圣诞树</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/17/fronted-end-frontier-tech/">前端前沿技术</a>
+          </li>
+        
+          <li>
+            <a href="/2018/11/15/event-loop/">JS小结之事件循环</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 MOCHIKo<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

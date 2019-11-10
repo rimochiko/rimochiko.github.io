@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>源码小记：jQueryの文档处理 | 年糕酱</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言今天是第二天啦！笔记的内容主要是跟着慕课网上的jQuery源码解析系列课程以及自己的理解+实践来写的，可能会有错误，欢迎指出。当然，都是最先发在我的Segmentfault上的，所以要是看到了不要觉得奇怪(⊙o⊙)。">
+<meta name="keywords" content="jQuery">
+<meta property="og:type" content="article">
+<meta property="og:title" content="源码小记：jQueryの文档处理">
+<meta property="og:url" content="https://www.mochiko.cn/2018/03/26/jquery_2nd/index.html">
+<meta property="og:site_name" content="年糕酱">
+<meta property="og:description" content="前言今天是第二天啦！笔记的内容主要是跟着慕课网上的jQuery源码解析系列课程以及自己的理解+实践来写的，可能会有错误，欢迎指出。当然，都是最先发在我的Segmentfault上的，所以要是看到了不要觉得奇怪(⊙o⊙)。">
+<meta property="og:locale" content="zh">
+<meta property="og:updated_time" content="2018-04-17T01:07:12.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="源码小记：jQueryの文档处理">
+<meta name="twitter:description" content="前言今天是第二天啦！笔记的内容主要是跟着慕课网上的jQuery源码解析系列课程以及自己的理解+实践来写的，可能会有错误，欢迎指出。当然，都是最先发在我的Segmentfault上的，所以要是看到了不要觉得奇怪(⊙o⊙)。">
+  
+    <link rel="alternate" href="/atom.xml" title="年糕酱" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">年糕酱</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://www.mochiko.cn"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-jquery_2nd" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/03/26/jquery_2nd/" class="article-date">
+  <time datetime="2018-03-26T11:08:13.000Z" itemprop="datePublished">2018-03-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      源码小记：jQueryの文档处理
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>今天是第二天啦！笔记的内容主要是跟着慕课网上的<a href="https://segmentfault.com/a/1190000013972757" target="_blank" rel="noopener">jQuery源码解析</a>系列课程以及自己的理解+实践来写的，可能会有错误，欢迎指出。当然，都是最先发在我的Segmentfault上的，所以要是看到了不要觉得奇怪(⊙o⊙)。</p>
+<a id="more"></a>
+
+<h1 id="第二天：文档处理"><a href="#第二天：文档处理" class="headerlink" title="第二天：文档处理"></a>第二天：文档处理</h1><p>这里相关的方法主要有：</p>
+<pre><code>jQuery.fn.extend({ 
+     text: function() {}, 
+     append: function() {}, 
+     prepend: function() {}, 
+     before: function() {}, 
+     after: function() {}, 
+     clone: function() {}, 
+     html: function() {},   
+     replaceWith: function() {},  
+     domManip: function() {},  
+})</code></pre><h2 id="domManip方法"><a href="#domManip方法" class="headerlink" title="domManip方法"></a>domManip方法</h2><p>我们在使用appendChild()等方法添加内容的时候，必须是元素类型。但是在jQuery里面我们可以传入字符串来添加内容，还有添加script等操作。domManip方法就是一个处理中间过渡的函数。</p>
+<blockquote>
+<p>所以针对所有接口的操作，jQuery会抽象出一种参数的处理方案，domManip方法主要做的事情如下：<br>1：解析参数，字符串，函数，对象。<br>2：针对大数据引入文档碎片处理。<br>3：如果参数中包含script的处理。</p>
+</blockquote>
+<p>以及一些细节问题： </p>
+<blockquote>
+<p>IE下面innerHTML会忽略没作用域元素,no-scope element(script,link,style,meta,noscript)等，所以这类通过innerHTML创建需要加前缀。<br>innerHTML在IE下面会对字符串进行trimLeft操作，去掉空白。<br>innerHTML不会执行脚本的代码，如果支持defer除外。<br>很多标签不能作为div的子元素、td、tr, tbody等等 jQuery是合集对象，文档碎片的与事件的复制问题。</p>
+</blockquote>
+<h2 id="模拟简单的append"><a href="#模拟简单的append" class="headerlink" title="模拟简单的append()"></a>模拟简单的append()</h2><pre><code>function buildFragment(elems, context) {
+    //创建Document的文档碎片
+  var fragment = context.createDocumentFragment(),
+    nodes = [],
+    i = 0,
+    elem,
+    l = elems.length;
+
+  for (; i &lt; l; i++) {
+    elem = elems[i];
+    //创建一个元素div做为容器
+    tmp = fragment.appendChild(context.createElement(&quot;div&quot;));
+    //放到文档碎片中
+    tmp.innerHTML = elem; 
+  }
+  //在这个例子里，运行到此处fragment相当于&lt;div&gt;&lt;div&gt;慕课网&lt;/div&gt;&lt;/div&gt;
+  return fragment;
+}
+
+/*
+* parentEles：被塞内容的容器-&gt;数组
+* target：要添加的内容
+* callback：创建成功后调用的函数
+*/
+function domManip(parentEles, target, callback) {
+  var l = parentEles.length;
+
+  if (l) {
+        //创建一个碎片,以document形式获取父元素中的第一个
+        //ownerDocument获取元素所属的Document
+    var fragment = buildFragment([target], parentEles[0].ownerDocument);
+
+        //获取创建成功的DOM、也就是我们需要添加的对象
+    first = fragment.childNodes[0];
+
+    //把结果返回给回调函数处理
+    if (first) {
+      callback.call(parentEles, first);
+    }
+  }
+}
+
+function append(parentEles, target) {
+    /**
+    * parentEles：被塞内容的容器
+    * elem: 要添加的内容
+    */
+  return domManip([parentEles], target, function(elem) {
+    //回调函数获取经过domManip处理后的DOM节点，可以直接添加
+    parentEles.appendChild(elem)
+  });
+}
+
+append(document.getElementById(&apos;test&apos;),&apos;&lt;div&gt;通过append加入慕课网&lt;/div&gt;&apos;)</code></pre><p><strong>Tip</strong>：这里的代码我稍微修改了一下，因为似乎有一些并没有用，可能是老师在放的时候是侧重讲这个点的，其他的没删干净。而且这个结果其实是向test添加了一个内容是<div><div>通过append加入慕课网</div></div>，按照常理应该没有外面包裹的div，但是childNodes[0]也好firstchild也好，都只能获取到这个结果，如果div里面有多个div要添加，直接再获取它下面的节点好像也不太好，所以我觉得这里应该是一个粗略的模拟。</p>
+<h2 id="处理script"><a href="#处理script" class="headerlink" title="处理script"></a>处理script</h2><p><code>div.innerHTML = &quot;&lt;script&gt;alert(&#39;慕课网&#39;)&quot;;</code>不会被执行，但是<code>$(&#39;div&#39;).append(&quot;&lt;script&gt;alert(&#39;慕课网&#39;)&quot;)</code>可以。它类似的函数调用过程是：.append()-&gt; .domManip() -&gt; buildFragment() -&gt;clean()。<br>我们假设要进行<code>append(document.querySelectorAll(&#39;div&#39;)[0],&quot;&lt;script&gt;alert(&#39;慕课网&#39;)&quot; )</code>操作，改进原来的domManip方法：</p>
+<p>  //关闭脚本执行<br>  function disableScript(elem) {<br>    elem.type = (elem.getAttribute(“type”) !== null) + “/“ + elem.type;<br>    //“<script type="false/">alert('慕课网')<br>    return elem;<br>  }</p>
+<p>  //还原脚本<br>  function restoreScript(elem) {<br>    elem.removeAttribute("type");<br>    return elem;<br>  }</p>
+<p>  function domManip(parentEles, target, callback) {<br>    var l = parentEles.length;<br>    var scripts;<br>    var hasScripts;<br>    if (l) {<br>      var fragment = buildFragment([target], parentEles[0].ownerDocument);<br>      //first内容是<script>alert('慕课网')<br>      var first = fragment.firstChild.firstChild<br>      if (first) {<br>        //标记为有脚本<br>        hasScripts = true</p>
+<pre><code>    //增加false标记，这样script不会马上执行，并把script加入到文档中
+    scripts = disableScript(first);
+    callback.call(parentEles, scripts);
+  }
+
+  //执行脚本加载
+  if(hasScripts){
+    //去掉type的false锁定
+    restoreScript(scripts);
+    var code = scripts.textContent.replace(/^\s*&lt;!(?:\[CDATA\[|--)|(?:\]\]|--)&gt;\s*$/g, &quot;&quot;);
+    //开始执行脚本
+    eval(code)
+  }
+}</code></pre><p>  }</p>
+<p>这里最后的<code>/^\s*&lt;!(?:\[CDATA\[|--)|(?:\]\]|--)&gt;\s*$/g</code>正则解析图如下:<br><img src="https://wx1.sinaimg.cn/mw690/0069luTRgy1fpqfikgmoej30bv03kt8o.jpg" alt="图片描述"><br>可以看出是用于去除脚本代码里的空白字符以及注释和CDATA标记的。<br>另外补充clean()函数的作用：</p>
+<blockquote>
+<p>clean() 中会动态产生一个div， 将div 的innerHTML设为传入的字符串，再用getElementsByTagName('script') 的方式把所有的script 抓出来另行储存。clean()执行完毕回到domManip() 中， domManip() 再将script 们一一拿出来执行。</p>
+</blockquote>
+<p>代码中没有模拟实现，但是看得出clean()函数的作用其实就是把混杂的代码中的脚本单独抽出来进行处理。</p>
+</script></p>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://www.mochiko.cn/2018/03/26/jquery_2nd/" data-id="ck2sre6hh003304whqcm0lsom" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jQuery/">jQuery</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/04/07/hajime-https/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          初识HTTPS
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/03/25/jquery_1st/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">源码小记：jQueryの节点遍历</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/demo/">demo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/呆萌の实践/">呆萌の实践</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/呆萌の研究/">呆萌の研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/学习小记/">学习小记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/巨人花园/">巨人花园</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂/">杂</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/禅道花园/">禅道花园</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计与前端/">设计与前端</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AngularJS/">AngularJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS/">CSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS3/">CSS3</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Canvas/">Canvas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/D3-js/">D3.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ES6/">ES6</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/">Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTML/">HTML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Houdini/">Houdini</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JAVA/">JAVA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Node-js/">Node.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PWA/">PWA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sass/">Sass</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Three-js/">Three.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TweenMax/">TweenMax</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript/">TypeScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue-js/">Vue.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WebAssembly/">WebAssembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Webpack/">Webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/canvas/">canvas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jQuery/">jQuery</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/koa2/">koa2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-native/">react-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-js/">react.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redux/">redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/svg/">svg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue-js/">vue.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webAR/">webAR</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webAssembly/">webAssembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安装体验/">安装体验</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/小结/">小结</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/浏览器/">浏览器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/计算机网络/">计算机网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/认真做事/">认真做事</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书笔记/">读书笔记</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AngularJS/" style="font-size: 10px;">AngularJS</a> <a href="/tags/CSS/" style="font-size: 16.67px;">CSS</a> <a href="/tags/CSS3/" style="font-size: 18.33px;">CSS3</a> <a href="/tags/Canvas/" style="font-size: 10px;">Canvas</a> <a href="/tags/D3-js/" style="font-size: 10px;">D3.js</a> <a href="/tags/ES6/" style="font-size: 10px;">ES6</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/HTML/" style="font-size: 13.33px;">HTML</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Houdini/" style="font-size: 10px;">Houdini</a> <a href="/tags/JAVA/" style="font-size: 10px;">JAVA</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/PWA/" style="font-size: 10px;">PWA</a> <a href="/tags/Sass/" style="font-size: 11.67px;">Sass</a> <a href="/tags/Three-js/" style="font-size: 11.67px;">Three.js</a> <a href="/tags/TweenMax/" style="font-size: 10px;">TweenMax</a> <a href="/tags/TypeScript/" style="font-size: 10px;">TypeScript</a> <a href="/tags/Vue-js/" style="font-size: 15px;">Vue.js</a> <a href="/tags/WebAssembly/" style="font-size: 10px;">WebAssembly</a> <a href="/tags/Webpack/" style="font-size: 10px;">Webpack</a> <a href="/tags/canvas/" style="font-size: 13.33px;">canvas</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/jQuery/" style="font-size: 15px;">jQuery</a> <a href="/tags/koa2/" style="font-size: 11.67px;">koa2</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/react-native/" style="font-size: 10px;">react-native</a> <a href="/tags/react-js/" style="font-size: 10px;">react.js</a> <a href="/tags/redux/" style="font-size: 10px;">redux</a> <a href="/tags/svg/" style="font-size: 10px;">svg</a> <a href="/tags/vue-js/" style="font-size: 15px;">vue.js</a> <a href="/tags/webAR/" style="font-size: 10px;">webAR</a> <a href="/tags/webAssembly/" style="font-size: 10px;">webAssembly</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a> <a href="/tags/安装体验/" style="font-size: 11.67px;">安装体验</a> <a href="/tags/小结/" style="font-size: 11.67px;">小结</a> <a href="/tags/浏览器/" style="font-size: 10px;">浏览器</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/计算机网络/" style="font-size: 15px;">计算机网络</a> <a href="/tags/认真做事/" style="font-size: 10px;">认真做事</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/读书笔记/" style="font-size: 10px;">读书笔记</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/11/10/191110-vue-3-data/">Vue 3中的数据监听</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/27/css-181227/">【CodePen分析】Day 2：燃烧的火焰</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/26/css-181226/">【CodePen分析】Day 1：流星+圣诞树</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/17/fronted-end-frontier-tech/">前端前沿技术</a>
+          </li>
+        
+          <li>
+            <a href="/2018/11/15/event-loop/">JS小结之事件循环</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 MOCHIKo<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

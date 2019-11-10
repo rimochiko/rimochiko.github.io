@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>初识HTTPS | 年糕酱</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言我就是那块迟钝の糕同学，我一直都只知道HTTPS是HTTP+SSL/TLS两种协议共同构成的，但是对于其中的机制，可以说是很多环节都充满了各种疑问。这个学期我们开了信息安全课，可惜老师只是讲了一些加密的算法，加上教材的语言真的太深奥了，于是我自己去借了一些书籍查看，最后终于弄清楚了自己的一些疑问。噗！必须要推荐《图解密码技术》这本书啊~（本文也是缓慢补坑）">
+<meta name="keywords" content="HTTPS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初识HTTPS">
+<meta property="og:url" content="https://www.mochiko.cn/2018/04/07/hajime-https/index.html">
+<meta property="og:site_name" content="年糕酱">
+<meta property="og:description" content="前言我就是那块迟钝の糕同学，我一直都只知道HTTPS是HTTP+SSL/TLS两种协议共同构成的，但是对于其中的机制，可以说是很多环节都充满了各种疑问。这个学期我们开了信息安全课，可惜老师只是讲了一些加密的算法，加上教材的语言真的太深奥了，于是我自己去借了一些书籍查看，最后终于弄清楚了自己的一些疑问。噗！必须要推荐《图解密码技术》这本书啊~（本文也是缓慢补坑）">
+<meta property="og:locale" content="zh">
+<meta property="og:image" content="https://wx2.sinaimg.cn/mw690/0069luTRgy1fq4gc9pc83j30ao0f4whw.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/mw690/0069luTRgy1fqci7yv2lqj30c3080mx3.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/mw690/0069luTRgy1fqci7yvlmsj30c8059wec.jpg">
+<meta property="og:updated_time" content="2018-04-16T13:30:58.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="初识HTTPS">
+<meta name="twitter:description" content="前言我就是那块迟钝の糕同学，我一直都只知道HTTPS是HTTP+SSL/TLS两种协议共同构成的，但是对于其中的机制，可以说是很多环节都充满了各种疑问。这个学期我们开了信息安全课，可惜老师只是讲了一些加密的算法，加上教材的语言真的太深奥了，于是我自己去借了一些书籍查看，最后终于弄清楚了自己的一些疑问。噗！必须要推荐《图解密码技术》这本书啊~（本文也是缓慢补坑）">
+<meta name="twitter:image" content="https://wx2.sinaimg.cn/mw690/0069luTRgy1fq4gc9pc83j30ao0f4whw.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="年糕酱" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">年糕酱</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://www.mochiko.cn"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-hajime-https" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/04/07/hajime-https/" class="article-date">
+  <time datetime="2018-04-07T13:43:11.000Z" itemprop="datePublished">2018-04-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      初识HTTPS
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>我就是那块迟钝の糕同学，我一直都只知道HTTPS是HTTP+SSL/TLS两种协议共同构成的，但是对于其中的机制，可以说是很多环节都充满了各种疑问。这个学期我们开了信息安全课，可惜老师只是讲了一些加密的算法，加上教材的语言真的太深奥了，于是我自己去借了一些书籍查看，最后终于弄清楚了自己的一些疑问。噗！必须要推荐《<a href="https://book.douban.com/subject/26265544/" target="_blank" rel="noopener">图解密码技术</a>》这本书啊~（本文也是缓慢补坑）</p>
+<a id="more"></a>
+
+<h1 id="为什么会出现HTTPS"><a href="#为什么会出现HTTPS" class="headerlink" title="为什么会出现HTTPS"></a>为什么会出现HTTPS</h1><p>那当然是因为HTTP有很多缺点，我们可以例举一些（来自<a href="https://book.douban.com/subject/25863515/" target="_blank" rel="noopener">图解HTTP</a>这本书142页）：</p>
+<ul>
+<li>通信不加密，内容可能会被窃听。</li>
+<li>不验证通信双方身份，可能遭遇伪装。</li>
+<li>无法证明报文的完整性，可能遭到篡改。</li>
+</ul>
+<p>我们的目标当然就是尽力去弥补这几个缺陷，所以我们针对1号缺陷，我们就对通信进行加密。针对2号缺陷，我们就想办法能确定双方的身份。针对3号缺陷，我们就想办法确定报文没有被修改过。</p>
+<h1 id="情景假设"><a href="#情景假设" class="headerlink" title="情景假设"></a>情景假设</h1><p>下面，我们来假设有两个孩子在通信，一个是<code>Alice</code>小姑娘，还有一个是<code>Bob</code>小男孩（看书上这个例子也是密码学上举例惯用的姓名啊）。</p>
+<h1 id="1号：通信の加密"><a href="#1号：通信の加密" class="headerlink" title="1号：通信の加密"></a>1号：通信の加密</h1><h2 id="常见加密方式"><a href="#常见加密方式" class="headerlink" title="常见加密方式"></a>常见加密方式</h2><p>说到加密，我们就必须先了解一下常用的加密方法：<strong>对称加密</strong>和<strong>非对称加密</strong>。<br>对称加密简单来说就是我用<code>A口令</code>去加密，同样用这个<code>A口令</code>来进行解密。<br>目前市面上常用的对称加密方法有：<strong>DES</strong>，<strong>AES</strong>。</p>
+<p>而非对称加密就是我用<code>A口令</code>来加密，但是可以用<code>B口令</code>来进行解密。<br>目前市面上常用的非对称加密方法有：<strong>RSA</strong>。</p>
+<p>这里的口令其实就是我们所说的密钥啦~</p>
+<h2 id="报文应该用什么加密方法"><a href="#报文应该用什么加密方法" class="headerlink" title="报文应该用什么加密方法"></a>报文应该用什么加密方法</h2><p>我们首先来分析HTTP的报文格式：<strong>报文头+内容主体</strong>。报文头一般是比较短的，内容主体内容可能会很长。</p>
+<p>刚才介绍到的对称加密方法，我们很容易发现只要我们有那个口令，就能完成加密和解密，所以Alice用口令加密消息后给Bob，Bob拿口令进行解密。但是问题是，口令也要安全传给Bob呀！所以可知，这样其实解决不了根本的问题。</p>
+<p>而非对称加密的方法就可以解决这个问题，Alice用A口令进行加密传给Bob，假如Bob自己本来就有A口令对应的B口令，Bob就可以进行解密，这样Alice就不用把口令传给Bob了。</p>
+<p>但是我们用脑子想想也知道，很明显非对称加密的方式比对称加密的方式要复杂一些，如果要计算肯定是花费很大。</p>
+<p>报文头的内容很短，我们也可以把消息加密的密钥存在这里啊！这样我们可以用非对称方式加密报文头，对称方式加密报文体，这样一来，就很好的保证了安全性，又减少了开销。</p>
+<h2 id="公钥和私钥"><a href="#公钥和私钥" class="headerlink" title="公钥和私钥"></a>公钥和私钥</h2><p>相信很多童鞋都知道，HTTPS会有<strong>公匙</strong>和<strong>私匙</strong>这两个东西的存在。这其实也是一种非对称加密方式里面的实现。</p>
+<p><strong>Q：私钥和公钥是什么？</strong><br>A：公钥很明显，意思就是公共的钥匙，意思是每个人都可以拿到这个钥匙。私钥则是自己的钥匙，永远都不能给别人。</p>
+<p><strong>Q：私钥和公钥怎么加密来传输信息的？</strong><br>A：首先，Alice用Bob的公钥加密了一句<code>我把100块放在你的第一个抽屉里了</code>，随后Bob就用自己的私钥去解开这个加密的消息，得到这个消息。也就是说公钥在这里充当着加密的角色，而私钥才能对应去解密。<br>如果黑客拿到了Bob的私钥，那么一切都没戏了，但是黑客拿到的是Bob的公钥的话，那他做的就是加密自己写的消息给Bob罢了。</p>
+<p><strong>Q：咦？真的会有这种奇怪的加密方法吗？能举个例子吗</strong><br>A：最常见的公钥密码算法就是RSA加密方法了。</p>
+<p>密文 = 明文<sup>E</sup> mod N （RSA加密）<br><strong>E和N</strong>的组合是<strong>公钥</strong>。</p>
+<p>密文 = 明文<sup>D</sup> mod N （RSA解密）<br><strong>D和N</strong>的组合就是<strong>私钥</strong>。</p>
+<h1 id="2号：身份の确认-amp-3号：报文の保护"><a href="#2号：身份の确认-amp-3号：报文の保护" class="headerlink" title="2号：身份の确认 &amp; 3号：报文の保护"></a>2号：身份の确认 &amp; 3号：报文の保护</h1><p>以上，我们解决了消息加密的问题。但是我们无法确定，和Alice在进行交流的真的是Bob吗？和Bob交流的又真的是Alice吗？<br>如果一开始Bob在发布自己的公钥的时候，来了一个攻击者Mallory把这个公钥换成了自己的公钥给Alice，那么Alice就会用Mallory的公钥来加密，那么信息就会暴露了。<br>所以我们必须要进行身份的确认。</p>
+<h2 id="补充知识：单向散列函数"><a href="#补充知识：单向散列函数" class="headerlink" title="补充知识：单向散列函数"></a>补充知识：单向散列函数</h2><p><strong>情景假设：</strong>Alice熬夜几天辛苦的把代码写完了，倒头就睡。但是第二天她起来要上交代码的时候，如何判断程序是不是被人更改过了什么地方呢？</p>
+<p>单向散列函数拥有：一个输入（消息）、一个输出（散列值）。<br>无论这个输入有多长，输出的长度总是固定的。</p>
+<p>所以我们可以让Alice给她的代码用这个单向散列函数来生成一个输出，这样保留好这个输出值。第二天只要再用函数生成一个输出，对比一下就知道是不是有变化了。</p>
+<h2 id="消息验证码"><a href="#消息验证码" class="headerlink" title="消息验证码"></a>消息验证码</h2><p>简称为MAC，是一种确认完整性并进行认证的技术。<br>完整验证码的操作需要任意长度的消息、发送者与接收者之间的共享密钥（可以输出固定长度的数据，即MAC值）。<br>它的机制与单向散列函数比较类似，所以在上面我们先引入了这个概念。我们可以理解为:</p>
+<blockquote>
+<p>消息认证码是一种与密钥相关的单项散列函数</p>
+</blockquote>
+<p>所以两者区别在于：<br>消息—（单项散列函数）——&gt;散列值<br>消息—（消息认证码+密钥）—&gt;MAC值</p>
+<p>下面插一个我自己画的消息验证码小剧场：<br><img src="https://wx2.sinaimg.cn/mw690/0069luTRgy1fq4gc9pc83j30ao0f4whw.jpg" alt="消息验证码小剧场"></p>
+<p><strong>消息验证码存在的问题</strong>:<br><strong>重放攻击</strong><br>假设Mallory去Alice银行向自己在Bob银行的账号存100块。<br>Alice把这个消息算出MAC值后把消息一起给了Bob银行，然后Bob银行发现是Alice银行发的，且内容也是正确的。<br>假如Mallory把这个消息重复发N次，那Bob每次肯定都会给Mallory的账号打钱啊。</p>
+<p>解决方法:</p>
+<ol>
+<li>序号：每次发送消息赋予一个递增的序号，计算MAC值时这个序号也包括在其中。</li>
+<li>时间戳：每次发送消息包含当前时间。</li>
+</ol>
+<p><strong>第三方证明</strong><br>Bob收到了Alice的消息，但是无法证明这条消息来自Alice，如果有一个第三方证明Victor的话就好了。但是他要介入就必须知道这个共享密钥，这样一来消息验证码的安全性也会遭到威胁。所以消息验证码无法弥补这个缺陷。</p>
+<p><strong>否认</strong><br>Bob收到了Alice的消息“我Alice于今日向借了Bob100块”，但是Alice否认这条消息是她发的，因为她可以说这个消息是Bob自己生成的。而由于没有第三个人能知道这个事情，所以Bob证明不了这个消息就是Alice发的，而第三者也无法判断真假。</p>
+<h2 id="数字签名"><a href="#数字签名" class="headerlink" title="数字签名"></a>数字签名</h2><p>消息验证码出现缺陷就是因为使用了只有两个人之间才知道的密钥，这样无法通过第三方来验证。<br>数字签名的机制其实和密钥与公钥的机制非常类似，相当于是“反过来用”的。Alice用<strong>签名密钥</strong>生成消息签名，Bob要验证数字签名，而第三方也和Bob一样可以对签名进行验证，所以Bob和第三方都拥有<strong>验证密钥</strong>。<br>两种生成和验证数字签名的方法:</p>
+<ol>
+<li>直接对消息签名：也就是上面讲的那个意思。</li>
+<li>对消息的散列值签名：就是Alice要先算出消息的散列值，用私钥对散列值进行加密，再把消息和签名发给Bob。</li>
+</ol>
+<p>反过头来，我们可以发现数字签名能解决“否认”这个问题。<br>SSL/TLS在认证服务器的身份是否合法的时候，就是加上了数字签名的公钥来验证。</p>
+<p><strong>中间人攻击</strong><br>Alice和Bob在通信的时候，黑客介入它们之中，面对Alice的时候伪装成是Bob，面对Bob的时候又装作是Alice，这样能够在不破解签名算法的前提下进行攻击。<br>破解方法是确认自己的公钥是不是真的属于自己的目的对象（比如：Alice打电话直接问Bob）。但是往往确认的内容会很多，我们可以生成散列值来确认。而实际上，公钥密码的软件可以显示公钥的散列值，即<strong>指纹</strong>。</p>
+<h2 id="证书"><a href="#证书" class="headerlink" title="证书"></a>证书</h2><p>证书可以解决让Alice知道自己拿到的钥匙到底是不是Bob得，这样就可以防御中间人攻击。</p>
+<blockquote>
+<p>证书实质是一个数据结构，是一种由一个可信任的权威机构签署的数据集合。</p>
+</blockquote>
+<p>而证书本身也分为很多种，常见的比如：PKI证书、PGP证书等。<br>数字证书举例（模拟教材画的图，其中CA是指<strong>签证机构</strong>）：<br><img src="https://wx2.sinaimg.cn/mw690/0069luTRgy1fqci7yv2lqj30c3080mx3.jpg" alt="图片描述"></p>
+<p>Q：那么Alice怎么确定手上的公钥匙Bob的呢？<br>A：Alice可以向Bob/证书机构索要公钥证书，然后Alice拿签证机构（CA）的公钥去验证这个签名，就可以获得Bob真实的公钥。</p>
+<h1 id="SSL-TLS协议"><a href="#SSL-TLS协议" class="headerlink" title="SSL/TLS协议"></a>SSL/TLS协议</h1><p>SSL/TLS协议在网络层次中的位置：<br><img src="https://wx2.sinaimg.cn/mw690/0069luTRgy1fqci7yvlmsj30c8059wec.jpg" alt="图片描述"></p>
+<p><strong>Q:SSL协议和TLS协议的关系</strong><br>A：TLS是SSL 3.0版本上的升级而来的。</p>
+<p><strong>Q:SSL协议和TLS协议只能搭配HTTP使用吗</strong><br>A：显然不是的，它们可以搭配很多协议。比如搭配发送邮件的SMTP协议和接受邮件的POP协议来使用。</p>
+<h2 id="SSL-TLS提供通信密码框架"><a href="#SSL-TLS提供通信密码框架" class="headerlink" title="SSL/TLS提供通信密码框架"></a>SSL/TLS提供通信密码框架</h2><p>在前文中我们讲到的一些技术，搭配起来就能够增加HTTP协议的安全性，但是这些技术里面也有很多不同的加密算法，比如分享公钥我们可以用公钥算法也可以用Diffie-Hellmanfan方法，这个是我们自己可以自由搭配选择的，哪个部分的方法很弱，我们就可以再替换那个部分的方法。<br>但是如果完全客户自定义了，很可能会出现沟通的障碍，因为接收方和发送方的加密解密方法应该是配套的。所以官方提供了一些加密套餐组合，叫做<strong>密码套件</strong>，供我们选择。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://www.mochiko.cn/2018/04/07/hajime-https/" data-id="ck2sre6j6005q04wh8kndkao5" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/HTTPS/">HTTPS</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/04/14/jquery-event-bind/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          源码小记：jQueryの事件绑定
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/03/26/jquery_2nd/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">源码小记：jQueryの文档处理</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/demo/">demo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/呆萌の实践/">呆萌の实践</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/呆萌の研究/">呆萌の研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/学习小记/">学习小记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/巨人花园/">巨人花园</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂/">杂</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/禅道花园/">禅道花园</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计与前端/">设计与前端</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AngularJS/">AngularJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS/">CSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS3/">CSS3</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Canvas/">Canvas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/D3-js/">D3.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ES6/">ES6</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Git/">Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTML/">HTML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Houdini/">Houdini</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JAVA/">JAVA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Node-js/">Node.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PWA/">PWA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sass/">Sass</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Three-js/">Three.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TweenMax/">TweenMax</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TypeScript/">TypeScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue-js/">Vue.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WebAssembly/">WebAssembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Webpack/">Webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/canvas/">canvas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jQuery/">jQuery</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/koa2/">koa2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-native/">react-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react-js/">react.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redux/">redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/svg/">svg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue-js/">vue.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webAR/">webAR</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webAssembly/">webAssembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webpack/">webpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安装体验/">安装体验</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/小结/">小结</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/浏览器/">浏览器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/计算机网络/">计算机网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/认真做事/">认真做事</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书笔记/">读书笔记</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AngularJS/" style="font-size: 10px;">AngularJS</a> <a href="/tags/CSS/" style="font-size: 16.67px;">CSS</a> <a href="/tags/CSS3/" style="font-size: 18.33px;">CSS3</a> <a href="/tags/Canvas/" style="font-size: 10px;">Canvas</a> <a href="/tags/D3-js/" style="font-size: 10px;">D3.js</a> <a href="/tags/ES6/" style="font-size: 10px;">ES6</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/HTML/" style="font-size: 13.33px;">HTML</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Houdini/" style="font-size: 10px;">Houdini</a> <a href="/tags/JAVA/" style="font-size: 10px;">JAVA</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/PWA/" style="font-size: 10px;">PWA</a> <a href="/tags/Sass/" style="font-size: 11.67px;">Sass</a> <a href="/tags/Three-js/" style="font-size: 11.67px;">Three.js</a> <a href="/tags/TweenMax/" style="font-size: 10px;">TweenMax</a> <a href="/tags/TypeScript/" style="font-size: 10px;">TypeScript</a> <a href="/tags/Vue-js/" style="font-size: 15px;">Vue.js</a> <a href="/tags/WebAssembly/" style="font-size: 10px;">WebAssembly</a> <a href="/tags/Webpack/" style="font-size: 10px;">Webpack</a> <a href="/tags/canvas/" style="font-size: 13.33px;">canvas</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/jQuery/" style="font-size: 15px;">jQuery</a> <a href="/tags/koa2/" style="font-size: 11.67px;">koa2</a> <a href="/tags/php/" style="font-size: 10px;">php</a> <a href="/tags/react-native/" style="font-size: 10px;">react-native</a> <a href="/tags/react-js/" style="font-size: 10px;">react.js</a> <a href="/tags/redux/" style="font-size: 10px;">redux</a> <a href="/tags/svg/" style="font-size: 10px;">svg</a> <a href="/tags/vue-js/" style="font-size: 15px;">vue.js</a> <a href="/tags/webAR/" style="font-size: 10px;">webAR</a> <a href="/tags/webAssembly/" style="font-size: 10px;">webAssembly</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a> <a href="/tags/安装体验/" style="font-size: 11.67px;">安装体验</a> <a href="/tags/小结/" style="font-size: 11.67px;">小结</a> <a href="/tags/浏览器/" style="font-size: 10px;">浏览器</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/计算机网络/" style="font-size: 15px;">计算机网络</a> <a href="/tags/认真做事/" style="font-size: 10px;">认真做事</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/读书笔记/" style="font-size: 10px;">读书笔记</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/11/10/191110-vue-3-data/">Vue 3中的数据监听</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/27/css-181227/">【CodePen分析】Day 2：燃烧的火焰</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/26/css-181226/">【CodePen分析】Day 1：流星+圣诞树</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/17/fronted-end-frontier-tech/">前端前沿技术</a>
+          </li>
+        
+          <li>
+            <a href="/2018/11/15/event-loop/">JS小结之事件循环</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 MOCHIKo<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
