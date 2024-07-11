@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!--Description-->
+    
+        <meta name="description" content="愿你有一个好心情~^-^">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="阿糕">
+    
+
+    <!-- Title -->
+    
+    <title>圣杯布局引发对margin负值的研究 | 阿糕家后院</title>
+    <!--[if lt IE 9]>
+        <script src="http://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+        <script src="http://cdn.staticfile.org/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+	<link href="https://cdn.bootcss.com/animate.css/3.5.2/animate.css" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="mck-body animated fadeIn">
+    <div class="mck-loading" id="loading-container">
+        <div class="mck-loading-item">
+            <div class="mck-loading-text">
+                <span class="mck-loading-textcontent">正在努力加载中...</span>
+            </div>
+        </div>
+    </div>
+    <div class="mck-sidebar">
+        <canvas id="floating"></canvas>
+        <div class="mck-logo">
+            <img src="//mcimages/logo.png" />
+        </div>
+        <div class="mck-menu">
+            <div class="mck-menu__collapse" id="mck-menu__collapse">
+                <span class="mck-menu__collapse_line"></span>
+                <span class="mck-menu__collapse_line"></span>
+            </div>
+            <div class="mck-menu__normal">
+                <div class="mck-menu-item">
+                    <a href="/">HOME</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/work/index.html">WORK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/tech/index.html">TECH</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/life/index.html">LIFE</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/link/index.html">LINK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/map/index.html" class="mck-menu-item__new">
+                        <img src="//mcimages/emoji1.png" class="mck-menu-item__new_icon animated bounce"/>TRAVEL
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="mck-footer">
+            <div class="mck-footer-text">MOCHIKO ❤ Since 2017</div>
+            <div class="mck-footer-text" id="busuanzi_container_site_pv">你是第<span id="busuanzi_value_site_pv"></span>个光临的童鞋！</div>
+        </div>
+    </div>
+	<div class="mck-main mck-post-main"> 
+        <div class="mck-post-header ">
+            <a class="mck-post-back" href="/"></a>
+            <div class="mck-post-cover" style="background-image: url(https://www.mochiko.cn/pimgs/20171130margin/1.png)"></div>
+            <div class="mck-post-category"><a href="#">技术打工人</a><span class="mck-post-date">2017-11-30</span></div>
+            <div class="mck-post-title">圣杯布局引发对margin负值的研究</div>
+            <ul class="mck-post-tags">
+				
+					
+
+<li class="mck-post-tag"><a class="a_tag" href="/tags/CSS/index.html">CSS</a></li>
+				
+            </ul>
+			<ol class="mck-post-menu"><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E9%97%AE%E9%A2%98%E3%81%AE%E8%B5%B7%E6%BA%90"><span class="mck-post-menu-number">1.</span> <span class="mck-post-menu-text">问题の起源</span></a><ol class="mck-post-menu-child"><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#%E4%B8%80%E8%88%AC%E3%81%AE%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%B3%95"><span class="mck-post-menu-number">1.1.</span> <span class="mck-post-menu-text">一般の实现方法</span></a></li></ol></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E5%88%9D%E6%AC%A1%E3%81%AE%E5%8F%91%E9%97%AE"><span class="mck-post-menu-number">2.</span> <span class="mck-post-menu-text">初次の发问</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E7%BB%A7%E7%BB%AD%E8%AF%95%E9%AA%8C"><span class="mck-post-menu-number">3.</span> <span class="mck-post-menu-text">继续试验</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E4%BA%8C%E6%AC%A1%E3%81%AE%E6%8F%90%E9%97%AE"><span class="mck-post-menu-number">4.</span> <span class="mck-post-menu-text">二次の提问</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E5%86%8D%E6%AC%A1%E5%AE%9E%E9%AA%8C"><span class="mck-post-menu-number">5.</span> <span class="mck-post-menu-text">再次实验</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E6%88%91%E3%81%AE%E5%B0%8F%E7%BB%93%E8%AE%BA"><span class="mck-post-menu-number">6.</span> <span class="mck-post-menu-text">我の小结论</span></a></li></ol>
+        </div>
+
+        <div class="mck-post-content">
+			<h1 id="问题の起源"><a href="#问题の起源" class="headerlink" title="问题の起源"></a>问题の起源</h1><p>以前一直就听说圣杯布局，但是没有怎么去用过，然后这次偶然接触到了，就学习了一下。<br>这是一个我从别人写的文章中复制过来的，关于圣杯布局的比较简单的说明</p>
+<blockquote>
+<p>通过缩放页面就可以发现，随着页面的宽度的变化，这三栏布局是中间盒子优先渲染，两边的盒子框子固定不变，即使页面宽度变小，也不影响我们的浏览</p>
+</blockquote>
+<p>而通常是采用浮动布局和margin负值。</p>
+<span id="more"></span>
+
+<h2 id="一般の实现方法"><a href="#一般の实现方法" class="headerlink" title="一般の实现方法"></a>一般の实现方法</h2><p><strong>HTML结构</strong><br>首先定义一个主体div，再是left和right的div</p>
+<pre><code>&lt;div class=&quot;container&quot;&gt;
+    &lt;div class=&quot;main&quot;&gt;main&lt;/div&gt;
+    &lt;div class=&quot;left&quot;&gt;left&lt;/div&gt;
+    &lt;div class=&quot;right&quot;&gt;right&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<p><strong>CSS部分</strong><br>1.给container左边和右边赋上padding值，宽度分别就是能容纳的下left和right的div。<br>2.main DIV的宽度为100%。<br>3.main，left和right三个div都设置为左浮动。</p>
+<p>完成以上我们就会得到一个这样的结果：<br><img src="https://www.mochiko.cn/pimgs/20171130margin/1.png" alt="图片描述"></p>
+<p>再然后我们给left一个margin-left:100%，此时会发现left移动到了第一行中：<br><img src="https://www.mochiko.cn/pimgs/20171130margin/2.png" alt="图片描述"></p>
+<p>然后面对这个现象，我展开了一系列的思考和探究~</p>
+<h1 id="初次の发问"><a href="#初次の发问" class="headerlink" title="初次の发问"></a>初次の发问</h1><p><strong>Q：为什么left会跑去了第一行？</strong><br>A：这个其实我们大概心里是明白的。一开始，main的宽度是100%，所以第一行是无法再容纳后面同样是左浮动的div块。但是通过赋予了margin-left为-100%，这里的100%也就是父容器的宽度，浏览器计算出来是一个负值，就认为它能被容纳在第一行。</p>
+<h1 id="继续试验"><a href="#继续试验" class="headerlink" title="继续试验"></a>继续试验</h1><p>我们可以尝试改变margin-left的值，去看看div位置的变化。为了方便我们计算，另外写了一个类似的布局，内容区的宽度是100px，三个div的宽度也都是100px。<br><strong>HTML部分</strong></p>
+<pre><code>&lt;div class=&quot;container&quot;&gt;
+    &lt;div class=&quot;main&quot;&gt;main&lt;/div&gt;
+    &lt;div class=&quot;left&quot;&gt;left&lt;/div&gt;
+    &lt;div class=&quot;right&quot;&gt;right&lt;/div&gt; 
+&lt;/div&gt;
+</code></pre>
+<p><strong>CSS部分</strong></p>
+<pre><code>.container&#123;
+  width:100px;
+  margin:0;
+  padding:0 100px;
+  background:rgba(0,0,0,.3);
+&#125;
+
+div&#123;
+  float:left;
+  width:100px;
+  height:100px;
+&#125;
+.main&#123;
+  background:rgba(0,0,255,.4);
+&#125;
+.left&#123;
+  background:rgba(233,0,0,.4);
+&#125;
+.right&#123;
+  background:rgba(0,233,0,.4);
+&#125;
+</code></pre>
+<p>效果是这样的<br><img src="https://www.mochiko.cn/pimgs/20171130margin/3.png" alt="图片描述"></p>
+<p>然后我们试着给left赋予不同的margin-left负值，会发现：<br>1.当margin-left在0px ~ -99px的时候，left会向左移动。<br><img src="https://www.mochiko.cn/pimgs/20171130margin/4.png" alt="图片描述"></p>
+<p>2.当margin-left为-100px的时候，left上移动，与main重叠：<br><img src="https://www.mochiko.cn/pimgs/20171130margin/5.png" alt="图片描述"></p>
+<p>所以margin-left是-100px的时候，显然是一个<strong>分界点</strong>。</p>
+<p>3.当margin-left的负值继续增加，left又会继续向左边移动：<br><img src="https://www.mochiko.cn/pimgs/20171130margin/6.png" alt="图片描述"></p>
+<p>根据上面的情况，加以本宝宝的百度（笑），我们确定了想法，就是在计算元素的”宽度”的时候是会把margin-left+width得到结果，当-100px+100px&#x3D;0px的时候，就被认为第一行是还可以容纳的下，所以第二行的元素就到了第一行。<br>此时，我还找到了一篇文章，这篇文章比较合理的阐述了移动的原理：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/LiveWithIt/p/6024864.html">https://www.cnblogs.com/LiveWithIt/p/6024864.html</a></p>
+<h1 id="二次の提问"><a href="#二次の提问" class="headerlink" title="二次の提问"></a>二次の提问</h1><p>然而这里还有一个细节问题，就是left的移动其实是有一个范围的：<br><img src="https://www.mochiko.cn/pimgs/20171130margin/7.png" alt="图片描述"></p>
+<p>画了红框的范围是container的一个padding区域，在left移动切换的时候，<br>当left的margin-left并没有达到-100px的时候，为什么它会向左移动，单纯从放不下的原理来说，它在原处不动也可以是一个合理的现象，那篇文章似乎也没有提到合理的原因，然后我继续试验。</p>
+<h1 id="再次实验"><a href="#再次实验" class="headerlink" title="再次实验"></a>再次实验</h1><p>我们从当left的margin-left为-100px开始，即main和left重叠的情况。<br>我们再给main一个margin-left负值为-50px，结果main和left一起向左边移动：<br><img src="https://www.mochiko.cn/pimgs/20171130margin/8.png" alt="图片描述"></p>
+<p>再试验一种情况，把left的宽设为150px，margin-left设为-150px，main的margin-left是0，此时left的右边对齐了main的右边。<br><img src="https://www.mochiko.cn/pimgs/20171130margin/9.png" alt="图片描述"></p>
+<p>所以应该隐隐约约可以发现了些什么…</p>
+<h1 id="我の小结论"><a href="#我の小结论" class="headerlink" title="我の小结论"></a>我の小结论</h1><p>合理的解释就是，在摆放元素位置的时候，它会计算出那个右边的值，并且会认为这就是元素的最后的标准线。</p>
+<p>1.解释<strong>继续实验</strong>中为什么margin-left为left宽度负值，left会和main重叠：<br>因为它会被认为宽度是0，所以从main的结束位置开始计算是100px+0px，所以元素要以100px为结束线，也就是它在100px的左边。</p>
+<p>2.解释<strong>再次实验</strong>中为什么更改main的margin-left，left会和它一直重叠：<br>根据1的推断，left的边界线计算结果一直都会是main的边界线。</p>
+<p>3.解释为什么left能在第二行向左边移动：<br>因为它会被认为宽度在1px<del>99px之间，所以它的边界线是在内容区中宽度为1px</del>99px之间，所以它能移动。</p>
+<p>其实也是我自己的猜想和推论，并不知道实际情况对不对QAQ，但是根据自己的测试情况来说，目前是都说得通的，望大神指点嘻嘻。</p>
+
+        </div>
+        <div class="mck-post-footer">
+    
+        <a href="/2017/08/16/tech-20170816-about-lorem/index.html">上一篇</a>
+    
+    
+        <a href="/2018/02/09/tech-20180209-http/index.html">下一篇</a>
+    
+</div>
+        <div class="mck-post-comments" id="mck-post-comments"></div>
+<script>
+    new Valine({
+        el: '#mck-post-comments',
+        appId: 'bhScVsXkKqR32IJd3MXvu41C-gzGzoHsz',
+        appKey: 'm8alBLTHvrVy8DQvzGshxoA5',
+        placeholder: '说点什么o_o ....',
+        avatar: 'monsterid'
+    });
+</script>
+        <div class="mck-about">
+    <div class="mck-about-title mck-section-title">ABOUT</div>
+    <div class="mck-about-main">
+        欢迎来到小年糕的后花园，年糕的小站开设于2017年，博主年糕君是一个爱好十分广泛的人，也是一个比较佛系的人，不定时爆发脑洞更新（因为是社畜，也可能失踪很久，工作太累了）。
+        <a href="/about/index.html" target="_blank" class="mck-about-more">查看更多</a>
+    </div>
+</div>
+    </div>
+    <script async src="/js/busuanzi.js"></script>
+    <script>
+    $(document).ready(function () {
+        setTimeout(() => {
+            $('#loading-container').fadeOut();
+        }, 2000);
+
+        $('#mck-menu__collapse').click(function() {
+            var menu = $('.mck-menu__normal');
+            if (menu.hasClass('opened')) {
+                $(this).removeClass('opened')
+                menu.removeClass('opened')
+            } else {
+                $(this).addClass('opened')
+                menu.addClass('opened')
+            }
+        })
+    })
+    </script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/prettify/r298/prettify.min.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+        jQuery("pre").addClass("prettyprint linenums");
+        prettyPrint();
+        });
+    </script>
+    <script async src="/js/sakura.js"></script>
+</body>
+</html>

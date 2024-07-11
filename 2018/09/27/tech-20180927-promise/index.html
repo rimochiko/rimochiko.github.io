@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!--Description-->
+    
+        <meta name="description" content="愿你有一个好心情~^-^">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="阿糕">
+    
+
+    <!-- Title -->
+    
+    <title>Promise的相关小结 | 阿糕家后院</title>
+    <!--[if lt IE 9]>
+        <script src="http://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+        <script src="http://cdn.staticfile.org/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+	<link href="https://cdn.bootcss.com/animate.css/3.5.2/animate.css" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="mck-body animated fadeIn">
+    <div class="mck-loading" id="loading-container">
+        <div class="mck-loading-item">
+            <div class="mck-loading-text">
+                <span class="mck-loading-textcontent">正在努力加载中...</span>
+            </div>
+        </div>
+    </div>
+    <div class="mck-sidebar">
+        <canvas id="floating"></canvas>
+        <div class="mck-logo">
+            <img src="//mcimages/logo.png" />
+        </div>
+        <div class="mck-menu">
+            <div class="mck-menu__collapse" id="mck-menu__collapse">
+                <span class="mck-menu__collapse_line"></span>
+                <span class="mck-menu__collapse_line"></span>
+            </div>
+            <div class="mck-menu__normal">
+                <div class="mck-menu-item">
+                    <a href="/">HOME</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/work/index.html">WORK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/tech/index.html">TECH</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/life/index.html">LIFE</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/link/index.html">LINK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/map/index.html" class="mck-menu-item__new">
+                        <img src="//mcimages/emoji1.png" class="mck-menu-item__new_icon animated bounce"/>TRAVEL
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="mck-footer">
+            <div class="mck-footer-text">MOCHIKO ❤ Since 2017</div>
+            <div class="mck-footer-text" id="busuanzi_container_site_pv">你是第<span id="busuanzi_value_site_pv"></span>个光临的童鞋！</div>
+        </div>
+    </div>
+	<div class="mck-main mck-post-main"> 
+        <div class="mck-post-header ">
+            <a class="mck-post-back" href="/"></a>
+            <div class="mck-post-cover" style="background-image: url(https://www.mochiko.cn/mcimages/q5.png)"></div>
+            <div class="mck-post-category"><a href="#">技术打工人</a><span class="mck-post-date">2018-09-27</span></div>
+            <div class="mck-post-title">Promise的相关小结</div>
+            <ul class="mck-post-tags">
+				
+					
+
+<li class="mck-post-tag"><a class="a_tag" href="/tags/JavaScript/index.html">JavaScript</a></li>
+				
+            </ul>
+			<ol class="mck-post-menu"><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E5%89%8D%E8%A8%80"><span class="mck-post-menu-number">1.</span> <span class="mck-post-menu-text">前言</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E5%88%9D%E5%AE%9A%E4%B9%89"><span class="mck-post-menu-number">2.</span> <span class="mck-post-menu-text">初定义</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E6%96%B9%E6%B3%95"><span class="mck-post-menu-number">3.</span> <span class="mck-post-menu-text">方法</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#Promise-prototype-then"><span class="mck-post-menu-number">4.</span> <span class="mck-post-menu-text">Promise.prototype.then()</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#Promise-prototype-catch"><span class="mck-post-menu-number">5.</span> <span class="mck-post-menu-text">Promise.prototype.catch()</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#Promise-all"><span class="mck-post-menu-number">6.</span> <span class="mck-post-menu-text">Promise.all()</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#Promise-race"><span class="mck-post-menu-number">7.</span> <span class="mck-post-menu-text">Promise.race()</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#Promise-resolve"><span class="mck-post-menu-number">8.</span> <span class="mck-post-menu-text">Promise.resolve()</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#Promise-reject"><span class="mck-post-menu-number">9.</span> <span class="mck-post-menu-text">Promise.reject()</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E6%B3%A8%E6%84%8F%E7%82%B9"><span class="mck-post-menu-number">10.</span> <span class="mck-post-menu-text">注意点</span></a><ol class="mck-post-menu-child"><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#%E7%8A%B6%E6%80%81%E5%8F%98%E5%8C%96"><span class="mck-post-menu-number">10.1.</span> <span class="mck-post-menu-text">状态变化</span></a></li><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#%E5%8F%82%E6%95%B0-%E8%BF%94%E5%9B%9E%E5%80%BC"><span class="mck-post-menu-number">10.2.</span> <span class="mck-post-menu-text">参数&#x2F;返回值</span></a></li><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F"><span class="mck-post-menu-number">10.3.</span> <span class="mck-post-menu-text">执行顺序</span></a></li></ol></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E6%89%8B%E5%86%99Promise"><span class="mck-post-menu-number">11.</span> <span class="mck-post-menu-text">手写Promise</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%AB%A0"><span class="mck-post-menu-number">12.</span> <span class="mck-post-menu-text">参考文章</span></a></li></ol>
+        </div>
+
+        <div class="mck-post-content">
+			<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>网上关于Promise的文章确实是非常多了，但是自己实践的并不多，这里是针对自己的一个知识点小结和梳理，而且由Promise延伸出的关于事件循环的机制也是可以挖出很多东西的，不过这个总结可能就是涉及到一些皮毛，当然啦如果有错误欢迎提出^_^。</p>
+<span id="more"></span>
+
+<h1 id="初定义"><a href="#初定义" class="headerlink" title="初定义"></a>初定义</h1><p><strong>定义</strong>：Promise对象用于一个异步操作的最终完成&#x2F;失败及其结果值的表示。<br><strong>使用原因：</strong>避免回调嵌套层次过多。<br><strong>拥有状态：</strong></p>
+<ul>
+<li>pending：初始&#x2F;未定状态，初始化Promise时，调用executor函数后的状态。</li>
+<li>fulfilled：成功状态。</li>
+<li>rejected：失败状态。</li>
+</ul>
+<p><strong>状态转化：</strong></p>
+<ul>
+<li>pending -&gt; fulfilled：操作成功</li>
+<li>pending -&gt; rejected：操作失败<br>状态转化是单向的，不可逆转。</li>
+</ul>
+<p><strong>最基本用法：</strong><br>可以看到创建一个Promise实例，传入的参数是一个函数，这个函数称为executor&#x2F;执行器。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">new Promise((resolve, reject) =&gt; &#123;</span><br><span class="line">if (success) &#123;</span><br><span class="line">resolve(a) // pending to resolved</span><br><span class="line">&#125; else &#123;</span><br><span class="line">reject(err) // pending to rejectd</span><br><span class="line">&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h1 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h1><p>Promise对象本身，有一些方法：</p>
+<ul>
+<li>race()</li>
+<li>reject()</li>
+<li>resolve()</li>
+<li>all()</li>
+</ul>
+<p>查看Promise的原型，发现它内置有几个方法：</p>
+<ul>
+<li>catch()</li>
+<li>finally()</li>
+<li>then()</li>
+</ul>
+<h1 id="Promise-prototype-then"><a href="#Promise-prototype-then" class="headerlink" title="Promise.prototype.then()"></a>Promise.prototype.then()</h1><ul>
+<li>参数：处理成功的函数，处理错误的函数</li>
+<li>返回值：返回一个Promise对象，所以可以链式调用。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">promise.then(</span><br><span class="line">() =&gt; &#123; console.log(&#x27;我是成功后被执行的&#x27;) &#125;,</span><br><span class="line">() =&gt; &#123; console.log(&#x27;我是失败后被执行的&#x27;) &#125;)</span><br></pre></td></tr></table></figure>
+<h1 id="Promise-prototype-catch"><a href="#Promise-prototype-catch" class="headerlink" title="Promise.prototype.catch()"></a>Promise.prototype.catch()</h1><ul>
+<li>参数：捕捉的错误&#x2F;reject()传来的参数</li>
+<li>返回值：返回一个Promise对象，所以可以链式调用。</li>
+<li>Promise和then()中抛出错误能够不断传递，就能够在下一个catch()中统一处理，所以一般省略then中的第二个失败执行的函数。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">promise.then(</span><br><span class="line">() =&gt; &#123; console.log(&#x27;我是成功后被执行的&#x27;) &#125;</span><br><span class="line">).catch(</span><br><span class="line">(err) =&gt; &#123; console.log(err) &#125;)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>使用rejects()方法改变状态和抛出错误 throw new Error() 的作用是相同的</p>
+</blockquote>
+<h1 id="Promise-all"><a href="#Promise-all" class="headerlink" title="Promise.all()"></a>Promise.all()</h1><ul>
+<li>参数：可迭代参数，如：数组。</li>
+<li>用途：处理一些并发的异步操作，需要保证每个都执行完毕。</li>
+<li>结果：状态全为fulfilled-&gt;fulfilled，否则-&gt;rejected。</li>
+</ul>
+<h1 id="Promise-race"><a href="#Promise-race" class="headerlink" title="Promise.race()"></a>Promise.race()</h1><ul>
+<li>参数：可迭代参数，如：数组。</li>
+<li>用途：处理一些并发的异步操作，只需要其中一个执行完毕。</li>
+<li>结果：所有异步操作中有一个状态先改变，就采纳那个最先改变的状态为结果。</li>
+</ul>
+<h1 id="Promise-resolve"><a href="#Promise-resolve" class="headerlink" title="Promise.resolve()"></a>Promise.resolve()</h1><ul>
+<li>参数：普通值、Promise对象、带有then的对象。</li>
+<li>结果：一般情况返回一个状态为fulfilled的Promise对象。解析发生错误则返回rejected的Promise对象。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Promise.resolve(&#x27;success&#x27;)</span><br><span class="line">// 其中[[PromiseStatus]]:&quot;resolved&quot;</span><br><span class="line"></span><br><span class="line">Promise.reject(&#x27;fail&#x27;)</span><br><span class="line">// 其中[[PromiseStatus]]:&quot;rejected&quot;</span><br><span class="line"></span><br><span class="line">Promise.resolve(Promise.reject(&#x27;fail&#x27;))</span><br><span class="line">// 其中[[PromiseStatus]]:&quot;rejected&quot;</span><br></pre></td></tr></table></figure>
+<p>由这个例子可以看出浏览器认为<code>resolved</code>和<code>fulfilled</code>是等价的，但<code>Promise.resolve()</code> 不一定让promise最终是<code>fulfilled</code>。所以对于<code>resolved</code>本身和<code>fulfilled</code>的区别，可以理解为<code>resolved</code>等价于<code>compiled</code>，即可能是成功也可能是失败。</p>
+<h1 id="Promise-reject"><a href="#Promise-reject" class="headerlink" title="Promise.reject()"></a>Promise.reject()</h1><ul>
+<li>参数： 发生异常的原因。</li>
+<li>结果：返回一个rejected状态的Promise对象。</li>
+</ul>
+<h1 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h1><h2 id="状态变化"><a href="#状态变化" class="headerlink" title="状态变化"></a>状态变化</h2><ul>
+<li>Promise状态只会改变一次。</li>
+<li>构造函数中的resolve()&#x2F;reject()只有第一次执行有效，多次调用没有作用。</li>
+<li>Promise状态改变，并且传递了一个值，后续调用.then()&#x2F;.catch()都可直接拿到该值。</li>
+</ul>
+<h2 id="参数-返回值"><a href="#参数-返回值" class="headerlink" title="参数&#x2F;返回值"></a>参数&#x2F;返回值</h2><ul>
+<li>.then()&#x2F;.catch()的参数应该是函数，传入非函数则会发生值穿透。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Promise.resolve(1)</span><br><span class="line">.then(2)</span><br><span class="line">.then(Promise.resolve(3))</span><br><span class="line">.then(console.log) //1</span><br></pre></td></tr></table></figure>
+<ul>
+<li>.then()&#x2F;.catch()不能返回Promise本身，会造成死循环。</li>
+<li>.then()&#x2F;.catch()中return一个error对象并不会抛出错误，所以无法捕捉。</li>
+</ul>
+<blockquote>
+<p>因为返回任意一个非Promise 的值都会被包裹成Promise对象，即 return new Error(‘error!!!’)等价于return Promise.resolve(new Error(‘error!!!’))</p>
+</blockquote>
+<h2 id="执行顺序"><a href="#执行顺序" class="headerlink" title="执行顺序"></a>执行顺序</h2><ul>
+<li>Promise构造函数是同步执行的，resolve()&#x2F;reject()后的代码也会执行。Promise.then()中的函数是异步执行的。**<br>以下输出：1243</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">const promise = new Promise((resolve, reject) =&gt; &#123;</span><br><span class="line">console.log(1)</span><br><span class="line">resolve()</span><br><span class="line">console.log(2)</span><br><span class="line">&#125;)</span><br><span class="line">promise.then(() =&gt; &#123;</span><br><span class="line">console.log(3)</span><br><span class="line">&#125;)</span><br><span class="line">console.log(4)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>process.nextTick</code>和<code>promise.then</code>属于<code>microtask</code>，<code>setImmediate</code>属于 <code>macrotask</code>。在每一次事件循环中，macrotask只会提取一个执行，而microtask会一直提取，直到microsoft队列为空为止。</li>
+</ul>
+<p>以下输出：end nextTick then setTimeout1 setTimeout2</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">process.nextTick(() =&gt; &#123;</span><br><span class="line">console.log(&#x27;nextTick&#x27;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">setTimeout(() =&gt; &#123;</span><br><span class="line">console.log(&#x27;setTimeout1&#x27;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">Promise.resolve()</span><br><span class="line">.then(() =&gt; &#123;</span><br><span class="line">console.log(&#x27;then&#x27;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">setTimeout(() =&gt; &#123;</span><br><span class="line">console.log(&#x27;setTimeout2&#x27;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">console.log(&#x27;end&#x27;)</span><br></pre></td></tr></table></figure>
+
+<p>补充：<br><strong>macrotasks:</strong></p>
+<ul>
+<li>setTimeout</li>
+<li>setInterval</li>
+<li>setImmediate</li>
+<li>requestAnimationFrame</li>
+<li>I&#x2F;O</li>
+<li>UI rendering</li>
+</ul>
+<p><strong>microtasks:</strong></p>
+<ul>
+<li>process.nextTick</li>
+<li>Promises</li>
+<li>Object.observe</li>
+<li>MutationObserver</li>
+</ul>
+<h1 id="手写Promise"><a href="#手写Promise" class="headerlink" title="手写Promise"></a>手写Promise</h1><p><strong>构造函数</strong><br>首先我们要知道Promise本身拥有的属性：<br>1.状态（Pending、Fullfied、Rejected），在状态发生改变后，就不会再进行变化了。<br>2.本次Promise的执行结果，value存储<br>3.我们最开始传入的方法实际是同步直接执行的。它需要一个resolve方法和reject方法作为参数。<br>4.如果它返回value还是一个Promise，还是直接返回，执行，直到拿到一个非Promise的结果（借助then）。</p>
+<p>这里我们需要保证最后把结果传给then的回调方法们，就需要利用一个setTimeout，把这个传值的环节放在事件循环的最后。<br>resolvedCallbacks和rejectCallbacks实际存储的都是then调用后拿到的回调函数。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">status = STATUS.PENDING</span><br><span class="line">    value = undefined</span><br><span class="line">    resolvedCallbacks = []</span><br><span class="line">    rejectCallbacks = []</span><br><span class="line">    resolve = (value) =&gt; &#123;</span><br><span class="line">        if (value instanceof MyPromise) &#123;</span><br><span class="line">            return value.then(resolve, reject);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // 本轮事件循环的末尾</span><br><span class="line">        setTimeout(() =&gt; &#123;</span><br><span class="line">            if (this.state === STATUS.PENDING) &#123;</span><br><span class="line">                this.state = STATUS.FULLFIED;</span><br><span class="line">                this.value = value;</span><br><span class="line">                this.resolvedCallbacks.forEach(callback =&gt; &#123;</span><br><span class="line">                    callback(value);</span><br><span class="line">                &#125;)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line"></span><br><span class="line">        this.status = STATUS.FULLFIED</span><br><span class="line">    &#125;</span><br><span class="line">    reject= (value) =&gt; &#123;</span><br><span class="line">        this.status = STATUS.REJECT</span><br><span class="line">        setTimeout(() =&gt; &#123;</span><br><span class="line">            if (this.state === PENDING) &#123;</span><br><span class="line">                this.state = STATUS.REJECT;</span><br><span class="line">                this.value = value;</span><br><span class="line">            &#125;</span><br><span class="line">            this.rejectCallbacks.forEach(callback =&gt; &#123;</span><br><span class="line">                callback(value);</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p><strong>then函数</strong><br>1.then返回的就是一个Promise，入参两个，1个是成功的回调，一个是失败的回调。<br>2.上面说了，它要把自己的方法放进队列里。我们需要实现一个一个接着去执行，所以需要包裹一层。<br>如果是同步的方法，我们直接执行完拿到结果就好了，如果是异步的，返回的还是一个Promise.then（Promise）去执行。</p>
+<h1 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h1><p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000011652907">ES6关于Promise的用法</a><br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/30797777">Promise 必知必会（十道题）</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/tugenhua0707/p/7675185.html">javascript中的异步 macrotask 和 microtask 简介</a><br><a target="_blank" rel="noopener" href="https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/">Tasks, microtasks, queues and schedules</a><br><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/25915634/difference-between-microtask-and-macrotask-within-an-event-loop-context">Difference between microtask and macrotask within an event loop context</a></p>
+
+        </div>
+        <div class="mck-post-footer">
+    
+        <a href="/2018/08/08/life-20180808-res/index.html">上一篇</a>
+    
+    
+        <a href="/2018/10/27/tech-20181027-cubizer/index.html">下一篇</a>
+    
+</div>
+        <div class="mck-post-comments" id="mck-post-comments"></div>
+<script>
+    new Valine({
+        el: '#mck-post-comments',
+        appId: 'bhScVsXkKqR32IJd3MXvu41C-gzGzoHsz',
+        appKey: 'm8alBLTHvrVy8DQvzGshxoA5',
+        placeholder: '说点什么o_o ....',
+        avatar: 'monsterid'
+    });
+</script>
+        <div class="mck-about">
+    <div class="mck-about-title mck-section-title">ABOUT</div>
+    <div class="mck-about-main">
+        欢迎来到小年糕的后花园，年糕的小站开设于2017年，博主年糕君是一个爱好十分广泛的人，也是一个比较佛系的人，不定时爆发脑洞更新（因为是社畜，也可能失踪很久，工作太累了）。
+        <a href="/about/index.html" target="_blank" class="mck-about-more">查看更多</a>
+    </div>
+</div>
+    </div>
+    <script async src="/js/busuanzi.js"></script>
+    <script>
+    $(document).ready(function () {
+        setTimeout(() => {
+            $('#loading-container').fadeOut();
+        }, 2000);
+
+        $('#mck-menu__collapse').click(function() {
+            var menu = $('.mck-menu__normal');
+            if (menu.hasClass('opened')) {
+                $(this).removeClass('opened')
+                menu.removeClass('opened')
+            } else {
+                $(this).addClass('opened')
+                menu.addClass('opened')
+            }
+        })
+    })
+    </script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/prettify/r298/prettify.min.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+        jQuery("pre").addClass("prettyprint linenums");
+        prettyPrint();
+        });
+    </script>
+    <script async src="/js/sakura.js"></script>
+</body>
+</html>

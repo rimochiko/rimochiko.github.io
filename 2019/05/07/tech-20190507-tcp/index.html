@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!--Description-->
+    
+        <meta name="description" content="愿你有一个好心情~^-^">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="阿糕">
+    
+
+    <!-- Title -->
+    
+    <title>传输层的小结 | 阿糕家后院</title>
+    <!--[if lt IE 9]>
+        <script src="http://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+        <script src="http://cdn.staticfile.org/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+	<link href="https://cdn.bootcss.com/animate.css/3.5.2/animate.css" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="mck-body animated fadeIn">
+    <div class="mck-loading" id="loading-container">
+        <div class="mck-loading-item">
+            <div class="mck-loading-text">
+                <span class="mck-loading-textcontent">正在努力加载中...</span>
+            </div>
+        </div>
+    </div>
+    <div class="mck-sidebar">
+        <canvas id="floating"></canvas>
+        <div class="mck-logo">
+            <img src="//mcimages/logo.png" />
+        </div>
+        <div class="mck-menu">
+            <div class="mck-menu__collapse" id="mck-menu__collapse">
+                <span class="mck-menu__collapse_line"></span>
+                <span class="mck-menu__collapse_line"></span>
+            </div>
+            <div class="mck-menu__normal">
+                <div class="mck-menu-item">
+                    <a href="/">HOME</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/work/index.html">WORK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/tech/index.html">TECH</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/life/index.html">LIFE</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/link/index.html">LINK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/map/index.html" class="mck-menu-item__new">
+                        <img src="//mcimages/emoji1.png" class="mck-menu-item__new_icon animated bounce"/>TRAVEL
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="mck-footer">
+            <div class="mck-footer-text">MOCHIKO ❤ Since 2017</div>
+            <div class="mck-footer-text" id="busuanzi_container_site_pv">你是第<span id="busuanzi_value_site_pv"></span>个光临的童鞋！</div>
+        </div>
+    </div>
+	<div class="mck-main mck-post-main"> 
+        <div class="mck-post-header ">
+            <a class="mck-post-back" href="/"></a>
+            <div class="mck-post-cover" style="background-image: url(https://www.mochiko.cn/pimgs/history/0069luTRgy1fqh1k86j2zj30bq0odafa.jpg)"></div>
+            <div class="mck-post-category"><a href="#">技术打工人</a><span class="mck-post-date">2019-05-07</span></div>
+            <div class="mck-post-title">传输层的小结</div>
+            <ul class="mck-post-tags">
+				
+					
+
+<li class="mck-post-tag"><a class="a_tag" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/index.html">计算机网络</a></li>
+				
+            </ul>
+			<ol class="mck-post-menu"><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E5%89%8D%E8%A8%80"><span class="mck-post-menu-number">1.</span> <span class="mck-post-menu-text">前言</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E5%87%BA%E7%8E%B0%E4%BC%A0%E8%BE%93%E5%B1%82"><span class="mck-post-menu-number">2.</span> <span class="mck-post-menu-text">为什么会出现传输层</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E5%85%B3%E4%BA%8E%E7%AB%AF%E5%8F%A3"><span class="mck-post-menu-number">3.</span> <span class="mck-post-menu-text">关于端口</span></a><ol class="mck-post-menu-child"><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#%E7%AB%AF%E5%8F%A3%E3%81%AE%E5%88%86%E7%B1%BB"><span class="mck-post-menu-number">3.1.</span> <span class="mck-post-menu-text">端口の分类</span></a></li></ol></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E4%BC%A0%E8%BE%93%E5%B1%82%E7%9A%84%E4%B8%A4%E7%A7%8D%E5%8D%8F%E8%AE%AE"><span class="mck-post-menu-number">4.</span> <span class="mck-post-menu-text">传输层的两种协议</span></a><ol class="mck-post-menu-child"><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#UDP"><span class="mck-post-menu-number">4.1.</span> <span class="mck-post-menu-text">UDP</span></a><ol class="mck-post-menu-child"><li class="mck-post-menu-item mck-post-menu-level-3"><a class="mck-post-menu-link" href="#UDP%E6%98%AF%E6%97%A0%E8%BF%9E%E6%8E%A5%E7%9A%84"><span class="mck-post-menu-number">4.1.1.</span> <span class="mck-post-menu-text">UDP是无连接的</span></a></li><li class="mck-post-menu-item mck-post-menu-level-3"><a class="mck-post-menu-link" href="#UDP%E5%B0%BD%E6%9C%80%E5%A4%A7%E5%8A%AA%E5%8A%9B%E4%BA%A4%E4%BB%98"><span class="mck-post-menu-number">4.1.2.</span> <span class="mck-post-menu-text">UDP尽最大努力交付</span></a></li><li class="mck-post-menu-item mck-post-menu-level-3"><a class="mck-post-menu-link" href="#UDP%E9%9D%A2%E5%90%91%E6%8A%A5%E6%96%87"><span class="mck-post-menu-number">4.1.3.</span> <span class="mck-post-menu-text">UDP面向报文</span></a></li><li class="mck-post-menu-item mck-post-menu-level-3"><a class="mck-post-menu-link" href="#UDP%E6%B2%A1%E6%9C%89%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6"><span class="mck-post-menu-number">4.1.4.</span> <span class="mck-post-menu-text">UDP没有拥塞控制</span></a></li><li class="mck-post-menu-item mck-post-menu-level-3"><a class="mck-post-menu-link" href="#UDP%E6%94%AF%E6%8C%81x%E5%AF%B9y%E7%9A%84%E4%BA%A4%E4%BA%92%E9%80%9A%E4%BF%A1"><span class="mck-post-menu-number">4.1.5.</span> <span class="mck-post-menu-text">UDP支持x对y的交互通信</span></a></li><li class="mck-post-menu-item mck-post-menu-level-3"><a class="mck-post-menu-link" href="#UDP%E9%A6%96%E9%83%A8%E5%BC%80%E9%94%80%E5%B0%8F"><span class="mck-post-menu-number">4.1.6.</span> <span class="mck-post-menu-text">UDP首部开销小</span></a></li></ol></li><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#TCP"><span class="mck-post-menu-number">4.2.</span> <span class="mck-post-menu-text">TCP</span></a><ol class="mck-post-menu-child"><li class="mck-post-menu-item mck-post-menu-level-3"><a class="mck-post-menu-link" href="#TCP%E6%98%AF%E9%9D%A2%E5%90%91%E8%BF%9E%E6%8E%A5%E7%9A%84"><span class="mck-post-menu-number">4.2.1.</span> <span class="mck-post-menu-text">TCP是面向连接的</span></a></li><li class="mck-post-menu-item mck-post-menu-level-3"><a class="mck-post-menu-link" href="#%E6%AF%8F%E6%9D%A1%E8%BF%9E%E6%8E%A5%E5%8F%AA%E8%83%BD%E6%9C%89%E4%B8%A4%E4%B8%AA%E7%AB%AF%E5%8F%A3"><span class="mck-post-menu-number">4.2.2.</span> <span class="mck-post-menu-text">每条连接只能有两个端口</span></a></li><li class="mck-post-menu-item mck-post-menu-level-3"><a class="mck-post-menu-link" href="#TCP%E6%8F%90%E4%BE%9B%E5%8F%AF%E9%9D%A0%E4%BA%A4%E4%BB%98%E7%9A%84%E6%9C%8D%E5%8A%A1"><span class="mck-post-menu-number">4.2.3.</span> <span class="mck-post-menu-text">TCP提供可靠交付的服务</span></a><ol class="mck-post-menu-child"><li class="mck-post-menu-item mck-post-menu-level-4"><a class="mck-post-menu-link" href="#%E5%81%9C%E6%AD%A2%E7%AD%89%E5%BE%85%E5%8D%8F%E8%AE%AE"><span class="mck-post-menu-number">4.2.3.1.</span> <span class="mck-post-menu-text">停止等待协议</span></a></li></ol></li><li class="mck-post-menu-item mck-post-menu-level-3"><a class="mck-post-menu-link" href="#TCP%E6%8F%90%E4%BE%9B%E5%85%A8%E5%8F%8C%E5%B7%A5%E9%80%9A%E4%BF%A1"><span class="mck-post-menu-number">4.2.4.</span> <span class="mck-post-menu-text">TCP提供全双工通信</span></a></li><li class="mck-post-menu-item mck-post-menu-level-3"><a class="mck-post-menu-link" href="#%E4%BC%A0%E8%BE%93%E6%98%AF%E9%9D%A2%E5%90%91%E5%AD%97%E8%8A%82%E6%B5%81%E7%9A%84"><span class="mck-post-menu-number">4.2.5.</span> <span class="mck-post-menu-text">传输是面向字节流的</span></a></li></ol></li></ol></li></ol>
+        </div>
+
+        <div class="mck-post-content">
+			<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>本文是复习原来的课本《计算机网络（第6版）》而总结出来的梳理思维的小笔记，因为内容也比较多，一次是整理不完了，所以又是慢慢补坑。若有错误欢迎提出(ง •_•)ง。</p>
+<span id="more"></span>
+
+<h1 id="为什么会出现传输层"><a href="#为什么会出现传输层" class="headerlink" title="为什么会出现传输层"></a>为什么会出现传输层</h1><p>我们知道网络层的IP协议可以通过IP地址来帮助我们定位到某一台电脑，但是真的在进行通信的是电脑上的<strong>进程</strong>，所以我们需要一个东西来区分不同电脑的不同进程，这也是为什么会出现一个传输层。<br>但是这里就会出现一些问题：</p>
+<ol>
+<li>不同的操作系统的进程标识符格式不同。</li>
+<li>进程的创建和撤销是动态的。</li>
+<li>我们需要的终点入口是功能，而不是实现这个功能的进行是哪一个。</li>
+</ol>
+<p>解决的方法：<strong>使用协议端口号（简称端口）</strong><br>虽然通信的终点是应用进程，但我们只要把传送的东西交给端口，剩下的工作就由传输层的协议来完成。</p>
+<h1 id="关于端口"><a href="#关于端口" class="headerlink" title="关于端口"></a>关于端口</h1><h2 id="端口の分类"><a href="#端口の分类" class="headerlink" title="端口の分类"></a>端口の分类</h2><ol>
+<li><strong>服务器端使用的端口号</strong><br>熟知端口号（0<del>1023）：分派给TCP&#x2F;IP重要应用程序，如DNS是53，SMTP是25。<br>登记端口号（1024</del>49151）：为没有熟知端口号的应用程序使用的。</li>
+<li><strong>客户端使用的端口号</strong>（49152~65535）。又叫短暂端口号，客户进程运行时才进行动态选择。通信结束后，端口号就会不复存在，后面又会分配给新的客户进程使用。</li>
+</ol>
+<h1 id="传输层的两种协议"><a href="#传输层的两种协议" class="headerlink" title="传输层的两种协议"></a>传输层的两种协议</h1><p>分别是无连接的UDP和面向连接的TCP。</p>
+<h2 id="UDP"><a href="#UDP" class="headerlink" title="UDP"></a>UDP</h2><h3 id="UDP是无连接的"><a href="#UDP是无连接的" class="headerlink" title="UDP是无连接的"></a>UDP是无连接的</h3><p>发送数据之前UDP不需要像TCP一样建立连接，所以减少了开销和时延。</p>
+<h3 id="UDP尽最大努力交付"><a href="#UDP尽最大努力交付" class="headerlink" title="UDP尽最大努力交付"></a>UDP尽最大努力交付</h3><p>UDP是不保证可靠交付的，也就是传输很快，但是不保证质量。</p>
+<h3 id="UDP面向报文"><a href="#UDP面向报文" class="headerlink" title="UDP面向报文"></a>UDP面向报文</h3><ul>
+<li><strong>UDP对于应用层给它的报文</strong>：不合并和不拆分，只是<strong>保留边界</strong>。所以应用层给它多少，他就一次性发多少。</li>
+<li><strong>UDP对于网络层给它的报文</strong>：去除首部之后，就原封不动的都给应用层。</li>
+</ul>
+<h3 id="UDP没有拥塞控制"><a href="#UDP没有拥塞控制" class="headerlink" title="UDP没有拥塞控制"></a>UDP没有拥塞控制</h3><p>所以即使出现网络拥塞，主机的发送速率也不会降低。对于视频在线直播，网络电话之类的应用来说是很有效的，它们需要实时的传输速率，又可以适当的有数据的损失。</p>
+<h3 id="UDP支持x对y的交互通信"><a href="#UDP支持x对y的交互通信" class="headerlink" title="UDP支持x对y的交互通信"></a>UDP支持x对y的交互通信</h3><p>这句话的意思是UDP支持下面四种通信：</p>
+<ul>
+<li>一对一</li>
+<li>一对多</li>
+<li>多对一</li>
+<li>多对多</li>
+</ul>
+<h3 id="UDP首部开销小"><a href="#UDP首部开销小" class="headerlink" title="UDP首部开销小"></a>UDP首部开销小</h3><p>UDP首部只有8个字节，而TCP首部有20个字节。<br><strong>UDP首部的结构</strong>：</p>
+<ol>
+<li>源端口</li>
+<li>目的端口</li>
+<li>长度</li>
+<li>检验和<br>这里每个都是占了2个字节。</li>
+</ol>
+<p><strong>UDP的伪首部</strong>：<br>在UDP的8个字节首部的基础上，其实还有一个12字节的伪首部。<br>之所以是伪首部，是因为它址在UDP计算检验和的时候<strong>临时添加</strong>在数据报前的：</p>
+<ul>
+<li>这个伪首部不会给应用层也不会给网络层。</li>
+<li>检验方法是把首部和数据部分一起检验。</li>
+<li>如果检查错误，就丢弃&#x2F;带着警告交给应用层。</li>
+</ul>
+<h2 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a>TCP</h2><h3 id="TCP是面向连接的"><a href="#TCP是面向连接的" class="headerlink" title="TCP是面向连接的"></a>TCP是面向连接的</h3><p>应用程序在使用TCP协议前，必须要通过三次握手进行建立，要经过四次挥手来结束连接。<br>来插一个自己画的有机物小剧场，帮助记忆：<br><img src="https://www.mochiko.cn/pimgs/history/0069luTRgy1fqh1k86j2zj30bq0odafa.jpg" alt="图片描述"></p>
+<p><strong>Q：为什么是三次握手，不是两次握手？</strong><br>A: 在某种情况下，假如只有两次握手，第一个分组在路上延迟发送了，等到传输结束后，服务器又收到了SYN请求，此时建立连接的话就迟迟得不到客户端的回应。<br><img src="https://www.mochiko.cn/pimgs/history/0069luTRgy1fqh1k9up92j30dw0aktap.jpg" alt="图片描述"></p>
+<h3 id="每条连接只能有两个端口"><a href="#每条连接只能有两个端口" class="headerlink" title="每条连接只能有两个端口"></a>每条连接只能有两个端口</h3><p>TCP连接的端口叫做<strong>套接字</strong>（插口），注意很多地方都有这个套接字的概念，但是在这里它的定义是：</p>
+<pre><code>端口号+IP地址
+</code></pre>
+<p>每一条TCP连接唯一地被通信两端的两个端点所确定。</p>
+<h3 id="TCP提供可靠交付的服务"><a href="#TCP提供可靠交付的服务" class="headerlink" title="TCP提供可靠交付的服务"></a>TCP提供可靠交付的服务</h3><p>现实情况下：</p>
+<ol>
+<li>传输信道可能会有差错。</li>
+<li>接收方可能不能及时处理收到的数据。<br>所以我们必须要想办法来应付这两种情况，才能实现可靠的服务：</li>
+</ol>
+<h4 id="停止等待协议"><a href="#停止等待协议" class="headerlink" title="停止等待协议"></a>停止等待协议</h4><p>我们<strong>假设只有年糕君在发送数据，有机物在接收数据</strong>，并发送确认（但是现实是双方都可以作为发送方和接收方）。</p>
+<ul>
+<li>正常情况下，年糕君发送数据后，有机物收到后再回复一个确认的消息，年糕君收到这个确认的消息才会继续发送下一个。</li>
+</ul>
+<p><strong>情景一：发送分组丢失</strong><br>如果一开始年糕君发送的数据块M丢失了，有机物迟迟没有回应，年糕君会通过等待回应的时间来判断块M是不是丢失了，然后就选择重发，这就是<strong>超时重传</strong>。</p>
+<ul>
+<li>所以必须给予年糕君一个<strong>超时计时器</strong>，如果年糕君收到有机物确认的时间比定时要早，那就撤销目前的计时，继续发送下一个数据块。<br><strong>注意点：</strong></li>
+</ul>
+<ol>
+<li>年糕君在发送一个分组后，必须要<strong>保留发送分组的副本</strong>。</li>
+<li>分组和确认分组必须进行编号，这样才能明确哪个收到了哪个没收到。</li>
+<li>计时器设置的重传时间应该<strong>比数据在分组传输的平均往返时间更长</strong>。</li>
+</ol>
+<p><strong>情景二：确认丢失</strong><br>如果有机物给年糕君的对数据块M的确认丢失了。年糕君在设定时间内没有收到确认，就会又发送一个M的副本，有机物收到后此时应该：</p>
+<ul>
+<li>丢弃这个重复的分组</li>
+<li>向年糕君发送确认，以免年糕君又继续重发M副本。</li>
+</ul>
+<p>这样我们就可以实现在不可靠的传输网络上实现可靠通信，这种协议通常称为：<strong>自动重传请求ARQ</strong>。</p>
+<p><strong>停止等待协议的缺陷</strong><br>信道利用率太低。<br>因为年糕君必须要等到收到有机物的确认才能发送下一个，这其中包括了很多时间，除了包括分组和确认的发送时间，还要加上往返时间（RTT）。但这个过程的<strong>核心只是分组发送的时间</strong>。</p>
+<p><strong>解决方法</strong><br>采用<strong>流水线传输</strong>，也就是年糕君可以一次性发送多个分组，不必收到确认才发送下一个。</p>
+<h3 id="TCP提供全双工通信"><a href="#TCP提供全双工通信" class="headerlink" title="TCP提供全双工通信"></a>TCP提供全双工通信</h3><p>所谓全双工通信的定义是：</p>
+<blockquote>
+<p>通信的双方可以同时发送和接收信息的信息交互方式</p>
+</blockquote>
+<p>TCP允许通信双方在<strong>任何时候都能发送数据</strong>。<br>So，为什么？<br>因为发送方和接收方都拥有<strong>发送缓存和接受缓存</strong>，存放双向通信的数据。<br>所以，应用程序把数据块放进缓存里后，就可以去做自己的事情了。比如在发送的时候，只用丢给缓存，就可以拜拜啦，在接收的时候，有需要再从缓存里去拿行了。<br><img src="https://www.mochiko.cn/pimgs/history/0069luTRgy1fqlpphphbzj30b4060my7.jpg" alt="图片描述"></p>
+<h3 id="传输是面向字节流的"><a href="#传输是面向字节流的" class="headerlink" title="传输是面向字节流的"></a>传输是面向字节流的</h3><p><strong>Q：什么是“流”？</strong><br>A: 流入到进程或从进程流出的字节序列。</p>
+<p>虽然程序和TCP的交互是一个个数据块（大小不等），但TCP认为这些都只是一串无结构的字节流。<br>【虽然我的漫画画的是一个个小块（包裹)，但这个小块是可以被拆开，然后把里面的东西（字节）取出来一些或者填进去一些( •̀ ω •́ )】<br>它不保证发送方的数据块和接收方的数据块是一样的大小，比如你给了它10个块，但是它只用了4个块就把你传来的东西送给它的上级了。<br>TCP是根据当前的窗口值和拥塞情况来决定一个报文段包含多少字节的。如果TCP缓存数据块太长，就划分短一点再发，如果进行一次只发来一个，就等到足够字数再发送出去。</p>
+
+        </div>
+        <div class="mck-post-footer">
+    
+        <a href="/2019/04/07/tech-20190407-webgl/index.html">上一篇</a>
+    
+    
+        <a href="/2019/07/21/work-cuttlenotes/index.html">下一篇</a>
+    
+</div>
+        <div class="mck-post-comments" id="mck-post-comments"></div>
+<script>
+    new Valine({
+        el: '#mck-post-comments',
+        appId: 'bhScVsXkKqR32IJd3MXvu41C-gzGzoHsz',
+        appKey: 'm8alBLTHvrVy8DQvzGshxoA5',
+        placeholder: '说点什么o_o ....',
+        avatar: 'monsterid'
+    });
+</script>
+        <div class="mck-about">
+    <div class="mck-about-title mck-section-title">ABOUT</div>
+    <div class="mck-about-main">
+        欢迎来到小年糕的后花园，年糕的小站开设于2017年，博主年糕君是一个爱好十分广泛的人，也是一个比较佛系的人，不定时爆发脑洞更新（因为是社畜，也可能失踪很久，工作太累了）。
+        <a href="/about/index.html" target="_blank" class="mck-about-more">查看更多</a>
+    </div>
+</div>
+    </div>
+    <script async src="/js/busuanzi.js"></script>
+    <script>
+    $(document).ready(function () {
+        setTimeout(() => {
+            $('#loading-container').fadeOut();
+        }, 2000);
+
+        $('#mck-menu__collapse').click(function() {
+            var menu = $('.mck-menu__normal');
+            if (menu.hasClass('opened')) {
+                $(this).removeClass('opened')
+                menu.removeClass('opened')
+            } else {
+                $(this).addClass('opened')
+                menu.addClass('opened')
+            }
+        })
+    })
+    </script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/prettify/r298/prettify.min.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+        jQuery("pre").addClass("prettyprint linenums");
+        prettyPrint();
+        });
+    </script>
+    <script async src="/js/sakura.js"></script>
+</body>
+</html>

@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!--Description-->
+    
+        <meta name="description" content="愿你有一个好心情~^-^">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="阿糕">
+    
+
+    <!-- Title -->
+    
+    <title>JavaScriptの类型 | 阿糕家后院</title>
+    <!--[if lt IE 9]>
+        <script src="http://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+        <script src="http://cdn.staticfile.org/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+	<link href="https://cdn.bootcss.com/animate.css/3.5.2/animate.css" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="mck-body animated fadeIn">
+    <div class="mck-loading" id="loading-container">
+        <div class="mck-loading-item">
+            <div class="mck-loading-text">
+                <span class="mck-loading-textcontent">正在努力加载中...</span>
+            </div>
+        </div>
+    </div>
+    <div class="mck-sidebar">
+        <canvas id="floating"></canvas>
+        <div class="mck-logo">
+            <img src="//mcimages/logo.png" />
+        </div>
+        <div class="mck-menu">
+            <div class="mck-menu__collapse" id="mck-menu__collapse">
+                <span class="mck-menu__collapse_line"></span>
+                <span class="mck-menu__collapse_line"></span>
+            </div>
+            <div class="mck-menu__normal">
+                <div class="mck-menu-item">
+                    <a href="/">HOME</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/work/index.html">WORK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/tech/index.html">TECH</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/life/index.html">LIFE</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/link/index.html">LINK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/map/index.html" class="mck-menu-item__new">
+                        <img src="//mcimages/emoji1.png" class="mck-menu-item__new_icon animated bounce"/>TRAVEL
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="mck-footer">
+            <div class="mck-footer-text">MOCHIKO ❤ Since 2017</div>
+            <div class="mck-footer-text" id="busuanzi_container_site_pv">你是第<span id="busuanzi_value_site_pv"></span>个光临的童鞋！</div>
+        </div>
+    </div>
+	<div class="mck-main mck-post-main"> 
+        <div class="mck-post-header ">
+            <a class="mck-post-back" href="/"></a>
+            <div class="mck-post-cover" style="background-image: url(https://www.mochiko.cn/mcimages/q5.png)"></div>
+            <div class="mck-post-category"><a href="#">技术打工人</a><span class="mck-post-date">2018-02-12</span></div>
+            <div class="mck-post-title">JavaScriptの类型</div>
+            <ul class="mck-post-tags">
+				
+					
+
+<li class="mck-post-tag"><a class="a_tag" href="/tags/JavaScript/index.html">JavaScript</a></li>
+				
+            </ul>
+			<ol class="mck-post-menu"><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E5%89%8D%E8%A8%80"><span class="mck-post-menu-number">1.</span> <span class="mck-post-menu-text">前言</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#null"><span class="mck-post-menu-number">2.</span> <span class="mck-post-menu-text">null</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#undefined"><span class="mck-post-menu-number">3.</span> <span class="mck-post-menu-text">undefined</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#boolean"><span class="mck-post-menu-number">4.</span> <span class="mck-post-menu-text">boolean</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#number"><span class="mck-post-menu-number">5.</span> <span class="mck-post-menu-text">number</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#string"><span class="mck-post-menu-number">6.</span> <span class="mck-post-menu-text">string</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#object"><span class="mck-post-menu-number">7.</span> <span class="mck-post-menu-text">object</span></a><ol class="mck-post-menu-child"><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#%E5%87%BD%E6%95%B0"><span class="mck-post-menu-number">7.1.</span> <span class="mck-post-menu-text">函数</span></a></li><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#%E6%95%B0%E7%BB%84"><span class="mck-post-menu-number">7.2.</span> <span class="mck-post-menu-text">数组</span></a></li></ol></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#symbol"><span class="mck-post-menu-number">8.</span> <span class="mck-post-menu-text">symbol</span></a></li></ol>
+        </div>
+
+        <div class="mck-post-content">
+			<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>此篇小结来源与《你不知道的JavaScript》和《JavaScript高级程序设计》的结合？？或许是的，龟速总结中…</p>
+<span id="more"></span>
+
+<p>#七种内置类型</p>
+<ol>
+<li>null</li>
+<li>undefined</li>
+<li>boolean</li>
+<li>number</li>
+<li>string</li>
+<li>object</li>
+<li>symbol</li>
+</ol>
+<p>除了object，其他都成为<strong>基本类型</strong>。<br>变量没有类型，值才有。<br>typeof总返回一个字符串。</p>
+<h1 id="null"><a href="#null" class="headerlink" title="null"></a>null</h1><p><strong>类型检测</strong><br>因为typeof检测null的结果为object，所以在判断的时候需要这样判断：</p>
+<pre><code>var a = null;
+(!a &amp;&amp; typeof null === &quot;object&quot;); //true
+</code></pre>
+<h1 id="undefined"><a href="#undefined" class="headerlink" title="undefined"></a>undefined</h1><p><strong>类型检测</strong></p>
+<pre><code>typeof undefined === &quot;undefined&quot;; //true
+</code></pre>
+<p>变量未持有值是undefined，但并不是未声明，不过下面结果都是undefined：</p>
+<pre><code>var a;
+typeof a;  //&quot;undefined&quot;
+typeof b;  //&quot;undefined&quot;
+</code></pre>
+<p><strong>安全防范</strong><br>防止出现直接抛出未声明的错误，不能直接用if(变量)的方法来判断变量是不是存在，可以用以下两种方法：</p>
+<pre><code>if(typeof DEGUB  !== &quot;undefined&quot;) &#123;&#125;
+if(window.DEBUG) &#123;&#125;
+</code></pre>
+<h1 id="boolean"><a href="#boolean" class="headerlink" title="boolean"></a>boolean</h1><p><strong>类型检测</strong></p>
+<pre><code>typeof true === &quot;boolean&quot;; //true
+</code></pre>
+<h1 id="number"><a href="#number" class="headerlink" title="number"></a>number</h1><p><strong>类型检测</strong></p>
+<pre><code>typeof 42 === &quot;number&quot;; //true
+</code></pre>
+<p>JS并没有真正意义上的整数，使用双精度格式（64位），42.0等同于42。</p>
+<p><strong>数字表示</strong></p>
+<ol>
+<li>默认十进制表示，小数最后的0被省略。</li>
+<li>特别大和特别小的用指数显示，与用toExponential()结果相同。</li>
+<li>数字前面的0可省略。</li>
+<li>小数点后小数最后的0也可以省略。</li>
+<li>调用Number.prototype的方法：toFixed()显示小数位数。</li>
+<li>调用Number.prototype的方法：toPrecision()指定有效数位的显示位数。</li>
+</ol>
+<p><em>注意：运算符会优先认为是有效数字字符</em></p>
+<pre><code>42.toFixed(3); //SynataxError
+(42).toFiex(3); //42.000
+0.42.toFixed(3); //0.420
+42..toFixed(3); //0.420
+42 .toFixed(3); //42.000
+</code></pre>
+<h1 id="string"><a href="#string" class="headerlink" title="string"></a>string</h1><p><strong>类型检测</strong></p>
+<pre><code>typeof &quot;42&quot; === &quot;string&quot;; //true
+</code></pre>
+<p><strong>字符串和字符串数组</strong></p>
+<ol>
+<li><p>都是类数组，有length属性，有indexOf()和concat()方法。</p>
+</li>
+<li><p>字符串不可变（创建返回新值），数组可变，但a[i]在老版本IE中不允许，正确用a.CharAt(i)。</p>
+</li>
+<li><p>字符串可以借用方法处理，如：Arrray.prototype.join.call(a,’-‘);</p>
+</li>
+<li><p>数组有reverse()方法，字符串没有。可以用以下方法（对复杂字符如Unicode、星号不适用）:</p>
+<p> var c&#x3D;a.split().reverse().join(‘’);</p>
+</li>
+</ol>
+<h1 id="object"><a href="#object" class="headerlink" title="object"></a>object</h1><h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p><strong>类型检测</strong><br>function是object的子类型，其length属性为参数个数，但是typeof判断结果有function：</p>
+<pre><code>type of function a()&#123;&#125; === &quot;function&quot;; //true
+</code></pre>
+<h2 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h2><p><strong>类型检测</strong><br>数组也是object的子类型</p>
+<pre><code>type of [1,2,3] === &quot;object&quot;; //true
+</code></pre>
+<p><strong>类数组转换</strong><br>1.slice()常用于把类数组转换为数组:</p>
+<pre><code>Array.prototype.slice.call(arguments);
+</code></pre>
+<p>2.ES6中的Array.from(arguments)实现相同作用。</p>
+<p><strong>注意点</strong><br>delete可以把元素删除，但length并不会发生变化。</p>
+<h1 id="symbol"><a href="#symbol" class="headerlink" title="symbol"></a>symbol</h1><p><strong>类型检测</strong></p>
+<pre><code>typeof Symbol() === &quot;symbol&quot;; //true
+</code></pre>
+
+        </div>
+        <div class="mck-post-footer">
+    
+        <a href="/2018/02/10/life-20180210-res/index.html">上一篇</a>
+    
+    
+        <a href="/2018/02/22/tech-20180202-closure/index.html">下一篇</a>
+    
+</div>
+        <div class="mck-post-comments" id="mck-post-comments"></div>
+<script>
+    new Valine({
+        el: '#mck-post-comments',
+        appId: 'bhScVsXkKqR32IJd3MXvu41C-gzGzoHsz',
+        appKey: 'm8alBLTHvrVy8DQvzGshxoA5',
+        placeholder: '说点什么o_o ....',
+        avatar: 'monsterid'
+    });
+</script>
+        <div class="mck-about">
+    <div class="mck-about-title mck-section-title">ABOUT</div>
+    <div class="mck-about-main">
+        欢迎来到小年糕的后花园，年糕的小站开设于2017年，博主年糕君是一个爱好十分广泛的人，也是一个比较佛系的人，不定时爆发脑洞更新（因为是社畜，也可能失踪很久，工作太累了）。
+        <a href="/about/index.html" target="_blank" class="mck-about-more">查看更多</a>
+    </div>
+</div>
+    </div>
+    <script async src="/js/busuanzi.js"></script>
+    <script>
+    $(document).ready(function () {
+        setTimeout(() => {
+            $('#loading-container').fadeOut();
+        }, 2000);
+
+        $('#mck-menu__collapse').click(function() {
+            var menu = $('.mck-menu__normal');
+            if (menu.hasClass('opened')) {
+                $(this).removeClass('opened')
+                menu.removeClass('opened')
+            } else {
+                $(this).addClass('opened')
+                menu.addClass('opened')
+            }
+        })
+    })
+    </script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/prettify/r298/prettify.min.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+        jQuery("pre").addClass("prettyprint linenums");
+        prettyPrint();
+        });
+    </script>
+    <script async src="/js/sakura.js"></script>
+</body>
+</html>

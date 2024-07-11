@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!--Description-->
+    
+        <meta name="description" content="愿你有一个好心情~^-^">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="阿糕">
+    
+
+    <!-- Title -->
+    
+    <title>JS高级程序设计·事件 | 阿糕家后院</title>
+    <!--[if lt IE 9]>
+        <script src="http://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+        <script src="http://cdn.staticfile.org/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+	<link href="https://cdn.bootcss.com/animate.css/3.5.2/animate.css" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="mck-body animated fadeIn">
+    <div class="mck-loading" id="loading-container">
+        <div class="mck-loading-item">
+            <div class="mck-loading-text">
+                <span class="mck-loading-textcontent">正在努力加载中...</span>
+            </div>
+        </div>
+    </div>
+    <div class="mck-sidebar">
+        <canvas id="floating"></canvas>
+        <div class="mck-logo">
+            <img src="//mcimages/logo.png" />
+        </div>
+        <div class="mck-menu">
+            <div class="mck-menu__collapse" id="mck-menu__collapse">
+                <span class="mck-menu__collapse_line"></span>
+                <span class="mck-menu__collapse_line"></span>
+            </div>
+            <div class="mck-menu__normal">
+                <div class="mck-menu-item">
+                    <a href="/">HOME</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/work/index.html">WORK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/tech/index.html">TECH</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/life/index.html">LIFE</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/link/index.html">LINK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/map/index.html" class="mck-menu-item__new">
+                        <img src="//mcimages/emoji1.png" class="mck-menu-item__new_icon animated bounce"/>TRAVEL
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="mck-footer">
+            <div class="mck-footer-text">MOCHIKO ❤ Since 2017</div>
+            <div class="mck-footer-text" id="busuanzi_container_site_pv">你是第<span id="busuanzi_value_site_pv"></span>个光临的童鞋！</div>
+        </div>
+    </div>
+	<div class="mck-main mck-post-main"> 
+        <div class="mck-post-header ">
+            <a class="mck-post-back" href="/"></a>
+            <div class="mck-post-cover" style="background-image: url(https://www.mochiko.cn/mcimages/q2.png)"></div>
+            <div class="mck-post-category"><a href="#">技术打工人</a><span class="mck-post-date">2017-07-28</span></div>
+            <div class="mck-post-title">JS高级程序设计·事件</div>
+            <ul class="mck-post-tags">
+				
+					
+
+<li class="mck-post-tag"><a class="a_tag" href="/tags/JavaScript/index.html">JavaScript</a></li>
+				
+            </ul>
+			<ol class="mck-post-menu"><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#1-%E4%BA%8B%E4%BB%B6%E6%B5%81"><span class="mck-post-menu-number">1.</span> <span class="mck-post-menu-text">1 事件流</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#2-%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E7%A8%8B%E5%BA%8F"><span class="mck-post-menu-number">2.</span> <span class="mck-post-menu-text">2 事件处理程序</span></a><ol class="mck-post-menu-child"><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#2-1-HTML%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E7%A8%8B%E5%BA%8F"><span class="mck-post-menu-number">2.1.</span> <span class="mck-post-menu-text">2.1 HTML中的事件处理程序</span></a></li><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#2-2-DOM0%E7%BA%A7%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E7%A8%8B%E5%BA%8F"><span class="mck-post-menu-number">2.2.</span> <span class="mck-post-menu-text">2.2 DOM0级事件处理程序</span></a></li><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#2-3-DOM2%E7%BA%A7%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E7%A8%8B%E5%BA%8F"><span class="mck-post-menu-number">2.3.</span> <span class="mck-post-menu-text">2.3 DOM2级事件处理程序</span></a></li><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#2-4-IE%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E7%A8%8B%E5%BA%8F"><span class="mck-post-menu-number">2.4.</span> <span class="mck-post-menu-text">2.4 IE事件处理程序</span></a></li><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#2-5-%E8%B7%A8%E6%B5%8F%E8%A7%88%E5%99%A8%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E7%A8%8B%E5%BA%8F"><span class="mck-post-menu-number">2.5.</span> <span class="mck-post-menu-text">2.5 跨浏览器的事件处理程序</span></a></li></ol></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#3-%E4%BA%8B%E4%BB%B6%E5%AF%B9%E8%B1%A1"><span class="mck-post-menu-number">3.</span> <span class="mck-post-menu-text">3 事件对象</span></a></li></ol>
+        </div>
+
+        <div class="mck-post-content">
+			<h1 id="1-事件流"><a href="#1-事件流" class="headerlink" title="1 事件流"></a>1 事件流</h1><p>在我们点击某个按钮的时候，其实也点击了包含它的容器，以及整个页面。假使我们给按钮的点击添加了某个事件的触发，但我们也给对包含它的容器的点击添加了事件的触发，那一般情况下我们肯定不能舍去其中某个事件的发生，这就有了多个事件的发生，既然有了多个事件，就必定要确定一个执行的顺序。</p>
+<span id="more"></span>
+<p>所谓的事件流就是从页面接收事件的顺序，但是有两种不同的方法，一种是事件冒泡流（IE团队制定），一种是事件捕获流（Netscape团队制定）。<br>事件冒泡顾名思义，即从底端一直上升到顶端，所以是从最小的单位触发的事件开始的。<br>例子：</p>
+<pre><code>&lt;!doctype&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Event Bubbling Example&lt;/title&gt;
+&lt;/head&gt;
+    &lt;div id=”myDiv”&gt;Click me!&lt;/div&gt;
+&lt;/html&gt;
+</code></pre>
+<p>如果你点击了ID为myDiv这个div，那么click事件会从div传到body，再传到html，最后到达document。理论是如此，现实的浏览器在具体实现上会有一些差别。比如IE5.5以前的版本会跳过html直接到document。而IE9、Firefox、Chrome和Safari则最多冒泡到window对象。<br>事件捕获则与事件冒泡的顺序刚好相反，从最大的元素开始一级一级捕获到最终的目标。上段的例子中如果是事件捕获，则顺序是从document一直到div。新版本的浏览器能支持事件流模型，但是因为老版本浏览器不支持，所以这种用的人比较少。<br>在DOM2规范中，定义事件流应该包括三个阶段：事件捕获阶段、处于目标阶段和事件冒泡阶段。还是以之前那个例子为例，DOM2规范中先从document开始到div（捕获阶段），到达div之后就是处于目标阶段，再从div又升到了document（冒泡阶段）。在捕获阶段不会接受事件，也就是开始document到body这段时间不接收发生事件，而下一阶段就是处于目标阶段，发生事件后，冒泡阶段开始发生，事件又传回文档。但实际情况，支持DOM事件流的浏览器（IE及更早版本不支持）会在捕获阶段触发事件对象的事件。</p>
+<h1 id="2-事件处理程序"><a href="#2-事件处理程序" class="headerlink" title="2 事件处理程序"></a>2 事件处理程序</h1><p>事件是用户或浏览器自身执行的某种动作，而要响应某个事件的函数就叫做事件处理程序（或事件侦听器）。</p>
+<h2 id="2-1-HTML中的事件处理程序"><a href="#2-1-HTML中的事件处理程序" class="headerlink" title="2.1 HTML中的事件处理程序"></a>2.1 HTML中的事件处理程序</h2><pre><code>&lt;input type=”button” value=”click me” onclick=”alert(‘yes’)” /&gt;
+</code></pre>
+<p>onclick包含的值是js代码，所以不能使用未经转义的HTML语法字符，像&amp;、&lt;、&gt;、””之类的，如果想使用双引号，我们可以用”代替。<br>这种处理程序会创建一个封装着元素属性值的函数，有一个局部变量event，即事件对象。它还会有一个扩展作用域的方式，也就是在这个局部中你可以访问到document以及元素本身的成员，它使用了with的方法来扩展作用域。</p>
+<pre><code>&lt;input type=”button” value=”click me” onclick=”alert(value)” /&gt;
+</code></pre>
+<p>这句代码和之前的呈现的效果一样。在表单中，作用于还包括了表单的入口，即你可以直接调用表单中其他的元素。</p>
+<pre><code>&lt;form method=”post”&gt;
+    &lt;input type=”text” name=”username” value=”” &gt;
+    &lt;input type=”button” value=”Echo username” onclick=”alert(username.value)” &gt;
+&lt;/form&gt;
+</code></pre>
+<p>不过HTML事件处理程序存在几个缺点，其一，存在时差，可能在js代码未加载完全的时候点击了HTML元素触发事件，从而产生错误，所以一般会捕捉错误来处理。</p>
+<pre><code>&lt;input type=”button” value=”click me” onclick=”try&#123;showMessage();&#125;catch(ex)&#123;&#125;”&gt;
+</code></pre>
+<p>其二是扩展事件处理程序的作用域链在不同的浏览器会导致不同的结果。最后一个就是耦合度太高，不方便修改。</p>
+<h2 id="2-2-DOM0级事件处理程序"><a href="#2-2-DOM0级事件处理程序" class="headerlink" title="2.2 DOM0级事件处理程序"></a>2.2 DOM0级事件处理程序</h2><p>这种处理程序是通过把一个函数赋值给一个事件处理程序属性来控制。至今仍然被所有线代浏览器支持，因为它简单并且具有跨浏览器的优势，但它只能添加一个事件处理程序。</p>
+<pre><code>var btn = document.getElementById(“myBtn”);
+btn.onclick = function () &#123;
+    alert(“yes”);
+&#125;
+</code></pre>
+<p>每个元素都有自己的事件处理程序属性，他们通常是全小写，像上面一样为它的属性设置一个函数就可以指定处理程序。但在代码运行之前并不会为他们指定，如果代码位于按钮后面，就可能在加载好之前不起作用。在这里，onclick被认为是元素的方法，所以事件处理程序是在元素的作用域中运行的，也就是在这里调用this是这个btn元素。<br>用这种方法添加的时间处理程序会在事件流的冒泡阶段被处理。可以指定它为null来删除事件处理程序。</p>
+<h2 id="2-3-DOM2级事件处理程序"><a href="#2-3-DOM2级事件处理程序" class="headerlink" title="2.3 DOM2级事件处理程序"></a>2.3 DOM2级事件处理程序</h2><p>它定义了两个方法：处理指定事件处理程序addEventListener()和删除事件处理程序removeEventListener()。他们都接受三个参数：事件名，处理函数，布尔值。如果这个布尔值是true，表示在捕获阶段调用事件捕捉，反之则在冒泡阶段调用事件处理程序。使用DOM2级事件处理程序的好处是可以添加多个事件处理程序。</p>
+<pre><code>var btn = document.getElementById(“myBtn”);
+btn.addEventListener(“click”,function()&#123;
+    alert(this.id);
+&#125;,false);
+btn.addEventListener(“click”,function()&#123;
+    alert(“hi”);
+&#125;,false);
+</code></pre>
+<p>在这个例子里面，这两个事件会按照添加它们的顺序触发，所以先显示ID再显示”hi”。<br>通过addEventListener添加的事件只能通过removeEventListener来删除，但是传入的参数必须要与添加程序的参数一样，所以匿名函数无法移除，因为第二次即使传入了一样的函数写法但这已经算是一个新的函数了。</p>
+<pre><code>var btn = document.getElementById(“myBtn”);
+var handler = function() &#123;
+    alert(this.id);
+&#125;;
+btn.addEventListener(“click”,handler,false);
+btn.removeEventListener(“click”,handler,false);
+</code></pre>
+<p>一般都将事件流添加到冒泡阶段，可以最大兼容浏览器。所以最好只在想在事件达到目标之前截获它的时候把事件处理程序添加到捕获阶段。</p>
+<h2 id="2-4-IE事件处理程序"><a href="#2-4-IE事件处理程序" class="headerlink" title="2.4 IE事件处理程序"></a>2.4 IE事件处理程序</h2><p>IE中有两个与DOM类似的方法:attachEvent()和detachEvent()，都接收两个参数：事件处理程序名称和事件处理函数。这样添加的事件处理程序都被添加到冒泡阶段。<br>这种事件处理程序方法与DOM0级方法主要区别在于处理程序的作用域。DOM0级的方法会在其所属的作用域内运行，而attachEvent()方法在全局作用域中运行，也就是说this等于window。</p>
+<pre><code>vat btn = document.getElementById(“myBtn”);
+btn.attachEvent(“onclick”,function()&#123;
+    alert(this === window)  //true
+&#125;);
+</code></pre>
+<p>使用attachEvent()也可以为元素添加多个事件处理程序，不过他是以相反的顺序来执行。在移除事件处理程序上与DOM处理程序一样，不能移除匿名函数。</p>
+<h2 id="2-5-跨浏览器的事件处理程序"><a href="#2-5-跨浏览器的事件处理程序" class="headerlink" title="2.5 跨浏览器的事件处理程序"></a>2.5 跨浏览器的事件处理程序</h2><p>根据前面的认识，我们掌握了他们的一些区别。为了能够打造一个兼容的事件处理程序，我们创建了一个EventUtil对象，对于多个处理程序的执行顺序和作用域的差异未能考虑到，但它大体能保证添加与移除事件处理程序。</p>
+<pre><code>var EventUtil = &#123;
+    addHandler: function(element,type,handler) &#123;
+    if(element.addEventListener) &#123;
+        //传入参数事件类型，执行函数，选用冒泡事件流
+    element.addEventListener(type,handler,false);
+&#125;	else if(element.attachEvent)	&#123;
+        //为了在IE8及更早版本支持，必须加一个on
+    element.attachEvent(“on”+type,handler);
+&#125;	else &#123;
+    //如果前两种都不支持，则选用兼容性最好的DOM0事件处理程序
+    element[“on” + type] = handler;
+&#125;
+&#125;
+    removeHandler: function(element,type,handler) &#123;
+    if(element.removeEventListener) &#123;
+    element.removeEventListener(type,handler,false);
+&#125;	else if(element.detachEvent)	&#123;
+    element.detachEvent(“on”+type,handler);
+&#125;	else &#123;
+    element[“on” + type] = null;
+&#125;
+&#125;
+&#125;;
+</code></pre>
+<h1 id="3-事件对象"><a href="#3-事件对象" class="headerlink" title="3 事件对象"></a>3 事件对象</h1><p><strong>1 HTML事件处理程也保存着event对象。</strong></p>
+<pre><code>&lt;input type=”button” value=”click me” onclick=”alert(event.type)” /&gt;
+</code></pre>
+<p><strong>2 DOM0中的事件对象</strong><br>事件处理程序中会被传入一个event对象。</p>
+<pre><code>var btn = document.getElementById(“muBtn”);
+btn.onclick = function(event)&#123;
+    alert(event.type);
+&#125;
+</code></pre>
+<p>*event的所有属性都是只读。<br>·关于currentTarget和target<br>在事件处理程序内部，this始终等于currentTarget的值，target只包含事件的实际目标。<br>直接将事件处理程序指定给目标元素，则this、currentTarget和target都包含相同值。</p>
+<p>document.getElementById(“mybtn”)).onclick &#x3D; function(event){<br>alert(event.currentTarget &#x3D;&#x3D; this) &#x2F;&#x2F;true，this始终等于currentTarget，目标是mybtn;<br>alert(event.target &#x3D;&#x3D;&#x3D; this) &#x2F;&#x2F;true;<br>}<br>如果事件处理程序在父节点中：</p>
+<p>document.body.onclick &#x3D; function(event){<br>alert(event.currentTarget &#x3D;&#x3D;&#x3D; document.body) &#x2F;&#x2F;true;<br>alert(this &#x3D;&#x3D;&#x3D; document.body ) &#x2F;&#x2F;true，this始终等于currentTarget;<br>alert(event.target &#x3D;&#x3D;&#x3D; document.getElementById(“mybtn”)); &#x2F;&#x2F;true，mybtn是实际目标;<br>}<br>click事件冒泡到了document.body上。<br>·关于type<br>通过一个函数处理多个事件，可以选择用type属性。</p>
+<pre><code>var handler = function(event)&#123;
+switch(event.type)&#123;
+case “click”: //…
+break;
+case “mouseover”: //….
+break;
+&#125;
+&#125;;
+document.getElementById(“mybtn”).onclick = handler;
+document.getElementById(“mybtn”).onmouseover = handler;
+</code></pre>
+<p><strong>3 IE中的事件对象</strong><br>IE中的event对象有几种不同的访问方式。<br>·使用HTML事件处理程序，有一个名为event的变量可直接使用：</p>
+<pre><code>&lt;input type=”button” value=”click me” onclick=”alert(event.type)” /&gt;
+</code></pre>
+<p>·使用DOM0级方法添加事件处理程序时，event作为window对象一个属性存在：</p>
+<pre><code>var btn = document.getElementById(“mybtn”);
+btn.onclick = function()&#123;
+var event = window.event;
+alert(event.type);
+&#125;
+</code></pre>
+<p>·使用IE添加方法（attachEvent）时，不仅window有属性，event也作为对象参数传入：</p>
+<pre><code>var btn = document.getElementById(“mybtn”);
+btn.attachEvent(“onclick”,function(event)&#123;
+alert(event.type);
+&#125;);
+</code></pre>
+<p>IE的全部event对象所拥有的属性和方法:<br>cancleBubble：可读写。默认false，是true表示取消事件冒泡<br>returnValue：默认ture，值为false表示取消默认行为。<br>srcElement：事件的目标<br>type：事件类型</p>
+<p>事件处理程序的作用域是根据指定方法确定的，所以this不一定都是作用目标，<br>所以用event.srcElement最保险。</p>
+<pre><code>btn.onclick = function()&#123;
+    alert(window.event.srcElement === this);  //true
+&#125;);
+btn.attachEvent(“onclick”,function()&#123;
+    alert(event.srcElement === this); //false
+&#125;);
+</code></pre>
+<p><strong>4 跨浏览器的event对象写法</strong></p>
+<pre><code>var EventUtil = &#123;
+    getEvent: function(event) &#123;
+    return event:window.event //当IE中用DOM0添加事件，event是undefined
+&#125;,
+getTarget:function(event)&#123;
+    return event.target||event.srcElement;
+&#125;,
+preventDefault:function(event)&#123;
+    if(event.preventDefault)&#123;
+    event.preventDefault();
+&#125;else&#123;
+    event.returnValue = false;
+&#125;
+&#125;,
+stopPropagation:function(event)&#123;
+    if(event.stopPropagation)&#123;
+    event.stopPropagation();
+&#125;else&#123;
+    event.cancelBubble = true;
+&#125;
+&#125;
+&#125;
+</code></pre>
+
+        </div>
+        <div class="mck-post-footer">
+    
+        <a href="/2017/07/21/work-meituce/index.html">上一篇</a>
+    
+    
+        <a href="/2017/08/16/tech-20170816-about-lorem/index.html">下一篇</a>
+    
+</div>
+        <div class="mck-post-comments" id="mck-post-comments"></div>
+<script>
+    new Valine({
+        el: '#mck-post-comments',
+        appId: 'bhScVsXkKqR32IJd3MXvu41C-gzGzoHsz',
+        appKey: 'm8alBLTHvrVy8DQvzGshxoA5',
+        placeholder: '说点什么o_o ....',
+        avatar: 'monsterid'
+    });
+</script>
+        <div class="mck-about">
+    <div class="mck-about-title mck-section-title">ABOUT</div>
+    <div class="mck-about-main">
+        欢迎来到小年糕的后花园，年糕的小站开设于2017年，博主年糕君是一个爱好十分广泛的人，也是一个比较佛系的人，不定时爆发脑洞更新（因为是社畜，也可能失踪很久，工作太累了）。
+        <a href="/about/index.html" target="_blank" class="mck-about-more">查看更多</a>
+    </div>
+</div>
+    </div>
+    <script async src="/js/busuanzi.js"></script>
+    <script>
+    $(document).ready(function () {
+        setTimeout(() => {
+            $('#loading-container').fadeOut();
+        }, 2000);
+
+        $('#mck-menu__collapse').click(function() {
+            var menu = $('.mck-menu__normal');
+            if (menu.hasClass('opened')) {
+                $(this).removeClass('opened')
+                menu.removeClass('opened')
+            } else {
+                $(this).addClass('opened')
+                menu.addClass('opened')
+            }
+        })
+    })
+    </script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/prettify/r298/prettify.min.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+        jQuery("pre").addClass("prettyprint linenums");
+        prettyPrint();
+        });
+    </script>
+    <script async src="/js/sakura.js"></script>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!--Description-->
+    
+        <meta name="description" content="愿你有一个好心情~^-^">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="阿糕">
+    
+
+    <!-- Title -->
+    
+    <title>浏览器の缓存机制 | 阿糕家后院</title>
+    <!--[if lt IE 9]>
+        <script src="http://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+        <script src="http://cdn.staticfile.org/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+	<link href="https://cdn.bootcss.com/animate.css/3.5.2/animate.css" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="mck-body animated fadeIn">
+    <div class="mck-loading" id="loading-container">
+        <div class="mck-loading-item">
+            <div class="mck-loading-text">
+                <span class="mck-loading-textcontent">正在努力加载中...</span>
+            </div>
+        </div>
+    </div>
+    <div class="mck-sidebar">
+        <canvas id="floating"></canvas>
+        <div class="mck-logo">
+            <img src="//mcimages/logo.png" />
+        </div>
+        <div class="mck-menu">
+            <div class="mck-menu__collapse" id="mck-menu__collapse">
+                <span class="mck-menu__collapse_line"></span>
+                <span class="mck-menu__collapse_line"></span>
+            </div>
+            <div class="mck-menu__normal">
+                <div class="mck-menu-item">
+                    <a href="/">HOME</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/work/index.html">WORK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/tech/index.html">TECH</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/life/index.html">LIFE</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/link/index.html">LINK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/map/index.html" class="mck-menu-item__new">
+                        <img src="//mcimages/emoji1.png" class="mck-menu-item__new_icon animated bounce"/>TRAVEL
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="mck-footer">
+            <div class="mck-footer-text">MOCHIKO ❤ Since 2017</div>
+            <div class="mck-footer-text" id="busuanzi_container_site_pv">你是第<span id="busuanzi_value_site_pv"></span>个光临的童鞋！</div>
+        </div>
+    </div>
+	<div class="mck-main mck-post-main"> 
+        <div class="mck-post-header ">
+            <a class="mck-post-back" href="/"></a>
+            <div class="mck-post-cover" style="background-image: url(https://wx3.sinaimg.cn/mw1024/0076cOZ3gy1frmtv3m5erj30m80ifwhv.jpg)"></div>
+            <div class="mck-post-category"><a href="#">技术打工人</a><span class="mck-post-date">2018-05-23</span></div>
+            <div class="mck-post-title">浏览器の缓存机制</div>
+            <ul class="mck-post-tags">
+				
+					
+
+<li class="mck-post-tag"><a class="a_tag" href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/index.html">浏览器</a></li>
+				
+            </ul>
+			<ol class="mck-post-menu"><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E5%89%8D%E8%A8%80"><span class="mck-post-menu-number">1.</span> <span class="mck-post-menu-text">前言</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E5%BC%BA%E7%BC%93%E5%AD%98%EF%BC%88%E6%9C%AC%E5%9C%B0%EF%BC%89"><span class="mck-post-menu-number">2.</span> <span class="mck-post-menu-text">强缓存（本地）</span></a><ol class="mck-post-menu-child"><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E8%B5%84%E6%BA%90"><span class="mck-post-menu-number">2.1.</span> <span class="mck-post-menu-text">浏览器资源</span></a></li><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#%E8%B5%84%E6%BA%90%E5%8A%A0%E8%BD%BD%E5%99%A8"><span class="mck-post-menu-number">2.2.</span> <span class="mck-post-menu-text">资源加载器</span></a></li><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#%E8%AF%B7%E6%B1%82%E8%BF%87%E7%A8%8B"><span class="mck-post-menu-number">2.3.</span> <span class="mck-post-menu-text">请求过程</span></a></li><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#%E5%86%85%E5%AD%98%E7%BC%93%E5%AD%98-%E7%A3%81%E7%9B%98%E7%BC%93%E5%AD%98"><span class="mck-post-menu-number">2.4.</span> <span class="mck-post-menu-text">内存缓存&amp;磁盘缓存</span></a></li><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#HTTP%E7%9B%B8%E5%85%B3%E8%AF%B7%E6%B1%82%E5%AD%97%E6%AE%B5"><span class="mck-post-menu-number">2.5.</span> <span class="mck-post-menu-text">HTTP相关请求字段</span></a><ol class="mck-post-menu-child"><li class="mck-post-menu-item mck-post-menu-level-3"><a class="mck-post-menu-link" href="#expires"><span class="mck-post-menu-number">2.5.1.</span> <span class="mck-post-menu-text">expires</span></a></li><li class="mck-post-menu-item mck-post-menu-level-3"><a class="mck-post-menu-link" href="#cache-control-max-age"><span class="mck-post-menu-number">2.5.2.</span> <span class="mck-post-menu-text">cache-control: max-age&#x3D;?</span></a></li></ol></li></ol></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E5%8D%8F%E5%95%86%E7%BC%93%E5%AD%98%EF%BC%88%E7%BB%8F%E8%BF%87%E6%9C%8D%E5%8A%A1%E5%99%A8%EF%BC%89"><span class="mck-post-menu-number">3.</span> <span class="mck-post-menu-text">协商缓存（经过服务器）</span></a><ol class="mck-post-menu-child"><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#HTTP%E7%9B%B8%E5%85%B3%E8%AF%B7%E6%B1%82%E5%AD%97%E6%AE%B5-1"><span class="mck-post-menu-number">3.1.</span> <span class="mck-post-menu-text">HTTP相关请求字段</span></a><ol class="mck-post-menu-child"><li class="mck-post-menu-item mck-post-menu-level-3"><a class="mck-post-menu-link" href="#if-Match-if-None-Match"><span class="mck-post-menu-number">3.1.1.</span> <span class="mck-post-menu-text">if-Match &#x2F; if-None-Match</span></a></li><li class="mck-post-menu-item mck-post-menu-level-3"><a class="mck-post-menu-link" href="#if-Modified-Since-if-Unmodified-Since"><span class="mck-post-menu-number">3.1.2.</span> <span class="mck-post-menu-text">if-Modified-Since &#x2F; if-Unmodified-Since</span></a></li></ol></li><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#%E7%BC%93%E5%AD%98%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="mck-post-menu-number">3.2.</span> <span class="mck-post-menu-text">缓存服务器</span></a></li></ol></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E5%85%B6%E4%BB%96%E8%A1%A5%E5%85%85"><span class="mck-post-menu-number">4.</span> <span class="mck-post-menu-text">其他补充</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E6%8E%A8%E8%8D%90%E6%96%87%E7%AB%A0"><span class="mck-post-menu-number">5.</span> <span class="mck-post-menu-text">推荐文章</span></a></li></ol>
+        </div>
+
+        <div class="mck-post-content">
+			<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>继续挖坑啦，这个也是上次面试和面试官说了很多的一个问题来着，然后我来好好重新研究研究，试着来了解一下浏览器以及和它相关的一些的缓存机制。因为是坑，所以也是缓慢更新的，如果有错误欢迎提出哦！<br>文章部分是小结于《<a target="_blank" rel="noopener" href="https://book.douban.com/subject/25910556/">WebKit技术内幕</a>》这本书关于浏览器本地缓存的文字和<strong>尾部列出文章</strong>的内容，然后HTTP相关的知识主要是来自于《<a target="_blank" rel="noopener" href="https://book.douban.com/subject/25863515/">图解HTTP</a>》这本书哦~</p>
+<span id="more"></span>
+
+<h1 id="强缓存（本地）"><a href="#强缓存（本地）" class="headerlink" title="强缓存（本地）"></a>强缓存（本地）</h1><p>关于浏览器的本地缓存，<strong>我都以谷歌浏览器为核心开始搜集资料+测试啦</strong>！<br>查看谷歌浏览器中的本地缓存资源只要输入下面的地址就可以：</p>
+<pre><code>chrome://cache
+</code></pre>
+<p>就可以看到本地缓存的文件，一个个URL排列，点开一个URL，就可以显示这个缓存的具体内容：<br><img src="https://wx3.sinaimg.cn/mw1024/0076cOZ3gy1frmtv3m5erj30m80ifwhv.jpg" alt="图片描述"></p>
+<h2 id="浏览器资源"><a href="#浏览器资源" class="headerlink" title="浏览器资源"></a>浏览器资源</h2><p>常见的资源主要有：HTML、JavaScript、CSS、图片、SVG、CSS Shader、视频、音频和字幕、字体文件、XSL样式表。</p>
+<p>浏览器资源可以分为两类:</p>
+<ul>
+<li>主资源：HTML页面，或者下载项</li>
+<li>派生资源：比如HTML页面中内嵌的图片或者脚本链接</li>
+</ul>
+<p>在WebKit内核中，是用不同的类来表示它们，有一个公共父类叫做<code>CachedResource</code>，也很好理解，就是<code>缓存的资源</code>。由此对应的子类比如：<code>CachedCSSStyleSheet</code>缓存的CSS样式表等等，以此类推。但是HTML比较特殊，它对应的类叫做<code>CachedRawResource</code>。</p>
+<h2 id="资源加载器"><a href="#资源加载器" class="headerlink" title="资源加载器"></a>资源加载器</h2><p>WebKit有三种类型的加载器。</p>
+<ol>
+<li>每种资源类型的特定加载器：只加载一种特定的资源，比如<code>imageLoader</code>、<code>FontLoader</code>，当请求资源时，加载器来负责加载。</li>
+<li>缓存机制的资源加载器：所有特定加载器通过它（<code>CachedResourceLoader</code>类）查找并插入缓存资源。</li>
+<li>通用资源加载器：<code>ResourceLoader</code>类，WebKit需要从网络&#x2F;文件系统获取资源的时候由它负责。</li>
+</ol>
+<h2 id="请求过程"><a href="#请求过程" class="headerlink" title="请求过程"></a>请求过程</h2><p>浏览器在发起请求的时候，会先去获取缓存的信息，再来决定是否向服务器发起请求。<br>WebKit如果在资源池寻找资源：</p>
+<ul>
+<li>找到了，就会拿出来用；</li>
+<li>没找到，创建一个新的<code>CashedResource</code>子类对象，向服务器发送请求。收到资源后放入缓存中。（使用的是<code>LRU</code>算法来进行资源池资源的替换）</li>
+</ul>
+<p><strong>浏览器是根据URL来判断不同的缓存内容</strong><br>也就是假如有两个文件，虽然它们的文件可能是相同的，但只要URL不同，浏览器就不会认为是同一个，所以都会进行一次缓存。<br>实际操作一下，进入<code>localhost</code>和<code>127.0.0.1</code>来缓存一些东西：<br><img src="https://wx3.sinaimg.cn/mw1024/0076cOZ3gy1frmtv81nhrj30iy0gjjuf.jpg" alt="图片描述"><br><img src="https://wx4.sinaimg.cn/mw1024/0076cOZ3gy1frmtv7yfn0j30in0gi77c.jpg" alt="图片描述"><br>这个<code>meituce/images/logo.png</code>其实是同一张图，但是因为URL不一样，所以浏览器缓存了两次。</p>
+<p><strong>继续观察：</strong><br><img src="https://wx3.sinaimg.cn/mw1024/0076cOZ3gy1frmtv7m8n0j30m809yjsc.jpg" alt="图片描述"></p>
+<p>通过控制台可以看到资源主要有两种，而且对应文件类型不同，来源也不太一样，<strong>强缓存得到的状态码是200 OK</strong>：</p>
+<ul>
+<li>from memory cache（图片、脚本）</li>
+<li>from disk cache（css）</li>
+</ul>
+<h2 id="内存缓存-磁盘缓存"><a href="#内存缓存-磁盘缓存" class="headerlink" title="内存缓存&amp;磁盘缓存"></a>内存缓存&amp;磁盘缓存</h2><p><strong>内存缓存 Memory Cache</strong><br>放入内存中缓存，Webkit的内存缓存只是针对派生资源。</p>
+<p><strong>磁盘缓存 Disk Cache</strong><br>放入磁盘中缓存，访问时不需要重新下载资源，直接从磁盘中获取。WebKit中也只能存储一些派生类资源。<br>存储形式为一个index.dat文件：URL + Response信息 + Content内容。<br>Response信息用于判断服务器上该Url的Content内容是否被修改。</p>
+<p><strong>这两者的区别是</strong><br>退出浏览器进程时，内存缓存中的数据会被清空，而磁盘缓存的数据不会。</p>
+<p><strong>不严谨的实验：</strong><br><img src="https://wx3.sinaimg.cn/mw1024/0076cOZ3gy1frmtv7rhrdj30m8097wfh.jpg" alt="图片描述"><br>这个网站只有HTML是没有被缓存的，所以可以证实，派生资源被缓存到其中。<br>单独输入一个在原网页中缓存过的图片来获取，发现它不是从磁盘内存缓存中来：<br><img src="https://wx3.sinaimg.cn/mw1024/0076cOZ3gy1frmtv7rlugj30es014743.jpg" alt="图片描述"></p>
+<h2 id="HTTP相关请求字段"><a href="#HTTP相关请求字段" class="headerlink" title="HTTP相关请求字段"></a>HTTP相关请求字段</h2><h3 id="expires"><a href="#expires" class="headerlink" title="expires"></a>expires</h3><p><strong>来源版本</strong>：HTTP 1.0<br><strong>值</strong>：GMT格式的时间字符串<br><strong>判断方法</strong>：如果发送的时间在这个时间之前，就从本地读取缓存。</p>
+<pre><code>expires: Sun, 27 May 2018 09:15:15 GMT
+</code></pre>
+<h3 id="cache-control-max-age"><a href="#cache-control-max-age" class="headerlink" title="cache-control: max-age&#x3D;?"></a>cache-control: max-age&#x3D;?</h3><p><strong>来源版本</strong>：HTTP 1.1<br><strong>值</strong>：cache-control操控缓存的工作指令，不同指令通过<code>,</code>分隔开；其中指令max-age的值为一个数字，表示过期时间，单位是秒。<br><strong>判断方法</strong>：如果根据时间和max-age算出已经是&lt;&#x3D;0了，就说明时间超过了，需要从服务器去读取。</p>
+<pre><code>cache-control: max-age=691200
+</code></pre>
+<blockquote>
+<p>如果cache-control与expires同时存在的话，cache-control的优先级高于expires</p>
+</blockquote>
+<h1 id="协商缓存（经过服务器）"><a href="#协商缓存（经过服务器）" class="headerlink" title="协商缓存（经过服务器）"></a>协商缓存（经过服务器）</h1><p>这部分的内容就和HTTP的内容相关联了，主要是几个字段。<br>if-XXX这种字段称为条件匹配，即只有当结果为真时，服务器才会执行请求。<br><strong>协商缓存成功后得到的状态码是304 NOT MODIFIED</strong></p>
+<h2 id="HTTP相关请求字段-1"><a href="#HTTP相关请求字段-1" class="headerlink" title="HTTP相关请求字段"></a>HTTP相关请求字段</h2><h3 id="if-Match-if-None-Match"><a href="#if-Match-if-None-Match" class="headerlink" title="if-Match &#x2F; if-None-Match"></a>if-Match &#x2F; if-None-Match</h3><p><strong>来源版本</strong>：HTTP 1.1<br>这个要联系到一个响应字段<code>Etag</code>，即服务器会一开始返回一个<code>Etag</code>值，只有后面这个<code>E-tag</code>作为<code>if-Match</code>字段的值发送到服务器，服务器进行判断是否匹配，来确定是否过期。<br>若匹配不一致，返回412（Precondition Failed）状态码。<br>可以指定字段值为<code>*</code>，这样只要资源存在，服务器就会忽略<code>Etag</code>值。</p>
+<pre><code>If-Match: &quot;bfc13a64729c4290ef5b2c2730249c88ca92d82d&quot;
+</code></pre>
+<h3 id="if-Modified-Since-if-Unmodified-Since"><a href="#if-Modified-Since-if-Unmodified-Since" class="headerlink" title="if-Modified-Since &#x2F; if-Unmodified-Since"></a>if-Modified-Since &#x2F; if-Unmodified-Since</h3><p><strong>来源版本</strong>：HTTP 1.0<br>根据字面意思也可以知道，这是制定了一个时间，表示在这个时间后更改&#x2F;未更改。<br>它可以根据<code>Last-Modified</code>字段来确定是否符合要求。</p>
+<pre><code>If-Modified-Since: Wed, 21 Oct 2015 07:28:00 GMT
+</code></pre>
+<p><strong>既然有if-Modified-Since，为何又有Etag和if-Match？</strong></p>
+<ul>
+<li>文件可能会被修改，但内容不改变(改变只是修改时间)，而前者会再次重新获取。</li>
+<li>If-Modified-Since只能精确到秒。</li>
+<li>某些服务器不能精确文件的最后修改时间。</li>
+</ul>
+<h2 id="缓存服务器"><a href="#缓存服务器" class="headerlink" title="缓存服务器"></a>缓存服务器</h2><p>缓存服务器是代理服务器的一种，缓存服务器帮客户端转发资源的时候，自己也会保存一份。请求的资源如果已经被缓存，则直接返回。</p>
+<h1 id="其他补充"><a href="#其他补充" class="headerlink" title="其他补充"></a>其他补充</h1><p>还可以在谷歌控制台的Network面板，选择Disable cache来禁止使用缓存。<br><img src="https://wx2.sinaimg.cn/mw1024/0076cOZ3gy1frmtv7vwk6j30k1066gm3.jpg" alt="图片描述"></p>
+<h1 id="推荐文章"><a href="#推荐文章" class="headerlink" title="推荐文章"></a>推荐文章</h1><p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000011286027">由memoryCache和diskCache产生的浏览器缓存机制的思考</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/hursing/article/details/52635829">Web开发须知的浏览器内幕 缓存与存储篇</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/m632587166/article/details/50732205">memoryCache和diskCache流程详解</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/wonyun/p/5524617.html">http协商缓存VS强缓存</a></p>
+
+        </div>
+        <div class="mck-post-footer">
+    
+        <a href="/2018/04/04/tech-20180404-cross/index.html">上一篇</a>
+    
+    
+        <a href="/2018/06/05/tech-20180605-multientry/index.html">下一篇</a>
+    
+</div>
+        <div class="mck-post-comments" id="mck-post-comments"></div>
+<script>
+    new Valine({
+        el: '#mck-post-comments',
+        appId: 'bhScVsXkKqR32IJd3MXvu41C-gzGzoHsz',
+        appKey: 'm8alBLTHvrVy8DQvzGshxoA5',
+        placeholder: '说点什么o_o ....',
+        avatar: 'monsterid'
+    });
+</script>
+        <div class="mck-about">
+    <div class="mck-about-title mck-section-title">ABOUT</div>
+    <div class="mck-about-main">
+        欢迎来到小年糕的后花园，年糕的小站开设于2017年，博主年糕君是一个爱好十分广泛的人，也是一个比较佛系的人，不定时爆发脑洞更新（因为是社畜，也可能失踪很久，工作太累了）。
+        <a href="/about/index.html" target="_blank" class="mck-about-more">查看更多</a>
+    </div>
+</div>
+    </div>
+    <script async src="/js/busuanzi.js"></script>
+    <script>
+    $(document).ready(function () {
+        setTimeout(() => {
+            $('#loading-container').fadeOut();
+        }, 2000);
+
+        $('#mck-menu__collapse').click(function() {
+            var menu = $('.mck-menu__normal');
+            if (menu.hasClass('opened')) {
+                $(this).removeClass('opened')
+                menu.removeClass('opened')
+            } else {
+                $(this).addClass('opened')
+                menu.addClass('opened')
+            }
+        })
+    })
+    </script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/prettify/r298/prettify.min.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+        jQuery("pre").addClass("prettyprint linenums");
+        prettyPrint();
+        });
+    </script>
+    <script async src="/js/sakura.js"></script>
+</body>
+</html>

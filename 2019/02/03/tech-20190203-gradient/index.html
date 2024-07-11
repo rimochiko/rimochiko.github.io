@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!--Description-->
+    
+        <meta name="description" content="愿你有一个好心情~^-^">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="阿糕">
+    
+
+    <!-- Title -->
+    
+    <title>CSS渐变小结 | 阿糕家后院</title>
+    <!--[if lt IE 9]>
+        <script src="http://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+        <script src="http://cdn.staticfile.org/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+	<link href="https://cdn.bootcss.com/animate.css/3.5.2/animate.css" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="mck-body animated fadeIn">
+    <div class="mck-loading" id="loading-container">
+        <div class="mck-loading-item">
+            <div class="mck-loading-text">
+                <span class="mck-loading-textcontent">正在努力加载中...</span>
+            </div>
+        </div>
+    </div>
+    <div class="mck-sidebar">
+        <canvas id="floating"></canvas>
+        <div class="mck-logo">
+            <img src="//mcimages/logo.png" />
+        </div>
+        <div class="mck-menu">
+            <div class="mck-menu__collapse" id="mck-menu__collapse">
+                <span class="mck-menu__collapse_line"></span>
+                <span class="mck-menu__collapse_line"></span>
+            </div>
+            <div class="mck-menu__normal">
+                <div class="mck-menu-item">
+                    <a href="/">HOME</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/work/index.html">WORK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/tech/index.html">TECH</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/life/index.html">LIFE</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/link/index.html">LINK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/map/index.html" class="mck-menu-item__new">
+                        <img src="//mcimages/emoji1.png" class="mck-menu-item__new_icon animated bounce"/>TRAVEL
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="mck-footer">
+            <div class="mck-footer-text">MOCHIKO ❤ Since 2017</div>
+            <div class="mck-footer-text" id="busuanzi_container_site_pv">你是第<span id="busuanzi_value_site_pv"></span>个光临的童鞋！</div>
+        </div>
+    </div>
+	<div class="mck-main mck-post-main"> 
+        <div class="mck-post-header ">
+            <a class="mck-post-back" href="/"></a>
+            <div class="mck-post-cover" style="background-image: url(https://www.mochiko.cn/pimgs/20190203gradient/0069luTRgy1fqfyanfm40j305h01c0sh.jpg)"></div>
+            <div class="mck-post-category"><a href="#">技术打工人</a><span class="mck-post-date">2019-02-03</span></div>
+            <div class="mck-post-title">CSS渐变小结</div>
+            <ul class="mck-post-tags">
+				
+					
+
+<li class="mck-post-tag"><a class="a_tag" href="/tags/CSS/index.html">CSS</a></li>
+				
+            </ul>
+			<ol class="mck-post-menu"><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="mck-post-menu-number">1.</span> <span class="mck-post-menu-text">基本用法</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E5%85%B3%E4%BA%8E%E6%96%B9%E5%90%91"><span class="mck-post-menu-number">2.</span> <span class="mck-post-menu-text">关于方向</span></a><ol class="mck-post-menu-child"><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#%E4%B8%8D%E5%86%99%E6%96%B9%E5%90%91"><span class="mck-post-menu-number">2.1.</span> <span class="mck-post-menu-text">不写方向</span></a></li><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E5%90%91%E5%8D%95%E8%AF%8D"><span class="mck-post-menu-number">2.2.</span> <span class="mck-post-menu-text">使用方向单词</span></a></li><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#%E4%BD%BF%E7%94%A8%E8%A7%92%E5%BA%A6"><span class="mck-post-menu-number">2.3.</span> <span class="mck-post-menu-text">使用角度</span></a></li></ol></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E5%85%B3%E4%BA%8E%E7%99%BE%E5%88%86%E6%AF%94"><span class="mck-post-menu-number">3.</span> <span class="mck-post-menu-text">关于百分比</span></a></li></ol>
+        </div>
+
+        <div class="mck-post-content">
+			<p>因为我不喜欢背公式，希望自己能找到比较容易理解和推理的记忆方式吧，很早就感觉CSS3渐变的属性组成不太好记忆，所以今天终于挖了这个坑，其实也没什么很特别的，嘻嘻，如果有错误欢迎提出。</p>
+<span id="more"></span>
+
+<h1 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h1><p>我们一般都是在添加background的时候会用到这个渐变效果，渐变效果分为<code>linear-gradient</code>（线性渐变）和<code>radial-gradient</code>（径向）。<br>当然这篇文章主要是围绕<code>linear-gradient</code>展开的。</p>
+<p><strong>语法如下：</strong></p>
+<pre><code>background: linear-gradient(方向, 颜色1, 颜色2, ...);
+</code></pre>
+<p>因为可以传入多个颜色，所以这里就是一大串了。<br>另外还有多个兼容前缀的写法，语法也有细微的不同，但是这里就讲的是标准形式，也就是没有前缀的~<br><strong>示例用法：</strong></p>
+<pre><code>linear-gradient(red, blue);
+linear-gradient(to right, red , blue);
+linear-gradient(180deg, red, blue);
+linear-gradient(180deg, red 10%, blue 20%);
+</code></pre>
+<h1 id="关于方向"><a href="#关于方向" class="headerlink" title="关于方向"></a>关于方向</h1><p>方向有两种写法，可以是写top、bottom、left、right，也可以是写具体的角度。</p>
+<h2 id="不写方向"><a href="#不写方向" class="headerlink" title="不写方向"></a>不写方向</h2><p>默认情况下是上-&gt;下：<br><img src="https://www.mochiko.cn/pimgs/20190203gradient/0069luTRgy1fqfyanfm40j305h01c0sh.jpg" alt="图片描述"></p>
+<pre><code>background: linear-gradient(red,blue);
+</code></pre>
+<h2 id="使用方向单词"><a href="#使用方向单词" class="headerlink" title="使用方向单词"></a>使用方向单词</h2><pre><code>to 某个方向（目的地）
+</code></pre>
+<p>这里的值可以是单纯的top，也可以是如top left（左上）这样的组合搭配。<br><strong>Tip</strong>：left top搭配中词语的顺序变换也没有影响。</p>
+<p>而它的方向就是以这个<code>目的地</code>为目标，径直发射过去。<br><strong>举例：</strong><br>向右下角（right bottom &#x2F; bottom right）发射过去啦~</p>
+<p><img src="https://www.mochiko.cn/pimgs/20190203gradient/0069luTRgy1fqfyb3bnflj305g0190sh.jpg" alt="图片描述"></p>
+<pre><code>background: linear-gradient(to right bottom, red , blue);
+</code></pre>
+<h2 id="使用角度"><a href="#使用角度" class="headerlink" title="使用角度"></a>使用角度</h2><p><strong>角度的范围：</strong><br>可以是负数到正数！它会进行%360deg的运算，所以0deg和360deg&#x2F;-360deg是一样的啦。</p>
+<p><strong>角度的判断：</strong><br>让我们先回到不填写方法的时候，渐变是red(1)-&gt;blue(2)，但是在0deg的情况下，渐变方向是blue(2)-&gt;red(1)：<br><img src="https://www.mochiko.cn/pimgs/20190203gradient/0069luTRgy1fqfyb3cn96j305h01c0sh.jpg" alt="图片描述"></p>
+<pre><code>background: linear-gradient(0deg , red , blue)
+</code></pre>
+<p>随后多次实验会发现，这个角度其实不像transform那种旋转的角度，同样也可以认为是一个发射的角度：<br><img src="https://www.mochiko.cn/pimgs/20190203gradient/0069luTRgy1fqfyb3d8mnj305f05hwed.jpg" alt="图片描述"></p>
+<p>所以呀，就可以认为是像这张图一样的，可以把red作为自己的出发点，然后对着某个角度发射过去。<br>所以在不写方向的默认情况下，<code>linear-gradient(red,blue);</code>这个角度其实相当于是<code>linear-gradient(180deg, red,blue)</code>。</p>
+<h1 id="关于百分比"><a href="#关于百分比" class="headerlink" title="关于百分比"></a>关于百分比</h1><p>我们在写颜色的时候后面可以在接一个百分比，这个百分比在MDN中的解释是：</p>
+<blockquote>
+<p>渐近线的颜色停止点在该位置有特定的颜色。该位置可以被指定为线长度的百分比或一个绝对长度。为实现期望的效果，可以指定任意多个颜色停止点。</p>
+</blockquote>
+<p>说实话，我感觉这个解释还是比较模糊，我个人觉得这个终点应该是渐变的终点，所以我开始了小探究（<strong>怕被打扰思维的童鞋直接跳过这里，看最后一段吧（怕被打）</strong>），但同样还是要存在一个颜色开始的起点，所以来实验一下：<br><strong>1.</strong><br><img src="https://www.mochiko.cn/pimgs/20190203gradient/0069luTRgy1fqfyb3e3swj305e01b0gy.jpg" alt="图片描述"></p>
+<pre><code>linear-gradient(to right, red 0%, blue 0%)
+</code></pre>
+<p>因为red设置了0%为终点，按照计算blue应该从0%开始，而blue也同样设置0%为渐变终点，所以blue就全部都占满了，且不存在渐变。</p>
+<ul>
+<li>渐变范围：0%~0%</li>
+<li>blue颜色范围：0%~100%</li>
+</ul>
+<p><strong>2.</strong><br><img src="https://www.mochiko.cn/pimgs/20190203gradient/0069luTRgy1fqfyb3fr76j305h01c0jy.jpg" alt="图片描述"></p>
+<pre><code>linear-gradient(to right, red 10%, blue 0%)
+</code></pre>
+<p>整个div的宽度是200px，red是10%，可以发现它截止的地方正好是<code>200*10%=20px</code>，但是blue的渐变终点是0。想象一下，就好像红色部分把蓝色的开头给遮住了，所以这个时候没有产生渐变，同样如果blue &lt;&#x3D; 10%都不会有这个渐变。</p>
+<ul>
+<li>渐变范围：10%~0%（大于起点，所以不存在）</li>
+<li>blue颜色范围：10%~100%</li>
+</ul>
+<p><strong>3.</strong><br><img src="https://www.mochiko.cn/pimgs/20190203gradient/0069luTRgy1fqfyb3f0pkj30500180kx.jpg" alt="图片描述"></p>
+<pre><code>linear-gradient(to right, red 0%, blue 10%)
+</code></pre>
+<p>So，如果blue是10%，按照计算，蓝色应该从0%的位置开始，但是渐变的终点是10%，所以会有10%长度的渐变出现。</p>
+<ul>
+<li>渐变范围：0%~10%</li>
+<li>blue颜色范围：0%~100%</li>
+</ul>
+<p><strong>4.</strong><br>来个复杂的情况：<br><img src="https://www.mochiko.cn/pimgs/20190203gradient/0069luTRgy1fqfyczxlxxj304w0160m9.jpg" alt="图片描述"></p>
+<pre><code>linear-gradient(to right, red 40%, blue 50%,yellow 60%);
+</code></pre>
+<p>首先红色部分在40%的时候止步，蓝色的渐变到50%的时候才结束，所以中间有10%的渐变，同理蓝色和黄色部分也有10%的渐变。</p>
+<ul>
+<li>red范围：0%~50%</li>
+<li>red-blue渐变范围：40%~50%</li>
+<li>blue范围： 50%~50%（渐变范围给予了它一定的纯色区域）</li>
+<li>blue-yellow渐变范围：50%~60%</li>
+<li>yellow颜色范围：50%~100%</li>
+</ul>
+<ol start="5">
+<li><p><img src="https://www.mochiko.cn/pimgs/20190203gradient/0069luTRgy1fqfyczxu1lj306g0263ya.jpg" alt="图片描述"></p>
+<p>  linear-gradient(to right, red 40%, blue 50%,yellow 0%);</p>
+</li>
+</ol>
+<p>把黄色部分设为0%，也就是黄色渐变在0%的时候就结束了，这个时候到蓝色部分正好是容器的一半（50%）。</p>
+<ul>
+<li>red-blue渐变范围：40%~50%</li>
+<li>blue颜色范围：50%~50%(因为red-blue渐变而有了一段纯色区)</li>
+<li>blue-yellow渐变范围：50%~0%（无效）</li>
+<li>yellow颜色范围：50%~100%</li>
+</ul>
+<p>目前看来，这个推理是合理的→_→，当然啦这里还只是我的推理（唔）。然后我找到了一篇文章：<a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000011406174">https://segmentfault.com/a/1190000011406174</a>，有详细的说明和资料，总结来说就是：</p>
+<blockquote>
+<p>百分比是指某个颜色值距离起点的开始位置。<br>渐变过渡区的占比为总的空间（高度或宽度）减去上下两个着色块空间占比剩下的空间。<br>如果某个色标的位置值比整个列表中在它之前的色标的位置值都要小，则该色标的位置值会被设置为它前面所有色标位置值的最大值。</p>
+</blockquote>
+<p>这是权威的说法哦，也很好理解（今天就自娱自乐到这里吧，嘻嘻）。</p>
+
+        </div>
+        <div class="mck-post-footer">
+    
+        <a href="/2018/12/27/life-20181227-music/index.html">上一篇</a>
+    
+    
+        <a href="/2019/02/10/life-20190210-perfume/index.html">下一篇</a>
+    
+</div>
+        <div class="mck-post-comments" id="mck-post-comments"></div>
+<script>
+    new Valine({
+        el: '#mck-post-comments',
+        appId: 'bhScVsXkKqR32IJd3MXvu41C-gzGzoHsz',
+        appKey: 'm8alBLTHvrVy8DQvzGshxoA5',
+        placeholder: '说点什么o_o ....',
+        avatar: 'monsterid'
+    });
+</script>
+        <div class="mck-about">
+    <div class="mck-about-title mck-section-title">ABOUT</div>
+    <div class="mck-about-main">
+        欢迎来到小年糕的后花园，年糕的小站开设于2017年，博主年糕君是一个爱好十分广泛的人，也是一个比较佛系的人，不定时爆发脑洞更新（因为是社畜，也可能失踪很久，工作太累了）。
+        <a href="/about/index.html" target="_blank" class="mck-about-more">查看更多</a>
+    </div>
+</div>
+    </div>
+    <script async src="/js/busuanzi.js"></script>
+    <script>
+    $(document).ready(function () {
+        setTimeout(() => {
+            $('#loading-container').fadeOut();
+        }, 2000);
+
+        $('#mck-menu__collapse').click(function() {
+            var menu = $('.mck-menu__normal');
+            if (menu.hasClass('opened')) {
+                $(this).removeClass('opened')
+                menu.removeClass('opened')
+            } else {
+                $(this).addClass('opened')
+                menu.addClass('opened')
+            }
+        })
+    })
+    </script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/prettify/r298/prettify.min.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+        jQuery("pre").addClass("prettyprint linenums");
+        prettyPrint();
+        });
+    </script>
+    <script async src="/js/sakura.js"></script>
+</body>
+</html>

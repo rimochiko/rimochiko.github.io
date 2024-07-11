@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!--Description-->
+    
+        <meta name="description" content="愿你有一个好心情~^-^">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="阿糕">
+    
+
+    <!-- Title -->
+    
+    <title>跨域问题 | 阿糕家后院</title>
+    <!--[if lt IE 9]>
+        <script src="http://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+        <script src="http://cdn.staticfile.org/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+	<link href="https://cdn.bootcss.com/animate.css/3.5.2/animate.css" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="mck-body animated fadeIn">
+    <div class="mck-loading" id="loading-container">
+        <div class="mck-loading-item">
+            <div class="mck-loading-text">
+                <span class="mck-loading-textcontent">正在努力加载中...</span>
+            </div>
+        </div>
+    </div>
+    <div class="mck-sidebar">
+        <canvas id="floating"></canvas>
+        <div class="mck-logo">
+            <img src="//mcimages/logo.png" />
+        </div>
+        <div class="mck-menu">
+            <div class="mck-menu__collapse" id="mck-menu__collapse">
+                <span class="mck-menu__collapse_line"></span>
+                <span class="mck-menu__collapse_line"></span>
+            </div>
+            <div class="mck-menu__normal">
+                <div class="mck-menu-item">
+                    <a href="/">HOME</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/work/index.html">WORK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/tech/index.html">TECH</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/life/index.html">LIFE</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/link/index.html">LINK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/map/index.html" class="mck-menu-item__new">
+                        <img src="//mcimages/emoji1.png" class="mck-menu-item__new_icon animated bounce"/>TRAVEL
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="mck-footer">
+            <div class="mck-footer-text">MOCHIKO ❤ Since 2017</div>
+            <div class="mck-footer-text" id="busuanzi_container_site_pv">你是第<span id="busuanzi_value_site_pv"></span>个光临的童鞋！</div>
+        </div>
+    </div>
+	<div class="mck-main mck-post-main"> 
+        <div class="mck-post-header ">
+            <a class="mck-post-back" href="/"></a>
+            <div class="mck-post-cover" style="background-image: url(https://wx2.sinaimg.cn/mw690/0069luTRgy1frgrw4usrxj30b203ea9v.jpg)"></div>
+            <div class="mck-post-category"><a href="#">技术打工人</a><span class="mck-post-date">2018-04-04</span></div>
+            <div class="mck-post-title">跨域问题</div>
+            <ul class="mck-post-tags">
+				
+					
+
+<li class="mck-post-tag"><a class="a_tag" href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/index.html">浏览器</a></li>
+				
+            </ul>
+			<ol class="mck-post-menu"><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E5%89%8D%E8%A8%80"><span class="mck-post-menu-number">1.</span> <span class="mck-post-menu-text">前言</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%B7%A8%E5%9F%9F%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="mck-post-menu-number">2.</span> <span class="mck-post-menu-text">什么是跨域问题？</span></a><ol class="mck-post-menu-child"><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E5%90%8C%E6%BA%90%E6%94%BF%E7%AD%96"><span class="mck-post-menu-number">2.1.</span> <span class="mck-post-menu-text">浏览器同源政策</span></a></li><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#%E5%AE%9E%E8%B7%B5%E6%8F%90%E9%97%AE%E5%8C%BA"><span class="mck-post-menu-number">2.2.</span> <span class="mck-post-menu-text">实践提问区</span></a></li></ol></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E7%AE%80%E5%8D%95-%E5%A4%8D%E6%9D%82%E8%AF%B7%E6%B1%82"><span class="mck-post-menu-number">3.</span> <span class="mck-post-menu-text">简单&#x2F;复杂请求</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E5%85%B6%E4%BB%96%E6%B5%8B%E9%AA%8C"><span class="mck-post-menu-number">4.</span> <span class="mck-post-menu-text">其他测验</span></a><ol class="mck-post-menu-child"><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#localStorage"><span class="mck-post-menu-number">4.1.</span> <span class="mck-post-menu-text">localStorage</span></a></li></ol></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#Cookie%E7%9B%B8%E5%85%B3"><span class="mck-post-menu-number">5.</span> <span class="mck-post-menu-text">Cookie相关</span></a><ol class="mck-post-menu-child"><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#iframe"><span class="mck-post-menu-number">5.1.</span> <span class="mck-post-menu-text">iframe</span></a></li></ol></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="mck-post-menu-number">6.</span> <span class="mck-post-menu-text">解决方法</span></a><ol class="mck-post-menu-child"><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#JSONP"><span class="mck-post-menu-number">6.1.</span> <span class="mck-post-menu-text">JSONP</span></a></li><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#Nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86"><span class="mck-post-menu-number">6.2.</span> <span class="mck-post-menu-text">Nginx反向代理</span></a></li><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#postMessage"><span class="mck-post-menu-number">6.3.</span> <span class="mck-post-menu-text">postMessage</span></a></li></ol></li></ol>
+        </div>
+
+        <div class="mck-post-content">
+			<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>唔，面试的时候被问到了，然后把之前自己知道的情况都说了一下，但是后面还是感觉这其中还是有很多细节可以继续扒，所以这里来小结一下，为什么是挖坑系列，因为我一次性肯定写不完，算是经历了此次几轮面试后的一个学习小结的开始吧。（如果有错误，欢迎提出）</p>
+<span id="more"></span>
+
+<h1 id="什么是跨域问题？"><a href="#什么是跨域问题？" class="headerlink" title="什么是跨域问题？"></a>什么是跨域问题？</h1><p>之前看了很多文章，都没有很系统&#x2F;官方的一个定义。这里选了一个比较靠谱的说法:</p>
+<blockquote>
+<p>跨域是指一个域下的文档或脚本试图去请求另一个域下的资源，这里跨域是广义的。</p>
+</blockquote>
+<p>而我们通常说的问题来源于js发起的ajax请求、dom和js对象的跨域操作等。</p>
+<h2 id="浏览器同源政策"><a href="#浏览器同源政策" class="headerlink" title="浏览器同源政策"></a>浏览器同源政策</h2><p>也就是<code>协议</code>、<code>域名</code>和<code>端口号</code>一致，浏览器才会承认它们之间是不会存在跨域的限制。</p>
+<p><strong>注意</strong>：<code>www.a.baidu.com</code>和<code>www.b.baidu.com</code>这种二级域名不一样也是相当于域名不相同的）</p>
+<p><strong>常见限制如下</strong>：</p>
+<ol>
+<li>Cookie、LocalStorage 和 IndexDB 无法读取</li>
+<li>DOM 和 Js对象无法获得</li>
+<li>AJAX 请求不能发送</li>
+</ol>
+<p><strong>为什么要进行限制？</strong><br>浏览器为了能够减少网络安全攻击问题采取的。<br>比如你直接在某个网站嵌入一段代码，其中获取了document.cookie，然后通过一个请求发送给你的网站，这样就可以盗取别人的cookie信息。</p>
+<h2 id="实践提问区"><a href="#实践提问区" class="headerlink" title="实践提问区"></a>实践提问区</h2><p><strong>Q：如果发送一个Ajax请求发生跨域，浏览器会做出什么反应呢？</strong><br>我们来做一个页面A：localhost&#x2F;ajax：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">function get() &#123;</span><br><span class="line">	  var xhr = new XMLHttpRequest();</span><br><span class="line">	  xhr.open(&quot;get&quot;,&quot;http://127.0.0.1/ajax/data.json&quot;,true);</span><br><span class="line">	  xhr.onreadystatechange = function() &#123;</span><br><span class="line">		if(xhr.readyState == 4) &#123;</span><br><span class="line">			if(xhr.status == 200 || xhr.status == 304) &#123;</span><br><span class="line">             alert(xhr.resonseText);</span><br><span class="line">			&#125; else &#123;</span><br><span class="line">				alert(&quot;请求失败啦&quot;);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	  &#125;</span><br><span class="line">	  xhr.send(null);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在页面A中请求：127.0.0.1&#x2F;ajax&#x2F;data.json<br>（没错，localhost和127.0.0.1两个家伙其实是同一个页面(。・∀・)ノ，但是它们的域名并不一样）<br>运行这个函数去请求之后，浏览器报错啦！<br><img src="https://wx2.sinaimg.cn/mw690/0069luTRgy1frgrw4usrxj30b203ea9v.jpg" alt="图片描述"><br><img src="http://wx4.sinaimg.cn/large/0069luTRgy1frgrw4uxt4j30wn03s3yq.jpg" alt="图片描述"></p>
+<pre><code>Failed to load http://127.0.0.1/ajax/data.json: No &#39;Access-Control-Allow-Origin&#39; header is present on the requested resource. Origin &#39;http://localhost&#39; is therefore not allowed access.
+</code></pre>
+<p>可以看到，它说因为没有<code>Access-Control-Allow-Origin</code>出现在请求资源的头部信息中，所以不允许<code>http://localhost</code>通行。（这是不是也暗示了我们，其中一种解决方法呢）</p>
+<p><strong>Q：浏览器发送了请求吗？它有没有收到什么回应？</strong><br>之前不是说浏览器限制我们的发送吗？所以它发送了请求吗？打开控制台发现，它不仅发了一个data.json请求，格式为xhr，状态码是200。<br><img src="http://wx3.sinaimg.cn/large/0069luTRgy1frgrw4w342j30sl04y0t1.jpg" alt="图片描述"><br>瞅瞅下面这个报文的具体请求信息：<br><img src="https://wx1.sinaimg.cn/mw1024/0069luTRgy1frgrw9iag3j309g0ci0tb.jpg" alt="图片描述"></p>
+<p>再瞅瞅这个报文的Response：<br><img src="https://wx1.sinaimg.cn/mw1024/0069luTRgy1frgrw9hzjhj3078021t8j.jpg" alt="图片描述"></p>
+<p>唔，会发现它其实收到了这个回应呢。</p>
+<p><strong>Q：更换请求方式，情况会发生改变吗？</strong><br>我把请求方式从<code>GET</code>改成<code>PUT</code>，再去发送请求，除了和之前的弹错误警告框，控制台报错一样外，报文如下：<br><img src="https://wx1.sinaimg.cn/mw1024/0069luTRgy1frgrwke2dkj30b30d7dgj.jpg" alt="图片描述"></p>
+<p>可以发现它的请求方式变成了<code>OPTIONS</code>，且<code>response</code>是空。</p>
+<h1 id="简单-复杂请求"><a href="#简单-复杂请求" class="headerlink" title="简单&#x2F;复杂请求"></a>简单&#x2F;复杂请求</h1><p>为什么用<code>PUT</code>请求后，请求的方式变成了<code>OPTIONS</code>呢？这就涉及简单&#x2F;复杂请求的问题了。<br><strong>简单请求的条件</strong></p>
+<ol>
+<li>必须是<code>HEAD</code>、<code>GET</code>、<code>POST</code>中的其中一种请求方法。</li>
+<li>请求头选项只能有如下几个：<code>Accept</code>、<code>Accept-Language</code>、<code>Content-Language</code>、<code>Last-Event-ID</code>、<code>Content-Type</code>。</li>
+<li>Content-Type只能是以下之一：<code>application/x-www-form-urlencoded</code>、<code>multipart/form-data</code>、<code>text/plain</code>。</li>
+</ol>
+<p>当然啦，如果不是简单请求，自然就是复杂请求了。</p>
+<p><strong>区别：</strong><br>复杂请求会先发送一种”预请求”，服务端也会返回”预回应”作为响应。只有预请求成功返回，实际的请求才会继续发送，预请求以<code>OPTIONS</code>方法发送，所以可以看到之前那个<code>PUT</code>方法的报文是<code>OPTIONS</code>。</p>
+<p>Q：我有一个疑问，它控制台报错说是不允许客户端的请求，如果服务器端允许客户端域名进行请求的话，那发送就可以带上了请求，如果是这样的话，那也不能保护客户端的cookie安全啊0_0？</p>
+<h1 id="其他测验"><a href="#其他测验" class="headerlink" title="其他测验"></a>其他测验</h1><h2 id="localStorage"><a href="#localStorage" class="headerlink" title="localStorage"></a>localStorage</h2><p>我们依旧在页面A：localhost&#x2F;ajax，先写好一个设置localStorage的函数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">function setStorage() &#123;</span><br><span class="line">	 if(window.localStorage) &#123;</span><br><span class="line">	 	localStorage.setItem(&quot;text&quot;,&quot;你好&quot;);</span><br><span class="line">	 &#125; else &#123;</span><br><span class="line">	 	new Error(&quot;不支持LocalStorage&quot;);</span><br><span class="line">	 &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们再写一个获取localStorage的函数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">function getStorage() &#123;</span><br><span class="line">	 if(window.localStorage) &#123;</span><br><span class="line">	 	console.log(localStorage.getItem(&quot;text&quot;));</span><br><span class="line">	 &#125; else &#123;</span><br><span class="line">	 	new Error(&quot;不支持LocalStorage&quot;);</span><br><span class="line">	 &#125;	   	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们在localhost下点击设置，去127.0.0.1下面尝试获取，会发现结果是<code>null</code>。但是如果回到localhost页面，会发现出现了“你好”。另外我又在该目录下增加了一个页面，以localhost打开会发现它也能取到这个“你好”，因为它们是同源的所有没有这个限制。</p>
+<h1 id="Cookie相关"><a href="#Cookie相关" class="headerlink" title="Cookie相关"></a>Cookie相关</h1><p>我们先预先来剧透一下，暂时用jQuery的封装发送一个jsonp请求来实现跨域，再来看看请求的差别：</p>
+<pre><code>$.ajax(&#123;
+    url: &quot;http://127.0.0.1/ajax/data.json?callback=showData&quot;,
+    type: &quot;GET&quot;,
+    dataType: &quot;jsonp&quot;,
+    jsonpCallback: &quot;showData&quot;,
+    success: function(data) &#123;
+       	 showData();
+    &#125;
+&#125;) 
+</code></pre>
+<p>发送请求的报文如下:<br><img src="https://wx4.sinaimg.cn/mw1024/0069luTRgy1frgrwu5zd6j30950algm4.jpg" alt="图片描述"></p>
+<p>和最开始没有解决跨域的请求相比，多了Cookie值：<br><img src="https://wx1.sinaimg.cn/mw1024/0069luTRgy1frgrw9iag3j309g0ci0tb.jpg" alt="图片描述"></p>
+<p>所以可以认为，浏览器在没有解决跨域问题之前，不会把Cookie带上去。</p>
+<h2 id="iframe"><a href="#iframe" class="headerlink" title="iframe"></a>iframe</h2><p>在页面里嵌入一个iframe标签，它也会产生这个问题吗，于是我们在<code>localhost/ajax/index.php</code>下又嵌了一个<code>localhost/ajax/index.php</code>，在iframe里面去点击向<code>127.0.0.1/ajax/index.php</code>发送请求，结果报错了，说明它是存在这个限制的。</p>
+<h1 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h1><p>可以说解决方法是烂大街了哈哈哈~</p>
+<h2 id="JSONP"><a href="#JSONP" class="headerlink" title="JSONP"></a>JSONP</h2><p>XHR请求存在跨域限制，但是script并不存在，利用这个特点，我们就出现了JSONP来解决跨域。</p>
+<h2 id="Nginx反向代理"><a href="#Nginx反向代理" class="headerlink" title="Nginx反向代理"></a>Nginx反向代理</h2><p><strong>Q：什么叫做反向代理？</strong><br>我们都明确代理的意思，就是“帮你做事情的人”。因为浏览器存在同源政策，无法进行跨域，但是服务器之间没有这样的约束，所以我们就设置这样一个代理机关，让客户误以为可以请求，实际上是转交了。<br>也就是说反向代理，代理的是服务器的角色。类似的情况还有对客户端的访问进行一个就近分配（CDN），或者分散流量等。</p>
+<p><strong>Q：那你知道正向代理吗？</strong><br>有反向代理，肯定有正向代理，而且就是方向反了。正向代理代理的是服务器，为什么它是正的？因为在很多年前，我们从局域网访问外网，其实就是通过代理去访问的，这时候代理代替了我们，比如我们使用VPN进行绿色上网。</p>
+<h2 id="postMessage"><a href="#postMessage" class="headerlink" title="postMessage"></a>postMessage</h2>
+        </div>
+        <div class="mck-post-footer">
+    
+        <a href="/2018/03/05/tech-20180305-eventloop/index.html">上一篇</a>
+    
+    
+        <a href="/2018/05/23/tech-20180523-cache/index.html">下一篇</a>
+    
+</div>
+        <div class="mck-post-comments" id="mck-post-comments"></div>
+<script>
+    new Valine({
+        el: '#mck-post-comments',
+        appId: 'bhScVsXkKqR32IJd3MXvu41C-gzGzoHsz',
+        appKey: 'm8alBLTHvrVy8DQvzGshxoA5',
+        placeholder: '说点什么o_o ....',
+        avatar: 'monsterid'
+    });
+</script>
+        <div class="mck-about">
+    <div class="mck-about-title mck-section-title">ABOUT</div>
+    <div class="mck-about-main">
+        欢迎来到小年糕的后花园，年糕的小站开设于2017年，博主年糕君是一个爱好十分广泛的人，也是一个比较佛系的人，不定时爆发脑洞更新（因为是社畜，也可能失踪很久，工作太累了）。
+        <a href="/about/index.html" target="_blank" class="mck-about-more">查看更多</a>
+    </div>
+</div>
+    </div>
+    <script async src="/js/busuanzi.js"></script>
+    <script>
+    $(document).ready(function () {
+        setTimeout(() => {
+            $('#loading-container').fadeOut();
+        }, 2000);
+
+        $('#mck-menu__collapse').click(function() {
+            var menu = $('.mck-menu__normal');
+            if (menu.hasClass('opened')) {
+                $(this).removeClass('opened')
+                menu.removeClass('opened')
+            } else {
+                $(this).addClass('opened')
+                menu.addClass('opened')
+            }
+        })
+    })
+    </script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/prettify/r298/prettify.min.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+        jQuery("pre").addClass("prettyprint linenums");
+        prettyPrint();
+        });
+    </script>
+    <script async src="/js/sakura.js"></script>
+</body>
+</html>

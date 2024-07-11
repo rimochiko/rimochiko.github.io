@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!--Description-->
+    
+        <meta name="description" content="愿你有一个好心情~^-^">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="阿糕">
+    
+
+    <!-- Title -->
+    
+    <title>回溯法小结 | 阿糕家后院</title>
+    <!--[if lt IE 9]>
+        <script src="http://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+        <script src="http://cdn.staticfile.org/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+	<link href="https://cdn.bootcss.com/animate.css/3.5.2/animate.css" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="mck-body animated fadeIn">
+    <div class="mck-loading" id="loading-container">
+        <div class="mck-loading-item">
+            <div class="mck-loading-text">
+                <span class="mck-loading-textcontent">正在努力加载中...</span>
+            </div>
+        </div>
+    </div>
+    <div class="mck-sidebar">
+        <canvas id="floating"></canvas>
+        <div class="mck-logo">
+            <img src="//mcimages/logo.png" />
+        </div>
+        <div class="mck-menu">
+            <div class="mck-menu__collapse" id="mck-menu__collapse">
+                <span class="mck-menu__collapse_line"></span>
+                <span class="mck-menu__collapse_line"></span>
+            </div>
+            <div class="mck-menu__normal">
+                <div class="mck-menu-item">
+                    <a href="/">HOME</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/work/index.html">WORK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/tech/index.html">TECH</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/life/index.html">LIFE</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/link/index.html">LINK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/map/index.html" class="mck-menu-item__new">
+                        <img src="//mcimages/emoji1.png" class="mck-menu-item__new_icon animated bounce"/>TRAVEL
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="mck-footer">
+            <div class="mck-footer-text">MOCHIKO ❤ Since 2017</div>
+            <div class="mck-footer-text" id="busuanzi_container_site_pv">你是第<span id="busuanzi_value_site_pv"></span>个光临的童鞋！</div>
+        </div>
+    </div>
+	<div class="mck-main mck-post-main"> 
+        <div class="mck-post-header ">
+            <a class="mck-post-back" href="/"></a>
+            <div class="mck-post-cover" style="background-image: url(https://www.mochiko.cn/pimgs/history/0069luTRgy1fo89f26fs8j30gz0avdg2.jpg)"></div>
+            <div class="mck-post-category"><a href="#">技术打工人</a><span class="mck-post-date">2019-03-12</span></div>
+            <div class="mck-post-title">回溯法小结</div>
+            <ul class="mck-post-tags">
+				
+					
+
+<li class="mck-post-tag"><a class="a_tag" href="/tags/%E7%AE%97%E6%B3%95/index.html">算法</a></li>
+				
+            </ul>
+			<ol class="mck-post-menu"><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E5%9B%9E%E6%BA%AF%E6%B3%95%E3%81%AE%E5%AE%9A%E4%B9%89"><span class="mck-post-menu-number">1.</span> <span class="mck-post-menu-text">回溯法の定义</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E5%9B%9E%E6%BA%AF%E6%B3%95%E3%81%AE%E8%A7%A3%E7%A9%BA%E9%97%B4"><span class="mck-post-menu-number">2.</span> <span class="mck-post-menu-text">回溯法の解空间</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E5%9B%9E%E6%BA%AF%E6%B3%95%E3%81%AE%E5%85%AC%E5%BC%8F"><span class="mck-post-menu-number">3.</span> <span class="mck-post-menu-text">回溯法の公式</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E4%B8%BE%E4%B8%AA%E6%A0%97%E5%AD%90"><span class="mck-post-menu-number">4.</span> <span class="mck-post-menu-text">举个栗子</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E6%95%88%E7%8E%87%E3%81%AE%E6%8F%90%E9%AB%98"><span class="mck-post-menu-number">5.</span> <span class="mck-post-menu-text">效率の提高</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E6%9C%80%E5%90%8E%E2%80%A6"><span class="mck-post-menu-number">6.</span> <span class="mck-post-menu-text">最后…</span></a></li></ol>
+        </div>
+
+        <div class="mck-post-content">
+			<h1 id="回溯法の定义"><a href="#回溯法の定义" class="headerlink" title="回溯法の定义"></a>回溯法の定义</h1><blockquote>
+<p>回溯法（探索与回溯法）是一种选优搜索法，又称为试探法，按选优条件向前搜索，以达到目标。但当探索到某一步时，发现原先选择并不优或达不到目标，就退回一步重新选择，这种走不通就退回再走的技术为回溯法。</p>
+</blockquote>
+<p>以上来自百度百科。</p>
+<span id="more"></span>
+
+<h1 id="回溯法の解空间"><a href="#回溯法の解空间" class="headerlink" title="回溯法の解空间"></a>回溯法の解空间</h1><p>就是要<strong>找出这个问题所有的解</strong>，在这些解里面<strong>筛选出最优解</strong>。<br>举个例子，0-1背包的问题，假设我们有A，B，C三个物品，我们要判断选择装进哪些物品。从我们的背包里没有任何东西开始，我们按顺序一个个物品来判断是不是把它装进去。那么我们就可能出现两种想法：<br><strong>想法一</strong><br>对每一个物品判断是装还是不装，然后画出一个不规范的的图：<br><img src="https://www.mochiko.cn/pimgs/history/0069luTRgy1fo89f26fs8j30gz0avdg2.jpg" alt="图片描述"></p>
+<p>在这个图中，连线旁边的数字：1表示装入背包中，0表示不装入背包。第一层中，我们判断是否放入A，放入就是1那条岔路，反之是0那条岔路，所以很直观地，我们就可以得到所有可能出现的8个情况：</p>
+<pre><code>&#123;(1,1,1),(1,1,0),(1,0,1),(1,0,0),(0,1,1),(0,1,0),(0,0,1),(0,0,0)&#125;
+</code></pre>
+<p><strong>想法二</strong><br>我们假设自己一开始要从三个里面选一个来装入，所以就有了：<br><img src="https://www.mochiko.cn/pimgs/history/0069luTRgy1fo89f285oej30ef08pq2z.jpg" alt="图片描述"></p>
+<p>（但是01背包问题并不适合用这种方法来解，所以这里就是与上面的树做一个对比）<br>如上图则表示，我们从A,B,C三个中先选择一个装入，如果第一轮选择了A，那么剩下就还有选择B或者C</p>
+<p>而想法一的想法，其实就能形成一颗<strong>子集树</strong>，它在每次选择的时候，是在一个有限选择集合S里面进行选择，01背包中，这个S就是{0,1}，而想法二能形成一颗排列树，它在每次进行选择的时候是在给出的选项S中作选择，这里是{A,B,C}。<br>所以回溯法的写法，也有两种，<strong>子集树的写法和排列树的写法，做题的时候要自己选择更加合适的方法来解决。</strong></p>
+<h1 id="回溯法の公式"><a href="#回溯法の公式" class="headerlink" title="回溯法の公式"></a>回溯法の公式</h1><p>每种算法都可以选择递归和迭代的方式来写，显然这里用迭代方式来写是很麻烦的，可以说也没有人选择这样的方法，所以我们都采用递归来写。</p>
+<p><strong>子集树写法</strong><br>我们的目的就是要遍历子集树上的每个解法，为了判断每一个解对不对，所以我们应该是深度遍历，所以我们需要：t（树的深度）,数组x（每一层的结果选择）。先写出中心的遍历函数：</p>
+<pre><code>void backtrack(int t)&#123;
+    if(t&gt;=n)&#123; 
+           output();   //此时已到达叶子结点，用于输出一个结果
+           return;
+    &#125;
+    
+    //对分叉点遍历0,1两种情况    
+    for(int i=0;i&lt;=1;i++)&#123;
+        x[t]=i;  //给第t层代表的选择赋可能选择的值
+        if(ok(t))  
+            //ok是判断目前的一个解有可行的机会 
+            backtrack(t+1);  
+    &#125;
+        
+&#125;
+</code></pre>
+<p>此时我们应该注意，x数组的初始值应该都为0。</p>
+<p><strong>排列树写法</strong><br>也和子集树一样要遍历子集树上的每个解法，我们同样需要：t（树的深度）,数组x（每一层的结果选择）。写出中心的遍历函数：</p>
+<pre><code>void backtrack(int t)&#123;
+    if(t&gt;=n)&#123; 
+           output();   //此时已到达叶子结点，用于输出一个结果
+           return;
+    &#125;
+    
+    //从第t个单元开始进行交换排列  
+    for(int i=t;i&lt;n;i++)&#123;
+        swap(x[t],x[i]);  //交换两个排列顺序，得到了一个解
+        if(ok(t))  
+            //ok是判断目前的一个解有可行的机会 
+            backtrack(t+1);  
+        swap(x[t],x[i]);  //恢复原样，给后面的好继续交换判断
+    &#125;
+        
+&#125;
+</code></pre>
+<p>此时我们应该注意，因为排列树其实就是写出所有可能的排列，所以x数组里面每个单元的内容都应该是不一样的，我们在初始化的时候就应该依次赋予可能的解。<br>总结比较，在子集树的公式中，for循环中的i是<strong>可能的取值</strong>，排列树的公式中，for循环中的i是<strong>所有可能取值的存放位置</strong>。</p>
+<h1 id="举个栗子"><a href="#举个栗子" class="headerlink" title="举个栗子"></a>举个栗子</h1><p>n皇后问题，要求在一个n行n格的棋盘中摆放n个皇后，皇后不能在同一行，同一列或者同一斜线，我们要找出有多少个解法。这个问题，我们在选择x数组上，一个一维数组就足够用，下标表示在第几行，对应的值表示在第几列。<br><strong>子集树方法</strong>：<br>假如n&#x3D;4，初始化x数组中每个取值为0，那么我们的for循环中i可能有0,1,2,3四种选择，然后就是填写ok()函数，根据约束的条件可知，ok()函数里应该填写判断</p>
+<blockquote>
+<p>皇后不能在同一行，同一列或者同一斜线</p>
+</blockquote>
+<p><img src="https://www.mochiko.cn/pimgs/history/0069luTRgy1fo89f4zxb5j306p06dt8j.jpg" alt="图片描述"></p>
+<p><strong>排列树方法</strong>：<br>假如n&#x3D;4，初始化x数组中每个取值为0,1,2,3，ok函数也和子集树一样，我们的for循环中i也可能有0,1,2,3四种选择，因为是采用了交换，不出现两个重复的值，所以和子集树相比，走过的路要少一些。<br><img src="https://www.mochiko.cn/pimgs/history/0069luTRgy1fo89f50kcej305z05p743.jpg" alt="图片描述"></p>
+<h1 id="效率の提高"><a href="#效率の提高" class="headerlink" title="效率の提高"></a>效率の提高</h1><p>为了提高算法的效率，我们可以从ok()函数来入手：</p>
+<ol>
+<li>计算简单</li>
+<li>剪枝多（避免走行不通的路）</li>
+</ol>
+<p>但是这两个条件是互相矛盾的。</p>
+<h1 id="最后…"><a href="#最后…" class="headerlink" title="最后…"></a>最后…</h1><p>这是一个挣扎的小渣渣写的文章，所以可能会有错误，各位大佬多指教QAQ</p>
+
+        </div>
+        <div class="mck-post-footer">
+    
+        <a href="/2019/02/22/tech-20190222-three/index.html">上一篇</a>
+    
+    
+        <a href="/2019/04/01/tech-20190401-three-material/index.html">下一篇</a>
+    
+</div>
+        <div class="mck-post-comments" id="mck-post-comments"></div>
+<script>
+    new Valine({
+        el: '#mck-post-comments',
+        appId: 'bhScVsXkKqR32IJd3MXvu41C-gzGzoHsz',
+        appKey: 'm8alBLTHvrVy8DQvzGshxoA5',
+        placeholder: '说点什么o_o ....',
+        avatar: 'monsterid'
+    });
+</script>
+        <div class="mck-about">
+    <div class="mck-about-title mck-section-title">ABOUT</div>
+    <div class="mck-about-main">
+        欢迎来到小年糕的后花园，年糕的小站开设于2017年，博主年糕君是一个爱好十分广泛的人，也是一个比较佛系的人，不定时爆发脑洞更新（因为是社畜，也可能失踪很久，工作太累了）。
+        <a href="/about/index.html" target="_blank" class="mck-about-more">查看更多</a>
+    </div>
+</div>
+    </div>
+    <script async src="/js/busuanzi.js"></script>
+    <script>
+    $(document).ready(function () {
+        setTimeout(() => {
+            $('#loading-container').fadeOut();
+        }, 2000);
+
+        $('#mck-menu__collapse').click(function() {
+            var menu = $('.mck-menu__normal');
+            if (menu.hasClass('opened')) {
+                $(this).removeClass('opened')
+                menu.removeClass('opened')
+            } else {
+                $(this).addClass('opened')
+                menu.addClass('opened')
+            }
+        })
+    })
+    </script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/prettify/r298/prettify.min.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+        jQuery("pre").addClass("prettyprint linenums");
+        prettyPrint();
+        });
+    </script>
+    <script async src="/js/sakura.js"></script>
+</body>
+</html>

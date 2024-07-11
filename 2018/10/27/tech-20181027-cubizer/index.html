@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!--Description-->
+    
+        <meta name="description" content="愿你有一个好心情~^-^">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="阿糕">
+    
+
+    <!-- Title -->
+    
+    <title>初识贝塞尔曲线 | 阿糕家后院</title>
+    <!--[if lt IE 9]>
+        <script src="http://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+        <script src="http://cdn.staticfile.org/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+	<link href="https://cdn.bootcss.com/animate.css/3.5.2/animate.css" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="mck-body animated fadeIn">
+    <div class="mck-loading" id="loading-container">
+        <div class="mck-loading-item">
+            <div class="mck-loading-text">
+                <span class="mck-loading-textcontent">正在努力加载中...</span>
+            </div>
+        </div>
+    </div>
+    <div class="mck-sidebar">
+        <canvas id="floating"></canvas>
+        <div class="mck-logo">
+            <img src="//mcimages/logo.png" />
+        </div>
+        <div class="mck-menu">
+            <div class="mck-menu__collapse" id="mck-menu__collapse">
+                <span class="mck-menu__collapse_line"></span>
+                <span class="mck-menu__collapse_line"></span>
+            </div>
+            <div class="mck-menu__normal">
+                <div class="mck-menu-item">
+                    <a href="/">HOME</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/work/index.html">WORK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/tech/index.html">TECH</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/life/index.html">LIFE</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/link/index.html">LINK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/map/index.html" class="mck-menu-item__new">
+                        <img src="//mcimages/emoji1.png" class="mck-menu-item__new_icon animated bounce"/>TRAVEL
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="mck-footer">
+            <div class="mck-footer-text">MOCHIKO ❤ Since 2017</div>
+            <div class="mck-footer-text" id="busuanzi_container_site_pv">你是第<span id="busuanzi_value_site_pv"></span>个光临的童鞋！</div>
+        </div>
+    </div>
+	<div class="mck-main mck-post-main"> 
+        <div class="mck-post-header ">
+            <a class="mck-post-back" href="/"></a>
+            <div class="mck-post-cover" style="background-image: url(https://wx2.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u4sjlj30aa03bdfo.jpg)"></div>
+            <div class="mck-post-category"><a href="#">技术打工人</a><span class="mck-post-date">2018-10-27</span></div>
+            <div class="mck-post-title">初识贝塞尔曲线</div>
+            <ul class="mck-post-tags">
+				
+					
+
+<li class="mck-post-tag"><a class="a_tag" href="/tags/CSS/index.html">CSS</a></li>
+				
+            </ul>
+			<ol class="mck-post-menu"><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%B4%9D%E5%A1%9E%E5%B0%94%E6%9B%B2%E7%BA%BF"><span class="mck-post-menu-number">1.</span> <span class="mck-post-menu-text">什么是贝塞尔曲线</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E4%BA%8C%E6%AC%A1%E8%B4%9D%E5%A1%9E%E5%B0%94%E6%9B%B2%E7%BA%BF"><span class="mck-post-menu-number">2.</span> <span class="mck-post-menu-text">二次贝塞尔曲线</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E4%B8%89%E6%AC%A1%E8%B4%9D%E5%A1%9E%E5%B0%94%E6%9B%B2%E7%BA%BF"><span class="mck-post-menu-number">3.</span> <span class="mck-post-menu-text">三次贝塞尔曲线</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E5%BA%94%E7%94%A8"><span class="mck-post-menu-number">4.</span> <span class="mck-post-menu-text">应用</span></a><ol class="mck-post-menu-child"><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#%E5%9C%A8CSS%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8"><span class="mck-post-menu-number">4.1.</span> <span class="mck-post-menu-text">在CSS中的应用</span></a></li><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#SVG"><span class="mck-post-menu-number">4.2.</span> <span class="mck-post-menu-text">SVG</span></a></li><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#canvas"><span class="mck-post-menu-number">4.3.</span> <span class="mck-post-menu-text">canvas</span></a></li></ol></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E6%9C%80%E5%90%8E"><span class="mck-post-menu-number">5.</span> <span class="mck-post-menu-text">最后</span></a></li></ol>
+        </div>
+
+        <div class="mck-post-content">
+			<p>贝塞尔曲线在CSS动画中和canvas、svg绘图中都是比较重要的一个东西！所以我来好好的小结一下关于它的一些东西。</p>
+<span id="more"></span>
+<h1 id="什么是贝塞尔曲线"><a href="#什么是贝塞尔曲线" class="headerlink" title="什么是贝塞尔曲线"></a>什么是贝塞尔曲线</h1><blockquote>
+<p>贝塞尔曲线于1962，由法国工程师皮埃尔·贝塞尔（Pierre Bézier）所广泛发表，他运用贝塞尔曲线来为汽车的主体进行设计。贝塞尔曲线最初由Paul de Casteljau于1959年运用de Casteljau演算法开发，以稳定数值的方法求出贝兹曲线。</p>
+</blockquote>
+<p>贝塞尔曲线被广泛用于制图软件中。<br>以前描述曲线并没有很好的方法，直到它的出现。<br>如果你用过PS、AI之类的制图软件，想必一定会很好理解。</p>
+<p>你可以登录<a target="_blank" rel="noopener" href="https://bezier.method.ac/">https://bezier.method.ac/</a>这个网站，在线学习体验使用PS中的钢笔工具，进行绘制各种形状的图案。</p>
+<h1 id="二次贝塞尔曲线"><a href="#二次贝塞尔曲线" class="headerlink" title="二次贝塞尔曲线"></a>二次贝塞尔曲线</h1><p><img src="https://wx2.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u4sjlj30aa03bdfo.jpg" alt="图片描述"></p>
+<p>二次贝塞尔曲线，我们要绘制出来需要指定：</p>
+<ul>
+<li>起点</li>
+<li>终点</li>
+<li>控制点</li>
+</ul>
+<p>我们可以看到如图所示，在控制点和起点的中点，连接上了控制点与终点的中点，这根线的终点，就是与曲线相交的一个点。<br>可以认为控制点像一个磁铁一样，把线吸了过去。</p>
+<p><img src="https://wx3.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u4sylj306d03l3ya.jpg" alt="图片描述"></p>
+<p><em>多边二次贝塞尔曲线</em><br>可以看到有两个控制点，这样连续画出来了。<br>如果想要连贯的曲线，那么它们的控制点应该是中心对称的。<br><img src="https://wx4.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u4pl2j3069052jr6.jpg" alt="图片描述"></p>
+<h1 id="三次贝塞尔曲线"><a href="#三次贝塞尔曲线" class="headerlink" title="三次贝塞尔曲线"></a>三次贝塞尔曲线</h1><p>三次贝塞尔曲线可以包括一个拐点。<br>它拥有两个控制点，两个控制点中间的中点，分别连接控制点与起点、终点的连线的中点。这两根线的中点分别相连接，这个中点就是和曲线相交的地方（有点绕，看图就明白了！）<br><img src="https://wx1.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u4xosj309w05ijr8.jpg" alt="图片描述"></p>
+<p>这一般也是绘图软件里常用的：<br><img src="https://wx4.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u5x1bj30jl0790su.jpg" alt="图片描述"></p>
+<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="在CSS中的应用"><a href="#在CSS中的应用" class="headerlink" title="在CSS中的应用"></a>在CSS中的应用</h2><p>我们可以指定动画的运动曲线。在CSS中运用的也是三次贝塞尔曲线。</p>
+<pre><code>cubic-bezier(控制点x1, 控制点y1, 控制点x2, 控制点y2)
+</code></pre>
+<p>这个代表的是速度曲线，也就是y值是速度，可以看到粉红色和蓝色的圆点就是两个控制点：<br><img src="https://wx2.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u5w19j309n099gll.jpg" alt="图片描述"></p>
+<p>而我们CSS中内置的一些默认的属性值，实际上是存了贝塞尔曲线的一些预设:<br><img src="https://wx2.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u6ucgj30fv03z0so.jpg" alt="图片描述"></p>
+<p>更多可以在：<a target="_blank" rel="noopener" href="http://cubic-bezier.com/#.17,.67,1,.63">贝塞尔CSS在线体验</a> 这里进行体验。</p>
+<h2 id="SVG"><a href="#SVG" class="headerlink" title="SVG"></a>SVG</h2><p>在SVG中定义一个二次贝塞尔曲线，用字母Q来表示，紧跟控制点和终点坐标：</p>
+<pre><code>&lt;path d=&quot;M30 75 Q240 30, 300 120&quot; style=&quot;stroke: black; fill: none;&quot;/&gt;
+</code></pre>
+<p>意思是，我们绘制一条路径，先把点Move（M）移动到(30, 75)的位置，然后开始绘制！<br>以(240, 30)为控制点，曲线的终点是(300, 120)。</p>
+<p>如果我们要绘制多边二次贝塞尔曲线，直接在Q后面继续跟两组坐标：</p>
+<pre><code>Q 80 30, 100 100, 130 65, 200 80
+</code></pre>
+<p>比如这组数据，就是在(100, 100)画完一边后，继续以(130, 65)为控制点，画到(200, 80)为终点。</p>
+<p>然后，我们提到之前的中心对称问题，可以直接使用T字母来表示中心对称的控制点。</p>
+<pre><code>Q 80 30, 100 100, T, 200 80
+</code></pre>
+<p>如果我们要绘制<strong>三次贝塞尔曲线</strong>，后面跟着的坐标组就有3个，分别就是起点的控制点、终点的控制点和端点（终点）。用字母C来开头指定。</p>
+<pre><code>M20 80, C 50 20, 150 60, 200 120
+</code></pre>
+<p>另外还有字母S开头，S x2 y2 x y，表示用x2 y2作为控制点，第一个控制点是前一个C命令的终点控制点的中心对称点。（如果前一个曲线不存在，当前点就是第一个控制点）</p>
+<h2 id="canvas"><a href="#canvas" class="headerlink" title="canvas"></a>canvas</h2><p>在canvas中使用quadraticCurveTo绘制二次贝塞尔曲线，参数分别为控制点和终点的x,y值。</p>
+<pre><code>ctx.beginPath();
+ctx.moveTo(20, 20);
+ctx.quadraticCurveTo(20, 100, 200, 20)&#39;
+ctx.stroke();
+</code></pre>
+<p>bezierCurveTo绘制三次贝塞尔曲线。参数为起点控制点、终点控制点和终点的x、y值。</p>
+<pre><code>ctx.beginPath();
+ctx.moveTo(20, 20);
+ctx.bezierCurveTo(20, 100, 200, 100, 200, 20)&#39;
+ctx.stroke();
+</code></pre>
+<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>本文是根据自己的一些小积累和资料查找总结出来的，如果有错误欢迎指正^_^，谢谢。</p>
+
+        </div>
+        <div class="mck-post-footer">
+    
+        <a href="/2018/09/27/tech-20180927-promise/index.html">上一篇</a>
+    
+    
+        <a href="/2018/11/21/tech-20181121-https/index.html">下一篇</a>
+    
+</div>
+        <div class="mck-post-comments" id="mck-post-comments"></div>
+<script>
+    new Valine({
+        el: '#mck-post-comments',
+        appId: 'bhScVsXkKqR32IJd3MXvu41C-gzGzoHsz',
+        appKey: 'm8alBLTHvrVy8DQvzGshxoA5',
+        placeholder: '说点什么o_o ....',
+        avatar: 'monsterid'
+    });
+</script>
+        <div class="mck-about">
+    <div class="mck-about-title mck-section-title">ABOUT</div>
+    <div class="mck-about-main">
+        欢迎来到小年糕的后花园，年糕的小站开设于2017年，博主年糕君是一个爱好十分广泛的人，也是一个比较佛系的人，不定时爆发脑洞更新（因为是社畜，也可能失踪很久，工作太累了）。
+        <a href="/about/index.html" target="_blank" class="mck-about-more">查看更多</a>
+    </div>
+</div>
+    </div>
+    <script async src="/js/busuanzi.js"></script>
+    <script>
+    $(document).ready(function () {
+        setTimeout(() => {
+            $('#loading-container').fadeOut();
+        }, 2000);
+
+        $('#mck-menu__collapse').click(function() {
+            var menu = $('.mck-menu__normal');
+            if (menu.hasClass('opened')) {
+                $(this).removeClass('opened')
+                menu.removeClass('opened')
+            } else {
+                $(this).addClass('opened')
+                menu.addClass('opened')
+            }
+        })
+    })
+    </script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/prettify/r298/prettify.min.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+        jQuery("pre").addClass("prettyprint linenums");
+        prettyPrint();
+        });
+    </script>
+    <script async src="/js/sakura.js"></script>
+</body>
+</html>

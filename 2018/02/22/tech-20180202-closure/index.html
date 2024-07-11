@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!--Description-->
+    
+        <meta name="description" content="愿你有一个好心情~^-^">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="阿糕">
+    
+
+    <!-- Title -->
+    
+    <title>JavaScriptの闭包 | 阿糕家后院</title>
+    <!--[if lt IE 9]>
+        <script src="http://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+        <script src="http://cdn.staticfile.org/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+	<link href="https://cdn.bootcss.com/animate.css/3.5.2/animate.css" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="mck-body animated fadeIn">
+    <div class="mck-loading" id="loading-container">
+        <div class="mck-loading-item">
+            <div class="mck-loading-text">
+                <span class="mck-loading-textcontent">正在努力加载中...</span>
+            </div>
+        </div>
+    </div>
+    <div class="mck-sidebar">
+        <canvas id="floating"></canvas>
+        <div class="mck-logo">
+            <img src="//mcimages/logo.png" />
+        </div>
+        <div class="mck-menu">
+            <div class="mck-menu__collapse" id="mck-menu__collapse">
+                <span class="mck-menu__collapse_line"></span>
+                <span class="mck-menu__collapse_line"></span>
+            </div>
+            <div class="mck-menu__normal">
+                <div class="mck-menu-item">
+                    <a href="/">HOME</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/work/index.html">WORK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/tech/index.html">TECH</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/life/index.html">LIFE</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/link/index.html">LINK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/map/index.html" class="mck-menu-item__new">
+                        <img src="//mcimages/emoji1.png" class="mck-menu-item__new_icon animated bounce"/>TRAVEL
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="mck-footer">
+            <div class="mck-footer-text">MOCHIKO ❤ Since 2017</div>
+            <div class="mck-footer-text" id="busuanzi_container_site_pv">你是第<span id="busuanzi_value_site_pv"></span>个光临的童鞋！</div>
+        </div>
+    </div>
+	<div class="mck-main mck-post-main"> 
+        <div class="mck-post-header ">
+            <a class="mck-post-back" href="/"></a>
+            <div class="mck-post-cover" style="background-image: url(https://www.mochiko.cn/pimgs/20180202closure/1.png)"></div>
+            <div class="mck-post-category"><a href="#">技术打工人</a><span class="mck-post-date">2018-02-22</span></div>
+            <div class="mck-post-title">JavaScriptの闭包</div>
+            <ul class="mck-post-tags">
+				
+					
+
+<li class="mck-post-tag"><a class="a_tag" href="/tags/JavaScript/index.html">JavaScript</a></li>
+				
+            </ul>
+			<ol class="mck-post-menu"><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E5%89%8D%E8%A8%80"><span class="mck-post-menu-number">1.</span> <span class="mck-post-menu-text">前言</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E9%97%AD%E5%8C%85"><span class="mck-post-menu-number">2.</span> <span class="mck-post-menu-text">什么是闭包</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E4%BA%A7%E7%94%9F%E9%97%AD%E5%8C%85"><span class="mck-post-menu-number">3.</span> <span class="mck-post-menu-text">为什么会产生闭包</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E5%8E%9F%E6%9D%A5%E5%A6%82%E6%AD%A4"><span class="mck-post-menu-number">4.</span> <span class="mck-post-menu-text">原来如此</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E6%8B%93%E5%B1%95-%E5%85%B3%E4%BA%8Ethis"><span class="mck-post-menu-number">5.</span> <span class="mck-post-menu-text">拓展-关于this</span></a></li></ol>
+        </div>
+
+        <div class="mck-post-content">
+			<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>此文的内容主要是来自看书的总结+小小的实践哦~会不断更新总结。</p>
+<span id="more"></span>
+
+<h1 id="什么是闭包"><a href="#什么是闭包" class="headerlink" title="什么是闭包"></a>什么是闭包</h1><p>书上是这样定义闭包的：</p>
+<blockquote>
+<p>有权访问另一个函数作用域中变量的函数。</p>
+</blockquote>
+<p>举一个例子：</p>
+<pre><code>function test()&#123;
+    var a = 1;
+    var b = function()&#123;
+        return a;   
+    &#125;;
+    return b;
+&#125;
+
+var c = test();
+console.log(c()); //1
+</code></pre>
+<p>这里c是直接得到了b这个函数表达式，但是调用c之后可以得到test的局部变量a的值1，也就是c它访问到了test作用域中的变量。<br>其实我初学的时候一直不清楚闭包的意思，因为我感觉这种情况是理所当然的，噗，后来才知道原来就是说这个啊。</p>
+<h1 id="为什么会产生闭包"><a href="#为什么会产生闭包" class="headerlink" title="为什么会产生闭包"></a>为什么会产生闭包</h1><p><strong>究其根本，是因为b代表的函数包含test的作用域。</strong><br>在某个函数被调用时会做下面这些事：</p>
+<ol>
+<li>创建一个执行环境。</li>
+<li>创建相应的作用域链（复制函数的[[Scope]]来完成）。</li>
+<li>初始化函数的活动对象（arguments和其他命名参数），并被推入作用域最顶端。</li>
+</ol>
+<p>而在作用域链中，外部函数的活动对象始终处于第二位，外部函数的外部函数的活动对象处于第三位…直到作为作用域链终点的全局执行环境。</p>
+<p><strong>举个栗子</strong></p>
+<pre><code>function test(value1,value2)&#123;
+    if(value1 &lt; value2)
+        return -1;
+    return 0;
+&#125;
+var result = test(5,10);
+</code></pre>
+<p>以上首先定义了test函数，又在全局作用域中调用它。<br>第一次调用时，会创建一个包含this、arguments、value1和value2的活动对象。<br>全局执行环境的变量（this、result、test）则处于test执行环境作用域链中的第二位。<br><img src="https://www.mochiko.cn/pimgs/20180202closure/1.png" alt="图片描述"><br>每个执行环境都有一个表示变量的对象，称为变量对象。<br>全局环境的变量对象一直存在，test()函数局部环境的变量对象只有在执行的时候会存在。</p>
+<p>函数的作用域链是保存在内部的[[Scope]]属性中。<br><strong>作用域本质是一个指针列表，只保存引用</strong>。<br>以下是最初的栗子中test()的原型内容：<br><img src="https://www.mochiko.cn/pimgs/20180202closure/2.png" alt="图片描述"><br>匿名函数执行结束后，它的执行环境被销毁了，但是返回的<strong>活动对象没有消失</strong>，所以闭包也不会消失，依旧存在内存中，如果给这个对象赋值null，就可以解除关系。</p>
+<h1 id="原来如此"><a href="#原来如此" class="headerlink" title="原来如此"></a>原来如此</h1><p>让我们瞅瞅这段熟悉的代码：</p>
+<pre><code>function test()&#123;
+    var result = new Array();
+    for(var i=0;i&lt;10;i++)&#123;
+        result[i] = function()&#123;
+            return i;
+        &#125;
+    &#125;
+    return result;
+&#125;
+</code></pre>
+<p>这个函数的实际结果是每个函数都返回了10，因为它们实际的i都是同一个。<br>解决方法是用匿名函数：</p>
+<pre><code>function test()&#123;
+    var result = new Array();
+    for(var i=0;i&lt;10;i++)&#123;
+        result[i] = function(num)(
+            return function()&#123;
+                return num;
+            &#125;
+        &#125;(i);
+    &#125;
+    return result;
+&#125;
+</code></pre>
+<p>由于中间多加上了一层，即每次把一个num值传入，所以内部的函数是形成了各自num的闭包，于是就没有像之前一样共用了。</p>
+<h1 id="拓展-关于this"><a href="#拓展-关于this" class="headerlink" title="拓展-关于this"></a>拓展-关于this</h1><p>确定this值的情况（以运行时给予函数的）主要有以下几种：</p>
+<ol>
+<li>全局函数中，this等于window。</li>
+<li>作为某个对象的方法调用时，this等于那个对象。</li>
+</ol>
+<p>看看例子：</p>
+<pre><code>var obj = &#123;
+    name: &quot;Bob&quot;,
+    getName: function()&#123;
+        return function()&#123;
+            return this.name;
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>这里有一个闭包，但是闭包在形成的时候获取它的this和arguments值只会停止搜索到活动对象，所以它不会把外部包裹的function里的this保存起来。调用obj.getName()()会得到this.name是undefined，因为obj.getName()得到的就是里面return的函数，再次调用，其实是window在调用这个函数，所以this是window。<br>如果改成以下代码：</p>
+<pre><code>var obj = &#123;
+    name: &quot;Bob&quot;,
+    getName: function()&#123;
+        var that = this;
+        return function()&#123;
+            return that.name;
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>就会按预期一样输出Bob，因为that保存了this值，而闭包的作用域包括了外部function里的变量，所以可以访问到这个值。</p>
+
+        </div>
+        <div class="mck-post-footer">
+    
+        <a href="/2018/02/12/tech-20180212-type/index.html">上一篇</a>
+    
+    
+        <a href="/2018/03/01/tech-20180301-post/index.html">下一篇</a>
+    
+</div>
+        <div class="mck-post-comments" id="mck-post-comments"></div>
+<script>
+    new Valine({
+        el: '#mck-post-comments',
+        appId: 'bhScVsXkKqR32IJd3MXvu41C-gzGzoHsz',
+        appKey: 'm8alBLTHvrVy8DQvzGshxoA5',
+        placeholder: '说点什么o_o ....',
+        avatar: 'monsterid'
+    });
+</script>
+        <div class="mck-about">
+    <div class="mck-about-title mck-section-title">ABOUT</div>
+    <div class="mck-about-main">
+        欢迎来到小年糕的后花园，年糕的小站开设于2017年，博主年糕君是一个爱好十分广泛的人，也是一个比较佛系的人，不定时爆发脑洞更新（因为是社畜，也可能失踪很久，工作太累了）。
+        <a href="/about/index.html" target="_blank" class="mck-about-more">查看更多</a>
+    </div>
+</div>
+    </div>
+    <script async src="/js/busuanzi.js"></script>
+    <script>
+    $(document).ready(function () {
+        setTimeout(() => {
+            $('#loading-container').fadeOut();
+        }, 2000);
+
+        $('#mck-menu__collapse').click(function() {
+            var menu = $('.mck-menu__normal');
+            if (menu.hasClass('opened')) {
+                $(this).removeClass('opened')
+                menu.removeClass('opened')
+            } else {
+                $(this).addClass('opened')
+                menu.addClass('opened')
+            }
+        })
+    })
+    </script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/prettify/r298/prettify.min.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+        jQuery("pre").addClass("prettyprint linenums");
+        prettyPrint();
+        });
+    </script>
+    <script async src="/js/sakura.js"></script>
+</body>
+</html>

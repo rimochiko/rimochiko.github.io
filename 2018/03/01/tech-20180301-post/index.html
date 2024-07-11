@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!--Description-->
+    
+        <meta name="description" content="愿你有一个好心情~^-^">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="阿糕">
+    
+
+    <!-- Title -->
+    
+    <title>一个由POST和URL引发的一系列提问 | 阿糕家后院</title>
+    <!--[if lt IE 9]>
+        <script src="http://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+        <script src="http://cdn.staticfile.org/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+	<link href="https://cdn.bootcss.com/animate.css/3.5.2/animate.css" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="mck-body animated fadeIn">
+    <div class="mck-loading" id="loading-container">
+        <div class="mck-loading-item">
+            <div class="mck-loading-text">
+                <span class="mck-loading-textcontent">正在努力加载中...</span>
+            </div>
+        </div>
+    </div>
+    <div class="mck-sidebar">
+        <canvas id="floating"></canvas>
+        <div class="mck-logo">
+            <img src="//mcimages/logo.png" />
+        </div>
+        <div class="mck-menu">
+            <div class="mck-menu__collapse" id="mck-menu__collapse">
+                <span class="mck-menu__collapse_line"></span>
+                <span class="mck-menu__collapse_line"></span>
+            </div>
+            <div class="mck-menu__normal">
+                <div class="mck-menu-item">
+                    <a href="/">HOME</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/work/index.html">WORK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/tech/index.html">TECH</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/life/index.html">LIFE</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/link/index.html">LINK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/map/index.html" class="mck-menu-item__new">
+                        <img src="//mcimages/emoji1.png" class="mck-menu-item__new_icon animated bounce"/>TRAVEL
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="mck-footer">
+            <div class="mck-footer-text">MOCHIKO ❤ Since 2017</div>
+            <div class="mck-footer-text" id="busuanzi_container_site_pv">你是第<span id="busuanzi_value_site_pv"></span>个光临的童鞋！</div>
+        </div>
+    </div>
+	<div class="mck-main mck-post-main"> 
+        <div class="mck-post-header ">
+            <a class="mck-post-back" href="/"></a>
+            <div class="mck-post-cover" style="background-image: url(https://www.mochiko.cn/mcimages/q2.png)"></div>
+            <div class="mck-post-category"><a href="#">技术打工人</a><span class="mck-post-date">2018-03-01</span></div>
+            <div class="mck-post-title">一个由POST和URL引发的一系列提问</div>
+            <ul class="mck-post-tags">
+				
+					
+
+<li class="mck-post-tag"><a class="a_tag" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/index.html">计算机网络</a></li>
+				
+            </ul>
+			<ol class="mck-post-menu"><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#POST%E6%96%B9%E6%B3%95%E5%8F%AF%E4%BB%A5%E7%94%A8URL%E6%9D%A5%E4%BC%A0%E5%8F%82%E5%90%97"><span class="mck-post-menu-number">1.</span> <span class="mck-post-menu-text">POST方法可以用URL来传参吗</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#POST%E7%9A%84%E6%95%B0%E6%8D%AE%E4%B8%80%E5%AE%9A%E8%A6%81%E5%9C%A8%E8%A1%A8%E6%A0%BC%E9%87%8C%E9%9D%A2%E5%90%97"><span class="mck-post-menu-number">2.</span> <span class="mck-post-menu-text">POST的数据一定要在表格里面吗</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E9%82%A3%E4%B9%88%E7%94%A8URL%E6%9D%A5%E4%BC%A0%E5%8F%82%E7%9A%84%E4%B8%80%E5%AE%9A%E6%98%AFGET%E6%96%B9%E6%B3%95%E5%90%97"><span class="mck-post-menu-number">3.</span> <span class="mck-post-menu-text">那么用URL来传参的一定是GET方法吗</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E7%BB%93%E5%B1%80"><span class="mck-post-menu-number">4.</span> <span class="mck-post-menu-text">结局</span></a></li></ol>
+        </div>
+
+        <div class="mck-post-content">
+			<p>我带着心中的“愤怒”，终于写完JAVA WEB作业。终于可以学点想学的只是啦，然后突然碰到了一个童鞋问的问题，结果发生了这是一个连锁反应。</p>
+<span id="more"></span>
+<h1 id="POST方法可以用URL来传参吗"><a href="#POST方法可以用URL来传参吗" class="headerlink" title="POST方法可以用URL来传参吗"></a>POST方法可以用URL来传参吗</h1><p>一个童鞋在群里提问说：“POST方法可以用URL来传参吗？”<br>然后我的第一反应是这个问题也太傻了吧，POST肯定是在主体里面传参呀！后面在群里说了几句，结果那位童鞋说，是面试官问他的问题，答案是可以。我本来就是个前端渣渣，经历后台也少，然后还那么肯定的说，瞬间就感觉好羞耻，马上就怂了。上网一搜发现有的人确实说可以，于是我就打开我的wireshark和网站开始实验。<br>一开始使用PHP，用POST方法去提交到一个带了参数的URL里面，结果是用$_POST只能获取到主体内的内容，用$_GET才能获取URL上的内容，查看报文也是，只有表单的内容放在主体里。<br>后面又用了JAVA，因为是用POST方法提交到Servlet去的，所以是调用了doPost方法，另外用getParameter()来获取数据结果显示的是URL上面的数据。后面查了一下很快就查到，它会优先去看GET里面的参数，如果有这个就不会再去看其他方法里有没有了。<br>所以这个结果，其实也知道，和我刚开始想的并没有很大的冲突，因为这种用URL带参数，本质上还是GET方法，所以说用POST方法来URL传参的说法并不严谨。</p>
+<h1 id="POST的数据一定要在表格里面吗"><a href="#POST的数据一定要在表格里面吗" class="headerlink" title="POST的数据一定要在表格里面吗"></a>POST的数据一定要在表格里面吗</h1><p>由于同时我还问了一些小伙伴，所以又有小伙伴问我，是不是POST方法只能用表单来实现？答案是否定的。在RFC文档里面只是规定了内容要放在主体上。后来我上网查询，发现POST提交的数据格式可以有下面几种：</p>
+<ul>
+<li>application&#x2F;x-www-form-urlencoded：最常见的表单提交数据格式</li>
+<li>multipart&#x2F;form-data：带有文件的表单提交方式</li>
+<li>application&#x2F;json：在Angular的Ajax提交用的就是这种方法</li>
+<li>text&#x2F;xml</li>
+</ul>
+<h1 id="那么用URL来传参的一定是GET方法吗"><a href="#那么用URL来传参的一定是GET方法吗" class="headerlink" title="那么用URL来传参的一定是GET方法吗"></a>那么用URL来传参的一定是GET方法吗</h1><p>这是师傅对我发出的提问，答案显然也不是的，查看RFC 2616文档发现DELETE、PUT这些都是从URL里面来解析参数。那么师傅又开始想，什么情况下应该把内容放在主体里面，什么时候又应该把内容放在URL里面呢？可以得知一些方便操作的东西是可以放在URL里面的，比如翻页呀搜索呀之类的，这样用户也方面，最后师傅去看axios的源码来查看他使用delete方法，结果师傅也越走越远…不过他最后说：</p>
+<blockquote>
+<p>后端的开发人员一般都会写一个方法获取url + body上的数据，再写两个方法一个专门用来获取url数据，一个专门用来获取body数据</p>
+</blockquote>
+<h1 id="结局"><a href="#结局" class="headerlink" title="结局"></a>结局</h1><p>我们班的大神最后看到了multipart&#x2F;form-data就想起了自己原来做安卓系统因为不知道它的存在，想了很久才把图片转编码传了上去。我想起自己原来写实训项目的时候也是用了base64编码，但是我做的是图片预览。然后他问我：“如果把一个txt文件改成jpg，你的网站也能提交成功吗？”然后我试了试，果然我没有处理这个BUG。后面上网查看发现有童鞋说，可以先把编码转成一个new Image再提取特征，看看是不是图片，也有童鞋说图片转成16机制有一段编码是完全相同的，可以靠这个来判断…然后在这个问题上越走越远了。</p>
+
+        </div>
+        <div class="mck-post-footer">
+    
+        <a href="/2018/02/22/tech-20180202-closure/index.html">上一篇</a>
+    
+    
+        <a href="/2018/03/01/life-20180301-res/index.html">下一篇</a>
+    
+</div>
+        <div class="mck-post-comments" id="mck-post-comments"></div>
+<script>
+    new Valine({
+        el: '#mck-post-comments',
+        appId: 'bhScVsXkKqR32IJd3MXvu41C-gzGzoHsz',
+        appKey: 'm8alBLTHvrVy8DQvzGshxoA5',
+        placeholder: '说点什么o_o ....',
+        avatar: 'monsterid'
+    });
+</script>
+        <div class="mck-about">
+    <div class="mck-about-title mck-section-title">ABOUT</div>
+    <div class="mck-about-main">
+        欢迎来到小年糕的后花园，年糕的小站开设于2017年，博主年糕君是一个爱好十分广泛的人，也是一个比较佛系的人，不定时爆发脑洞更新（因为是社畜，也可能失踪很久，工作太累了）。
+        <a href="/about/index.html" target="_blank" class="mck-about-more">查看更多</a>
+    </div>
+</div>
+    </div>
+    <script async src="/js/busuanzi.js"></script>
+    <script>
+    $(document).ready(function () {
+        setTimeout(() => {
+            $('#loading-container').fadeOut();
+        }, 2000);
+
+        $('#mck-menu__collapse').click(function() {
+            var menu = $('.mck-menu__normal');
+            if (menu.hasClass('opened')) {
+                $(this).removeClass('opened')
+                menu.removeClass('opened')
+            } else {
+                $(this).addClass('opened')
+                menu.addClass('opened')
+            }
+        })
+    })
+    </script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/prettify/r298/prettify.min.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+        jQuery("pre").addClass("prettyprint linenums");
+        prettyPrint();
+        });
+    </script>
+    <script async src="/js/sakura.js"></script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!--Description-->
+    
+        <meta name="description" content="愿你有一个好心情~^-^">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="阿糕">
+    
+
+    <!-- Title -->
+    
+    <title>初识Unity | 阿糕家后院</title>
+    <!--[if lt IE 9]>
+        <script src="http://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+        <script src="http://cdn.staticfile.org/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+	<link href="https://cdn.bootcss.com/animate.css/3.5.2/animate.css" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="mck-body animated fadeIn">
+    <div class="mck-loading" id="loading-container">
+        <div class="mck-loading-item">
+            <div class="mck-loading-text">
+                <span class="mck-loading-textcontent">正在努力加载中...</span>
+            </div>
+        </div>
+    </div>
+    <div class="mck-sidebar">
+        <canvas id="floating"></canvas>
+        <div class="mck-logo">
+            <img src="//mcimages/logo.png" />
+        </div>
+        <div class="mck-menu">
+            <div class="mck-menu__collapse" id="mck-menu__collapse">
+                <span class="mck-menu__collapse_line"></span>
+                <span class="mck-menu__collapse_line"></span>
+            </div>
+            <div class="mck-menu__normal">
+                <div class="mck-menu-item">
+                    <a href="/">HOME</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/work/index.html">WORK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/tech/index.html">TECH</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/life/index.html">LIFE</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/link/index.html">LINK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/map/index.html" class="mck-menu-item__new">
+                        <img src="//mcimages/emoji1.png" class="mck-menu-item__new_icon animated bounce"/>TRAVEL
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="mck-footer">
+            <div class="mck-footer-text">MOCHIKO ❤ Since 2017</div>
+            <div class="mck-footer-text" id="busuanzi_container_site_pv">你是第<span id="busuanzi_value_site_pv"></span>个光临的童鞋！</div>
+        </div>
+    </div>
+	<div class="mck-main mck-post-main"> 
+        <div class="mck-post-header ">
+            <a class="mck-post-back" href="/"></a>
+            <div class="mck-post-cover" style="background-image: url(https://www.mochiko.cn/pimgs/unity/%E5%9B%BE%E7%89%873.png)"></div>
+            <div class="mck-post-category"><a href="#">技术打工人</a><span class="mck-post-date">2022-05-22</span></div>
+            <div class="mck-post-title">初识Unity</div>
+            <ul class="mck-post-tags">
+				
+					
+
+<li class="mck-post-tag"><a class="a_tag" href="/tags/Unity/index.html">Unity</a></li>
+				
+            </ul>
+			<ol class="mck-post-menu"><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E5%89%8D%E8%A8%80"><span class="mck-post-menu-number">1.</span> <span class="mck-post-menu-text">前言</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E4%B8%8B%E8%BD%BD%E5%92%8C%E5%AE%89%E8%A3%85Unity"><span class="mck-post-menu-number">2.</span> <span class="mck-post-menu-text">下载和安装Unity</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E8%B5%B0%E8%BF%9B%E6%B8%B8%E6%88%8F%E7%9A%84%E4%B8%96%E7%95%8C"><span class="mck-post-menu-number">3.</span> <span class="mck-post-menu-text">走进游戏的世界</span></a><ol class="mck-post-menu-child"><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#%E5%9C%BA%E6%99%AF-Scene"><span class="mck-post-menu-number">3.1.</span> <span class="mck-post-menu-text">场景 Scene</span></a></li><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#%E7%9B%B8%E6%9C%BA-Camera"><span class="mck-post-menu-number">3.2.</span> <span class="mck-post-menu-text">相机 Camera</span></a></li><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#%E7%89%A9%E4%BD%93-GameObject"><span class="mck-post-menu-number">3.3.</span> <span class="mck-post-menu-text">物体 GameObject</span></a></li></ol></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E7%AB%A0%E7%BB%93%E5%B0%BE"><span class="mck-post-menu-number">4.</span> <span class="mck-post-menu-text">章结尾</span></a></li></ol>
+        </div>
+
+        <div class="mck-post-content">
+			<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>游戏像是一个异次元时空的存在，它有自己的世界观，人物和生存规则。作为一个普通的前端开发，我们可能对游戏编程概念没有很系统化的认识，虽然可能会接触一些轻量级的H5游戏，但它可能很难承载一个大型复杂的游戏世界。前辈们早就用自己的经验，产出了一套成熟且优秀的的游戏设计思想。这些思想都可以在Unity这款软件上面被发现。<br>我认为Unity是一个十分优秀的存在，它实现了游戏开发的低代码，把复杂的游戏开发化繁为简，要知道想要完全复原我们所在世界的运作是十分复杂的，光是模型的重力与碰撞效果、光照的反射等就会听着让人头疼了。这款软件的交互也设计也十分优秀，很大程度上通过UI交互操作代替了很多复杂代码的开发。<br>那么，学习Unity有什么用处呢？我认为有以下几点：<br>1.能学习到游戏设计的思想和概念。理解了游戏里这套常见的理论体系后，我们以后用H5的游戏引擎开发就会十分容易上手和好理解了。另外，我们学习了一种新的设计思想，可以帮助拓展我们思考和解决其他类似问题的思路。<br>2.学习和体验一个优秀低代码平台的设计。Unity是一个很优秀的低代码开发平台，虽然他出生的时候还没有低代码这样的概念，但是它把底层很多复杂的东西都进行了包装，大大降低了开发者的开发门槛和成本。另外Unity里也有一些优秀的可视化编程插件，甚至能直接实现无代码开发。<br>3.能对计算机图形学进行一定了解。游戏的运行和图像的渲染是分不开关系的，想要作出高级且性能优秀的游戏，学习计算机图形学也是必不可少的环节。直接学习计算机图形学可能会比较干燥，我们可以在做游戏的过程中慢慢体会里面的概念。<br>4.能更有效的学习物理和数学。游戏世界和物理数学也是紧密关联的，在这里你可能需要尽可能的还原和模仿真实世界的动作和效果，于是就不得不对一些物理概念进行理解和运用。图形和不同材质的渲染计算也与数学矩阵关系密切，在这里我们看不懂的高数线性代数，终于能派上用场（为什么我没有早点碰到它!!!）。<br>5.温习英语。Unity的教程和资源在国内实在是不太好找，且很多都需要氪金才能拿到，目前很多优秀的课程基本都是外网的大佬们制作的，所以你不得不接触一些英文的课程。其次Unity这个软件里会有很多单词和概念频繁出现，游戏的内容也可能涉及各行各业，所以相比一般的代码开发，你可能会需要接触更多的英语。<br>6.掌握一门进行创作的方式。制作游戏其实也是一种实现自己脑海里内容的一种方式，就和写小说、拍视频等其实是一样的，但是不同的是游戏可以让我们更有沉浸和体验感，这种丰富度和精神满足感的层次会更高。<br><img src="https://www.mochiko.cn/pimgs/unity/%E5%9B%BE%E7%89%871.png" alt="请输入图片描述"></p>
+<h1 id="下载和安装Unity"><a href="#下载和安装Unity" class="headerlink" title="下载和安装Unity"></a>下载和安装Unity</h1><p>首先我们要做的就是安装Unity，工具在手，后面的事情都好说。Unity的下载和安装门槛极其低，直接在官方上下载即可，Unity的软件包含两个部分：<br>1.Unity 软件本体：用它来开发我们的游戏<br>2.Unity Hub：一个用来管理Unity软件版本，和工程项目的工具，我们要运行和使用Unity，必须要通过它来触发。<br><img src="https://www.mochiko.cn/pimgs/unity/%E5%9B%BE%E7%89%875.png" alt="请输入图片描述"><br>Unity的安装比较简单，且容易理解，不像我们web开发时npm install命令管理，它会直接用Unity Hub来帮你完成所有安装的繁琐工程，不用担心版本依赖的问题。<br>另外最重要的，如果我们只是学习，可以直接申请免费的准可证，这点真的非常好。当然如果我们要做自己的游戏并上架到商店，还是得自己花钱买，但是价格也不算贵。</p>
+<h1 id="走进游戏的世界"><a href="#走进游戏的世界" class="headerlink" title="走进游戏的世界"></a>走进游戏的世界</h1><p>如果你要为游戏开发者们打造一个制作游戏的工具，会怎么去抽象设计来满足大家游戏制作的需求呢？每当我们学习一个新框架或思想的时候，你总会发现很多人一开始就摆出一些概念性的东西，但是你可能很难理解为什么要有这样概念的存在，其实这些都是设计的同学在自己的解决方案背景下进行了更系统化抽象得出来的结论。<br>前面我提到的——游戏就像是另一个真实的世界，如果我们希望这个世界呈现在“你”的眼前，其实它就很像一个电影作品，所以可以把它和拍电影结合起来进行类比。<br><img src="https://www.mochiko.cn/pimgs/unity/%E5%9B%BE%E7%89%873.png" alt="请输入图片描述"></p>
+<h2 id="场景-Scene"><a href="#场景-Scene" class="headerlink" title="场景 Scene"></a>场景 Scene</h2><p>就像电影可能会有很多不同的拍摄场地一样，我们也为游戏定义了类似的概念，它就是场景 Scene，每个场景都可以是独立的，也可以把它们组合拼装起来。它里面可以放置很多不同的角色物体。<br>当你进入Unity界面，你就会发现它默认会为我们创建一个场景，我们就在这个场景下添加我们的物理内容，完成我们的游戏。<br><img src="https://www.mochiko.cn/pimgs/unity/%E5%9B%BE%E7%89%874.png" alt="请输入图片描述"></p>
+<h2 id="相机-Camera"><a href="#相机-Camera" class="headerlink" title="相机 Camera"></a>相机 Camera</h2><p>有了电影的拍摄场地，必不可少的自然是摄像机。在游戏开发里，相机决定了游戏体验者的能看到的视角和结果。在3D的场景下，新开发的同学可能会被相机弄懵逼，我开始也会经常迷糊为什么游戏结果里不是自己所希望的。我们需要先弄清楚Unity里面的坐标系。<br>我们知道游戏一般分为3D和2D的，在Unity里刚开始创建工程时你是可以选择是做3D还是2D游戏。<br><img src="https://www.mochiko.cn/pimgs/unity/%E5%9B%BE%E7%89%875.png" alt="请输入图片描述"><br>在3D世界里，我们一般情况有左手和右手坐标轴两种体系，都是由x、y和z轴组成。<br>我们拿出自己的两只小手，给大拇指、食指和中指分被赋予x、y和z的标记，然后只要作出三根手指两两垂直的手势，就可以得到我们的坐标系：<br><img src="https://www.mochiko.cn/pimgs/unity/%E5%9B%BE%E7%89%876.png" alt="请输入图片描述"><br><img src="https://www.mochiko.cn/pimgs/unity/%E5%9B%BE%E7%89%877.png" alt="请输入图片描述"><br>左手和右手坐标系的区别主要是三个方向组合的结果区别，我们可以改变我们手的转向，然后尽量把两个坐标轴进行平行对比，会发现其实它们的区别就在于有一根轴的方向是相对相反的。这两种坐标系在计算机图形学的领域里都有友人使用，而在Unity里面，使用的是左手坐标系。我们可以在Unity的界面里看到这个坐标系：<br><img src="https://www.mochiko.cn/pimgs/unity/%E5%9B%BE%E7%89%878.png" alt="请输入图片描述"><br>而一般情况我们理解的2D屏幕坐标系就是我们数学课本上常用的：<br><img src="https://www.mochiko.cn/pimgs/unity/%E5%9B%BE%E7%89%879.png" alt="请输入图片描述"><br>但是在Unity里面默认还是3D的坐标系，因为实际上2D游戏是3D游戏的一个子集。<br><img src="https://www.mochiko.cn/pimgs/unity/%E5%9B%BE%E7%89%8710.png" alt="请输入图片描述"><br>在上图中其实画的其实是一种透视（Perspective）成像，它就和我们真实的眼睛或者相机拍出来的视角是一样的，它会拥有近大远小，近实远虚的效果。除了这种模式，相机还可以是直线投影（Orthographic），这种就类似我们高中做数学几何体里画的模式和方法是一样的。我们可以在相机里找到投影属性（Projection）来设置投影的模式。<br><img src="https://www.mochiko.cn/pimgs/unity/%E5%9B%BE%E7%89%8711.png" alt="请输入图片描述"><br><img src="https://www.mochiko.cn/pimgs/unity/%E5%9B%BE%E7%89%8713.png" alt="请输入图片描述"><br><img src="https://www.mochiko.cn/pimgs/unity/%E5%9B%BE%E7%89%8712.png" alt="请输入图片描述"></p>
+<h2 id="物体-GameObject"><a href="#物体-GameObject" class="headerlink" title="物体 GameObject"></a>物体 GameObject</h2><p>有了拍摄场地和相机后，自然不能怠慢我们电影的男女主角。在Unity里，游戏里不管是相机、不同角色人物，还是花花草草都被称为是物体 （GameObject），所谓“万物皆为物体”——它可以是实质性的人物对象，也可以是没有实际意思、只是承担了C#脚本的空物体。<br>每个物体都是由不同的组件（Component）组合而成的，这种组件类似于插件一样，可以对物体赋予某种功能，或是对属性进行拓展，也正是因为这样的设计，Unity实际也是一个十分灵活的软件，你可以添加和拓展很多自己的功能。<br><img src="https://www.mochiko.cn/pimgs/unity/%E5%9B%BE%E7%89%8714.png" alt="请输入图片描述"><br>GameObject都会用拥有一个叫做Transform的组件，你在创建一个GameObject时就会自动带上。它的作用是指定物体的所在的位置，旋转方向以及缩放比例。因为Transform是物体一定存在的组件，所以一般情况在代码里也有很多利用Transform来寻找到GameObject本体的写法。<br><img src="https://www.mochiko.cn/pimgs/unity/%E5%9B%BE%E7%89%8715.png" alt="请输入图片描述"><br>其他常用的组件还有诸如刚体组件（Rigibody）——它可以让物体拥有物理性质，如质量等，有了这个基础，就可以使用碰撞器组件（Collider）——它可以让你和其他拥有碰撞器的物体进行碰撞接触的动力学模拟，帮助你节省很多呈现效果的开发成本，这些我们都会在后面的学习里详细接触。</p>
+<h1 id="章结尾"><a href="#章结尾" class="headerlink" title="章结尾"></a>章结尾</h1><p>在了解上面的几个概念后，我们就能算是入门了。你会发现其实这些东西在前端领域也有很多类似的概念，比如：Three.js——因为这几个概念其实都是图形学里产出的概念。如果你还学习体验过建模软件，像C4D——它的结果渲染阶段和游戏的运行原理及过程都是类似相通的。<br>下一章我们就可以开始接触和使用Unity，并带着这些概念在软件里找到对应的内容。</p>
+
+        </div>
+        <div class="mck-post-footer">
+    
+        <a href="/2021/11/15/life-20211115-luxun/index.html">上一篇</a>
+    
+    
+        <a href="/2022/08/21/work-drawlife-2022/index.html">下一篇</a>
+    
+</div>
+        <div class="mck-post-comments" id="mck-post-comments"></div>
+<script>
+    new Valine({
+        el: '#mck-post-comments',
+        appId: 'bhScVsXkKqR32IJd3MXvu41C-gzGzoHsz',
+        appKey: 'm8alBLTHvrVy8DQvzGshxoA5',
+        placeholder: '说点什么o_o ....',
+        avatar: 'monsterid'
+    });
+</script>
+        <div class="mck-about">
+    <div class="mck-about-title mck-section-title">ABOUT</div>
+    <div class="mck-about-main">
+        欢迎来到小年糕的后花园，年糕的小站开设于2017年，博主年糕君是一个爱好十分广泛的人，也是一个比较佛系的人，不定时爆发脑洞更新（因为是社畜，也可能失踪很久，工作太累了）。
+        <a href="/about/index.html" target="_blank" class="mck-about-more">查看更多</a>
+    </div>
+</div>
+    </div>
+    <script async src="/js/busuanzi.js"></script>
+    <script>
+    $(document).ready(function () {
+        setTimeout(() => {
+            $('#loading-container').fadeOut();
+        }, 2000);
+
+        $('#mck-menu__collapse').click(function() {
+            var menu = $('.mck-menu__normal');
+            if (menu.hasClass('opened')) {
+                $(this).removeClass('opened')
+                menu.removeClass('opened')
+            } else {
+                $(this).addClass('opened')
+                menu.addClass('opened')
+            }
+        })
+    })
+    </script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/prettify/r298/prettify.min.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+        jQuery("pre").addClass("prettyprint linenums");
+        prettyPrint();
+        });
+    </script>
+    <script async src="/js/sakura.js"></script>
+</body>
+</html>

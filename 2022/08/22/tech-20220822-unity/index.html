@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!--Description-->
+    
+        <meta name="description" content="愿你有一个好心情~^-^">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="阿糕">
+    
+
+    <!-- Title -->
+    
+    <title>Unity跨平台原理 | 阿糕家后院</title>
+    <!--[if lt IE 9]>
+        <script src="http://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+        <script src="http://cdn.staticfile.org/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+	<link href="https://cdn.bootcss.com/animate.css/3.5.2/animate.css" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="mck-body animated fadeIn">
+    <div class="mck-loading" id="loading-container">
+        <div class="mck-loading-item">
+            <div class="mck-loading-text">
+                <span class="mck-loading-textcontent">正在努力加载中...</span>
+            </div>
+        </div>
+    </div>
+    <div class="mck-sidebar">
+        <canvas id="floating"></canvas>
+        <div class="mck-logo">
+            <img src="//mcimages/logo.png" />
+        </div>
+        <div class="mck-menu">
+            <div class="mck-menu__collapse" id="mck-menu__collapse">
+                <span class="mck-menu__collapse_line"></span>
+                <span class="mck-menu__collapse_line"></span>
+            </div>
+            <div class="mck-menu__normal">
+                <div class="mck-menu-item">
+                    <a href="/">HOME</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/work/index.html">WORK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/tech/index.html">TECH</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/life/index.html">LIFE</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/link/index.html">LINK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/map/index.html" class="mck-menu-item__new">
+                        <img src="//mcimages/emoji1.png" class="mck-menu-item__new_icon animated bounce"/>TRAVEL
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="mck-footer">
+            <div class="mck-footer-text">MOCHIKO ❤ Since 2017</div>
+            <div class="mck-footer-text" id="busuanzi_container_site_pv">你是第<span id="busuanzi_value_site_pv"></span>个光临的童鞋！</div>
+        </div>
+    </div>
+	<div class="mck-main mck-post-main"> 
+        <div class="mck-post-header ">
+            <a class="mck-post-back" href="/"></a>
+            <div class="mck-post-cover" style="background-image: url(https://www.mochiko.cn/mcimages/q4.png)"></div>
+            <div class="mck-post-category"><a href="#">技术打工人</a><span class="mck-post-date">2022-08-22</span></div>
+            <div class="mck-post-title">Unity跨平台原理</div>
+            <ul class="mck-post-tags">
+				
+					
+
+<li class="mck-post-tag"><a class="a_tag" href="/tags/Unity/index.html">Unity</a></li>
+				
+            </ul>
+			<ol class="mck-post-menu"><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E5%85%B3%E4%BA%8EMono"><span class="mck-post-menu-number">1.</span> <span class="mck-post-menu-text">关于Mono</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#Mono%E8%BF%90%E8%A1%8C%E6%97%B6"><span class="mck-post-menu-number">2.</span> <span class="mck-post-menu-text">Mono运行时</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E8%84%9A%E6%9C%AC%E6%9C%BA%E5%88%B6"><span class="mck-post-menu-number">3.</span> <span class="mck-post-menu-text">脚本机制</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#Unity%E7%9A%84%E8%84%9A%E6%9C%AC%E6%9C%BA%E8%B4%A8%E5%AE%9E%E7%8E%B0"><span class="mck-post-menu-number">4.</span> <span class="mck-post-menu-text">Unity的脚本机质实现</span></a></li></ol>
+        </div>
+
+        <div class="mck-post-content">
+			<p>众所周知，Unity可以产出兼容各个平台的游戏软件，这里咱虽然还是一个Unity入门者，可以先从底层来了解一下Unity为何能做到这种能力，这背后其实还挺有意思，因为它可能会涵盖很多计算机的基础知识。本文的一些信息主要是从Unity3D脚本编程这本书里学习来的。</p>
+<span id="more"></span>
+<p>在Unity初期，它只支持在Macbook上运行和生产，但是随着移动端的普及，他们的团队意识到强依赖平台的基座会阻碍他们的推广和进展，存在很多新的开发量以及很难跟随时代的变化，所以他们选择底层采用Mono去进行了一次改造，让底层依赖与具体平台的关系剥离开，更好的做到跨平台。</p>
+<h1 id="关于Mono"><a href="#关于Mono" class="headerlink" title="关于Mono"></a>关于Mono</h1><p>Mono这个框架本质是对CIL（通用中间语言）的实现，CIL也叫做MSIL（微软中间语言），它可以在任何支持CLI（通用语言基础结构）的环境中运行，比如.NET就是对这个标准的实现。我们说的IOS、安卓、windows、Mac OS都支持它，所以使用它也就能达到跨平台的能力了。</p>
+<p>Mono主要由四个部分组成：</p>
+<ul>
+<li>C#编译器</li>
+<li>Mono运行时</li>
+<li>基础类库（同.NET兼容）</li>
+<li>Mono类库（Mono自己拓展的一些类库）</li>
+</ul>
+<h1 id="Mono运行时"><a href="#Mono运行时" class="headerlink" title="Mono运行时"></a>Mono运行时</h1><p>C#编译器（MCS）作用是把C#编译为ECMA CIL的字节码，之后需要Mono运行时的编译器把这个码转译为原生码（也就是操作系统直接可以读取的代码）。<br>Mono运行时提供三种转译方式：</p>
+<ul>
+<li>即时编译 Just-in-time</li>
+<li>提前编译 Ahead-of-time AOT</li>
+<li>完全静态编译 full-ahead-of-time Full-AOT</li>
+</ul>
+<h1 id="脚本机制"><a href="#脚本机制" class="headerlink" title="脚本机制"></a>脚本机制</h1><p>很早的时候我们只能用一种编程语言去实现游戏，但是我们知道游戏是一种对性能要求很高的东西，我们用C&#x2F;C++之类的语言去开发软件的性能会更高，但是如果用一些高级解释语言，因为要花费时间去翻译，所以它的性能比不上C&#x2F;C++。<br>我们常见的语言：</p>
+<ul>
+<li>汇编语言</li>
+<li>C、C++（编译型静态不安全语言）</li>
+<li>C#、Java（编译型静态安全语言）</li>
+<li>Python、Perl、JavaScript（解释型动态安全语言）<br>我们知道从上而下，速度肯定是越来越慢的，但是对我们来说，写高级的语言其实开发效率会高很多！<br>所以我们是不是有一种方法，可以结合性能和开发效率，从而做到一举两得？<br>于是脚本机制就诞生了~~应用的引擎由有经验的人员用C、C++开发，具体项目的功能就用高级语言去开发。Mono就提供了这种机质的实现可能性，允许开发者使用JIT编译的代码作为他们的应用拓展。而对Unity来说，它的引擎本体就是使用C、C++开发的，而我们则是通过脚本去实现我们游戏的具体功能。</li>
+</ul>
+<h1 id="Unity的脚本机质实现"><a href="#Unity的脚本机质实现" class="headerlink" title="Unity的脚本机质实现"></a>Unity的脚本机质实现</h1><p>我们假设我们拥有了一个用C、C++写好的Unity应用，然后我们把Mono运行时引入——把libmono和应用链接，链接的过程需要使用pkg-config工具，应用就获取了一个完全的虚拟机运行环境——一个可执行的文件。<br>Mono的嵌入接口会把Mono运行时暴露给Unity，这样开发者就可以去控制Mono，Mono初始化OK后，就要把CIL的代码加载进来。此时地址内容就成为：C、C++代码（非托管代码）-Mono运行时-托管代码。<br>比如我们新建了一个HelloWord.cs文件，我们使用Mono的C#编译器将它转换为一个DLL文件，然后我们就在Unity.cpp里通过调用Mono的运行时去加载执行这个DLL文件。</p>
+<p>剩下的更复杂的内容&gt;_&lt;就等我再多熟悉和学习Unity后再补充吧~</p>
+
+        </div>
+        <div class="mck-post-footer">
+    
+        <a href="/2022/08/22/tech-20230422-ws/index.html">上一篇</a>
+    
+    
+        <a href="/2022/10/23/life-20221023-beihai/index.html">下一篇</a>
+    
+</div>
+        <div class="mck-post-comments" id="mck-post-comments"></div>
+<script>
+    new Valine({
+        el: '#mck-post-comments',
+        appId: 'bhScVsXkKqR32IJd3MXvu41C-gzGzoHsz',
+        appKey: 'm8alBLTHvrVy8DQvzGshxoA5',
+        placeholder: '说点什么o_o ....',
+        avatar: 'monsterid'
+    });
+</script>
+        <div class="mck-about">
+    <div class="mck-about-title mck-section-title">ABOUT</div>
+    <div class="mck-about-main">
+        欢迎来到小年糕的后花园，年糕的小站开设于2017年，博主年糕君是一个爱好十分广泛的人，也是一个比较佛系的人，不定时爆发脑洞更新（因为是社畜，也可能失踪很久，工作太累了）。
+        <a href="/about/index.html" target="_blank" class="mck-about-more">查看更多</a>
+    </div>
+</div>
+    </div>
+    <script async src="/js/busuanzi.js"></script>
+    <script>
+    $(document).ready(function () {
+        setTimeout(() => {
+            $('#loading-container').fadeOut();
+        }, 2000);
+
+        $('#mck-menu__collapse').click(function() {
+            var menu = $('.mck-menu__normal');
+            if (menu.hasClass('opened')) {
+                $(this).removeClass('opened')
+                menu.removeClass('opened')
+            } else {
+                $(this).addClass('opened')
+                menu.addClass('opened')
+            }
+        })
+    })
+    </script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/prettify/r298/prettify.min.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+        jQuery("pre").addClass("prettyprint linenums");
+        prettyPrint();
+        });
+    </script>
+    <script async src="/js/sakura.js"></script>
+</body>
+</html>

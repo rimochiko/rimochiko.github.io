@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!--Description-->
+    
+        <meta name="description" content="愿你有一个好心情~^-^">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="阿糕">
+    
+
+    <!-- Title -->
+    
+    <title>JavaScript常见的继承方式 | 阿糕家后院</title>
+    <!--[if lt IE 9]>
+        <script src="http://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+        <script src="http://cdn.staticfile.org/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+	<link href="https://cdn.bootcss.com/animate.css/3.5.2/animate.css" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="mck-body animated fadeIn">
+    <div class="mck-loading" id="loading-container">
+        <div class="mck-loading-item">
+            <div class="mck-loading-text">
+                <span class="mck-loading-textcontent">正在努力加载中...</span>
+            </div>
+        </div>
+    </div>
+    <div class="mck-sidebar">
+        <canvas id="floating"></canvas>
+        <div class="mck-logo">
+            <img src="//mcimages/logo.png" />
+        </div>
+        <div class="mck-menu">
+            <div class="mck-menu__collapse" id="mck-menu__collapse">
+                <span class="mck-menu__collapse_line"></span>
+                <span class="mck-menu__collapse_line"></span>
+            </div>
+            <div class="mck-menu__normal">
+                <div class="mck-menu-item">
+                    <a href="/">HOME</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/work/index.html">WORK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/tech/index.html">TECH</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/life/index.html">LIFE</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/link/index.html">LINK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/map/index.html" class="mck-menu-item__new">
+                        <img src="//mcimages/emoji1.png" class="mck-menu-item__new_icon animated bounce"/>TRAVEL
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="mck-footer">
+            <div class="mck-footer-text">MOCHIKO ❤ Since 2017</div>
+            <div class="mck-footer-text" id="busuanzi_container_site_pv">你是第<span id="busuanzi_value_site_pv"></span>个光临的童鞋！</div>
+        </div>
+    </div>
+	<div class="mck-main mck-post-main"> 
+        <div class="mck-post-header ">
+            <a class="mck-post-back" href="/"></a>
+            <div class="mck-post-cover" style="background-image: url(https://wx1.sinaimg.cn/mw690/0069luTRgy1fp13owry3zj306x048t8o.jpg)"></div>
+            <div class="mck-post-category"><a href="#">技术打工人</a><span class="mck-post-date">2018-03-04</span></div>
+            <div class="mck-post-title">JavaScript常见的继承方式</div>
+            <ul class="mck-post-tags">
+				
+					
+
+<li class="mck-post-tag"><a class="a_tag" href="/tags/JavaScript/index.html">JavaScript</a></li>
+				
+            </ul>
+			<ol class="mck-post-menu"><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E6%96%B9%E5%BC%8F1-%E7%B1%BB%E5%BC%8F%E7%BB%A7%E6%89%BF"><span class="mck-post-menu-number">1.</span> <span class="mck-post-menu-text">方式1 类式继承</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E6%96%B9%E5%BC%8F2-%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E7%BB%A7%E6%89%BF"><span class="mck-post-menu-number">2.</span> <span class="mck-post-menu-text">方式2 构造函数继承</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E6%96%B9%E5%BC%8F3-%E7%BB%84%E5%90%88%E7%BB%A7%E6%89%BF"><span class="mck-post-menu-number">3.</span> <span class="mck-post-menu-text">方式3 组合继承</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E6%96%B9%E5%BC%8F4-%E5%8E%9F%E5%9E%8B%E7%BB%A7%E6%89%BF"><span class="mck-post-menu-number">4.</span> <span class="mck-post-menu-text">方式4 原型继承</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E6%96%B9%E5%BC%8F5-%E5%AF%84%E7%94%9F%E5%BC%8F%E7%BB%A7%E6%89%BF"><span class="mck-post-menu-number">5.</span> <span class="mck-post-menu-text">方式5 寄生式继承</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E6%96%B9%E5%BC%8F6-%E5%AF%84%E7%94%9F%E7%BB%84%E5%90%88%E5%BC%8F%E7%BB%A7%E6%89%BF"><span class="mck-post-menu-number">6.</span> <span class="mck-post-menu-text">方式6 寄生组合式继承</span></a></li></ol>
+        </div>
+
+        <div class="mck-post-content">
+			<p>最近在看《JavaScript设计模式》，然后开篇复习了JavaScript中的几种继承方式，自己似乎也没有怎么仔细探究过，目前自己没怎么碰到过应用的场景（噗），所以借这次机会好好来屡屡思路。</p>
+<span id="more"></span>
+
+<h1 id="方式1-类式继承"><a href="#方式1-类式继承" class="headerlink" title="方式1 类式继承"></a>方式1 类式继承</h1><p>例子</p>
+<pre><code>function Person() &#123;
+    this.telephone = [&#39;000-0000-0000&#39;];
+&#125;
+
+functio n Student(className) &#123;
+    this.className = className;
+&#125;
+
+Student.prototype = new Person();
+var Haha = new Student(1);
+var Xixi = new Student(2);
+</code></pre>
+<p>创建好父类和子类。联系他们的方式是把学生的prototype指向一个人的实例。</p>
+<p><strong>问：prototype是什么？</strong><br>几乎任何对象有一个[[prototype]]属性，在标准中，[[prototype]]一个隐藏属性，指向的是这个对象的原型。而它的指向是由构造该对象的方法决定的：<br>1.对象字面量构造：其[[prototype]]指向Object.prototype。</p>
+<pre><code>var person = &#123;&#125;;
+</code></pre>
+<p>2.构造函数构造：new操作符调用的函数就是构造函数。其[[prototype]]和其构造函数的prototype指向相同。而构造函数prototype属性指向的对象带有constructor属性，指向函数自身。</p>
+<pre><code>function Person()&#123;&#125;
+var person = new Person();
+</code></pre>
+<p><img src="https://wx1.sinaimg.cn/mw690/0069luTRgy1fp13owry3zj306x048t8o.jpg" alt="图片描述"></p>
+<p>此图为Person的prototype内容，可以看到constructor属性实际指向的就是Person()函数。（小绿色框框内和外面绿色框框其实是同一个内容）。</p>
+<p>3.Object.create构造的。</p>
+<pre><code>var person = &#123;&#125;;
+var Haha = Object.create(person);
+</code></pre>
+<p>这里对象Haha的[[prototype]]指向对象person。也可以写null，此时对象Haha就没有原型。</p>
+<p>首先要分清楚类和实例，在控制台显示中，只有类才会有prototype属性，而实例是拥有一个名为_proto_的属性，它会指向构造它函数的原型，两者本质都是一个指针。</p>
+<pre><code>function Person() &#123;
+   this.telephone = [&#39;000-0000-0000&#39;];
+&#125;
+var Hehe = new Person(); 
+console.log(Person.prototype);
+console.log(Hehe);
+</code></pre>
+<p>以上代码运行结果：<br><img src="https://wx4.sinaimg.cn/mw690/0069luTRgy1fp13p0i3m6j308t062wek.jpg" alt="图片描述"></p>
+<p>可以瞧见，这里Hehe的<code>_proto_</code>是指向了<code>Person.prototype</code>。</p>
+<p><strong>问：new关键字的作用是什么？</strong><br>new关键字运作的过程如下，引用自《JavaScript》高级程序设计：</p>
+<blockquote>
+<p> 1、创建一个空对象，并且 this 变量引用该对象，同时还继承了该函数的原型。  2、属性和方法被加入到 this 引用的对象中。<br>3、新创建的对象由 this 所引用，并且最后隐式的返回 this。</p>
+</blockquote>
+<p>简单来说，它创建了一个空对象，指定了原型，把属性方法进行拷贝，并把this指向进行了改变。假如我们把上面的代码改成：</p>
+<pre><code>function Person() &#123;
+ this.telephone = [&#39;000-0000-0000&#39;];
+&#125;
+        
+var Hehe = Person();
+console.log(Hehe.telephone);
+</code></pre>
+<p>去掉new关键词赋予Person()，会报错，而输出<code>window.telphone</code>得到的就是<code>[&#39;000-0000-0000&#39;]</code>。因为函数的返回值（没有返回值所以是undefined）赋予给了Hehe，尝试去读取undefined的属性，报错了。而此时函数运行中的this是全局变量window。</p>
+<p><strong>So，回归类式继承，仔细看看诞生的嘻嘻和哈哈两位同学</strong><br><img src="https://wx1.sinaimg.cn/mw690/0069luTRgy1fp13p0lgjvj3074053jre.jpg" alt="图片描述"></p>
+<p>会发现，各自都有自己的班级名属性，但是原型指向的是同一个Person实例，所以如果嘻嘻有两个号码，或者他要更改自己的号码，那哈哈的电话号码也会发生变化，他们只能共享这个电话号码。</p>
+<h1 id="方式2-构造函数继承"><a href="#方式2-构造函数继承" class="headerlink" title="方式2 构造函数继承"></a>方式2 构造函数继承</h1><p>例子</p>
+<pre><code>function Person(name) &#123;
+    this.name = name;
+&#125;
+
+Person.prototype.showName = function() &#123;
+    console.log(this.name);
+&#125;
+
+function Student(name, className) &#123;
+    this.className = className;
+    Person.call(this, name);
+&#125;
+var Haha = new Student(&#39;Haha&#39;, 1);
+var Xixi = new Student(&#39;Xixi&#39;, 2);
+</code></pre>
+<p><strong>问：call函数的运作过程？</strong><br>call函数和apply函数的作用相同，不同之处就是apply函数只能传入2个参数，而call函数可以有多个。F.call(thisArg,[arg1……]) 函数的运作过程如下（来源网络）：</p>
+<blockquote>
+<p>1.先判断F是否为一个函数，如果不是一个函数，那么将抛出TypeError异常。<br>2.创建一个内部类型空列表list<br>3.然后如果参数除去thisArg外还有其他参数的话，就将这些值添加到list中<br>4.thisArg和list作为F内部属性[[Call]]的参数传入调用进行函数的执行操作</p>
+</blockquote>
+<p>简而言之就是它把一个函数的对象上下文改成了由 thisArg指定的新对象。</p>
+<p><strong>So，回归构造函数继承，仔细看看诞生的嘻嘻和哈哈两位同学</strong><br><img src="https://wx2.sinaimg.cn/mw690/0069luTRgy1fp13p0kvooj307y03t3yf.jpg" alt="图片描述"></p>
+<p>可以看到两个实例都拥有了className和name两个属性，因为call方法的运行类似于执行了<code>Haha.name=&#39;Haha&#39;</code>和<code>Xixi.name=&#39;Xixi&#39;</code>。<br>但是因为没有与父类的原型相联系，所以父类原型中的方法，不能得到继承。运行Haha.showName()会得到报错。</p>
+<h1 id="方式3-组合继承"><a href="#方式3-组合继承" class="headerlink" title="方式3 组合继承"></a>方式3 组合继承</h1><p>例子</p>
+<pre><code>function Person(name) &#123;
+    this.name = name;
+&#125;
+
+Person.prototype.showName = function() &#123;
+    console.log(this.name);
+&#125;
+
+function Student(name, className) &#123;
+    this.className = className;
+    Person.call(this, name);
+&#125;
+Student.prototype = new Person();
+Student.prototype.showClassName = function() &#123;
+     console.log(this.className);
+&#125;
+
+var Haha = new Student(&#39;Haha&#39;, 1);
+var Xixi = new Student(&#39;Xixi&#39;, 2);
+</code></pre>
+<p>组合继承综合了类式继承和构造函数继承，在把父类的属性继承后，把子类的原型指向了父类实例，这样就可以继承父类原型的方法了。<br>但是这里相当于使用了两次父类函数，并且<strong>子类不是父类的实例，子类的原型是父类的实例</strong>，所以还会有更好的方法。</p>
+<h1 id="方式4-原型继承"><a href="#方式4-原型继承" class="headerlink" title="方式4 原型继承"></a>方式4 原型继承</h1><pre><code>function inheritObject(o) &#123;
+ function F() &#123;&#125;
+ F.prototype = o;
+ return new F();
+&#125;
+
+var person = &#123;
+ name: &quot;unknown&quot;,
+ telephone: [&quot;000-0000-0000&quot;]
+&#125;
+
+var Xixi = inheritObject(person);
+Xixi.name = &quot;Xixi&quot;;
+Xixi.telephone.push(&quot;111-1111-1111&quot;);
+
+var Haha = inheritObject(person);
+Haha.name = &quot;Haha&quot;;
+</code></pre>
+<p><strong>仔细看看诞生的嘻嘻和哈哈两位同学</strong><br><img src="https://wx1.sinaimg.cn/mw690/0069luTRgy1fp13p0paxfj30ao05tgln.jpg" alt="图片描述"></p>
+<p>这里.name给Xixi实例添加了一个自己的name属性，而push操作是直接影响原型中引用变量，所以改进之后又有了下面这种方式。<br>在这里我产生了一个疑问，为什么name属性是自己添加新的，而telephone是采用原来的。于是添加了一个age属性，执行Xixi.age++操作。<br><img src="https://wx4.sinaimg.cn/mw690/0069luTRgy1fp13p0ohwij307603n0sl.jpg" alt="图片描述"></p>
+<p>这里可以看到实例重新添加了一个age属性，所以我们可以说只要是改变原型属性的值，就会把新的属性加在实例上，引用不改变是因为引用的地址还没有改变。</p>
+<h1 id="方式5-寄生式继承"><a href="#方式5-寄生式继承" class="headerlink" title="方式5 寄生式继承"></a>方式5 寄生式继承</h1><p>寄生式继承是在原型继承的基础之上，我们需要再添加一下代码：</p>
+<pre><code>function createPerson(obj) &#123;
+ var o = inheritObject(obj);
+ o.getName = function()&#123;
+  console.log(name);
+ &#125;
+ return o;
+&#125;
+</code></pre>
+<p>这样就给得到的对象添加了公共方法。</p>
+<h1 id="方式6-寄生组合式继承"><a href="#方式6-寄生组合式继承" class="headerlink" title="方式6 寄生组合式继承"></a>方式6 寄生组合式继承</h1><p>寄生组合式继承是为了弥补组合式继承的缺点，是在寄生式继承+构造函数继承组合而成的：</p>
+<pre><code>function inheritObject(o) &#123;
+ function F() &#123;&#125;
+ F.prototype = o;
+ return new F();
+&#125;
+function inheritPrototype(subClass, superClass) &#123;
+ //复制一份父类原型
+ var p = inheritObject(superClass.prototype);
+ //修正重写子类原型导致constructor属性被修改
+ p.constructor = subClass;
+ //设置子类原型
+ subClass.prototype = p;
+&#125;
+
+function Person(name) &#123;
+    this.name = name;
+&#125;
+
+Person.prototype.showName = function() &#123;
+    console.log(this.name);
+&#125;
+
+function Student(name, className) &#123;
+    this.className = className;
+    Person.call(this, name);
+&#125;
+
+inheritPrototype(Student, Person);
+
+Student.prototype.showClassName = function() &#123;
+     console.log(this.className);
+&#125;
+
+var Xixi = new Student(&#39;Xixi&#39;,2);
+var Haha = new Student(&#39;Haha&#39;,1);
+</code></pre>
+<p>以下为嘻嘻和哈哈的内容：<br><img src="https://wx2.sinaimg.cn/mw690/0069luTRgy1fp13p0p7xfj308w06zt8u.jpg" alt="图片描述"></p>
+<p>可以对比一下组合式继承的结果：<br><img src="https://wx3.sinaimg.cn/mw690/0069luTRgy1fp13p0pto3j308d06jaa3.jpg" alt="图片描述"></p>
+<p>不同的地方在于把子类原型的构造函数改成了实例对应的构造函数，在组合继承中子类原型直属并没有constructor属性。</p>
+
+        </div>
+        <div class="mck-post-footer">
+    
+        <a href="/2018/03/01/life-20180301-res/index.html">上一篇</a>
+    
+    
+        <a href="/2018/03/05/tech-20180305-eventloop/index.html">下一篇</a>
+    
+</div>
+        <div class="mck-post-comments" id="mck-post-comments"></div>
+<script>
+    new Valine({
+        el: '#mck-post-comments',
+        appId: 'bhScVsXkKqR32IJd3MXvu41C-gzGzoHsz',
+        appKey: 'm8alBLTHvrVy8DQvzGshxoA5',
+        placeholder: '说点什么o_o ....',
+        avatar: 'monsterid'
+    });
+</script>
+        <div class="mck-about">
+    <div class="mck-about-title mck-section-title">ABOUT</div>
+    <div class="mck-about-main">
+        欢迎来到小年糕的后花园，年糕的小站开设于2017年，博主年糕君是一个爱好十分广泛的人，也是一个比较佛系的人，不定时爆发脑洞更新（因为是社畜，也可能失踪很久，工作太累了）。
+        <a href="/about/index.html" target="_blank" class="mck-about-more">查看更多</a>
+    </div>
+</div>
+    </div>
+    <script async src="/js/busuanzi.js"></script>
+    <script>
+    $(document).ready(function () {
+        setTimeout(() => {
+            $('#loading-container').fadeOut();
+        }, 2000);
+
+        $('#mck-menu__collapse').click(function() {
+            var menu = $('.mck-menu__normal');
+            if (menu.hasClass('opened')) {
+                $(this).removeClass('opened')
+                menu.removeClass('opened')
+            } else {
+                $(this).addClass('opened')
+                menu.addClass('opened')
+            }
+        })
+    })
+    </script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/prettify/r298/prettify.min.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+        jQuery("pre").addClass("prettyprint linenums");
+        prettyPrint();
+        });
+    </script>
+    <script async src="/js/sakura.js"></script>
+</body>
+</html>

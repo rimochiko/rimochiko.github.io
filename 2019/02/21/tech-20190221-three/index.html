@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!--Description-->
+    
+        <meta name="description" content="愿你有一个好心情~^-^">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="阿糕">
+    
+
+    <!-- Title -->
+    
+    <title>Three.js自学碎碎叨（上） | 阿糕家后院</title>
+    <!--[if lt IE 9]>
+        <script src="http://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+        <script src="http://cdn.staticfile.org/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+	<link href="https://cdn.bootcss.com/animate.css/3.5.2/animate.css" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="mck-body animated fadeIn">
+    <div class="mck-loading" id="loading-container">
+        <div class="mck-loading-item">
+            <div class="mck-loading-text">
+                <span class="mck-loading-textcontent">正在努力加载中...</span>
+            </div>
+        </div>
+    </div>
+    <div class="mck-sidebar">
+        <canvas id="floating"></canvas>
+        <div class="mck-logo">
+            <img src="//mcimages/logo.png" />
+        </div>
+        <div class="mck-menu">
+            <div class="mck-menu__collapse" id="mck-menu__collapse">
+                <span class="mck-menu__collapse_line"></span>
+                <span class="mck-menu__collapse_line"></span>
+            </div>
+            <div class="mck-menu__normal">
+                <div class="mck-menu-item">
+                    <a href="/">HOME</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/work/index.html">WORK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/tech/index.html">TECH</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/life/index.html">LIFE</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/link/index.html">LINK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/map/index.html" class="mck-menu-item__new">
+                        <img src="//mcimages/emoji1.png" class="mck-menu-item__new_icon animated bounce"/>TRAVEL
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="mck-footer">
+            <div class="mck-footer-text">MOCHIKO ❤ Since 2017</div>
+            <div class="mck-footer-text" id="busuanzi_container_site_pv">你是第<span id="busuanzi_value_site_pv"></span>个光临的童鞋！</div>
+        </div>
+    </div>
+	<div class="mck-main mck-post-main"> 
+        <div class="mck-post-header ">
+            <a class="mck-post-back" href="/"></a>
+            <div class="mck-post-cover" style="background-image: url(https://www.mochiko.cn/pimgs/history/0069luTRly1fvt1yhylhij30m80e3754.jpg)"></div>
+            <div class="mck-post-category"><a href="#">技术打工人</a><span class="mck-post-date">2019-02-21</span></div>
+            <div class="mck-post-title">Three.js自学碎碎叨（上）</div>
+            <ul class="mck-post-tags">
+				
+					
+
+<li class="mck-post-tag"><a class="a_tag" href="/tags/Three-js/index.html">Three.js</a></li>
+				
+            </ul>
+			<ol class="mck-post-menu"><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E6%90%9C%E5%88%AE%E6%9D%A5%E7%9A%84%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99"><span class="mck-post-menu-number">1.</span> <span class="mck-post-menu-text">搜刮来的学习资料</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#WebGL%E5%88%9D%E5%8D%B0%E8%B1%A1"><span class="mck-post-menu-number">2.</span> <span class="mck-post-menu-text">WebGL初印象</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#Three-js%E5%88%9D%E5%8D%B0%E8%B1%A1"><span class="mck-post-menu-number">3.</span> <span class="mck-post-menu-text">Three.js初印象</span></a><ol class="mck-post-menu-child"><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#%E4%B8%89%E4%B8%AA%E8%A6%81%E7%B4%A0"><span class="mck-post-menu-number">3.1.</span> <span class="mck-post-menu-text">三个要素</span></a></li><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E4%BE%8B%E5%AD%90"><span class="mck-post-menu-number">3.2.</span> <span class="mck-post-menu-text">我的第一个例子</span></a><ol class="mck-post-menu-child"><li class="mck-post-menu-item mck-post-menu-level-3"><a class="mck-post-menu-link" href="#%E5%9C%BA%E6%99%AF%E7%AF%87"><span class="mck-post-menu-number">3.2.1.</span> <span class="mck-post-menu-text">场景篇</span></a></li><li class="mck-post-menu-item mck-post-menu-level-3"><a class="mck-post-menu-link" href="#%E7%9B%92%E5%AD%90%E7%AF%87"><span class="mck-post-menu-number">3.2.2.</span> <span class="mck-post-menu-text">盒子篇</span></a><ol class="mck-post-menu-child"><li class="mck-post-menu-item mck-post-menu-level-4"><a class="mck-post-menu-link" href="#BoxGeometry%E6%98%AF%E4%BB%80%E4%B9%88%E5%91%A2"><span class="mck-post-menu-number">3.2.2.1.</span> <span class="mck-post-menu-text">BoxGeometry是什么呢</span></a></li><li class="mck-post-menu-item mck-post-menu-level-4"><a class="mck-post-menu-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E6%9C%89%E4%B8%80%E4%B8%AAMaterial%E5%91%A2"><span class="mck-post-menu-number">3.2.2.2.</span> <span class="mck-post-menu-text">为什么还有一个Material呢</span></a></li></ol></li><li class="mck-post-menu-item mck-post-menu-level-3"><a class="mck-post-menu-link" href="#%E5%85%89%E6%BA%90%E7%AF%87"><span class="mck-post-menu-number">3.2.3.</span> <span class="mck-post-menu-text">光源篇</span></a></li><li class="mck-post-menu-item mck-post-menu-level-3"><a class="mck-post-menu-link" href="#%E7%85%A7%E7%9B%B8%E6%9C%BA%E7%AF%87"><span class="mck-post-menu-number">3.2.4.</span> <span class="mck-post-menu-text">照相机篇</span></a></li><li class="mck-post-menu-item mck-post-menu-level-3"><a class="mck-post-menu-link" href="#%E6%B8%B2%E6%9F%93%E5%99%A8%E7%AF%87"><span class="mck-post-menu-number">3.2.5.</span> <span class="mck-post-menu-text">渲染器篇</span></a></li></ol></li></ol></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E5%B0%8F%E7%BB%93"><span class="mck-post-menu-number">4.</span> <span class="mck-post-menu-text">小结</span></a></li></ol>
+        </div>
+
+        <div class="mck-post-content">
+			<p>一直就很想学习WebGL相关的知识，现在也找到了工作，生活也差不多趋向稳定了，加上学校也没那么多课程了，所以我肯定要利用起来这个时间啊！因为腿摔伤了，国庆估计是在家躺7天，所以更加要抓住这么好的学习时机了。<br>如你所见，这系列文章都是我自己的碎碎叨，当然啦，目的是为了能更好的梳理自己学习的知识，加强印象，顺便再来做个总结，这样能更加扎实的学习。<br>我的情况是，有前端基础，有PS基础，无计算机图形学基础，没有学过OpenGL，而我觉得，立体的图像比起2D的来说，可能更难以理解，因为首先，没有图形学的基础，游戏建模的经验，所以要通过联想来达成对概念的理解是比较困难的，但是我觉得只要多看多试验，实在不行就问问身边的同学，不一定要是图形学的“专家”，美术生也是不错的选择哦！这样总会明白的，所以让我们开始今天的学习吧！</p>
+<span id="more"></span>
+
+<h1 id="搜刮来的学习资料"><a href="#搜刮来的学习资料" class="headerlink" title="搜刮来的学习资料"></a>搜刮来的学习资料</h1><p>我的学习资料主要是来源于下面的清单（可是找了好久，才找到了这么多，当然还有加上百度各种文章）：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://threejs.org/docs/index.html#api">Three.js官方文档</a>：官方的肯定是杠杠的！</li>
+<li><a target="_blank" rel="noopener" href="http://www.yanhuangxueyuan.com/">郭隆邦的技术博客</a>：我觉得很适合没基础的人学习，就是网页的排版不太舒服。</li>
+<li><a target="_blank" rel="noopener" href="http://www.ituring.com.cn/book/1272">Three.js入门指南</a>：是很知乎上很著名的女神写的，内容虽然很简洁，但是对于没有图形学基础的人来看有的地方还是不好理解。</li>
+<li><a target="_blank" rel="noopener" href="https://ithelp.ithome.com.tw/articles/10197499">ａｅｓｔｈＥｔｉｃ，ＣＹＢＥＲの ａｕｄｉｏ &#x2F; ＶＩＳＵＡＬ，網頁中的聲音與影像研究</a>：这个写的很好，不过不适合初学者看，讲的也偏向于简单介绍吧</li>
+<li><a target="_blank" rel="noopener" href="http://www.hangge.com/blog/cache/search.php?key=three.js">航哥Three.js入门教程</a>：这个系列的文章还不错呢！</li>
+<li><a target="_blank" rel="noopener" href="https://www.jikexueyuan.com/course/webgl/">极客学院WebGL教程</a>：当然学生党没啥钱，现在只能看免费的</li>
+</ul>
+<h1 id="WebGL初印象"><a href="#WebGL初印象" class="headerlink" title="WebGL初印象"></a>WebGL初印象</h1><p>WebGL也是在Canvas上绘制成的。<br>但是它还是有一点不一样，因为它除了要HTML、JS来写之外，还需要一个叫做着色器语言的东西，而WebGL使用的是GLSL ES，这就是说作为前端的我们，还得去学习另一门语言才行。<br>至于这其中的道理就是，Javascript通过浏览器的JS解释器控制CPU，通过CPU来控制GPU，GPU就是图形处理器，着色器语言构成的代码被编译后再交给GPU去执行。所以在写WebGL的时候，你会看到一大段类似于C语言的代码字符串被赋予给一个变量。<br>而对于我们新手来说，肯定是一脸懵逼的，所以我们对WebGL有一个简单的印象后，从Three.js开始入手学习，Three.js对这些都进行了一个很好的封装，我们就可以先不去考虑这些稍微原生态的东西。</p>
+<h1 id="Three-js初印象"><a href="#Three-js初印象" class="headerlink" title="Three.js初印象"></a>Three.js初印象</h1><p>Github地址：<a target="_blank" rel="noopener" href="https://github.com/mrdoob/three.js">https://github.com/mrdoob/three.js</a><br>我们肯定要先从简单的入手啦！虽然官方git仓库东西丰富，看的眼花缭乱！我们可以直接引入一个three.min.js的cdn链接就开始写我们的程序。</p>
+<p>一般情况下，我们可以在HTML文档里先写一个canvas标签，最后把我们的内容挂载上去，但是大家似乎更倾向于一切都在JS代码中完成，也就是最后appendChild到body上面去。</p>
+<h2 id="三个要素"><a href="#三个要素" class="headerlink" title="三个要素"></a>三个要素</h2><p>我们可以想像自己是在拍摄一张照片！比如，要拍摄淘宝的商品图片。<br>这时候我们就需要布置一个场景，我们可以放（add）一个苹果，然后加一个光照，最后再拿相机摆好位置拍下来！然后再把成像洗出来。<br>而Three.js成像的过程也很类似于这样，我们每次要作一幅新画的时候，就需要一个场景（Scene）对象、照相机(Camera)对象，还有渲染器（Renderer）！</p>
+<h2 id="我的第一个例子"><a href="#我的第一个例子" class="headerlink" title="我的第一个例子"></a>我的第一个例子</h2><pre><code>var scene = new THREE.Scene();
+
+var box = new THREE.BoxGeometry(100, 100, 100);
+var material = new THREE.MeshLambertMaterial(&#123;color: 0x0000ff&#125;);
+var mesh = new THREE.Mesh(box, material);
+scene.add(mesh);
+
+var point = new THREE.PointLight(0xffffff);
+point.position.set(400, 200, 300);
+scene.add(point);
+
+var ambient = new THREE.AmbientLight(0x444444);
+scene.add(ambient);
+
+var width = window.innerWidth;
+var height = window.innerHeight;
+var k = width / height;
+var s = 100;
+
+var camera = new THREE.OrthographicCamera(-s*k, s*k, s, -s, 1, 1000);
+camera.position.set(200, 300, 200);
+camera.lookAt(scene.position);
+
+var renderer = new THREE.WebGLRenderer();
+renderer.setSize(width, height);
+renderer.setClearColor(0xb9d3ff, 1);
+document.body.appendChild(renderer.domElement);
+renderer.render(scene, camera);
+</code></pre>
+<p>以下是下面这段代码的预览图：<br><img src="https://www.mochiko.cn/pimgs/history/0069luTRly1fvt1yhylhij30m80e3754.jpg" alt="图片描述"></p>
+<p>以上的大段代码来自于我学习资料中的第一个网站！看不懂没关系，这时候其实我也还没细细看呢，我们一个个来看哦！</p>
+<h3 id="场景篇"><a href="#场景篇" class="headerlink" title="场景篇"></a>场景篇</h3><p>第一段代码，是关于我们创建了一个场景对象的！<br>这个比较简单，就是new了一个对象:</p>
+<pre><code>var scene = new THREE.Scene();
+</code></pre>
+<p>不过后面我们可以看到相关的代码还有<code>scene.add(point);</code>之类的，其实就是类似于我们说过的，向场景里去添加东西啦！我们可以看看场景对象的内部结构：<br><img src="https://www.mochiko.cn/pimgs/history/0069luTRly1fvt1yi7w7aj30m80e4ae0.jpg" alt="图片描述"><br>眼花缭乱，东西好多啊！但是我们可以看到它有一个children属性，下面放的就是一个数组，就是我们add进去的东西哦！这样就更好理解了！</p>
+<h3 id="盒子篇"><a href="#盒子篇" class="headerlink" title="盒子篇"></a>盒子篇</h3><p>可以看到，这个场景，我们就是放了一个正方体进去！</p>
+<pre><code>var box = new THREE.BoxGeometry(100, 100, 100);
+var material = new THREE.MeshLambertMaterial(&#123;color: 0x0000ff&#125;);
+var mesh = new THREE.Mesh(box, material);
+scene.add(mesh);
+</code></pre>
+<h4 id="BoxGeometry是什么呢"><a href="#BoxGeometry是什么呢" class="headerlink" title="BoxGeometry是什么呢"></a>BoxGeometry是什么呢</h4><p>当然就是创建一个“盒子”对象咯，也就是一个块，长方体呀正方体啊都可以，给它设置参数就行了。三个参数分别表示width, height和depth。这里都是100，所以就是一个正方体啦！（可以自己修改下参数试试）</p>
+<h4 id="为什么还有一个Material呢"><a href="#为什么还有一个Material呢" class="headerlink" title="为什么还有一个Material呢"></a>为什么还有一个Material呢</h4><p>我们可以看到，我们最后用Mesh这个方法，把Box和Material结合起来了，字如其名！Material就是材料啦！如果我们不给Box添加任何材料的话，那就是一个”骨架”了，所以这里可能和我一开始的想象不一样，我们需要给Box制定它的材质，这个东西才能出来！</p>
+<h3 id="光源篇"><a href="#光源篇" class="headerlink" title="光源篇"></a>光源篇</h3><p>我们可以想象，假如我们东西都摆好了，但是没有灯的话，就是一片漆黑，所以这里还有很多光源的对象。这里我们就先了解这里用的两种光：点光源（point）和环境光（ambient）。</p>
+<p>假如没有任何的光，它就是乌漆麻黑的看不见！！<br><img src="https://www.mochiko.cn/pimgs/history/0069luTRly1fvt1yhw88rj30ke0fkjrc.jpg" alt="图片描述"></p>
+<p>那么首先我们来研究一下点光源！</p>
+<pre><code>var point = new THREE.PointLight(0xffffff);
+point.position.set(400, 200, 300);
+scene.add(point);
+</code></pre>
+<p>我们给它添加了白色的光，重要的是在于这个位置的理解。我们根据经验也可以推断是这是x，y和z三个坐标值。经过我不断的改变这个位置值，看下图分别是(100, 100, 0)和(100, 100, 100)的情况，我们可以根据光线的变化来推断出光源的位置，从而知道坐标轴的设置：<br><img src="https://www.mochiko.cn/pimgs/history/0069luTRly1fvt1yhwsc0j30h20gmt9i.jpg" alt="图片描述"><br><img src="https://www.mochiko.cn/pimgs/history/0069luTRly1fvt1yhww4yj30gu0get9e.jpg" alt="图片描述"><br>随后查过资料后，发现Three.js使用的确实是右手坐标系，这里是与OpenGL同步默认的情况：<br><img src="https://www.mochiko.cn/pimgs/history/0069luTRly1fvt1ym3nzgj30an06yaa6.jpg" alt="图片描述"><br>下面我模拟了一下从(0, 0, 100)到(0, 200, 100)的变化情况，也就是灯光从下一直上升到了上面。<br><img src="https://www.mochiko.cn/pimgs/history/0069luTRly1fvt1ymd1rtg30b70bn0we.gif" alt="图片描述"></p>
+<p>我们再来看看环境光～<br>我尝试着只给Cube添加一个#FFF最亮的白光，可以看到它全部都亮了，颜色就是我们最初给Cube的颜色。我们可以发现这个环境光是均匀的，不会像点光源一样有一个强弱的减少。也就是说我们可以利用它来给我们提供一个布景的基础。<br><img src="https://www.mochiko.cn/pimgs/history/0069luTRly1fvt1ym3m8qj30k60h83yh.jpg" alt="图片描述"></p>
+<h3 id="照相机篇"><a href="#照相机篇" class="headerlink" title="照相机篇"></a>照相机篇</h3><p>照相机我觉得对于我们这种没有图形学基础和建模经验的人来说，应该是比较难理解的，首先是我们要知道有两种成像相机：</p>
+<ul>
+<li>正交投影照相机：Orthographic Camera</li>
+<li>透视投影照相机：PerspectiveCamera</li>
+</ul>
+<p>其中透视投影是符合我们眼睛成像的原理的，就是说东西并不是远近一样的大小，比如下面这张桌子，我们可以感觉到离我们近的这边要更“大”一些：<br><img src="https://www.mochiko.cn/pimgs/history/0069luTRly1fvt1ymdyilj30c00ac40t.jpg" alt="图片描述"></p>
+<p>而正交投影就不一样了，比如我们可以看下面这张建模图，就是方方正正的，参考线都是平行的：<br><img src="https://www.mochiko.cn/pimgs/history/0069luTRly1fvt1ywvjctj30fi0fkah9.jpg" alt="图片描述"></p>
+<p>好，下面我们来认识一下照相机里面的几个参数：左、右、上、下、近、远。<br>这就类似于你相机成像的位置，也就是说可能画布是无限大的，但是相机只能拍出部分景象。<br><img src="https://www.mochiko.cn/pimgs/history/0069luTRly1fvt1ywl60hj30ic09wq40.jpg" alt="图片描述"><br>这里比较难理解的就是近和远，似乎又和我们想像的一样，根据我自己的测试，我感觉它更像一个盒子，就是说超出这个范围的东西都会被割掉。<br>比如，当我把near值调大一点的时候，可以看到出现了一个缺口，也就是说相机距离的很近，所以出现了一个三角形的缺口。<br><img src="https://www.mochiko.cn/pimgs/history/0069luTRly1fvt1ywjbd8j30gm0f2mxk.jpg" alt="图片描述"><br>另外我们可以知道，这个左-右&#x2F;上-下的比例应该与画布的比例一样，要不然图像的宽高比肯定会变化，会被压缩。</p>
+<p>当然啦，我们有了一个相机，必定要设置好它的位置，以及它朝着的方向。</p>
+<h3 id="渲染器篇"><a href="#渲染器篇" class="headerlink" title="渲染器篇"></a>渲染器篇</h3><p>最后，一切就绪，我们就可以用渲染器把这个图像渲染出来。<br>然后用<code>document.body.appendChild(renderer.domElement);</code>把渲染器渲染出来的元素添加到body中，再调用render函数进行渲染，就完毕了。<br>如果想要做动画效果，就再函数里动态改变一些数值，重新调用渲染方法，就可以达到了。</p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>今天是我学习Three.js的第一天，我通过一个基本的例子，对Three.js里面的一些基础的概念有了一点了解。<br>不过有的细节还是不太懂，也有一些自己的疑问，这还需要后面更多的学习。<br>另外，因为我也是新手，可能会有一些自己理解的不对的地方，欢迎指出来！^—^</p>
+
+        </div>
+        <div class="mck-post-footer">
+    
+        <a href="/2019/02/10/life-20190210-perfume/index.html">上一篇</a>
+    
+    
+        <a href="/2019/02/22/tech-20190222-three/index.html">下一篇</a>
+    
+</div>
+        <div class="mck-post-comments" id="mck-post-comments"></div>
+<script>
+    new Valine({
+        el: '#mck-post-comments',
+        appId: 'bhScVsXkKqR32IJd3MXvu41C-gzGzoHsz',
+        appKey: 'm8alBLTHvrVy8DQvzGshxoA5',
+        placeholder: '说点什么o_o ....',
+        avatar: 'monsterid'
+    });
+</script>
+        <div class="mck-about">
+    <div class="mck-about-title mck-section-title">ABOUT</div>
+    <div class="mck-about-main">
+        欢迎来到小年糕的后花园，年糕的小站开设于2017年，博主年糕君是一个爱好十分广泛的人，也是一个比较佛系的人，不定时爆发脑洞更新（因为是社畜，也可能失踪很久，工作太累了）。
+        <a href="/about/index.html" target="_blank" class="mck-about-more">查看更多</a>
+    </div>
+</div>
+    </div>
+    <script async src="/js/busuanzi.js"></script>
+    <script>
+    $(document).ready(function () {
+        setTimeout(() => {
+            $('#loading-container').fadeOut();
+        }, 2000);
+
+        $('#mck-menu__collapse').click(function() {
+            var menu = $('.mck-menu__normal');
+            if (menu.hasClass('opened')) {
+                $(this).removeClass('opened')
+                menu.removeClass('opened')
+            } else {
+                $(this).addClass('opened')
+                menu.addClass('opened')
+            }
+        })
+    })
+    </script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/prettify/r298/prettify.min.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+        jQuery("pre").addClass("prettyprint linenums");
+        prettyPrint();
+        });
+    </script>
+    <script async src="/js/sakura.js"></script>
+</body>
+</html>

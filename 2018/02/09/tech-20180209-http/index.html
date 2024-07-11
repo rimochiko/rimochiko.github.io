@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!--Description-->
+    
+        <meta name="description" content="愿你有一个好心情~^-^">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="阿糕">
+    
+
+    <!-- Title -->
+    
+    <title>《图解HTTP》小结+实践理解 | 阿糕家后院</title>
+    <!--[if lt IE 9]>
+        <script src="http://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+        <script src="http://cdn.staticfile.org/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+	<link href="https://cdn.bootcss.com/animate.css/3.5.2/animate.css" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="mck-body animated fadeIn">
+    <div class="mck-loading" id="loading-container">
+        <div class="mck-loading-item">
+            <div class="mck-loading-text">
+                <span class="mck-loading-textcontent">正在努力加载中...</span>
+            </div>
+        </div>
+    </div>
+    <div class="mck-sidebar">
+        <canvas id="floating"></canvas>
+        <div class="mck-logo">
+            <img src="//mcimages/logo.png" />
+        </div>
+        <div class="mck-menu">
+            <div class="mck-menu__collapse" id="mck-menu__collapse">
+                <span class="mck-menu__collapse_line"></span>
+                <span class="mck-menu__collapse_line"></span>
+            </div>
+            <div class="mck-menu__normal">
+                <div class="mck-menu-item">
+                    <a href="/">HOME</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/work/index.html">WORK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/tech/index.html">TECH</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/life/index.html">LIFE</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/link/index.html">LINK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/map/index.html" class="mck-menu-item__new">
+                        <img src="//mcimages/emoji1.png" class="mck-menu-item__new_icon animated bounce"/>TRAVEL
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="mck-footer">
+            <div class="mck-footer-text">MOCHIKO ❤ Since 2017</div>
+            <div class="mck-footer-text" id="busuanzi_container_site_pv">你是第<span id="busuanzi_value_site_pv"></span>个光临的童鞋！</div>
+        </div>
+    </div>
+	<div class="mck-main mck-post-main"> 
+        <div class="mck-post-header ">
+            <a class="mck-post-back" href="/"></a>
+            <div class="mck-post-cover" style="background-image: url(https://www.mochiko.cn/pimgs/20180209http/1.png)"></div>
+            <div class="mck-post-category"><a href="#">技术打工人</a><span class="mck-post-date">2018-02-09</span></div>
+            <div class="mck-post-title">《图解HTTP》小结+实践理解</div>
+            <ul class="mck-post-tags">
+				
+					
+
+<li class="mck-post-tag"><a class="a_tag" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/index.html">计算机网络</a></li>
+				
+            </ul>
+			<ol class="mck-post-menu"><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E5%89%8D%E8%A8%80"><span class="mck-post-menu-number">1.</span> <span class="mck-post-menu-text">前言</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80"><span class="mck-post-menu-number">2.</span> <span class="mck-post-menu-text">网络基础</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E5%88%9D%E8%AF%86HTTP"><span class="mck-post-menu-number">3.</span> <span class="mck-post-menu-text">初识HTTP</span></a><ol class="mck-post-menu-child"><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#%E8%AF%B7%E6%B1%82%E6%8A%A5%E6%96%87"><span class="mck-post-menu-number">3.1.</span> <span class="mck-post-menu-text">请求报文</span></a></li><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#%E5%93%8D%E5%BA%94%E6%8A%A5%E6%96%87"><span class="mck-post-menu-number">3.2.</span> <span class="mck-post-menu-text">响应报文</span></a></li><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#HTTP%E6%96%B9%E6%B3%95"><span class="mck-post-menu-number">3.3.</span> <span class="mck-post-menu-text">HTTP方法</span></a></li><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#%E5%85%B6%E4%BB%96%E7%89%B9%E6%80%A7"><span class="mck-post-menu-number">3.4.</span> <span class="mck-post-menu-text">其他特性</span></a></li></ol></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E4%BA%86%E8%A7%A3HTTP"><span class="mck-post-menu-number">4.</span> <span class="mck-post-menu-text">了解HTTP</span></a></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#%E7%8A%B6%E6%80%81%E7%A0%81%E5%92%8C%E7%9F%AD%E8%AF%AD"><span class="mck-post-menu-number">5.</span> <span class="mck-post-menu-text">状态码和短语</span></a><ol class="mck-post-menu-child"><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#1XX-Information"><span class="mck-post-menu-number">5.1.</span> <span class="mck-post-menu-text">1XX Information</span></a></li><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#2XX-Success"><span class="mck-post-menu-number">5.2.</span> <span class="mck-post-menu-text">2XX Success</span></a></li><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#3XX-Redirection"><span class="mck-post-menu-number">5.3.</span> <span class="mck-post-menu-text">3XX Redirection</span></a></li><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#4XX-Client-Error"><span class="mck-post-menu-number">5.4.</span> <span class="mck-post-menu-text">4XX Client Error</span></a></li><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#5XX-Server-Error"><span class="mck-post-menu-number">5.5.</span> <span class="mck-post-menu-text">5XX Server Error</span></a></li></ol></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#HTTP-1-1%E9%80%9A%E7%94%A8%E9%A6%96%E9%83%A8%E5%AD%97%E6%AE%B5"><span class="mck-post-menu-number">6.</span> <span class="mck-post-menu-text">HTTP&#x2F;1.1通用首部字段</span></a></li></ol>
+        </div>
+
+        <div class="mck-post-content">
+			<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>计算机网络课程的学习已经是在大二下学期的时候了，过去了半年多，有很多东西似乎都忘记了QAQ。况且当时上课的时候就感觉专业术语多，很多知识也难以理解，但是还是硬着头皮学了下来，如今阅读《HTTP图解》这本书发现很好理解，但是需要加强印象还得自己总结与实践，所以写了这篇文章。</p>
+<span id="more"></span>
+
+<h1 id="网络基础"><a href="#网络基础" class="headerlink" title="网络基础"></a>网络基础</h1><p><strong>最初的念想</strong><br>借助多文档之间的关联形成的超文本连成可互相参阅的万维网。</p>
+<p><strong>三项WWW构建技术:</strong></p>
+<ol>
+<li>SGML作为页面的文本标记语言的HTML（HTML5已不在SGML基础上）</li>
+<li>作为文档传递协议的HTTP</li>
+<li>指定文档所在地址的URL</li>
+</ol>
+<p><strong>HTTP（超文本传输协议，书上说称为超文本转移协议更严谨）</strong><br>破壳日：1989年3月<br>客户端到服务器通信的流程是建立在HTTP协议之上的。</p>
+<p><strong>TCP&#x2F;IP的协议模型</strong><br><img src="https://www.mochiko.cn/pimgs/20180209http/1.png" alt="图片描述"><br>在每次进行信息传输的时候，信息都要从高层传到底层，会经过不断的“包装”。再从对方的底层传到高层，这时会不断的“拆包装”。<br>在这之中也会用到各个层的一些很重要的协议，在一次HTTP请求发送中：<br>应用层（应用层、表示层、会话层）：HTTP、DNS<br>传输层：TCP<br>网络层：IP、ARP<br>其中DNS协议用于解析域名，TCP协议用于确定目标计算机资源端口，IP协议用于确定目标计算机的IP地址，ARP协议用于把IP地址转换为真正的物理地址MAC。</p>
+<p><strong>TCP协议</strong><br>TCP提供可靠的字节流服务，会把数据分割成报文段进行发送。<br>TCP用SYN和ACK标志来确认对方是否成功送达：<br>1.发送端发送：SYN。<br>2.接收端接收后，发送SYN和ACK。<br>3.发送端接收后，再次发送ACK，握手结束。</p>
+<p><strong>综上，当我们从浏览器输入一个URL后，发生了这些事：</strong><br>客户端想浏览URL为 <a href="http://www.mochiko.cn/">http://www.mochiko.cn</a> 的页面，HTTP协议生成请求页面资源报文，TCP协议把HTTP请求报文分割为多个文段，把文段可靠的传给对方。随后IP协议搜索对方的地址，一遍中转，一遍传送。（省略了网络层以下的了）随后TCP协议把收到的报文段重新组合成原来的顺序，然后HTTP协议把WEB服务器请求的内容进行处理，并返回请求的结果和内容。<br><img src="https://www.mochiko.cn/pimgs/20180209http/2.png" alt="图片描述"><br>wireshark抓包结果可看到，首先发生了三次握手，建立起了TCP链接。随后发出HTTP请求，TCP再把报文分成了四段发送，其中收到了三个数据接收回复，最后HTTP返回200 OK表示成功发送完了主页的HTML文件。<br><img src="https://www.mochiko.cn/pimgs/20180209http/3.png" alt="图片描述"><br>在此次抓包中，这里的x&#x3D;0,y&#x3D;0,第二次x&#x3D;1，第三次，x&#x3D;y&#x3D;1，符合图中的规则。</p>
+<p><strong>URL</strong><br>URI 统一资源标识符（在《HTTP权威指南》里面对URI的解释更充分一点）</p>
+<blockquote>
+<p>协议方案名:&#x2F;&#x2F;登录信息@服务器地址:端口号&#x2F;带层次的文件路径?查询字符串#片段标识符</p>
+</blockquote>
+<h1 id="初识HTTP"><a href="#初识HTTP" class="headerlink" title="初识HTTP"></a>初识HTTP</h1><ul>
+<li>HTTP协议用于客户端和服务器端之间的通信，请求必定由客户端发出，服务器端被动回复。</li>
+<li>HTTP协议不保存状态，是无状态协议。</li>
+<li>HTTP协议使用URI定位互联网资源。</li>
+</ul>
+<h2 id="请求报文"><a href="#请求报文" class="headerlink" title="请求报文"></a>请求报文</h2><p><img src="https://www.mochiko.cn/pimgs/20180209http/4.png" alt="图片描述"></p>
+<p>开头GET是请求服务器的类型，即方法，随后的“&#x2F;”表示请求访问的资源对象。最后的HTTP1.1是版本号。</p>
+<p><strong>请求报文结构</strong>：<br><img src="https://www.mochiko.cn/pimgs/20180209http/5.png" alt="0069luTRgy1fn5k0z12mpj30nd0ak3z1.jpg"></p>
+<h2 id="响应报文"><a href="#响应报文" class="headerlink" title="响应报文"></a>响应报文</h2><p><img src="https://www.mochiko.cn/pimgs/20180209http/6.png" alt="图片描述"></p>
+<p>开头是HTTP的版本，200是状态码，OK是短语。下面（没截）还带有HTML的主体代码。</p>
+<p><strong>响应报文结构</strong>：<br><img src="https://www.mochiko.cn/pimgs/20180209http/7.png" alt="0069luTRgy1fn5k11fm9pj30n70at3z3.jpg"></p>
+<h2 id="HTTP方法"><a href="#HTTP方法" class="headerlink" title="HTTP方法"></a>HTTP方法</h2><p><strong>GET：获取资源</strong><br>指定的资源经过服务器解析后返回相应内容，即文本直接返回，CGI返回经过执行后的结果。</p>
+<p><strong>POST: 传输实体主题</strong><br>PUT和GET功能相似，但是POST的主要目的不是获取响应的主题内容</p>
+<p><strong>PUT：传输文件</strong><br>像FTP文件上传一样，要把请求报文主题包含在文件内容，保存在请求URI的指定位置上。<br>HTTP&#x2F;1.1的PUT自身不带验证，任何人都可以上传，存在安全性问题，一般不使用。若配合WEB应用程序的验证机制或架构设计采用REST标准则可能开放使用。</p>
+<p><strong>HEAD：获得报文首部</strong><br>和GET方法一样，但不返回报文主体部分。用于确认URI有效性和资源更新的日期等。</p>
+<p><strong>DELETE：删除文件</strong><br>与PUT相反的方法，同样存在安全性问题。</p>
+<p><strong>OPTIONS：询问支持的方法</strong><br>查询针对请求URI指定的资源支持方法。<br>1.1版本才支持。</p>
+<p><strong>TRACE：追踪路径</strong><br>让WEB服务器端将之前的请求通信环回给客户端，发送请求把Max-Forwards首部字段填入数值，每经过一个服务器端就把该数字减1，是0时停止传输。容易引发XST攻击，通常不会用到。<br>1.1版本才支持。</p>
+<p><strong>CONNECT：用隧道协议连接代理</strong><br>主要用SSL和TSL协议把通信内容加密经网络隧道传输。<br>1.1版本才支持。</p>
+<h2 id="其他特性"><a href="#其他特性" class="headerlink" title="其他特性"></a>其他特性</h2><p><strong>持久链接节省通信量</strong><br>HTTP 1.1和部分HTTP 1.0提供持久链接，只要任意一段没有提出断开链接，就保持TCP链接状态。<br><img src="https://www.mochiko.cn/pimgs/20180209http/8.png" alt="图片描述"></p>
+<p>可以查看抓包数据，发送成功一个请求后没有断开TCP连接，此图也适用于管线化的说明，同时发送几个HTTP请求。</p>
+<p><strong>管线化</strong><br>从前必须要收到响应才发送新的请求，而管线化技术不需要等待，可以同时发送多个请求。</p>
+<p><strong>Cookie管理状态</strong><br>因为HTTP是无状态的协议，所以需要Cookie来管理状态：<br>1.客户端发送请求。<br>2.服务器对这个客户端生成一个Cookie，保存下来，并发送回去。<br>3.客户端保存这个Cookie。<br>4.客户端第二次发送请求，带着Cookie一起发送。<br>5.服务器坚持Cookie，分析出是刚才那个客户端。</p>
+<h1 id="了解HTTP"><a href="#了解HTTP" class="headerlink" title="了解HTTP"></a>了解HTTP</h1><p>HTTP报文本身是由多行（CR+LF换行符）数据构成的文本。[这点上头的示例报文很明显了]。</p>
+<p><strong>压缩内容编码</strong><br>原貌传输速度没有压缩后的编码速度快，但是相应会消耗资源。<br>常见编码有：</p>
+<ol>
+<li>gzip(GUN zip)</li>
+<li>compress</li>
+<li>deflate</li>
+<li>identity</li>
+</ol>
+<p><strong>报文主体和实体主体</strong><br>报文主体用于传输请求或者响应实体主体。</p>
+<p><strong>分块传输编码</strong><br>把实体主体分成多个部分，每一块用十六进制标记块大小，最后一块用“0（CR+LF）”标记。</p>
+<p><strong>发送多种数据多对象集合</strong><br>MINE机制允许多个不同类型的二进制数据以ASCII码指明。<br>多部分对象集合包含：<br>1.multipart&#x2F;form-data<br>2.multipart&#x2F;byteranges<br>3.multipart&#x2F;form-data<br>用boundary字符串（指定各个实体开始和结束加入–）划分多部分对象集合类型。<br><img src="https://www.mochiko.cn/pimgs/20180209http/9.png" alt="图片描述"></p>
+<p><strong>range获取指定范围数据</strong><br><img src="https://www.mochiko.cn/pimgs/20180209http/10.png" alt="图片描述"></p>
+<p>图为一个大图的GET请求，Range表示请求933343~2151819之间的字节</p>
+<p><img src="https://www.mochiko.cn/pimgs/20180209http/12.png" alt="图片描述"></p>
+<p>针对范围请求，会有206状态码返回。若服务器无法响应，就是返回200状态码。</p>
+<p><strong>Accept内容协商</strong><br>包括服务器驱动协商，客户端驱动协商和透明协商<br>Accept<br>Accept-Charset<br>Accept-Encoding<br>Accept-Language<br>Content-Language</p>
+<h1 id="状态码和短语"><a href="#状态码和短语" class="headerlink" title="状态码和短语"></a>状态码和短语</h1><h2 id="1XX-Information"><a href="#1XX-Information" class="headerlink" title="1XX Information"></a>1XX Information</h2><p>接受的请求正在处理</p>
+<h2 id="2XX-Success"><a href="#2XX-Success" class="headerlink" title="2XX Success"></a>2XX Success</h2><p>请求正常处理完毕</p>
+<p><strong>200 OK</strong><br>客户端发来的请求被正常处理了，返回的信息因为方法不同而不同。</p>
+<p><strong>204 No Content</strong><br>客户端发来的请求被正常处理了，但不包含实体的主体部分。</p>
+<p><strong>206 Partial Content</strong><br>客户端进行了范围请求，且服务器正确执行了请求，响应报文中包含由Content-Range指定范围的主体。</p>
+<h2 id="3XX-Redirection"><a href="#3XX-Redirection" class="headerlink" title="3XX Redirection"></a>3XX Redirection</h2><p>重定向，需要进行附加操作</p>
+<p><strong>301 Move Permanently</strong><br>永久性重定位，状态码表示请求的资源已经被分配了新的URI，以后应用现在指定的URI。如果URI保存书签了，也应该按照Location首部字段提示保存。<br><img src="https://www.mochiko.cn/pimgs/20180209http/13.png" alt="图片描述"><br>输入URL最后不加&#x2F;会产生301状态码</p>
+<p><strong>302 Found</strong><br>临时性重定向，请求的资源被分配了新的URI，希望用户用新的URI访问。推荐仅在响应GET或 HEAD 方法时采用302状态码，而在其他时候使用 307 Temporary Redirect 来替代，因为在这些场景下方法变换是明确禁止的</p>
+<p><strong>303 See Other</strong><br>与302有相同的功能，但是303明确表示客户端用GET方法获取资源。在确实需要将重定向请求的方法转换为 GET的场景下，可以使用303。</p>
+<p><strong>304 Not Modified</strong><br>客户端发送附带条件的GET请求：If-Match、If-Modified-Since、If-None-Match、If-Range、If-Unmodified-Since，服务器允许请求资源，但因发生请求不满足条件而返回。</p>
+<p><strong>307 Temporary Redirect</strong><br>临时重定向，与302 Found相同含义。307不会从POST变成GET，不过要看具体浏览器。</p>
+<blockquote>
+<p> 当发送重定向请求的时候，307状态码可以确保请求方法和消息主体不会发生变化。当响应状态码为302的时候，一些旧有的用户代理会错误地将请求方法转换为 GET：使用非 GET 请求方法而返回302状态码，Web应用的运行状况是不可预测的。而返回307状态码时则是可预测的。对于GET请求来说，两种情况没有区别</p>
+</blockquote>
+<h2 id="4XX-Client-Error"><a href="#4XX-Client-Error" class="headerlink" title="4XX Client Error"></a>4XX Client Error</h2><p>客户端错误</p>
+<p><strong>400 Bad Request</strong><br>请求报文中存在语法错误。</p>
+<p><strong>401 Unauthorized</strong><br>发送请求需要通过HTTP认证的认证信息。头部必须包含一个WWW-Authentiate首部质询用户信息</p>
+<p><strong>403 Forbidden</strong><br>访问请求资源被拒绝。</p>
+<p><strong>404 Not Found</strong><br>无法找到资源或者服务器拒绝请求且不想说明理由。</p>
+<h2 id="5XX-Server-Error"><a href="#5XX-Server-Error" class="headerlink" title="5XX Server Error"></a>5XX Server Error</h2><p><strong>500 Internal Service Error</strong><br>服务器在执行请求时发生了错误。</p>
+<p><strong>502 Bad Gateway</strong><br>错误网关 </p>
+<p><strong>503 Service Unvaliable</strong><br>服务器暂时超载或正在进行停机维护，无法进行处理。若事先知道时间，返回Retry-after字段。</p>
+<h1 id="HTTP-1-1通用首部字段"><a href="#HTTP-1-1通用首部字段" class="headerlink" title="HTTP&#x2F;1.1通用首部字段"></a>HTTP&#x2F;1.1通用首部字段</h1><p>即响应报文和请求报文都可以用的字段<br><strong>Cache-Control</strong><br>操作缓存，参数可选，逗号分隔<br>public：其他用户也可以利用缓存。<br>private：特定用户可以利用缓存。<br>no-cache：<strong>不是不缓存</strong>，是客户端不接受缓存过的响应，所以缓存服务器必须要把请求转发出去。若对它赋值（如no-cache&#x3D;Location），表示客户端接收到这个参数的响应报文后不能使用缓存。<br>no-store：按时请求或响应中包含机密信息。规定缓存不能在本地存储请求或响应的部分。<br>s-maxage： 功能和max-age相同，但这个适用于多位用户使用的公共缓存服务器。<br>max-age： 单位秒，缓存时间比指定时间数值小则接收数据。HTTP&#x2F;1.1还存在Expires首部字段，会优先处理max-age，而HTTP&#x2F;1.0中max-age会被忽略。<br>min-fresh：缓存服务器返回至少还未过指定时间的缓存资源。<br>max-stale：过期缓存资源也接收。<br>only-if-cached：客户端仅在缓存服务器本地缓存目标资源的情况下返回，若请求缓存服务器本地缓存无反应，返回504。<br>must-revalidate：代理向源服务器再次验证即将返回响应缓存是否有效。无法连接服务器返回504。用这条会忽略max-stale。<br>proxy-revalidate：所有缓存服务器在收到客户端指令请求返回时，再次验证缓存有效性。<br>no-transform：请求或相应中都不能改变主体媒体类型。</p>
+<p><strong>Connection</strong></p>
+<ol>
+<li><p>控制不再转发给代理的首部字段</p>
+</li>
+<li><p>管理持久连接：HTTP&#x2F;1.1默认是持久链接，想断开连接指定Connection:Close。旧版本默认是非持久，所以需要指明Connection：Keep-Alive。</p>
+<p>Connection:不再转发的首部字段名<br>Connection:close</p>
+</li>
+</ol>
+<p><strong>Date</strong><br>创建HTTP报文的日期时间</p>
+<p><strong>Pragma</strong><br>历史遗留字段，为了兼容而存在<br>Pragma:no-cacheyao要求中间缓存服务器不返回缓存。</p>
+<p><strong>Trailer</strong><br>事先说明在报文主体后记录了哪些首部字段。</p>
+<p><strong>Transfer-Encoading</strong><br>规定报文主体采用的编码方式。进队分块传输编码有效。</p>
+<p><strong>Upgrade</strong><br>检测HTTP协议及其他协议是否可使用高版本进行通信，参数可以指定一个完全不同的通信协议。</p>
+<p><strong>Via</strong><br>追踪客户端与服务器之间的请求和响应报文的传输路径。</p>
+<p><strong>Warning</strong><br>从1.0版本的Retry-After演变过来的，通常会告知用户一些缓存相关的问题警告。<br>1.1版本定义了7种警告：<br>110 Response is stale 代理返回已过过期资源<br>111 Revalidation failed 代理再验证资源有效失败<br>112 Disconnection operation 断开连接操作<br>113 Heuristic expiration 试探性过期，响应试用期超过24小时<br>199 Miscellaneous warning 任意的警告内容<br>214 Transformation applied 代理对内容编码或媒体类型执行了某些处理<br>299 Miscellaneous persistent warning 任意的警告内容</p>
+
+        </div>
+        <div class="mck-post-footer">
+    
+        <a href="/2017/11/30/tech-20171130-margin/index.html">上一篇</a>
+    
+    
+        <a href="/2018/02/10/life-20180210-res/index.html">下一篇</a>
+    
+</div>
+        <div class="mck-post-comments" id="mck-post-comments"></div>
+<script>
+    new Valine({
+        el: '#mck-post-comments',
+        appId: 'bhScVsXkKqR32IJd3MXvu41C-gzGzoHsz',
+        appKey: 'm8alBLTHvrVy8DQvzGshxoA5',
+        placeholder: '说点什么o_o ....',
+        avatar: 'monsterid'
+    });
+</script>
+        <div class="mck-about">
+    <div class="mck-about-title mck-section-title">ABOUT</div>
+    <div class="mck-about-main">
+        欢迎来到小年糕的后花园，年糕的小站开设于2017年，博主年糕君是一个爱好十分广泛的人，也是一个比较佛系的人，不定时爆发脑洞更新（因为是社畜，也可能失踪很久，工作太累了）。
+        <a href="/about/index.html" target="_blank" class="mck-about-more">查看更多</a>
+    </div>
+</div>
+    </div>
+    <script async src="/js/busuanzi.js"></script>
+    <script>
+    $(document).ready(function () {
+        setTimeout(() => {
+            $('#loading-container').fadeOut();
+        }, 2000);
+
+        $('#mck-menu__collapse').click(function() {
+            var menu = $('.mck-menu__normal');
+            if (menu.hasClass('opened')) {
+                $(this).removeClass('opened')
+                menu.removeClass('opened')
+            } else {
+                $(this).addClass('opened')
+                menu.addClass('opened')
+            }
+        })
+    })
+    </script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/prettify/r298/prettify.min.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+        jQuery("pre").addClass("prettyprint linenums");
+        prettyPrint();
+        });
+    </script>
+    <script async src="/js/sakura.js"></script>
+</body>
+</html>

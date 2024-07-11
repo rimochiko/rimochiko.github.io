@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!--Description-->
+    
+        <meta name="description" content="愿你有一个好心情~^-^">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="阿糕">
+    
+
+    <!-- Title -->
+    
+    <title>初识WEBGL | 阿糕家后院</title>
+    <!--[if lt IE 9]>
+        <script src="http://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+        <script src="http://cdn.staticfile.org/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+	<link href="https://cdn.bootcss.com/animate.css/3.5.2/animate.css" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="mck-body animated fadeIn">
+    <div class="mck-loading" id="loading-container">
+        <div class="mck-loading-item">
+            <div class="mck-loading-text">
+                <span class="mck-loading-textcontent">正在努力加载中...</span>
+            </div>
+        </div>
+    </div>
+    <div class="mck-sidebar">
+        <canvas id="floating"></canvas>
+        <div class="mck-logo">
+            <img src="//mcimages/logo.png" />
+        </div>
+        <div class="mck-menu">
+            <div class="mck-menu__collapse" id="mck-menu__collapse">
+                <span class="mck-menu__collapse_line"></span>
+                <span class="mck-menu__collapse_line"></span>
+            </div>
+            <div class="mck-menu__normal">
+                <div class="mck-menu-item">
+                    <a href="/">HOME</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/work/index.html">WORK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/tech/index.html">TECH</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/life/index.html">LIFE</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/link/index.html">LINK</a>
+                </div>
+                <div class="mck-menu-item">
+                    <a href="/map/index.html" class="mck-menu-item__new">
+                        <img src="//mcimages/emoji1.png" class="mck-menu-item__new_icon animated bounce"/>TRAVEL
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="mck-footer">
+            <div class="mck-footer-text">MOCHIKO ❤ Since 2017</div>
+            <div class="mck-footer-text" id="busuanzi_container_site_pv">你是第<span id="busuanzi_value_site_pv"></span>个光临的童鞋！</div>
+        </div>
+    </div>
+	<div class="mck-main mck-post-main"> 
+        <div class="mck-post-header ">
+            <a class="mck-post-back" href="/"></a>
+            <div class="mck-post-cover" style="background-image: url(https://www.mochiko.cn/mcimages/q5.png)"></div>
+            <div class="mck-post-category"><a href="#">技术打工人</a><span class="mck-post-date">2019-04-07</span></div>
+            <div class="mck-post-title">初识WEBGL</div>
+            <ul class="mck-post-tags">
+				
+					
+
+<li class="mck-post-tag"><a class="a_tag" href="/tags/WEBGL/index.html">WEBGL</a></li>
+				
+            </ul>
+			<ol class="mck-post-menu"><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#3D%E5%9B%BE%E5%BD%A2%E5%9F%BA%E7%A1%80"><span class="mck-post-menu-number">1.</span> <span class="mck-post-menu-text">3D图形基础</span></a><ol class="mck-post-menu-child"><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#3D%E5%9B%BE%E5%BD%A2%E5%85%83%E7%B4%A0"><span class="mck-post-menu-number">1.1.</span> <span class="mck-post-menu-text">3D图形元素</span></a></li></ol></li><li class="mck-post-menu-item mck-post-menu-level-1"><a class="mck-post-menu-link" href="#WebGL%E5%9F%BA%E7%A1%80"><span class="mck-post-menu-number">2.</span> <span class="mck-post-menu-text">WebGL基础</span></a><ol class="mck-post-menu-child"><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#WebGL%E8%BF%90%E4%BD%9C%E8%BF%87%E7%A8%8B"><span class="mck-post-menu-number">2.1.</span> <span class="mck-post-menu-text">WebGL运作过程</span></a></li><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#%E7%BB%98%E5%9B%BE%E5%9B%BE%E5%85%83"><span class="mck-post-menu-number">2.2.</span> <span class="mck-post-menu-text">绘图图元</span></a></li><li class="mck-post-menu-item mck-post-menu-level-2"><a class="mck-post-menu-link" href="#%E7%9D%80%E8%89%B2%E5%99%A8"><span class="mck-post-menu-number">2.3.</span> <span class="mck-post-menu-text">着色器</span></a></li></ol></li></ol>
+        </div>
+
+        <div class="mck-post-content">
+			<p>我们希望3D图像也能在网页中实现，这样我们可以利用网页这个快捷的传播途径，进行更多可能的创作。随着HTML5的到来，WebGL的出现使得其成为可能，WebGL使得JS支持硬件3D加速渲染（同样的CSS3也得到了硬件3D加速渲染和动画）。<br>HTML5中的Canvas本身搭配的是2D绘图的API，但如果使用一些库，它也可以用于3D渲染，在不支持WebGL和CSS 3D的平台上，这是通常的代替方法。</p>
+<span id="more"></span>
+
+<h1 id="3D图形基础"><a href="#3D图形基础" class="headerlink" title="3D图形基础"></a>3D图形基础</h1><p>在我们开始了解WebGL之前，我们首先要掌握一些3D绘图的基本知识。</p>
+<blockquote>
+<p><strong>3D计算机图形</strong>是使用<strong>三个维度来表示几何数据</strong>（通常是笛卡尔坐标系），并存储在计算机中，用于计算和绘制成屏幕上2D图像的一类图形。它<strong>可以被存储起来随时浏览，也可用于实时显示</strong>。</p>
+</blockquote>
+<h2 id="3D图形元素"><a href="#3D图形元素" class="headerlink" title="3D图形元素"></a>3D图形元素</h2><p>一个3D图形不是我们想象的，一个创建就可以完完整整体现在你的眼前。<br>可能你一开始使用Three.js（一个封装了WebGL API的库）去写一些东西，你会觉得很疑惑，为什么我们需要创建很多个对象，最后再把它们组合在一起呢？这样是不是太麻烦了？<br>其实在其他图形编程里，往往也是使用这样的过程方法，把一个物体分成基本的形状和不同的材质元素等等，最后组合在一起，这样也是为了方便我们去编写不同的结果。</p>
+<p>一个3D图形元素往往由下面这些元素组成：</p>
+<ul>
+<li>3D坐标系：没有坐标，我们就无法确定每个物体放置的位置。</li>
+<li>网格、多边形与顶点：这些都是我们确定物体形状的东西。</li>
+<li>材质、纹理与光源：这些是为了确定物体的外观。</li>
+<li>变换与矩阵：方便我们去进行物理运动的计算。</li>
+<li>相机、透视、视口与投影：这些确定了我们肉眼看到的绘制的这个世界的视觉范围。</li>
+<li>着色器：它是一段代码，为了渲染出一个网格的最终图像，开发者需要准确定义各个元素以及它们之间是如何相互作用而生成最终的图像，这个工作就是由着色器来完成的。着色器实现了把网格像素点投影到屏幕上的算法。通常是用C语言编写，并且会被编译成GPU可以执行的代码。</li>
+</ul>
+<p><strong>Tips：着色器相关的补充</strong></p>
+<blockquote>
+<ol>
+<li>WebGL和CSS自定义滤镜都是使用OpenGL ES着色语言定义着色器。</li>
+<li>CSS滤镜中，着色器是可以配置的，着色器用来被定义CSS3滤镜的时候，被称为自定义滤镜。</li>
+<li>2D Canvas API不支持可编程着色器。</li>
+</ol>
+</blockquote>
+<h1 id="WebGL基础"><a href="#WebGL基础" class="headerlink" title="WebGL基础"></a>WebGL基础</h1><p>对WebGL的简单认识：</p>
+<ul>
+<li>WebGL是一套API。</li>
+<li>WebGL基于OpenGL ES 2.0（其中ES是嵌入式系统，表示用于小型计算机设备）。</li>
+<li>可以与其他web页面元素结合。</li>
+<li>为创建动态web应用而生。</li>
+<li>跨平台的。</li>
+<li>免费的。</li>
+</ul>
+<h2 id="WebGL运作过程"><a href="#WebGL运作过程" class="headerlink" title="WebGL运作过程"></a>WebGL运作过程</h2><ol>
+<li>创建一个Canvas。</li>
+<li>获取Canvas元素中的绘图上下文。</li>
+<li>初始化视口。</li>
+<li>创建包含待渲染数据（一般是顶点）的缓冲。</li>
+<li>创建定义顶点缓冲到屏幕空间转换规则的矩阵。</li>
+<li>创建一到多个着色器。</li>
+<li>参数初始化着色器</li>
+<li>绘制。</li>
+</ol>
+<h2 id="绘图图元"><a href="#绘图图元" class="headerlink" title="绘图图元"></a>绘图图元</h2><p>WebGL基于图元进行绘制。<br>图元就是不同类型的基本几何图案，包括了：三角形、点和线。三角形是最常用的。通常使用：</p>
+<ul>
+<li>三角形集（数组存储）</li>
+<li>三角形条带<br>图元如果以数组形式存储，这个数组就叫做缓冲，等待被绘制的顶点数据在缓冲中被定义。</li>
+</ul>
+<p>浏览器为了WebGL引入新的数据类型，比如Float32Array。这是一类缓冲数组，也成为类型化数组，是一种以二进制为存储方式的JS类型。它访问速度更快，耗费内存也更小。</p>
+<h2 id="着色器"><a href="#着色器" class="headerlink" title="着色器"></a>着色器</h2><p>一个着色器通常由两个部分组成：</p>
+<ul>
+<li>顶点着色器：负责把物体的坐标转换为2D显示区域中的坐标。</li>
+<li>片段着色器：计算转换好的顶点像素的最终颜色输出，基于各个元素比如颜色、纹理、光源等数值输入。</li>
+</ul>
+
+        </div>
+        <div class="mck-post-footer">
+    
+        <a href="/2019/04/01/tech-20190401-three-material/index.html">上一篇</a>
+    
+    
+        <a href="/2019/05/07/tech-20190507-tcp/index.html">下一篇</a>
+    
+</div>
+        <div class="mck-post-comments" id="mck-post-comments"></div>
+<script>
+    new Valine({
+        el: '#mck-post-comments',
+        appId: 'bhScVsXkKqR32IJd3MXvu41C-gzGzoHsz',
+        appKey: 'm8alBLTHvrVy8DQvzGshxoA5',
+        placeholder: '说点什么o_o ....',
+        avatar: 'monsterid'
+    });
+</script>
+        <div class="mck-about">
+    <div class="mck-about-title mck-section-title">ABOUT</div>
+    <div class="mck-about-main">
+        欢迎来到小年糕的后花园，年糕的小站开设于2017年，博主年糕君是一个爱好十分广泛的人，也是一个比较佛系的人，不定时爆发脑洞更新（因为是社畜，也可能失踪很久，工作太累了）。
+        <a href="/about/index.html" target="_blank" class="mck-about-more">查看更多</a>
+    </div>
+</div>
+    </div>
+    <script async src="/js/busuanzi.js"></script>
+    <script>
+    $(document).ready(function () {
+        setTimeout(() => {
+            $('#loading-container').fadeOut();
+        }, 2000);
+
+        $('#mck-menu__collapse').click(function() {
+            var menu = $('.mck-menu__normal');
+            if (menu.hasClass('opened')) {
+                $(this).removeClass('opened')
+                menu.removeClass('opened')
+            } else {
+                $(this).addClass('opened')
+                menu.addClass('opened')
+            }
+        })
+    })
+    </script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/prettify/r298/prettify.min.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+        jQuery("pre").addClass("prettyprint linenums");
+        prettyPrint();
+        });
+    </script>
+    <script async src="/js/sakura.js"></script>
+</body>
+</html>
