@@ -39,7 +39,7 @@ html {
 
 html,
 body {
-    font-size: 14px;
+    font-size: 16px;
 	min-width: 350px;
 }
 body {
@@ -491,6 +491,7 @@ body {
 	position: relative;
 	margin-top: 3rem;
 	margin-right: 8%;
+	display: block;
 }
 
 .mck-article-item:nth-child(3n) {
@@ -697,6 +698,11 @@ body {
 	flex-wrap: wrap;
 }
 
+.mck-life-item-container {
+	display: block;
+	width: 100%;
+}
+
 .mck-life-item {
 	font-size: 1.1rem;
 	line-height: 2;
@@ -711,6 +717,7 @@ body {
 	background-size: 100% 37px;
 	box-shadow: 10px 10px 0 #000;
 	display: flex;
+	color: #000;
 }
 
 .mck-life-item-left {
@@ -1528,7 +1535,6 @@ body {
 	display: block;
 }
 
-/** 响应式 **/
 @media (max-width: 1200px) {
 	.mck-life-item {
 		height: 20rem;
