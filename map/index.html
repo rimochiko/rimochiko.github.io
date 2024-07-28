@@ -80,15 +80,15 @@
             <div class="mck-map-title">阿糕游记(北京篇)</div>
          </div>
          <div class="mck-map-content__tips_container">
-            <div class="mck-map-content__tips animated bounce">寻找地图上的小旗，发现新的游记！</div>
+            <div class="mck-map-content__tips animated bounce">寻找地图小旗，发现新游记！</div>
             </div>
          <div class="mck-map-content">
               <div class="mck-map-content__cover" id="mck-map-content__cover" style="background-image: url(https://www.mochiko.cn/pimgs/summer2022/5.png);">
               </div>
               <a class="mck-map-content__main" href="#" target="_blank" id="mck-map-content__main">
-                  <div class="mck-map-content__title" id="mck-map-content__title">鲁迅纪念馆一日游</div>
-                  <div class="mck-map-content__content" id="mck-map-content__content">我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我我</div>
-                  <div class="mck-map-content__date" id="mck-map-content__date">出行于2019年2月13日，还记得那天是晴天呢。</div>
+                  <div class="mck-map-content__title" id="mck-map-content__title"></div>
+                  <div class="mck-map-content__content" id="mck-map-content__content"></div>
+                  <div class="mck-map-content__date" id="mck-map-content__date"></div>
               </a>
           </div>
          <div id="mck-map" style="width: 100%;height: 100%">
@@ -101,7 +101,7 @@
                 map.centerAndZoom(point, 15);
                 map.enableScrollWheelZoom(true);
 
-                var markList = [{"link":"https://www.mochiko.cn/2021/11/15/life-20221115-luxun/index.html#鲁迅博物馆","title":"鲁迅博物馆","desc":"地铁2号线·阜成门 / 门票免费 / 有印章可盖","long":116.36538,"lat":39.93167,"date":"2021年11月","weather":"晴天","cover":"https://www.mochiko.cn/timgs/2011luxun/3.png","mark":""},{"link":"https://www.mochiko.cn/2021/11/15/life-20221115-luxun/index.html#中山公园","title":"中山公园","desc":"天安门东地铁站 / 门票2元 / 有印章可盖","long":116.40058,"lat":39.9167,"date":"2021年11月","weather":"晴天","cover":"https://www.mochiko.cn/timgs/2011luxun/20.png","mark":""},{"link":"https://www.mochiko.cn/2022/10/23/life-20221023-beihai/index.html","title":"北海公园","desc":"北海北地铁站 / 门票10元 / 有印章可盖","long":116.39548,"lat":39.93291,"date":"2022年10月","weather":"晴天","cover":"https://www.mochiko.cn/timgs/2011luxun/20.png","mark":""},{"link":"https://www.mochiko.cn/2023/01/08/life-20230108/index.html","title":"朝阳公园","desc":"枣营地铁站 / 门票免费","long":116.48923,"lat":39.94986,"date":"2023年1月","weather":"晴天","cover":"https://www.mochiko.cn/timgs/2022cygy/8.png","mark":""},{"link":"https://www.mochiko.cn/2023/02/18/life-20230218-wanshousi/index.html","title":"万寿寺","desc":"万寿寺地铁站 / 门票20元","long":116.31755,"lat":39.95216,"date":"2023年2月","weather":"晴天","cover":"https://www.mochiko.cn/timgs/2023wss/_4.png","mark":""},{"link":"https://www.mochiko.cn/2023/02/18/life-20230218-wanshousi/index.html","title":"石刻艺术博物馆","desc":"国家图书博物馆地铁站 / 门票20元","long":116.33698,"lat":39.95057,"date":"2023年2月","weather":"晴天","cover":"https://www.mochiko.cn/timgs/2023wss/_18.png","mark":""}];
+                var markList = [{"link":"https://www.mochiko.cn/2021/11/15/life-20221115-luxun/index.html#鲁迅博物馆","title":"鲁迅博物馆","desc":"地铁2号线·阜成门 / 门票免费 / 有印章可盖","long":116.36538,"lat":39.93167,"date":"2021年11月","weather":"晴天","cover":"https://www.mochiko.cn/timgs/2011luxun/3.png","mark":""},{"link":"https://www.mochiko.cn/2021/11/15/life-20221115-luxun/index.html#中山公园","title":"中山公园","desc":"天安门东地铁站 / 门票2元 / 有印章可盖","long":116.40058,"lat":39.9167,"date":"2021年11月","weather":"晴天","cover":"https://www.mochiko.cn/timgs/2011luxun/20.png","mark":""},{"link":"https://www.mochiko.cn/2022/10/23/life-20221023-beihai/index.html","title":"北海公园","desc":"北海北地铁站 / 门票10元 / 有印章可盖","long":116.39548,"lat":39.93291,"date":"2022年10月","weather":"晴天","cover":"https://www.mochiko.cn/timgs/2011luxun/20.png","mark":""},{"link":"https://www.mochiko.cn/2023/01/08/life-20230108/index.html","title":"朝阳公园","desc":"枣营地铁站 / 门票免费","long":116.48923,"lat":39.94986,"date":"2023年1月","weather":"晴天","cover":"https://www.mochiko.cn/timgs/2022cygy/8.png","mark":""},{"link":"https://www.mochiko.cn/2023/02/18/life-20230218-wanshousi/index.html","title":"万寿寺","desc":"万寿寺地铁站 / 门票20元","long":116.31755,"lat":39.95216,"date":"2023年2月","weather":"晴天","cover":"https://www.mochiko.cn/timgs/2023wss/_4.png","mark":""},{"link":"https://www.mochiko.cn/2023/02/18/life-20230218-wanshousi/index.html","title":"石刻艺术博物馆","desc":"国家图书博物馆地铁站 / 门票20元","long":116.33698,"lat":39.95057,"date":"2023年2月","weather":"晴天","cover":"https://www.mochiko.cn/timgs/2023wss/_18.png","mark":""},{"link":"","title":"紫檀博物馆","desc":"高碑店站 / 门票?元","long":116.526151,"lat":39.910505,"date":"2024年4月","weather":"阴天","cover":"https://www.mochiko.cn/wimgs/none.jpg","mark":""},{"link":"","title":"大观园","desc":"菜市口站 / 门票50元","long":116.355832,"lat":39.871308,"date":"2024年3月","weather":"晴天","cover":"https://www.mochiko.cn/wimgs/none.jpg","mark":""},{"link":"","title":"中国邮政邮票博物馆","desc":"门票0元","long":116.431142,"lat":39.910848,"date":"2024年2月","weather":"晴天","cover":"https://www.mochiko.cn/wimgs/none.jpg","mark":""},{"link":"","title":"中国海关博物馆","desc":"门票0元","long":116.432779,"lat":39.907105,"date":"2024年2月","weather":"晴天","cover":"https://www.mochiko.cn/wimgs/none.jpg","mark":""},{"link":"","title":"中国铁道博物馆(正阳门馆)","desc":"门票0元","long":116.400383,"lat":39.899873,"date":"2024年2月","weather":"晴天","cover":"https://www.mochiko.cn/wimgs/none.jpg","mark":""},{"link":"","title":"北京古观象台","desc":"门票20元","long":116.434604,"lat":39.907538,"date":"2024年2月","weather":"晴天","cover":"https://www.mochiko.cn/wimgs/none.jpg","mark":""},{"link":"","title":"智化寺","desc":"门票20元","long":116.432399,"lat":39.917765,"date":"2024年2月","weather":"晴天","cover":"https://www.mochiko.cn/wimgs/none.jpg","mark":""},{"link":"","title":"中国国家图书馆","desc":"门票0元","long":116.323501,"lat":39.943873,"date":"2024年1月","weather":"晴天","cover":"https://www.mochiko.cn/wimgs/none.jpg","mark":""},{"link":"","title":"北京天文馆","desc":"门票0元","long":116.337037,"lat":39.937364,"date":"2024年4月","weather":"晴天","cover":"https://www.mochiko.cn/wimgs/none.jpg","mark":""},{"link":"","title":"法海寺森林公园","desc":"门票0元","long":116.160653,"lat":39.943143,"date":"2022年4月","weather":"晴天","cover":"https://www.mochiko.cn/wimgs/none.jpg","mark":""},{"link":"","title":"地质博物馆","desc":"门票0元","long":116.372386,"lat":39.923496,"date":"2022年4月","weather":"晴天","cover":"https://www.mochiko.cn/wimgs/none.jpg","mark":""}];
                 for (var i = 0; i < markList.length; i++) {
                     // 创建小车图标
                     var myIcon = new BMapGL.Icon(markList[i].mark || "https://www.mochiko.cn/mcimages/map_mark.png", new BMapGL.Size(52, 52));
@@ -116,10 +116,12 @@
                             var item = markList[index];
                             $('.mck-map-content__tips').hide();
                             $('.mck-map-content').addClass('visible');
-                            $('#mck-map-content__main').attr('href', item.link);
+                            if (item.link) {
+                               $('#mck-map-content__main').attr('href', item.link); 
+                            }
                             $('#mck-map-content__title').text(item.title);
                             $('#mck-map-content__content').text(item.desc);
-                            $('#mck-map-content__cover').css('background-image', 'url('+item.cover+')');
+                            $('#mck-map-content__cover').css('background-image', 'url('+ (item.cover || 'https://www.mochiko.cn/wimgs/none.jpg')+')');
                             $('#mck-map-content__date').text('出行于'+item.date, '，还记得那天是'+ item.weather +'呢。');
                         }
                         marker.addEventListener('mouseover', eventHandler);
