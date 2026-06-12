@@ -1073,11 +1073,14 @@ a {
   padding: 1.2rem 1.2rem 1.35rem;
   overflow: hidden;
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 500;
   line-height: 1.35;
   letter-spacing: 0.04em;
-  color: #3f3325;
+  color: #fff;
   text-shadow: none;
+  -webkit-text-stroke: 3px #111;
+  text-stroke: 3px #111;
+  paint-order: stroke fill;
   background: transparent;
 }
 

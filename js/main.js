@@ -449,8 +449,15 @@ const setupDiaryInteraction = () => {
       if (!href || openInNewContext) return;
 
       event.preventDefault();
+
+      const isExternal = /^https?:\/\//.test(href) && !href.startsWith(window.location.origin);
+
       window.setTimeout(() => {
-        window.location.href = href;
+        if (isExternal) {
+          window.open(href, "_blank", "noopener,noreferrer");
+        } else {
+          window.location.href = href;
+        }
       }, 220);
     });
   });
