@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta
+  name="description"
+  content="&lt;p&gt;因为我不喜欢背公式，希望自己能找到比较容易理解和推理的记忆方式吧，很早就感觉CSS3渐变的属性组成不太好记忆，所以今天终于挖了这个坑，其实也没什么很特别的，嘻嘻，如果有错误欢迎提出。&lt;/p&gt;"
+/>
+<title>CSS渐变小结 | 年糕的编绳花园</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
+  rel="stylesheet"
+/>
+<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
+<link rel="stylesheet" href="/css/style.css" />
+
+
+  <meta name="generator" content="Hexo 7.3.0"></head>
+  <body class="post-page">
+    <div
+      class="site-loading"
+      aria-live="polite"
+      aria-label="页面加载中"
+      data-sprite-src="/images/tech/girl_read_sprite.png"
+      data-frame-count="2"
+    >
+      <div class="site-loading__inner">
+        <div class="site-loading__girl" aria-hidden="true"></div>
+        <p class="site-loading__text">LOADING...</p>
+        <div class="site-loading__progress" aria-hidden="true">
+          <span class="site-loading__progress-bar"></span>
+        </div>
+      </div>
+    </div>
+    <svg class="visual-defs" aria-hidden="true" width="0" height="0">
+      <defs>
+        <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.018"
+            numOctaves="2"
+            seed="8"
+            result="noise"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="noise"
+            scale="18"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
+      </defs>
+    </svg>
+    
+<header class="site-header">
+  <a
+    class="site-logo is-small"
+    href="/"
+    aria-label="返回年糕的编绳花园首页"
+    data-default-logo="/images/logo.png"
+    data-small-logo="/images/logo_small.png"
+  >
+    <img src="/images/logo_small.png" alt="年糕的编绳花园" />
+  </a>
+
+  <button
+    class="menu-toggle"
+    type="button"
+    aria-label="打开菜单"
+    aria-expanded="false"
+    aria-controls="site-menu"
+  >
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <div class="site-menu-overlay" hidden>
+    <div class="site-menu-page">
+      <nav id="site-menu" class="site-menu" aria-label="主菜单">
+        
+          <a href="/#home">HOME</a>
+        
+          <a href="/#work">WORK</a>
+        
+          <a href="/#tech">TECH</a>
+        
+          <a href="/#diary">DIARY</a>
+        
+          <a href="/#about">ABOUT</a>
+        
+      </nav>
+    </div>
+  </div>
+</header>
+
+    
+<main class="post-shell post-shell--detail">
+  <section class="post-journal-band">
+    <div class="post-journal">
+      <section class="post-hero-band">
+        <div class="post-hero post-hero--no-cover" aria-labelledby="post-title">
+          
+
+          <div class="post-hero__content">
+            <span class="post-hero__eyebrow">DIARY LOG</span>
+            <span class="post-hero__date">2019.02.03</span>
+            <h1 id="post-title" class="post-title post-title--decorated">
+              <img
+                class="post-title__decor"
+                src="/images/decorates/flower2.png"
+                alt=""
+                aria-hidden="true"
+              />
+              <span>CSS渐变小结</span>
+            </h1>
+            <div class="post-meta" aria-label="文章信息">
+              <span>阅读约 9 分钟</span>
+              <span>#CSS</span>
+              <span>#博客</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="post-content-band">
+        <article class="post-main">
+          <div class="post-body-shell">
+            <div class="post-body post-body--entry"><p>因为我不喜欢背公式，希望自己能找到比较容易理解和推理的记忆方式吧，很早就感觉CSS3渐变的属性组成不太好记忆，所以今天终于挖了这个坑，其实也没什么很特别的，嘻嘻，如果有错误欢迎提出。</p>
+<span id="more"></span>
+
+<h1 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h1><p>我们一般都是在添加background的时候会用到这个渐变效果，渐变效果分为<code>linear-gradient</code>（线性渐变）和<code>radial-gradient</code>（径向）。<br>当然这篇文章主要是围绕<code>linear-gradient</code>展开的。</p>
+<p><strong>语法如下：</strong></p>
+<pre><code>background: linear-gradient(方向, 颜色1, 颜色2, ...);
+</code></pre>
+<p>因为可以传入多个颜色，所以这里就是一大串了。<br>另外还有多个兼容前缀的写法，语法也有细微的不同，但是这里就讲的是标准形式，也就是没有前缀的~<br><strong>示例用法：</strong></p>
+<pre><code>linear-gradient(red, blue);
+linear-gradient(to right, red , blue);
+linear-gradient(180deg, red, blue);
+linear-gradient(180deg, red 10%, blue 20%);
+</code></pre>
+<h1 id="关于方向"><a href="#关于方向" class="headerlink" title="关于方向"></a>关于方向</h1><p>方向有两种写法，可以是写top、bottom、left、right，也可以是写具体的角度。</p>
+<h2 id="不写方向"><a href="#不写方向" class="headerlink" title="不写方向"></a>不写方向</h2><p>默认情况下是上-&gt;下：<br><img src="/pimgs/20190203gradient/0069luTRgy1fqfyanfm40j305h01c0sh.jpg" alt="图片描述"></p>
+<pre><code>background: linear-gradient(red,blue);
+</code></pre>
+<h2 id="使用方向单词"><a href="#使用方向单词" class="headerlink" title="使用方向单词"></a>使用方向单词</h2><pre><code>to 某个方向（目的地）
+</code></pre>
+<p>这里的值可以是单纯的top，也可以是如top left（左上）这样的组合搭配。<br><strong>Tip</strong>：left top搭配中词语的顺序变换也没有影响。</p>
+<p>而它的方向就是以这个<code>目的地</code>为目标，径直发射过去。<br><strong>举例：</strong><br>向右下角（right bottom &#x2F; bottom right）发射过去啦~</p>
+<p><img src="/pimgs/20190203gradient/0069luTRgy1fqfyb3bnflj305g0190sh.jpg" alt="图片描述"></p>
+<pre><code>background: linear-gradient(to right bottom, red , blue);
+</code></pre>
+<h2 id="使用角度"><a href="#使用角度" class="headerlink" title="使用角度"></a>使用角度</h2><p><strong>角度的范围：</strong><br>可以是负数到正数！它会进行%360deg的运算，所以0deg和360deg&#x2F;-360deg是一样的啦。</p>
+<p><strong>角度的判断：</strong><br>让我们先回到不填写方法的时候，渐变是red(1)-&gt;blue(2)，但是在0deg的情况下，渐变方向是blue(2)-&gt;red(1)：<br><img src="/pimgs/20190203gradient/0069luTRgy1fqfyb3cn96j305h01c0sh.jpg" alt="图片描述"></p>
+<pre><code>background: linear-gradient(0deg , red , blue)
+</code></pre>
+<p>随后多次实验会发现，这个角度其实不像transform那种旋转的角度，同样也可以认为是一个发射的角度：<br><img src="/pimgs/20190203gradient/0069luTRgy1fqfyb3d8mnj305f05hwed.jpg" alt="图片描述"></p>
+<p>所以呀，就可以认为是像这张图一样的，可以把red作为自己的出发点，然后对着某个角度发射过去。<br>所以在不写方向的默认情况下，<code>linear-gradient(red,blue);</code>这个角度其实相当于是<code>linear-gradient(180deg, red,blue)</code>。</p>
+<h1 id="关于百分比"><a href="#关于百分比" class="headerlink" title="关于百分比"></a>关于百分比</h1><p>我们在写颜色的时候后面可以在接一个百分比，这个百分比在MDN中的解释是：</p>
+<blockquote>
+<p>渐近线的颜色停止点在该位置有特定的颜色。该位置可以被指定为线长度的百分比或一个绝对长度。为实现期望的效果，可以指定任意多个颜色停止点。</p>
+</blockquote>
+<p>说实话，我感觉这个解释还是比较模糊，我个人觉得这个终点应该是渐变的终点，所以我开始了小探究（<strong>怕被打扰思维的童鞋直接跳过这里，看最后一段吧（怕被打）</strong>），但同样还是要存在一个颜色开始的起点，所以来实验一下：<br><strong>1.</strong><br><img src="https://www.mochiko.cn/pimgs/20190203gradient/0069luTRgy1fqfyb3e3swj305e01b0gy.jpg" alt="图片描述"></p>
+<pre><code>linear-gradient(to right, red 0%, blue 0%)
+</code></pre>
+<p>因为red设置了0%为终点，按照计算blue应该从0%开始，而blue也同样设置0%为渐变终点，所以blue就全部都占满了，且不存在渐变。</p>
+<ul>
+<li>渐变范围：0%~0%</li>
+<li>blue颜色范围：0%~100%</li>
+</ul>
+<p><strong>2.</strong><br><img src="https://www.mochiko.cn/pimgs/20190203gradient/0069luTRgy1fqfyb3fr76j305h01c0jy.jpg" alt="图片描述"></p>
+<pre><code>linear-gradient(to right, red 10%, blue 0%)
+</code></pre>
+<p>整个div的宽度是200px，red是10%，可以发现它截止的地方正好是<code>200*10%=20px</code>，但是blue的渐变终点是0。想象一下，就好像红色部分把蓝色的开头给遮住了，所以这个时候没有产生渐变，同样如果blue &lt;&#x3D; 10%都不会有这个渐变。</p>
+<ul>
+<li>渐变范围：10%~0%（大于起点，所以不存在）</li>
+<li>blue颜色范围：10%~100%</li>
+</ul>
+<p><strong>3.</strong><br><img src="/pimgs/20190203gradient/0069luTRgy1fqfyb3f0pkj30500180kx.jpg" alt="图片描述"></p>
+<pre><code>linear-gradient(to right, red 0%, blue 10%)
+</code></pre>
+<p>So，如果blue是10%，按照计算，蓝色应该从0%的位置开始，但是渐变的终点是10%，所以会有10%长度的渐变出现。</p>
+<ul>
+<li>渐变范围：0%~10%</li>
+<li>blue颜色范围：0%~100%</li>
+</ul>
+<p><strong>4.</strong><br>来个复杂的情况：<br><img src="/pimgs/20190203gradient/0069luTRgy1fqfyczxlxxj304w0160m9.jpg" alt="图片描述"></p>
+<pre><code>linear-gradient(to right, red 40%, blue 50%,yellow 60%);
+</code></pre>
+<p>首先红色部分在40%的时候止步，蓝色的渐变到50%的时候才结束，所以中间有10%的渐变，同理蓝色和黄色部分也有10%的渐变。</p>
+<ul>
+<li>red范围：0%~50%</li>
+<li>red-blue渐变范围：40%~50%</li>
+<li>blue范围： 50%~50%（渐变范围给予了它一定的纯色区域）</li>
+<li>blue-yellow渐变范围：50%~60%</li>
+<li>yellow颜色范围：50%~100%</li>
+</ul>
+<ol start="5">
+<li></li>
+</ol>
+<p><img src="/pimgs/20190203gradient/0069luTRgy1fqfyczxu1lj306g0263ya.jpg" alt="图片描述"></p>
+<pre><code>linear-gradient(to right, red 40%, blue 50%,yellow 0%);
+</code></pre>
+<p>把黄色部分设为0%，也就是黄色渐变在0%的时候就结束了，这个时候到蓝色部分正好是容器的一半（50%）。</p>
+<ul>
+<li>red-blue渐变范围：40%~50%</li>
+<li>blue颜色范围：50%~50%(因为red-blue渐变而有了一段纯色区)</li>
+<li>blue-yellow渐变范围：50%~0%（无效）</li>
+<li>yellow颜色范围：50%~100%</li>
+</ul>
+<p>目前看来，这个推理是合理的→_→，当然啦这里还只是我的推理（唔）。然后我找到了一篇文章：<a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000011406174">https://segmentfault.com/a/1190000011406174</a>，有详细的说明和资料，总结来说就是：</p>
+<blockquote>
+<p>百分比是指某个颜色值距离起点的开始位置。<br>渐变过渡区的占比为总的空间（高度或宽度）减去上下两个着色块空间占比剩下的空间。<br>如果某个色标的位置值比整个列表中在它之前的色标的位置值都要小，则该色标的位置值会被设置为它前面所有色标位置值的最大值。</p>
+</blockquote>
+<p>这是权威的说法哦，也很好理解（今天就自娱自乐到这里吧，嘻嘻）。</p>
+</div>
+          </div>
+
+          
+            <nav class="post-nav" aria-label="文章切换">
+              
+                <a
+                  href="/posts/life-20190210-perfume/"
+                  
+                >
+                  <span class="post-nav__label">上一篇</span>
+                  <span class="post-nav__title">生活 | 给Perfume写的信</span>
+                </a>
+              
+              
+                <a
+                  href="/posts/life-20181227-music/"
+                  
+                >
+                  <span class="post-nav__label">下一篇</span>
+                  <span class="post-nav__title">音乐 | 2018年令我印象深刻的J-POP</span>
+                </a>
+              
+            </nav>
+          
+        </article>
+      </section>
+    </div>
+  </section>
+
+  <section class="post-about-band">
+    <svg class="post-divider post-divider--content" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"></path>
+    </svg>
+    <div class="post-about-band__inner">
+      <section class="post-about" aria-label="关于年糕">
+  <div class="post-about__figure">
+    <div class="post-about__figure-card">
+      <img
+        class="post-about__image"
+        src="/images/mochi_real.png"
+        alt="年糕的个人形象照"
+      />
+    </div>
+  </div>
+
+  <div class="post-about__content">
+    <p class="post-about__eyebrow">ABOUT THE GARDENER</p>
+    <div class="post-about__header">
+      <h2 class="post-about__name">年糕</h2>
+      <div class="post-about__channels" aria-label="社交平台">
+        
+          <a href="/#about">小红书</a>
+        
+          <a href="/#about">B站</a>
+        
+          <a href="/#about">微信公众号</a>
+        
+      </div>
+    </div>
+    <p class="post-about__bio">年糕是一个喜欢把代码、灵感和日常心情慢慢种进花园里的人。会写点前端，做点设计，也认真记录那些看起来不盛大、但会在以后发芽的小事。</p>
+  </div>
+</section>
+
+    </div>
+  </section>
+</main>
+
+
+    <footer class="site-footer site-footer--post">
+  <div class="site-footer__inner">
+    <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
+    <p class="site-footer__copy">© 2026 Mochi Garden. All rights reserved.</p>
+  </div>
+</footer>
+
+    <script src="/vendor/gsap/gsap.min.js"></script>
+<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+
+<script src="/js/main.js"></script>
+
+  </body>
+</html>

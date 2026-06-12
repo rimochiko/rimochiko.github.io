@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta
+  name="description"
+  content="&lt;p&gt;众所周知，Unity可以产出兼容各个平台的游戏软件，这里咱虽然还是一个Unity入门者，可以先从底层来了解一下Unity为何能做到这种能力，这背后其实还挺有意思，因为它可能会涵盖很多计算机的基础知识。本文的一些信息主要是从Unity3D脚本编程这本书里学习来的。&lt;/p&gt;"
+/>
+<title>Unity跨平台原理 | 年糕的编绳花园</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
+  rel="stylesheet"
+/>
+<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
+<link rel="stylesheet" href="/css/style.css" />
+
+
+  <meta name="generator" content="Hexo 7.3.0"></head>
+  <body class="post-page">
+    <div
+      class="site-loading"
+      aria-live="polite"
+      aria-label="页面加载中"
+      data-sprite-src="/images/tech/girl_read_sprite.png"
+      data-frame-count="2"
+    >
+      <div class="site-loading__inner">
+        <div class="site-loading__girl" aria-hidden="true"></div>
+        <p class="site-loading__text">LOADING...</p>
+        <div class="site-loading__progress" aria-hidden="true">
+          <span class="site-loading__progress-bar"></span>
+        </div>
+      </div>
+    </div>
+    <svg class="visual-defs" aria-hidden="true" width="0" height="0">
+      <defs>
+        <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.018"
+            numOctaves="2"
+            seed="8"
+            result="noise"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="noise"
+            scale="18"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
+      </defs>
+    </svg>
+    
+<header class="site-header">
+  <a
+    class="site-logo is-small"
+    href="/"
+    aria-label="返回年糕的编绳花园首页"
+    data-default-logo="/images/logo.png"
+    data-small-logo="/images/logo_small.png"
+  >
+    <img src="/images/logo_small.png" alt="年糕的编绳花园" />
+  </a>
+
+  <button
+    class="menu-toggle"
+    type="button"
+    aria-label="打开菜单"
+    aria-expanded="false"
+    aria-controls="site-menu"
+  >
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <div class="site-menu-overlay" hidden>
+    <div class="site-menu-page">
+      <nav id="site-menu" class="site-menu" aria-label="主菜单">
+        
+          <a href="/#home">HOME</a>
+        
+          <a href="/#work">WORK</a>
+        
+          <a href="/#tech">TECH</a>
+        
+          <a href="/#diary">DIARY</a>
+        
+          <a href="/#about">ABOUT</a>
+        
+      </nav>
+    </div>
+  </div>
+</header>
+
+    
+<main class="post-shell post-shell--detail">
+  <section class="post-journal-band">
+    <div class="post-journal">
+      <section class="post-hero-band">
+        <div class="post-hero post-hero--no-cover" aria-labelledby="post-title">
+          
+
+          <div class="post-hero__content">
+            <span class="post-hero__eyebrow">DIARY LOG</span>
+            <span class="post-hero__date">2022.08.22</span>
+            <h1 id="post-title" class="post-title post-title--decorated">
+              <img
+                class="post-title__decor"
+                src="/images/decorates/flower2.png"
+                alt=""
+                aria-hidden="true"
+              />
+              <span>Unity跨平台原理</span>
+            </h1>
+            <div class="post-meta" aria-label="文章信息">
+              <span>阅读约 5 分钟</span>
+              <span>#Unity</span>
+              <span>#博客</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="post-content-band">
+        <article class="post-main">
+          <div class="post-body-shell">
+            <div class="post-body post-body--entry"><p>众所周知，Unity可以产出兼容各个平台的游戏软件，这里咱虽然还是一个Unity入门者，可以先从底层来了解一下Unity为何能做到这种能力，这背后其实还挺有意思，因为它可能会涵盖很多计算机的基础知识。本文的一些信息主要是从Unity3D脚本编程这本书里学习来的。</p>
+<span id="more"></span>
+<p>在Unity初期，它只支持在Macbook上运行和生产，但是随着移动端的普及，他们的团队意识到强依赖平台的基座会阻碍他们的推广和进展，存在很多新的开发量以及很难跟随时代的变化，所以他们选择底层采用Mono去进行了一次改造，让底层依赖与具体平台的关系剥离开，更好的做到跨平台。</p>
+<h1 id="关于Mono"><a href="#关于Mono" class="headerlink" title="关于Mono"></a>关于Mono</h1><p>Mono这个框架本质是对CIL（通用中间语言）的实现，CIL也叫做MSIL（微软中间语言），它可以在任何支持CLI（通用语言基础结构）的环境中运行，比如.NET就是对这个标准的实现。我们说的IOS、安卓、windows、Mac OS都支持它，所以使用它也就能达到跨平台的能力了。</p>
+<p>Mono主要由四个部分组成：</p>
+<ul>
+<li>C#编译器</li>
+<li>Mono运行时</li>
+<li>基础类库（同.NET兼容）</li>
+<li>Mono类库（Mono自己拓展的一些类库）</li>
+</ul>
+<h1 id="Mono运行时"><a href="#Mono运行时" class="headerlink" title="Mono运行时"></a>Mono运行时</h1><p>C#编译器（MCS）作用是把C#编译为ECMA CIL的字节码，之后需要Mono运行时的编译器把这个码转译为原生码（也就是操作系统直接可以读取的代码）。<br>Mono运行时提供三种转译方式：</p>
+<ul>
+<li>即时编译 Just-in-time</li>
+<li>提前编译 Ahead-of-time AOT</li>
+<li>完全静态编译 full-ahead-of-time Full-AOT</li>
+</ul>
+<h1 id="脚本机制"><a href="#脚本机制" class="headerlink" title="脚本机制"></a>脚本机制</h1><p>很早的时候我们只能用一种编程语言去实现游戏，但是我们知道游戏是一种对性能要求很高的东西，我们用C&#x2F;C++之类的语言去开发软件的性能会更高，但是如果用一些高级解释语言，因为要花费时间去翻译，所以它的性能比不上C&#x2F;C++。<br>我们常见的语言：</p>
+<ul>
+<li>汇编语言</li>
+<li>C、C++（编译型静态不安全语言）</li>
+<li>C#、Java（编译型静态安全语言）</li>
+<li>Python、Perl、JavaScript（解释型动态安全语言）<br>我们知道从上而下，速度肯定是越来越慢的，但是对我们来说，写高级的语言其实开发效率会高很多！<br>所以我们是不是有一种方法，可以结合性能和开发效率，从而做到一举两得？<br>于是脚本机制就诞生了~~应用的引擎由有经验的人员用C、C++开发，具体项目的功能就用高级语言去开发。Mono就提供了这种机质的实现可能性，允许开发者使用JIT编译的代码作为他们的应用拓展。而对Unity来说，它的引擎本体就是使用C、C++开发的，而我们则是通过脚本去实现我们游戏的具体功能。</li>
+</ul>
+<h1 id="Unity的脚本机质实现"><a href="#Unity的脚本机质实现" class="headerlink" title="Unity的脚本机质实现"></a>Unity的脚本机质实现</h1><p>我们假设我们拥有了一个用C、C++写好的Unity应用，然后我们把Mono运行时引入——把libmono和应用链接，链接的过程需要使用pkg-config工具，应用就获取了一个完全的虚拟机运行环境——一个可执行的文件。<br>Mono的嵌入接口会把Mono运行时暴露给Unity，这样开发者就可以去控制Mono，Mono初始化OK后，就要把CIL的代码加载进来。此时地址内容就成为：C、C++代码（非托管代码）-Mono运行时-托管代码。<br>比如我们新建了一个HelloWord.cs文件，我们使用Mono的C#编译器将它转换为一个DLL文件，然后我们就在Unity.cpp里通过调用Mono的运行时去加载执行这个DLL文件。</p>
+<p>剩下的更复杂的内容&gt;_&lt;就等我再多熟悉和学习Unity后再补充吧~</p>
+</div>
+          </div>
+
+          
+            <nav class="post-nav" aria-label="文章切换">
+              
+                <a
+                  href="/posts/life-20221023-beihai/"
+                  
+                >
+                  <span class="post-nav__label">上一篇</span>
+                  <span class="post-nav__title">游记 | 北海环行</span>
+                </a>
+              
+              
+                <a
+                  href="/posts/tech-20230422-ws/"
+                  
+                >
+                  <span class="post-nav__label">下一篇</span>
+                  <span class="post-nav__title">WebSocket那些事</span>
+                </a>
+              
+            </nav>
+          
+        </article>
+      </section>
+    </div>
+  </section>
+
+  <section class="post-about-band">
+    <svg class="post-divider post-divider--content" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"></path>
+    </svg>
+    <div class="post-about-band__inner">
+      <section class="post-about" aria-label="关于年糕">
+  <div class="post-about__figure">
+    <div class="post-about__figure-card">
+      <img
+        class="post-about__image"
+        src="/images/mochi_real.png"
+        alt="年糕的个人形象照"
+      />
+    </div>
+  </div>
+
+  <div class="post-about__content">
+    <p class="post-about__eyebrow">ABOUT THE GARDENER</p>
+    <div class="post-about__header">
+      <h2 class="post-about__name">年糕</h2>
+      <div class="post-about__channels" aria-label="社交平台">
+        
+          <a href="/#about">小红书</a>
+        
+          <a href="/#about">B站</a>
+        
+          <a href="/#about">微信公众号</a>
+        
+      </div>
+    </div>
+    <p class="post-about__bio">年糕是一个喜欢把代码、灵感和日常心情慢慢种进花园里的人。会写点前端，做点设计，也认真记录那些看起来不盛大、但会在以后发芽的小事。</p>
+  </div>
+</section>
+
+    </div>
+  </section>
+</main>
+
+
+    <footer class="site-footer site-footer--post">
+  <div class="site-footer__inner">
+    <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
+    <p class="site-footer__copy">© 2026 Mochi Garden. All rights reserved.</p>
+  </div>
+</footer>
+
+    <script src="/vendor/gsap/gsap.min.js"></script>
+<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+
+<script src="/js/main.js"></script>
+
+  </body>
+</html>

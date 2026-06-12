@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta
+  name="description"
+  content="一个把代码、灵感和日常慢慢种进花园里的 Hexo 博客。"
+/>
+<title>初识Unity | 年糕的编绳花园</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
+  rel="stylesheet"
+/>
+<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
+<link rel="stylesheet" href="/css/style.css" />
+
+
+  <meta name="generator" content="Hexo 7.3.0"></head>
+  <body class="post-page">
+    <div
+      class="site-loading"
+      aria-live="polite"
+      aria-label="页面加载中"
+      data-sprite-src="/images/tech/girl_read_sprite.png"
+      data-frame-count="2"
+    >
+      <div class="site-loading__inner">
+        <div class="site-loading__girl" aria-hidden="true"></div>
+        <p class="site-loading__text">LOADING...</p>
+        <div class="site-loading__progress" aria-hidden="true">
+          <span class="site-loading__progress-bar"></span>
+        </div>
+      </div>
+    </div>
+    <svg class="visual-defs" aria-hidden="true" width="0" height="0">
+      <defs>
+        <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.018"
+            numOctaves="2"
+            seed="8"
+            result="noise"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="noise"
+            scale="18"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
+      </defs>
+    </svg>
+    
+<header class="site-header">
+  <a
+    class="site-logo is-small"
+    href="/"
+    aria-label="返回年糕的编绳花园首页"
+    data-default-logo="/images/logo.png"
+    data-small-logo="/images/logo_small.png"
+  >
+    <img src="/images/logo_small.png" alt="年糕的编绳花园" />
+  </a>
+
+  <button
+    class="menu-toggle"
+    type="button"
+    aria-label="打开菜单"
+    aria-expanded="false"
+    aria-controls="site-menu"
+  >
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <div class="site-menu-overlay" hidden>
+    <div class="site-menu-page">
+      <nav id="site-menu" class="site-menu" aria-label="主菜单">
+        
+          <a href="/#home">HOME</a>
+        
+          <a href="/#work">WORK</a>
+        
+          <a href="/#tech">TECH</a>
+        
+          <a href="/#diary">DIARY</a>
+        
+          <a href="/#about">ABOUT</a>
+        
+      </nav>
+    </div>
+  </div>
+</header>
+
+    
+<main class="post-shell post-shell--detail">
+  <section class="post-journal-band">
+    <div class="post-journal">
+      <section class="post-hero-band">
+        <div class="post-hero" aria-labelledby="post-title">
+          
+          <div class="post-hero__visual">
+            <div class="post-hero__photo-frame">
+              <img
+                class="post-hero__image"
+                src="/pimgs/unity/%E5%9B%BE%E7%89%873.png"
+                alt="初识Unity头图"
+              />
+            </div>
+          </div>
+          
+
+          <div class="post-hero__content">
+            <span class="post-hero__eyebrow">DIARY LOG</span>
+            <span class="post-hero__date">2022.05.22</span>
+            <h1 id="post-title" class="post-title post-title--decorated">
+              <img
+                class="post-title__decor"
+                src="/images/decorates/flower2.png"
+                alt=""
+                aria-hidden="true"
+              />
+              <span>初识Unity</span>
+            </h1>
+            <div class="post-meta" aria-label="文章信息">
+              <span>阅读约 11 分钟</span>
+              <span>#Unity</span>
+              <span>#博客</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="post-content-band">
+        <article class="post-main">
+          <div class="post-body-shell">
+            <div class="post-body post-body--entry"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>游戏像是一个异次元时空的存在，它有自己的世界观，人物和生存规则。作为一个普通的前端开发，我们可能对游戏编程概念没有很系统化的认识，虽然可能会接触一些轻量级的H5游戏，但它可能很难承载一个大型复杂的游戏世界。前辈们早就用自己的经验，产出了一套成熟且优秀的的游戏设计思想。这些思想都可以在Unity这款软件上面被发现。<br>我认为Unity是一个十分优秀的存在，它实现了游戏开发的低代码，把复杂的游戏开发化繁为简，要知道想要完全复原我们所在世界的运作是十分复杂的，光是模型的重力与碰撞效果、光照的反射等就会听着让人头疼了。这款软件的交互也设计也十分优秀，很大程度上通过UI交互操作代替了很多复杂代码的开发。<br>那么，学习Unity有什么用处呢？我认为有以下几点：<br>1.能学习到游戏设计的思想和概念。理解了游戏里这套常见的理论体系后，我们以后用H5的游戏引擎开发就会十分容易上手和好理解了。另外，我们学习了一种新的设计思想，可以帮助拓展我们思考和解决其他类似问题的思路。<br>2.学习和体验一个优秀低代码平台的设计。Unity是一个很优秀的低代码开发平台，虽然他出生的时候还没有低代码这样的概念，但是它把底层很多复杂的东西都进行了包装，大大降低了开发者的开发门槛和成本。另外Unity里也有一些优秀的可视化编程插件，甚至能直接实现无代码开发。<br>3.能对计算机图形学进行一定了解。游戏的运行和图像的渲染是分不开关系的，想要作出高级且性能优秀的游戏，学习计算机图形学也是必不可少的环节。直接学习计算机图形学可能会比较干燥，我们可以在做游戏的过程中慢慢体会里面的概念。<br>4.能更有效的学习物理和数学。游戏世界和物理数学也是紧密关联的，在这里你可能需要尽可能的还原和模仿真实世界的动作和效果，于是就不得不对一些物理概念进行理解和运用。图形和不同材质的渲染计算也与数学矩阵关系密切，在这里我们看不懂的高数线性代数，终于能派上用场（为什么我没有早点碰到它!!!）。<br>5.温习英语。Unity的教程和资源在国内实在是不太好找，且很多都需要氪金才能拿到，目前很多优秀的课程基本都是外网的大佬们制作的，所以你不得不接触一些英文的课程。其次Unity这个软件里会有很多单词和概念频繁出现，游戏的内容也可能涉及各行各业，所以相比一般的代码开发，你可能会需要接触更多的英语。<br>6.掌握一门进行创作的方式。制作游戏其实也是一种实现自己脑海里内容的一种方式，就和写小说、拍视频等其实是一样的，但是不同的是游戏可以让我们更有沉浸和体验感，这种丰富度和精神满足感的层次会更高。<br><img src="/pimgs/unity/%E5%9B%BE%E7%89%871.png" alt="请输入图片描述"></p>
+<h1 id="下载和安装Unity"><a href="#下载和安装Unity" class="headerlink" title="下载和安装Unity"></a>下载和安装Unity</h1><p>首先我们要做的就是安装Unity，工具在手，后面的事情都好说。Unity的下载和安装门槛极其低，直接在官方上下载即可，Unity的软件包含两个部分：<br>1.Unity 软件本体：用它来开发我们的游戏<br>2.Unity Hub：一个用来管理Unity软件版本，和工程项目的工具，我们要运行和使用Unity，必须要通过它来触发。<br><img src="/pimgs/unity/%E5%9B%BE%E7%89%875.png" alt="请输入图片描述"><br>Unity的安装比较简单，且容易理解，不像我们web开发时npm install命令管理，它会直接用Unity Hub来帮你完成所有安装的繁琐工程，不用担心版本依赖的问题。<br>另外最重要的，如果我们只是学习，可以直接申请免费的准可证，这点真的非常好。当然如果我们要做自己的游戏并上架到商店，还是得自己花钱买，但是价格也不算贵。</p>
+<h1 id="走进游戏的世界"><a href="#走进游戏的世界" class="headerlink" title="走进游戏的世界"></a>走进游戏的世界</h1><p>如果你要为游戏开发者们打造一个制作游戏的工具，会怎么去抽象设计来满足大家游戏制作的需求呢？每当我们学习一个新框架或思想的时候，你总会发现很多人一开始就摆出一些概念性的东西，但是你可能很难理解为什么要有这样概念的存在，其实这些都是设计的同学在自己的解决方案背景下进行了更系统化抽象得出来的结论。<br>前面我提到的——游戏就像是另一个真实的世界，如果我们希望这个世界呈现在“你”的眼前，其实它就很像一个电影作品，所以可以把它和拍电影结合起来进行类比。<br><img src="/pimgs/unity/%E5%9B%BE%E7%89%873.png" alt="请输入图片描述"></p>
+<h2 id="场景-Scene"><a href="#场景-Scene" class="headerlink" title="场景 Scene"></a>场景 Scene</h2><p>就像电影可能会有很多不同的拍摄场地一样，我们也为游戏定义了类似的概念，它就是场景 Scene，每个场景都可以是独立的，也可以把它们组合拼装起来。它里面可以放置很多不同的角色物体。<br>当你进入Unity界面，你就会发现它默认会为我们创建一个场景，我们就在这个场景下添加我们的物理内容，完成我们的游戏。<br><img src="/pimgs/unity/%E5%9B%BE%E7%89%874.png" alt="请输入图片描述"></p>
+<h2 id="相机-Camera"><a href="#相机-Camera" class="headerlink" title="相机 Camera"></a>相机 Camera</h2><p>有了电影的拍摄场地，必不可少的自然是摄像机。在游戏开发里，相机决定了游戏体验者的能看到的视角和结果。在3D的场景下，新开发的同学可能会被相机弄懵逼，我开始也会经常迷糊为什么游戏结果里不是自己所希望的。我们需要先弄清楚Unity里面的坐标系。<br>我们知道游戏一般分为3D和2D的，在Unity里刚开始创建工程时你是可以选择是做3D还是2D游戏。<br><img src="/pimgs/unity/%E5%9B%BE%E7%89%875.png" alt="请输入图片描述"><br>在3D世界里，我们一般情况有左手和右手坐标轴两种体系，都是由x、y和z轴组成。<br>我们拿出自己的两只小手，给大拇指、食指和中指分被赋予x、y和z的标记，然后只要作出三根手指两两垂直的手势，就可以得到我们的坐标系：<br><img src="/pimgs/unity/%E5%9B%BE%E7%89%876.png" alt="请输入图片描述"><br><img src="/pimgs/unity/%E5%9B%BE%E7%89%877.png" alt="请输入图片描述"><br>左手和右手坐标系的区别主要是三个方向组合的结果区别，我们可以改变我们手的转向，然后尽量把两个坐标轴进行平行对比，会发现其实它们的区别就在于有一根轴的方向是相对相反的。这两种坐标系在计算机图形学的领域里都有友人使用，而在Unity里面，使用的是左手坐标系。我们可以在Unity的界面里看到这个坐标系：<br><img src="/pimgs/unity/%E5%9B%BE%E7%89%878.png" alt="请输入图片描述"><br>而一般情况我们理解的2D屏幕坐标系就是我们数学课本上常用的：<br><img src="/pimgs/unity/%E5%9B%BE%E7%89%879.png" alt="请输入图片描述"><br>但是在Unity里面默认还是3D的坐标系，因为实际上2D游戏是3D游戏的一个子集。<br><img src="/pimgs/unity/%E5%9B%BE%E7%89%8710.png" alt="请输入图片描述"><br>在上图中其实画的其实是一种透视（Perspective）成像，它就和我们真实的眼睛或者相机拍出来的视角是一样的，它会拥有近大远小，近实远虚的效果。除了这种模式，相机还可以是直线投影（Orthographic），这种就类似我们高中做数学几何体里画的模式和方法是一样的。我们可以在相机里找到投影属性（Projection）来设置投影的模式。<br><img src="/pimgs/unity/%E5%9B%BE%E7%89%8711.png" alt="请输入图片描述"><br><img src="/pimgs/unity/%E5%9B%BE%E7%89%8713.png" alt="请输入图片描述"><br><img src="/pimgs/unity/%E5%9B%BE%E7%89%8712.png" alt="请输入图片描述"></p>
+<h2 id="物体-GameObject"><a href="#物体-GameObject" class="headerlink" title="物体 GameObject"></a>物体 GameObject</h2><p>有了拍摄场地和相机后，自然不能怠慢我们电影的男女主角。在Unity里，游戏里不管是相机、不同角色人物，还是花花草草都被称为是物体 （GameObject），所谓“万物皆为物体”——它可以是实质性的人物对象，也可以是没有实际意思、只是承担了C#脚本的空物体。<br>每个物体都是由不同的组件（Component）组合而成的，这种组件类似于插件一样，可以对物体赋予某种功能，或是对属性进行拓展，也正是因为这样的设计，Unity实际也是一个十分灵活的软件，你可以添加和拓展很多自己的功能。<br><img src="/pimgs/unity/%E5%9B%BE%E7%89%8714.png" alt="请输入图片描述"><br>GameObject都会用拥有一个叫做Transform的组件，你在创建一个GameObject时就会自动带上。它的作用是指定物体的所在的位置，旋转方向以及缩放比例。因为Transform是物体一定存在的组件，所以一般情况在代码里也有很多利用Transform来寻找到GameObject本体的写法。<br><img src="/pimgs/unity/%E5%9B%BE%E7%89%8715.png" alt="请输入图片描述"><br>其他常用的组件还有诸如刚体组件（Rigibody）——它可以让物体拥有物理性质，如质量等，有了这个基础，就可以使用碰撞器组件（Collider）——它可以让你和其他拥有碰撞器的物体进行碰撞接触的动力学模拟，帮助你节省很多呈现效果的开发成本，这些我们都会在后面的学习里详细接触。</p>
+<h1 id="章结尾"><a href="#章结尾" class="headerlink" title="章结尾"></a>章结尾</h1><p>在了解上面的几个概念后，我们就能算是入门了。你会发现其实这些东西在前端领域也有很多类似的概念，比如：Three.js——因为这几个概念其实都是图形学里产出的概念。如果你还学习体验过建模软件，像C4D——它的结果渲染阶段和游戏的运行原理及过程都是类似相通的。<br>下一章我们就可以开始接触和使用Unity，并带着这些概念在软件里找到对应的内容。</p>
+</div>
+          </div>
+
+          
+            <nav class="post-nav" aria-label="文章切换">
+              
+                <a
+                  href="/posts/work-drawlife-2022/"
+                  
+                >
+                  <span class="post-nav__label">上一篇</span>
+                  <span class="post-nav__title">2022~2023-年糕の生活漫画集合</span>
+                </a>
+              
+              
+                <a
+                  href="/posts/life-20211115-luxun/"
+                  
+                >
+                  <span class="post-nav__label">下一篇</span>
+                  <span class="post-nav__title">游记 | 追随迅哥的脚步</span>
+                </a>
+              
+            </nav>
+          
+        </article>
+      </section>
+    </div>
+  </section>
+
+  <section class="post-about-band">
+    <svg class="post-divider post-divider--content" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"></path>
+    </svg>
+    <div class="post-about-band__inner">
+      <section class="post-about" aria-label="关于年糕">
+  <div class="post-about__figure">
+    <div class="post-about__figure-card">
+      <img
+        class="post-about__image"
+        src="/images/mochi_real.png"
+        alt="年糕的个人形象照"
+      />
+    </div>
+  </div>
+
+  <div class="post-about__content">
+    <p class="post-about__eyebrow">ABOUT THE GARDENER</p>
+    <div class="post-about__header">
+      <h2 class="post-about__name">年糕</h2>
+      <div class="post-about__channels" aria-label="社交平台">
+        
+          <a href="/#about">小红书</a>
+        
+          <a href="/#about">B站</a>
+        
+          <a href="/#about">微信公众号</a>
+        
+      </div>
+    </div>
+    <p class="post-about__bio">年糕是一个喜欢把代码、灵感和日常心情慢慢种进花园里的人。会写点前端，做点设计，也认真记录那些看起来不盛大、但会在以后发芽的小事。</p>
+  </div>
+</section>
+
+    </div>
+  </section>
+</main>
+
+
+    <footer class="site-footer site-footer--post">
+  <div class="site-footer__inner">
+    <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
+    <p class="site-footer__copy">© 2026 Mochi Garden. All rights reserved.</p>
+  </div>
+</footer>
+
+    <script src="/vendor/gsap/gsap.min.js"></script>
+<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+
+<script src="/js/main.js"></script>
+
+  </body>
+</html>

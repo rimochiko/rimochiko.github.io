@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta
+  name="description"
+  content="&lt;h1 id=&#34;回溯法の定义&#34;&gt;&lt;a href=&#34;#回溯法の定义&#34; class=&#34;headerlink&#34; title=&#34;回溯法の定义&#34;&gt;&lt;/a&gt;回溯法の定义&lt;/h1&gt;&lt;blockquote&gt;
+&lt;p&gt;回溯法（探索与回溯法）是一种选优搜索法，又称为试探法，按选优条件向前搜索，以达到目标。但当探索到某一步时，发现原先选择并不优或达不到目标，就退回一步重新选择，这种走不通就退回再走的技术为回溯法。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;以上来自百度百科。&lt;/p&gt;"
+/>
+<title>回溯法小结 | 年糕的编绳花园</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
+  rel="stylesheet"
+/>
+<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
+<link rel="stylesheet" href="/css/style.css" />
+
+
+  <meta name="generator" content="Hexo 7.3.0"></head>
+  <body class="post-page">
+    <div
+      class="site-loading"
+      aria-live="polite"
+      aria-label="页面加载中"
+      data-sprite-src="/images/tech/girl_read_sprite.png"
+      data-frame-count="2"
+    >
+      <div class="site-loading__inner">
+        <div class="site-loading__girl" aria-hidden="true"></div>
+        <p class="site-loading__text">LOADING...</p>
+        <div class="site-loading__progress" aria-hidden="true">
+          <span class="site-loading__progress-bar"></span>
+        </div>
+      </div>
+    </div>
+    <svg class="visual-defs" aria-hidden="true" width="0" height="0">
+      <defs>
+        <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.018"
+            numOctaves="2"
+            seed="8"
+            result="noise"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="noise"
+            scale="18"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
+      </defs>
+    </svg>
+    
+<header class="site-header">
+  <a
+    class="site-logo is-small"
+    href="/"
+    aria-label="返回年糕的编绳花园首页"
+    data-default-logo="/images/logo.png"
+    data-small-logo="/images/logo_small.png"
+  >
+    <img src="/images/logo_small.png" alt="年糕的编绳花园" />
+  </a>
+
+  <button
+    class="menu-toggle"
+    type="button"
+    aria-label="打开菜单"
+    aria-expanded="false"
+    aria-controls="site-menu"
+  >
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <div class="site-menu-overlay" hidden>
+    <div class="site-menu-page">
+      <nav id="site-menu" class="site-menu" aria-label="主菜单">
+        
+          <a href="/#home">HOME</a>
+        
+          <a href="/#work">WORK</a>
+        
+          <a href="/#tech">TECH</a>
+        
+          <a href="/#diary">DIARY</a>
+        
+          <a href="/#about">ABOUT</a>
+        
+      </nav>
+    </div>
+  </div>
+</header>
+
+    
+<main class="post-shell post-shell--detail">
+  <section class="post-journal-band">
+    <div class="post-journal">
+      <section class="post-hero-band">
+        <div class="post-hero post-hero--no-cover" aria-labelledby="post-title">
+          
+
+          <div class="post-hero__content">
+            <span class="post-hero__eyebrow">DIARY LOG</span>
+            <span class="post-hero__date">2019.03.12</span>
+            <h1 id="post-title" class="post-title post-title--decorated">
+              <img
+                class="post-title__decor"
+                src="/images/decorates/flower2.png"
+                alt=""
+                aria-hidden="true"
+              />
+              <span>回溯法小结</span>
+            </h1>
+            <div class="post-meta" aria-label="文章信息">
+              <span>阅读约 7 分钟</span>
+              <span>#算法</span>
+              <span>#博客</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="post-content-band">
+        <article class="post-main">
+          <div class="post-body-shell">
+            <div class="post-body post-body--entry"><h1 id="回溯法の定义"><a href="#回溯法の定义" class="headerlink" title="回溯法の定义"></a>回溯法の定义</h1><blockquote>
+<p>回溯法（探索与回溯法）是一种选优搜索法，又称为试探法，按选优条件向前搜索，以达到目标。但当探索到某一步时，发现原先选择并不优或达不到目标，就退回一步重新选择，这种走不通就退回再走的技术为回溯法。</p>
+</blockquote>
+<p>以上来自百度百科。</p>
+<span id="more"></span>
+
+<h1 id="回溯法の解空间"><a href="#回溯法の解空间" class="headerlink" title="回溯法の解空间"></a>回溯法の解空间</h1><p>就是要<strong>找出这个问题所有的解</strong>，在这些解里面<strong>筛选出最优解</strong>。<br>举个例子，0-1背包的问题，假设我们有A，B，C三个物品，我们要判断选择装进哪些物品。从我们的背包里没有任何东西开始，我们按顺序一个个物品来判断是不是把它装进去。那么我们就可能出现两种想法：<br><strong>想法一</strong><br>对每一个物品判断是装还是不装，然后画出一个不规范的的图：<br><img src="/pimgs/history/0069luTRgy1fo89f26fs8j30gz0avdg2.jpg" alt="图片描述"></p>
+<p>在这个图中，连线旁边的数字：1表示装入背包中，0表示不装入背包。第一层中，我们判断是否放入A，放入就是1那条岔路，反之是0那条岔路，所以很直观地，我们就可以得到所有可能出现的8个情况：</p>
+<pre><code>&#123;(1,1,1),(1,1,0),(1,0,1),(1,0,0),(0,1,1),(0,1,0),(0,0,1),(0,0,0)&#125;
+</code></pre>
+<p><strong>想法二</strong><br>我们假设自己一开始要从三个里面选一个来装入，所以就有了：<br><img src="/pimgs/history/0069luTRgy1fo89f285oej30ef08pq2z.jpg" alt="图片描述"></p>
+<p>（但是01背包问题并不适合用这种方法来解，所以这里就是与上面的树做一个对比）<br>如上图则表示，我们从A,B,C三个中先选择一个装入，如果第一轮选择了A，那么剩下就还有选择B或者C</p>
+<p>而想法一的想法，其实就能形成一颗<strong>子集树</strong>，它在每次选择的时候，是在一个有限选择集合S里面进行选择，01背包中，这个S就是{0,1}，而想法二能形成一颗排列树，它在每次进行选择的时候是在给出的选项S中作选择，这里是{A,B,C}。<br>所以回溯法的写法，也有两种，<strong>子集树的写法和排列树的写法，做题的时候要自己选择更加合适的方法来解决。</strong></p>
+<h1 id="回溯法の公式"><a href="#回溯法の公式" class="headerlink" title="回溯法の公式"></a>回溯法の公式</h1><p>每种算法都可以选择递归和迭代的方式来写，显然这里用迭代方式来写是很麻烦的，可以说也没有人选择这样的方法，所以我们都采用递归来写。</p>
+<p><strong>子集树写法</strong><br>我们的目的就是要遍历子集树上的每个解法，为了判断每一个解对不对，所以我们应该是深度遍历，所以我们需要：t（树的深度）,数组x（每一层的结果选择）。先写出中心的遍历函数：</p>
+<pre><code>void backtrack(int t)&#123;
+    if(t&gt;=n)&#123; 
+           output();   //此时已到达叶子结点，用于输出一个结果
+           return;
+    &#125;
+    
+    //对分叉点遍历0,1两种情况    
+    for(int i=0;i&lt;=1;i++)&#123;
+        x[t]=i;  //给第t层代表的选择赋可能选择的值
+        if(ok(t))  
+            //ok是判断目前的一个解有可行的机会 
+            backtrack(t+1);  
+    &#125;
+        
+&#125;
+</code></pre>
+<p>此时我们应该注意，x数组的初始值应该都为0。</p>
+<p><strong>排列树写法</strong><br>也和子集树一样要遍历子集树上的每个解法，我们同样需要：t（树的深度）,数组x（每一层的结果选择）。写出中心的遍历函数：</p>
+<pre><code>void backtrack(int t)&#123;
+    if(t&gt;=n)&#123; 
+           output();   //此时已到达叶子结点，用于输出一个结果
+           return;
+    &#125;
+    
+    //从第t个单元开始进行交换排列  
+    for(int i=t;i&lt;n;i++)&#123;
+        swap(x[t],x[i]);  //交换两个排列顺序，得到了一个解
+        if(ok(t))  
+            //ok是判断目前的一个解有可行的机会 
+            backtrack(t+1);  
+        swap(x[t],x[i]);  //恢复原样，给后面的好继续交换判断
+    &#125;
+        
+&#125;
+</code></pre>
+<p>此时我们应该注意，因为排列树其实就是写出所有可能的排列，所以x数组里面每个单元的内容都应该是不一样的，我们在初始化的时候就应该依次赋予可能的解。<br>总结比较，在子集树的公式中，for循环中的i是<strong>可能的取值</strong>，排列树的公式中，for循环中的i是<strong>所有可能取值的存放位置</strong>。</p>
+<h1 id="举个栗子"><a href="#举个栗子" class="headerlink" title="举个栗子"></a>举个栗子</h1><p>n皇后问题，要求在一个n行n格的棋盘中摆放n个皇后，皇后不能在同一行，同一列或者同一斜线，我们要找出有多少个解法。这个问题，我们在选择x数组上，一个一维数组就足够用，下标表示在第几行，对应的值表示在第几列。<br><strong>子集树方法</strong>：<br>假如n&#x3D;4，初始化x数组中每个取值为0，那么我们的for循环中i可能有0,1,2,3四种选择，然后就是填写ok()函数，根据约束的条件可知，ok()函数里应该填写判断</p>
+<blockquote>
+<p>皇后不能在同一行，同一列或者同一斜线</p>
+</blockquote>
+<p><img src="/pimgs/history/0069luTRgy1fo89f4zxb5j306p06dt8j.jpg" alt="图片描述"></p>
+<p><strong>排列树方法</strong>：<br>假如n&#x3D;4，初始化x数组中每个取值为0,1,2,3，ok函数也和子集树一样，我们的for循环中i也可能有0,1,2,3四种选择，因为是采用了交换，不出现两个重复的值，所以和子集树相比，走过的路要少一些。<br><img src="/pimgs/history/0069luTRgy1fo89f50kcej305z05p743.jpg" alt="图片描述"></p>
+<h1 id="效率の提高"><a href="#效率の提高" class="headerlink" title="效率の提高"></a>效率の提高</h1><p>为了提高算法的效率，我们可以从ok()函数来入手：</p>
+<ol>
+<li>计算简单</li>
+<li>剪枝多（避免走行不通的路）</li>
+</ol>
+<p>但是这两个条件是互相矛盾的。</p>
+<h1 id="最后…"><a href="#最后…" class="headerlink" title="最后…"></a>最后…</h1><p>这是一个挣扎的小渣渣写的文章，所以可能会有错误，各位大佬多指教QAQ</p>
+</div>
+          </div>
+
+          
+            <nav class="post-nav" aria-label="文章切换">
+              
+                <a
+                  href="/posts/tech-20190401-three-material/"
+                  
+                >
+                  <span class="post-nav__label">上一篇</span>
+                  <span class="post-nav__title">Three.js材料篇</span>
+                </a>
+              
+              
+                <a
+                  href="/posts/tech-20190222-three/"
+                  
+                >
+                  <span class="post-nav__label">下一篇</span>
+                  <span class="post-nav__title">Three.js自学碎碎叨（下）</span>
+                </a>
+              
+            </nav>
+          
+        </article>
+      </section>
+    </div>
+  </section>
+
+  <section class="post-about-band">
+    <svg class="post-divider post-divider--content" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"></path>
+    </svg>
+    <div class="post-about-band__inner">
+      <section class="post-about" aria-label="关于年糕">
+  <div class="post-about__figure">
+    <div class="post-about__figure-card">
+      <img
+        class="post-about__image"
+        src="/images/mochi_real.png"
+        alt="年糕的个人形象照"
+      />
+    </div>
+  </div>
+
+  <div class="post-about__content">
+    <p class="post-about__eyebrow">ABOUT THE GARDENER</p>
+    <div class="post-about__header">
+      <h2 class="post-about__name">年糕</h2>
+      <div class="post-about__channels" aria-label="社交平台">
+        
+          <a href="/#about">小红书</a>
+        
+          <a href="/#about">B站</a>
+        
+          <a href="/#about">微信公众号</a>
+        
+      </div>
+    </div>
+    <p class="post-about__bio">年糕是一个喜欢把代码、灵感和日常心情慢慢种进花园里的人。会写点前端，做点设计，也认真记录那些看起来不盛大、但会在以后发芽的小事。</p>
+  </div>
+</section>
+
+    </div>
+  </section>
+</main>
+
+
+    <footer class="site-footer site-footer--post">
+  <div class="site-footer__inner">
+    <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
+    <p class="site-footer__copy">© 2026 Mochi Garden. All rights reserved.</p>
+  </div>
+</footer>
+
+    <script src="/vendor/gsap/gsap.min.js"></script>
+<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+
+<script src="/js/main.js"></script>
+
+  </body>
+</html>

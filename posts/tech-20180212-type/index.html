@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta
+  name="description"
+  content="&lt;h1 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;此篇小结来源与《你不知道的JavaScript》和《JavaScript高级程序设计》的结合？？或许是的，龟速总结中…&lt;/p&gt;"
+/>
+<title>JavaScriptの类型 | 年糕的编绳花园</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
+  rel="stylesheet"
+/>
+<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
+<link rel="stylesheet" href="/css/style.css" />
+
+
+  <meta name="generator" content="Hexo 7.3.0"></head>
+  <body class="post-page">
+    <div
+      class="site-loading"
+      aria-live="polite"
+      aria-label="页面加载中"
+      data-sprite-src="/images/tech/girl_read_sprite.png"
+      data-frame-count="2"
+    >
+      <div class="site-loading__inner">
+        <div class="site-loading__girl" aria-hidden="true"></div>
+        <p class="site-loading__text">LOADING...</p>
+        <div class="site-loading__progress" aria-hidden="true">
+          <span class="site-loading__progress-bar"></span>
+        </div>
+      </div>
+    </div>
+    <svg class="visual-defs" aria-hidden="true" width="0" height="0">
+      <defs>
+        <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.018"
+            numOctaves="2"
+            seed="8"
+            result="noise"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="noise"
+            scale="18"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
+      </defs>
+    </svg>
+    
+<header class="site-header">
+  <a
+    class="site-logo is-small"
+    href="/"
+    aria-label="返回年糕的编绳花园首页"
+    data-default-logo="/images/logo.png"
+    data-small-logo="/images/logo_small.png"
+  >
+    <img src="/images/logo_small.png" alt="年糕的编绳花园" />
+  </a>
+
+  <button
+    class="menu-toggle"
+    type="button"
+    aria-label="打开菜单"
+    aria-expanded="false"
+    aria-controls="site-menu"
+  >
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <div class="site-menu-overlay" hidden>
+    <div class="site-menu-page">
+      <nav id="site-menu" class="site-menu" aria-label="主菜单">
+        
+          <a href="/#home">HOME</a>
+        
+          <a href="/#work">WORK</a>
+        
+          <a href="/#tech">TECH</a>
+        
+          <a href="/#diary">DIARY</a>
+        
+          <a href="/#about">ABOUT</a>
+        
+      </nav>
+    </div>
+  </div>
+</header>
+
+    
+<main class="post-shell post-shell--detail">
+  <section class="post-journal-band">
+    <div class="post-journal">
+      <section class="post-hero-band">
+        <div class="post-hero post-hero--no-cover" aria-labelledby="post-title">
+          
+
+          <div class="post-hero__content">
+            <span class="post-hero__eyebrow">DIARY LOG</span>
+            <span class="post-hero__date">2018.02.12</span>
+            <h1 id="post-title" class="post-title post-title--decorated">
+              <img
+                class="post-title__decor"
+                src="/images/decorates/flower2.png"
+                alt=""
+                aria-hidden="true"
+              />
+              <span>JavaScriptの类型</span>
+            </h1>
+            <div class="post-meta" aria-label="文章信息">
+              <span>阅读约 7 分钟</span>
+              <span>#JavaScript</span>
+              <span>#博客</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="post-content-band">
+        <article class="post-main">
+          <div class="post-body-shell">
+            <div class="post-body post-body--entry"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>此篇小结来源与《你不知道的JavaScript》和《JavaScript高级程序设计》的结合？？或许是的，龟速总结中…</p>
+<span id="more"></span>
+
+<p>#七种内置类型</p>
+<ol>
+<li>null</li>
+<li>undefined</li>
+<li>boolean</li>
+<li>number</li>
+<li>string</li>
+<li>object</li>
+<li>symbol</li>
+</ol>
+<p>除了object，其他都成为<strong>基本类型</strong>。<br>变量没有类型，值才有。<br>typeof总返回一个字符串。</p>
+<h1 id="null"><a href="#null" class="headerlink" title="null"></a>null</h1><p><strong>类型检测</strong><br>因为typeof检测null的结果为object，所以在判断的时候需要这样判断：</p>
+<pre><code>var a = null;
+(!a &amp;&amp; typeof null === &quot;object&quot;); //true
+</code></pre>
+<h1 id="undefined"><a href="#undefined" class="headerlink" title="undefined"></a>undefined</h1><p><strong>类型检测</strong></p>
+<pre><code>typeof undefined === &quot;undefined&quot;; //true
+</code></pre>
+<p>变量未持有值是undefined，但并不是未声明，不过下面结果都是undefined：</p>
+<pre><code>var a;
+typeof a;  //&quot;undefined&quot;
+typeof b;  //&quot;undefined&quot;
+</code></pre>
+<p><strong>安全防范</strong><br>防止出现直接抛出未声明的错误，不能直接用if(变量)的方法来判断变量是不是存在，可以用以下两种方法：</p>
+<pre><code>if(typeof DEGUB  !== &quot;undefined&quot;) &#123;&#125;
+if(window.DEBUG) &#123;&#125;
+</code></pre>
+<h1 id="boolean"><a href="#boolean" class="headerlink" title="boolean"></a>boolean</h1><p><strong>类型检测</strong></p>
+<pre><code>typeof true === &quot;boolean&quot;; //true
+</code></pre>
+<h1 id="number"><a href="#number" class="headerlink" title="number"></a>number</h1><p><strong>类型检测</strong></p>
+<pre><code>typeof 42 === &quot;number&quot;; //true
+</code></pre>
+<p>JS并没有真正意义上的整数，使用双精度格式（64位），42.0等同于42。</p>
+<p><strong>数字表示</strong></p>
+<ol>
+<li>默认十进制表示，小数最后的0被省略。</li>
+<li>特别大和特别小的用指数显示，与用toExponential()结果相同。</li>
+<li>数字前面的0可省略。</li>
+<li>小数点后小数最后的0也可以省略。</li>
+<li>调用Number.prototype的方法：toFixed()显示小数位数。</li>
+<li>调用Number.prototype的方法：toPrecision()指定有效数位的显示位数。</li>
+</ol>
+<p><em>注意：运算符会优先认为是有效数字字符</em></p>
+<pre><code>42.toFixed(3); //SynataxError
+(42).toFiex(3); //42.000
+0.42.toFixed(3); //0.420
+42..toFixed(3); //0.420
+42 .toFixed(3); //42.000
+</code></pre>
+<h1 id="string"><a href="#string" class="headerlink" title="string"></a>string</h1><p><strong>类型检测</strong></p>
+<pre><code>typeof &quot;42&quot; === &quot;string&quot;; //true
+</code></pre>
+<p><strong>字符串和字符串数组</strong></p>
+<ol>
+<li><p>都是类数组，有length属性，有indexOf()和concat()方法。</p>
+</li>
+<li><p>字符串不可变（创建返回新值），数组可变，但a[i]在老版本IE中不允许，正确用a.CharAt(i)。</p>
+</li>
+<li><p>字符串可以借用方法处理，如：Arrray.prototype.join.call(a,’-‘);</p>
+</li>
+<li><p>数组有reverse()方法，字符串没有。可以用以下方法（对复杂字符如Unicode、星号不适用）:</p>
+<p> var c&#x3D;a.split().reverse().join(‘’);</p>
+</li>
+</ol>
+<h1 id="object"><a href="#object" class="headerlink" title="object"></a>object</h1><h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p><strong>类型检测</strong><br>function是object的子类型，其length属性为参数个数，但是typeof判断结果有function：</p>
+<pre><code>type of function a()&#123;&#125; === &quot;function&quot;; //true
+</code></pre>
+<h2 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h2><p><strong>类型检测</strong><br>数组也是object的子类型</p>
+<pre><code>type of [1,2,3] === &quot;object&quot;; //true
+</code></pre>
+<p><strong>类数组转换</strong><br>1.slice()常用于把类数组转换为数组:</p>
+<pre><code>Array.prototype.slice.call(arguments);
+</code></pre>
+<p>2.ES6中的Array.from(arguments)实现相同作用。</p>
+<p><strong>注意点</strong><br>delete可以把元素删除，但length并不会发生变化。</p>
+<h1 id="symbol"><a href="#symbol" class="headerlink" title="symbol"></a>symbol</h1><p><strong>类型检测</strong></p>
+<pre><code>typeof Symbol() === &quot;symbol&quot;; //true
+</code></pre>
+</div>
+          </div>
+
+          
+            <nav class="post-nav" aria-label="文章切换">
+              
+                <a
+                  href="/posts/tech-20180202-closure/"
+                  
+                >
+                  <span class="post-nav__label">上一篇</span>
+                  <span class="post-nav__title">JavaScriptの闭包</span>
+                </a>
+              
+              
+                <a
+                  href="/posts/life-20180210-res/"
+                  
+                >
+                  <span class="post-nav__label">下一篇</span>
+                  <span class="post-nav__title">生活 | 大三上学期小结</span>
+                </a>
+              
+            </nav>
+          
+        </article>
+      </section>
+    </div>
+  </section>
+
+  <section class="post-about-band">
+    <svg class="post-divider post-divider--content" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"></path>
+    </svg>
+    <div class="post-about-band__inner">
+      <section class="post-about" aria-label="关于年糕">
+  <div class="post-about__figure">
+    <div class="post-about__figure-card">
+      <img
+        class="post-about__image"
+        src="/images/mochi_real.png"
+        alt="年糕的个人形象照"
+      />
+    </div>
+  </div>
+
+  <div class="post-about__content">
+    <p class="post-about__eyebrow">ABOUT THE GARDENER</p>
+    <div class="post-about__header">
+      <h2 class="post-about__name">年糕</h2>
+      <div class="post-about__channels" aria-label="社交平台">
+        
+          <a href="/#about">小红书</a>
+        
+          <a href="/#about">B站</a>
+        
+          <a href="/#about">微信公众号</a>
+        
+      </div>
+    </div>
+    <p class="post-about__bio">年糕是一个喜欢把代码、灵感和日常心情慢慢种进花园里的人。会写点前端，做点设计，也认真记录那些看起来不盛大、但会在以后发芽的小事。</p>
+  </div>
+</section>
+
+    </div>
+  </section>
+</main>
+
+
+    <footer class="site-footer site-footer--post">
+  <div class="site-footer__inner">
+    <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
+    <p class="site-footer__copy">© 2026 Mochi Garden. All rights reserved.</p>
+  </div>
+</footer>
+
+    <script src="/vendor/gsap/gsap.min.js"></script>
+<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+
+<script src="/js/main.js"></script>
+
+  </body>
+</html>

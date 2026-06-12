@@ -1,186 +1,303 @@
-<!doctype html>
-<html lang="zh-cn">
-<head>
-	<meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <!--Description-->
-    
-        <meta name="description" content="愿你有一个好心情~^-^">
-    
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta
+  name="description"
+  content="一个把代码、灵感和日常慢慢种进花园里的 Hexo 博客。"
+/>
+<title>年糕的编绳花园</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
+  rel="stylesheet"
+/>
+<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
+<link rel="stylesheet" href="/css/style.css" />
 
-    <!--Author-->
-    
-        <meta name="author" content="阿糕">
-    
 
-    <!-- Title -->
+  <meta name="generator" content="Hexo 7.3.0"></head>
+  <body class="">
+    <div
+      class="site-loading"
+      aria-live="polite"
+      aria-label="页面加载中"
+      data-sprite-src="/images/tech/girl_read_sprite.png"
+      data-frame-count="2"
+    >
+      <div class="site-loading__inner">
+        <div class="site-loading__girl" aria-hidden="true"></div>
+        <p class="site-loading__text">LOADING...</p>
+        <div class="site-loading__progress" aria-hidden="true">
+          <span class="site-loading__progress-bar"></span>
+        </div>
+      </div>
+    </div>
+    <svg class="visual-defs" aria-hidden="true" width="0" height="0">
+      <defs>
+        <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.018"
+            numOctaves="2"
+            seed="8"
+            result="noise"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="noise"
+            scale="18"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
+      </defs>
+    </svg>
     
-    <title>计算机网络 | 阿糕家后院</title>
-    <!--[if lt IE 9]>
-        <script src="http://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
-        <script src="http://cdn.staticfile.org/respond.js/1.3.0/respond.min.js"></script>
-        <![endif]-->
-    <!-- Custom CSS -->
+<header class="site-header">
+  <a
+    class="site-logo is-small"
+    href="/"
+    aria-label="返回年糕的编绳花园首页"
+    data-default-logo="/images/logo.png"
+    data-small-logo="/images/logo_small.png"
+  >
+    <img src="/images/logo_small.png" alt="年糕的编绳花园" />
+  </a>
+
+  <button
+    class="menu-toggle"
+    type="button"
+    aria-label="打开菜单"
+    aria-expanded="false"
+    aria-controls="site-menu"
+  >
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <div class="site-menu-overlay" hidden>
+    <div class="site-menu-page">
+      <nav id="site-menu" class="site-menu" aria-label="主菜单">
+        
+          <a href="/#home">HOME</a>
+        
+          <a href="/#work">WORK</a>
+        
+          <a href="/#tech">TECH</a>
+        
+          <a href="/#diary">DIARY</a>
+        
+          <a href="/#about">ABOUT</a>
+        
+      </nav>
+    </div>
+  </div>
+</header>
+
     
-<link rel="stylesheet" href="/css/style.css">
+<main class="post-shell post-shell--archive">
+  <section class="post-hero-band">
+    <div class="post-hero" aria-labelledby="post-title">
+      <div class="post-hero__content archive-hero__content">
+        <span class="post-hero__eyebrow">ARCHIVE</span>
+        <span class="post-hero__date">
+          58 篇文章
+        </span>
+        <h1 id="post-title" class="post-title">花园归档</h1>
+        <div class="post-meta" aria-label="归档信息">
+          <span>按时间浏览全部文章</span>
+          
+        </div>
+      </div>
+    </div>
+  </section>
 
-	<link href="https://cdn.bootcss.com/animate.css/3.5.2/animate.css" rel="stylesheet">
-    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
-    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
-<meta name="generator" content="Hexo 7.3.0"></head>
-<body class="mck-body animated fadeIn">
-    <div class="mck-loading" id="loading-container">
-        <div class="mck-loading-item">
-            <div class="mck-loading-text">
-                <span class="mck-loading-textcontent">正在努力加载中...</span>
-            </div>
-        </div>
-    </div>
-    <div class="mck-sidebar">
-        <canvas id="floating"></canvas>
-        <div class="mck-logo">
-            <img src="https://www.mochiko.cn/mcimages/logo.png" />
-        </div>
-        <div class="mck-menu">
-            <div class="mck-menu__collapse" id="mck-menu__collapse">
-                <span class="mck-menu__collapse_line"></span>
-                <span class="mck-menu__collapse_line"></span>
-            </div>
-            <div class="mck-menu__normal">
-                <div class="mck-menu-item">
-                    <a href="/">HOME</a>
-                </div>
-                <div class="mck-menu-item">
-                    <a href="/work/index.html">WORK</a>
-                </div>
-                <div class="mck-menu-item">
-                    <a href="/tech/index.html">TECH</a>
-                </div>
-                <div class="mck-menu-item">
-                    <a href="/life/index.html">LIFE</a>
-                </div>
-                <div class="mck-menu-item">
-                    <a href="/link/index.html">LINK</a>
-                </div>
-                <div class="mck-menu-item">
-                    <a href="/map/index.html" class="mck-menu-item__new">
-                        <img src="https://www.mochiko.cn/mcimages/emoji1.png" class="mck-menu-item__new_icon animated bounce"/>TRAVEL
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="mck-footer">
-            <div class="mck-footer-text">MOCHIKO ❤ Since 2017</div>
-            <div class="mck-footer-text" id="busuanzi_container_site_pv">你是第<span id="busuanzi_value_site_pv"></span>个光临的童鞋！</div>
-        </div>
-    </div><!--header end-->
-	<!--main begin-->
-	<div class="mck-main">
-		<div class="mck-single-page">
-			<div class="mck-single-page-header mck-single-page-header__tags">
-			   <div class="mck-single-page-title">
-				   <p class="mck-single-page-title__main">标签 / TAGS</p>
-				   <p class="mck-single-page-title__sub">凑合看看你会发现这个人爱好真的很杂...</p>
-			   </div>
-			   <div class="mck-single-page-cover mck-single-page-cover__tags">
-				   <div class="mck-singe-page-cover__dialog animated bounce">＞﹏＜拒绝随便贴标签</div>
-			   </div>
-			</div>
-			<div class="mck-single-page-content_side">
-				<div class="mck-single-page-content__left"><div class="mck-single-page-header mck-single-page-header__filter">
-	<div class="mck-single-pgae-header__filter_title">
-		<img src="https://www.mochiko.cn/mcimages/search.png" class="mck-single-pgae-header__filter_icon"/>
-		「计算机网络」的搜索结果：
-	</div>
-	</div>
-	
-			<div class="mck-single-page-content mck-single-pgae-content__filter">
-    <a class="mck-single-pgae-content__filter_title" href="[object Object].url" target="_blank">
-        WebSocket那些事
-    </a>
-    <div class="mck-single-pgae-content__filter_desc">
-        诶，这里面或许没有写什么文字呢(⊙﹏⊙)？...
-    </div>
-    <div class="mck-single-pgae-content__filter_date">于 2022-08-22 投稿</div>
- </div>
-	
-			<div class="mck-single-page-content mck-single-pgae-content__filter">
-    <a class="mck-single-pgae-content__filter_title" href="[object Object].url" target="_blank">
-        传输层的小结
-    </a>
-    <div class="mck-single-pgae-content__filter_desc">
-        前言本文是复习原来的课本《计算机网络（第6版）》而总结出来的梳理思维的小笔记，因为内容也比较多，一次是整理不完了，所以又是慢慢补坑。若有错误欢迎提出(ง•_•)
-    </div>
-    <div class="mck-single-pgae-content__filter_date">于 2019-05-07 投稿</div>
- </div>
-	
-			<div class="mck-single-page-content mck-single-pgae-content__filter">
-    <a class="mck-single-pgae-content__filter_title" href="[object Object].url" target="_blank">
-        初识HTTPS
-    </a>
-    <div class="mck-single-pgae-content__filter_desc">
-        前言我就是那块迟钝の糕同学，我一直都只知道HTTPS是HTTP+SSL&#x2F;TLS两种协议共同构成的，但是对于其中的机制，可以说是很多环节都充满了各种疑问
-    </div>
-    <div class="mck-single-pgae-content__filter_date">于 2018-11-21 投稿</div>
- </div>
-	
-			<div class="mck-single-page-content mck-single-pgae-content__filter">
-    <a class="mck-single-pgae-content__filter_title" href="[object Object].url" target="_blank">
-        一个由POST和URL引发的一系列提问
-    </a>
-    <div class="mck-single-pgae-content__filter_desc">
-        我带着心中的“愤怒”，终于写完JAVAWEB作业。终于可以学点想学的只是啦，然后突然碰到了一个童鞋问的问题，结果发生了这是一个连锁反应。
-    </div>
-    <div class="mck-single-pgae-content__filter_date">于 2018-03-01 投稿</div>
- </div>
-	
-			<div class="mck-single-page-content mck-single-pgae-content__filter">
-    <a class="mck-single-pgae-content__filter_title" href="[object Object].url" target="_blank">
-        《图解HTTP》小结+实践理解
-    </a>
-    <div class="mck-single-pgae-content__filter_desc">
-        前言计算机网络课程的学习已经是在大二下学期的时候了，过去了半年多，有很多东西似乎都忘记了QAQ。况且当时上课的时候就感觉专业术语多，很多知识也难以理解，但是还是
-    </div>
-    <div class="mck-single-pgae-content__filter_date">于 2018-02-09 投稿</div>
- </div>
-	
-	<div class="mck-article-more">
-	<span class="page-number current">1</span>
-</div>
-</div>
-				<div class="mck-single-page-content mck-single-page-content__tags">
-					<a href="/tags/AI/" style="font-size: 16px;">AI</a> <a href="/tags/CSS/" style="font-size: 18.67px;">CSS</a> <a href="/tags/HTML/" style="font-size: 16px;">HTML</a> <a href="/tags/J-POP/" style="font-size: 17.33px;">J-POP</a> <a href="/tags/JavaScript/" style="font-size: 24px;">JavaScript</a> <a href="/tags/React-Native/" style="font-size: 16px;">React Native</a> <a href="/tags/Three-js/" style="font-size: 18.67px;">Three.js</a> <a href="/tags/Unity/" style="font-size: 17.33px;">Unity</a> <a href="/tags/WEBGL/" style="font-size: 16px;">WEBGL</a> <a href="/tags/cocos/" style="font-size: 17.33px;">cocos</a> <a href="/tags/p5-js/" style="font-size: 16px;">p5.js</a> <a href="/tags/vue-js/" style="font-size: 16px;">vue.js</a> <a href="/tags/%E4%B8%AD%E7%94%B0%E5%BA%B7%E8%B4%B5/" style="font-size: 16px;">中田康贵</a> <a href="/tags/%E4%BA%A7%E5%93%81%E8%AE%BE%E8%AE%A1/" style="font-size: 16px;">产品设计</a> <a href="/tags/%E5%8C%97%E4%BA%AC%E5%8D%B0%E8%B1%A1/" style="font-size: 20px;">北京印象</a> <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 17.33px;">浏览器</a> <a href="/tags/%E6%B8%B8%E6%88%8F/" style="font-size: 17.33px;">游戏</a> <a href="/tags/%E6%B8%B8%E8%AE%B0/" style="font-size: 20px;">游记</a> <a href="/tags/%E7%94%BB%E7%94%BB/" style="font-size: 18.67px;">画画</a> <a href="/tags/%E7%A2%8E%E7%A2%8E%E5%BF%B5/" style="font-size: 22.67px;">碎碎念</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 16px;">算法</a> <a href="/tags/%E7%BC%96%E7%A8%8B%E9%A1%B9%E7%9B%AE/" style="font-size: 18.67px;">编程项目</a> <a href="/tags/%E7%BF%BB%E8%AF%91/" style="font-size: 16px;">翻译</a> <a href="/tags/%E8%89%BA%E6%9C%AF%E7%BC%96%E7%A8%8B/" style="font-size: 17.33px;">艺术编程</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="font-size: 21.33px;">计算机网络</a> <a href="/tags/%E9%9F%B3%E4%B9%90/" style="font-size: 18.67px;">音乐</a>
-				</div>
-			</div>
-		  </div>
-    </div>
-	<!--footer begin-->
-    <script async src="/js/busuanzi.js"></script>
-    <script>
-    $(document).ready(function () {
-        setTimeout(() => {
-            $('#loading-container').fadeOut();
-        }, 2000);
+  <section class="post-content-band">
+    <article class="post-main">
+      <div class="post-body-shell">
+        <div class="post-body archive-showcase">
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="/posts/tech-20230422-ws/"
+              aria-label="查看文章：WebSocket那些事"
+              
+            >
+              
 
-        $('#mck-menu__collapse').click(function() {
-            var menu = $('.mck-menu__normal');
-            if (menu.hasClass('opened')) {
-                $(this).removeClass('opened')
-                menu.removeClass('opened')
-            } else {
-                $(this).addClass('opened')
-                menu.addClass('opened')
-            }
-        })
-    })
-    </script>
-    <script src="https://cdn.bootcdn.net/ajax/libs/prettify/r298/prettify.min.js"></script>
-    <script type="text/javascript">
-        jQuery(document).ready(function () {
-        jQuery("pre").addClass("prettyprint linenums");
-        prettyPrint();
-        });
-    </script>
-    <script async src="/js/sakura.js"></script>
-</body>
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">WebSocket那些事</h2>
+                <p class="archive-card__excerpt">
+                  我对WebSocket的了解与阐述。 它出现の背景 我们知道HTTP 1.0一个请求建立，就需要经历一次TCP连接，这样会导致三次握手和四次挥手的重复成本较多。 所以在HTTP 1.1的时候出现了keep-alive这个
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2022</span>
+                    <span class="archive-card__day">08.22</span>
+                  </div>
+                  <span class="archive-card__tag">#计算机网络</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="/posts/tech-20190507-tcp/"
+              aria-label="查看文章：传输层的小结"
+              
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">传输层的小结</h2>
+                <p class="archive-card__excerpt">
+                  前言 本文是复习原来的课本《计算机网络（第6版）》而总结出来的梳理思维的小笔记，因为内容也比较多，一次是整理不完了，所以又是慢慢补坑。若有错误欢迎提出(ง •_•)ง。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2019</span>
+                    <span class="archive-card__day">05.07</span>
+                  </div>
+                  <span class="archive-card__tag">#计算机网络</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="/posts/tech-20181121-https/"
+              aria-label="查看文章：初识HTTPS"
+              
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">初识HTTPS</h2>
+                <p class="archive-card__excerpt">
+                  前言 我就是那块迟钝の糕同学，我一直都只知道HTTPS是HTTP+SSL&amp;#x2F;TLS两种协议共同构成的，但是对于其中的机制，可以说是很多环节都充满了各种疑问。这个学期我们开了信息安全课，可惜老师只是讲了一些加密的算
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2018</span>
+                    <span class="archive-card__day">11.21</span>
+                  </div>
+                  <span class="archive-card__tag">#计算机网络</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="/posts/tech-20180301-post/"
+              aria-label="查看文章：一个由POST和URL引发的一系列提问"
+              
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">一个由POST和URL引发的一系列提问</h2>
+                <p class="archive-card__excerpt">
+                  我带着心中的“愤怒”，终于写完JAVA WEB作业。终于可以学点想学的只是啦，然后突然碰到了一个童鞋问的问题，结果发生了这是一个连锁反应。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2018</span>
+                    <span class="archive-card__day">03.01</span>
+                  </div>
+                  <span class="archive-card__tag">#计算机网络</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="/posts/tech-20180209-http/"
+              aria-label="查看文章：《图解HTTP》小结+实践理解"
+              
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">《图解HTTP》小结+实践理解</h2>
+                <p class="archive-card__excerpt">
+                  前言 计算机网络课程的学习已经是在大二下学期的时候了，过去了半年多，有很多东西似乎都忘记了QAQ。况且当时上课的时候就感觉专业术语多，很多知识也难以理解，但是还是硬着头皮学了下来，如今阅读《HTTP图解》这本书发现很好理
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2018</span>
+                    <span class="archive-card__day">02.09</span>
+                  </div>
+                  <span class="archive-card__tag">#计算机网络</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+
+          
+        </div>
+      </div>
+    </article>
+    <svg class="post-divider post-divider--content" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"></path>
+    </svg>
+  </section>
+
+  <section class="post-about" aria-label="关于年糕">
+  <div class="post-about__figure">
+    <div class="post-about__figure-card">
+      <img
+        class="post-about__image"
+        src="/images/mochi_real.png"
+        alt="年糕的个人形象照"
+      />
+    </div>
+  </div>
+
+  <div class="post-about__content">
+    <p class="post-about__eyebrow">ABOUT THE GARDENER</p>
+    <div class="post-about__header">
+      <h2 class="post-about__name">年糕</h2>
+      <div class="post-about__channels" aria-label="社交平台">
+        
+          <a href="/#about">小红书</a>
+        
+          <a href="/#about">B站</a>
+        
+          <a href="/#about">微信公众号</a>
+        
+      </div>
+    </div>
+    <p class="post-about__bio">年糕是一个喜欢把代码、灵感和日常心情慢慢种进花园里的人。会写点前端，做点设计，也认真记录那些看起来不盛大、但会在以后发芽的小事。</p>
+  </div>
+</section>
+
+</main>
+
+    <footer class="site-footer">
+  <div class="site-footer__inner">
+    <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
+    <p class="site-footer__copy">© 2026 Mochi Garden. All rights reserved.</p>
+  </div>
+</footer>
+
+    <script src="/vendor/gsap/gsap.min.js"></script>
+<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+
+<script src="/js/main.js"></script>
+
+  </body>
 </html>

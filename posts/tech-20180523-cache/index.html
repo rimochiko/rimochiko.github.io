@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta
+  name="description"
+  content="&lt;h1 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;继续挖坑啦，这个也是上次面试和面试官说了很多的一个问题来着，然后我来好好重新研究研究，试着来了解一下浏览器以及和它相关的一些的缓存机制。因为是坑，所以也是缓慢更新的，如果有错误欢迎提出哦！&lt;br&gt;文章部分是小结于《&lt;a href=&#34;https://book.douban.com/subject/25910556/&#34;&gt;WebKit技术内幕&lt;/a&gt;》这本书关于浏览器本地缓存的文字和&lt;strong&gt;尾部列出文章&lt;/strong&gt;的内容，然后HTTP相关的知识主要是来自于《&lt;a href=&#34;https://book.douban.com/subject/25863515/&#34;&gt;图解HTTP&lt;/a&gt;》这本书哦~&lt;/p&gt;"
+/>
+<title>浏览器の缓存机制 | 年糕的编绳花园</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
+  rel="stylesheet"
+/>
+<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
+<link rel="stylesheet" href="/css/style.css" />
+
+
+  <meta name="generator" content="Hexo 7.3.0"></head>
+  <body class="post-page">
+    <div
+      class="site-loading"
+      aria-live="polite"
+      aria-label="页面加载中"
+      data-sprite-src="/images/tech/girl_read_sprite.png"
+      data-frame-count="2"
+    >
+      <div class="site-loading__inner">
+        <div class="site-loading__girl" aria-hidden="true"></div>
+        <p class="site-loading__text">LOADING...</p>
+        <div class="site-loading__progress" aria-hidden="true">
+          <span class="site-loading__progress-bar"></span>
+        </div>
+      </div>
+    </div>
+    <svg class="visual-defs" aria-hidden="true" width="0" height="0">
+      <defs>
+        <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.018"
+            numOctaves="2"
+            seed="8"
+            result="noise"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="noise"
+            scale="18"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
+      </defs>
+    </svg>
+    
+<header class="site-header">
+  <a
+    class="site-logo is-small"
+    href="/"
+    aria-label="返回年糕的编绳花园首页"
+    data-default-logo="/images/logo.png"
+    data-small-logo="/images/logo_small.png"
+  >
+    <img src="/images/logo_small.png" alt="年糕的编绳花园" />
+  </a>
+
+  <button
+    class="menu-toggle"
+    type="button"
+    aria-label="打开菜单"
+    aria-expanded="false"
+    aria-controls="site-menu"
+  >
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <div class="site-menu-overlay" hidden>
+    <div class="site-menu-page">
+      <nav id="site-menu" class="site-menu" aria-label="主菜单">
+        
+          <a href="/#home">HOME</a>
+        
+          <a href="/#work">WORK</a>
+        
+          <a href="/#tech">TECH</a>
+        
+          <a href="/#diary">DIARY</a>
+        
+          <a href="/#about">ABOUT</a>
+        
+      </nav>
+    </div>
+  </div>
+</header>
+
+    
+<main class="post-shell post-shell--detail">
+  <section class="post-journal-band">
+    <div class="post-journal">
+      <section class="post-hero-band">
+        <div class="post-hero post-hero--no-cover" aria-labelledby="post-title">
+          
+
+          <div class="post-hero__content">
+            <span class="post-hero__eyebrow">DIARY LOG</span>
+            <span class="post-hero__date">2018.05.23</span>
+            <h1 id="post-title" class="post-title post-title--decorated">
+              <img
+                class="post-title__decor"
+                src="/images/decorates/flower2.png"
+                alt=""
+                aria-hidden="true"
+              />
+              <span>浏览器の缓存机制</span>
+            </h1>
+            <div class="post-meta" aria-label="文章信息">
+              <span>阅读约 10 分钟</span>
+              <span>#浏览器</span>
+              <span>#博客</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="post-content-band">
+        <article class="post-main">
+          <div class="post-body-shell">
+            <div class="post-body post-body--entry"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>继续挖坑啦，这个也是上次面试和面试官说了很多的一个问题来着，然后我来好好重新研究研究，试着来了解一下浏览器以及和它相关的一些的缓存机制。因为是坑，所以也是缓慢更新的，如果有错误欢迎提出哦！<br>文章部分是小结于《<a target="_blank" rel="noopener" href="https://book.douban.com/subject/25910556/">WebKit技术内幕</a>》这本书关于浏览器本地缓存的文字和<strong>尾部列出文章</strong>的内容，然后HTTP相关的知识主要是来自于《<a target="_blank" rel="noopener" href="https://book.douban.com/subject/25863515/">图解HTTP</a>》这本书哦~</p>
+<span id="more"></span>
+
+<h1 id="强缓存（本地）"><a href="#强缓存（本地）" class="headerlink" title="强缓存（本地）"></a>强缓存（本地）</h1><p>关于浏览器的本地缓存，<strong>我都以谷歌浏览器为核心开始搜集资料+测试啦</strong>！<br>查看谷歌浏览器中的本地缓存资源只要输入下面的地址就可以：</p>
+<pre><code>chrome://cache
+</code></pre>
+<p>就可以看到本地缓存的文件，一个个URL排列，点开一个URL，就可以显示这个缓存的具体内容：<br><img src="https://wx3.sinaimg.cn/mw1024/0076cOZ3gy1frmtv3m5erj30m80ifwhv.jpg" alt="图片描述"></p>
+<h2 id="浏览器资源"><a href="#浏览器资源" class="headerlink" title="浏览器资源"></a>浏览器资源</h2><p>常见的资源主要有：HTML、JavaScript、CSS、图片、SVG、CSS Shader、视频、音频和字幕、字体文件、XSL样式表。</p>
+<p>浏览器资源可以分为两类:</p>
+<ul>
+<li>主资源：HTML页面，或者下载项</li>
+<li>派生资源：比如HTML页面中内嵌的图片或者脚本链接</li>
+</ul>
+<p>在WebKit内核中，是用不同的类来表示它们，有一个公共父类叫做<code>CachedResource</code>，也很好理解，就是<code>缓存的资源</code>。由此对应的子类比如：<code>CachedCSSStyleSheet</code>缓存的CSS样式表等等，以此类推。但是HTML比较特殊，它对应的类叫做<code>CachedRawResource</code>。</p>
+<h2 id="资源加载器"><a href="#资源加载器" class="headerlink" title="资源加载器"></a>资源加载器</h2><p>WebKit有三种类型的加载器。</p>
+<ol>
+<li>每种资源类型的特定加载器：只加载一种特定的资源，比如<code>imageLoader</code>、<code>FontLoader</code>，当请求资源时，加载器来负责加载。</li>
+<li>缓存机制的资源加载器：所有特定加载器通过它（<code>CachedResourceLoader</code>类）查找并插入缓存资源。</li>
+<li>通用资源加载器：<code>ResourceLoader</code>类，WebKit需要从网络&#x2F;文件系统获取资源的时候由它负责。</li>
+</ol>
+<h2 id="请求过程"><a href="#请求过程" class="headerlink" title="请求过程"></a>请求过程</h2><p>浏览器在发起请求的时候，会先去获取缓存的信息，再来决定是否向服务器发起请求。<br>WebKit如果在资源池寻找资源：</p>
+<ul>
+<li>找到了，就会拿出来用；</li>
+<li>没找到，创建一个新的<code>CashedResource</code>子类对象，向服务器发送请求。收到资源后放入缓存中。（使用的是<code>LRU</code>算法来进行资源池资源的替换）</li>
+</ul>
+<p><strong>浏览器是根据URL来判断不同的缓存内容</strong><br>也就是假如有两个文件，虽然它们的文件可能是相同的，但只要URL不同，浏览器就不会认为是同一个，所以都会进行一次缓存。<br>实际操作一下，进入<code>localhost</code>和<code>127.0.0.1</code>来缓存一些东西：<br><img src="https://wx3.sinaimg.cn/mw1024/0076cOZ3gy1frmtv81nhrj30iy0gjjuf.jpg" alt="图片描述"><br><img src="https://wx4.sinaimg.cn/mw1024/0076cOZ3gy1frmtv7yfn0j30in0gi77c.jpg" alt="图片描述"><br>这个<code>meituce/images/logo.png</code>其实是同一张图，但是因为URL不一样，所以浏览器缓存了两次。</p>
+<p><strong>继续观察：</strong><br><img src="https://wx3.sinaimg.cn/mw1024/0076cOZ3gy1frmtv7m8n0j30m809yjsc.jpg" alt="图片描述"></p>
+<p>通过控制台可以看到资源主要有两种，而且对应文件类型不同，来源也不太一样，<strong>强缓存得到的状态码是200 OK</strong>：</p>
+<ul>
+<li>from memory cache（图片、脚本）</li>
+<li>from disk cache（css）</li>
+</ul>
+<h2 id="内存缓存-磁盘缓存"><a href="#内存缓存-磁盘缓存" class="headerlink" title="内存缓存&amp;磁盘缓存"></a>内存缓存&amp;磁盘缓存</h2><p><strong>内存缓存 Memory Cache</strong><br>放入内存中缓存，Webkit的内存缓存只是针对派生资源。</p>
+<p><strong>磁盘缓存 Disk Cache</strong><br>放入磁盘中缓存，访问时不需要重新下载资源，直接从磁盘中获取。WebKit中也只能存储一些派生类资源。<br>存储形式为一个index.dat文件：URL + Response信息 + Content内容。<br>Response信息用于判断服务器上该Url的Content内容是否被修改。</p>
+<p><strong>这两者的区别是</strong><br>退出浏览器进程时，内存缓存中的数据会被清空，而磁盘缓存的数据不会。</p>
+<p><strong>不严谨的实验：</strong><br><img src="https://wx3.sinaimg.cn/mw1024/0076cOZ3gy1frmtv7rhrdj30m8097wfh.jpg" alt="图片描述"><br>这个网站只有HTML是没有被缓存的，所以可以证实，派生资源被缓存到其中。<br>单独输入一个在原网页中缓存过的图片来获取，发现它不是从磁盘内存缓存中来：<br><img src="https://wx3.sinaimg.cn/mw1024/0076cOZ3gy1frmtv7rlugj30es014743.jpg" alt="图片描述"></p>
+<h2 id="HTTP相关请求字段"><a href="#HTTP相关请求字段" class="headerlink" title="HTTP相关请求字段"></a>HTTP相关请求字段</h2><h3 id="expires"><a href="#expires" class="headerlink" title="expires"></a>expires</h3><p><strong>来源版本</strong>：HTTP 1.0<br><strong>值</strong>：GMT格式的时间字符串<br><strong>判断方法</strong>：如果发送的时间在这个时间之前，就从本地读取缓存。</p>
+<pre><code>expires: Sun, 27 May 2018 09:15:15 GMT
+</code></pre>
+<h3 id="cache-control-max-age"><a href="#cache-control-max-age" class="headerlink" title="cache-control: max-age&#x3D;?"></a>cache-control: max-age&#x3D;?</h3><p><strong>来源版本</strong>：HTTP 1.1<br><strong>值</strong>：cache-control操控缓存的工作指令，不同指令通过<code>,</code>分隔开；其中指令max-age的值为一个数字，表示过期时间，单位是秒。<br><strong>判断方法</strong>：如果根据时间和max-age算出已经是&lt;&#x3D;0了，就说明时间超过了，需要从服务器去读取。</p>
+<pre><code>cache-control: max-age=691200
+</code></pre>
+<blockquote>
+<p>如果cache-control与expires同时存在的话，cache-control的优先级高于expires</p>
+</blockquote>
+<h1 id="协商缓存（经过服务器）"><a href="#协商缓存（经过服务器）" class="headerlink" title="协商缓存（经过服务器）"></a>协商缓存（经过服务器）</h1><p>这部分的内容就和HTTP的内容相关联了，主要是几个字段。<br>if-XXX这种字段称为条件匹配，即只有当结果为真时，服务器才会执行请求。<br><strong>协商缓存成功后得到的状态码是304 NOT MODIFIED</strong></p>
+<h2 id="HTTP相关请求字段-1"><a href="#HTTP相关请求字段-1" class="headerlink" title="HTTP相关请求字段"></a>HTTP相关请求字段</h2><h3 id="if-Match-if-None-Match"><a href="#if-Match-if-None-Match" class="headerlink" title="if-Match &#x2F; if-None-Match"></a>if-Match &#x2F; if-None-Match</h3><p><strong>来源版本</strong>：HTTP 1.1<br>这个要联系到一个响应字段<code>Etag</code>，即服务器会一开始返回一个<code>Etag</code>值，只有后面这个<code>E-tag</code>作为<code>if-Match</code>字段的值发送到服务器，服务器进行判断是否匹配，来确定是否过期。<br>若匹配不一致，返回412（Precondition Failed）状态码。<br>可以指定字段值为<code>*</code>，这样只要资源存在，服务器就会忽略<code>Etag</code>值。</p>
+<pre><code>If-Match: &quot;bfc13a64729c4290ef5b2c2730249c88ca92d82d&quot;
+</code></pre>
+<h3 id="if-Modified-Since-if-Unmodified-Since"><a href="#if-Modified-Since-if-Unmodified-Since" class="headerlink" title="if-Modified-Since &#x2F; if-Unmodified-Since"></a>if-Modified-Since &#x2F; if-Unmodified-Since</h3><p><strong>来源版本</strong>：HTTP 1.0<br>根据字面意思也可以知道，这是制定了一个时间，表示在这个时间后更改&#x2F;未更改。<br>它可以根据<code>Last-Modified</code>字段来确定是否符合要求。</p>
+<pre><code>If-Modified-Since: Wed, 21 Oct 2015 07:28:00 GMT
+</code></pre>
+<p><strong>既然有if-Modified-Since，为何又有Etag和if-Match？</strong></p>
+<ul>
+<li>文件可能会被修改，但内容不改变(改变只是修改时间)，而前者会再次重新获取。</li>
+<li>If-Modified-Since只能精确到秒。</li>
+<li>某些服务器不能精确文件的最后修改时间。</li>
+</ul>
+<h2 id="缓存服务器"><a href="#缓存服务器" class="headerlink" title="缓存服务器"></a>缓存服务器</h2><p>缓存服务器是代理服务器的一种，缓存服务器帮客户端转发资源的时候，自己也会保存一份。请求的资源如果已经被缓存，则直接返回。</p>
+<h1 id="其他补充"><a href="#其他补充" class="headerlink" title="其他补充"></a>其他补充</h1><p>还可以在谷歌控制台的Network面板，选择Disable cache来禁止使用缓存。<br><img src="https://wx2.sinaimg.cn/mw1024/0076cOZ3gy1frmtv7vwk6j30k1066gm3.jpg" alt="图片描述"></p>
+<h1 id="推荐文章"><a href="#推荐文章" class="headerlink" title="推荐文章"></a>推荐文章</h1><p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000011286027">由memoryCache和diskCache产生的浏览器缓存机制的思考</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/hursing/article/details/52635829">Web开发须知的浏览器内幕 缓存与存储篇</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/m632587166/article/details/50732205">memoryCache和diskCache流程详解</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/wonyun/p/5524617.html">http协商缓存VS强缓存</a></p>
+</div>
+          </div>
+
+          
+            <nav class="post-nav" aria-label="文章切换">
+              
+                <a
+                  href="/posts/tech-20180605-multientry/"
+                  
+                >
+                  <span class="post-nav__label">上一篇</span>
+                  <span class="post-nav__title">vue-cli项目打包为多页面</span>
+                </a>
+              
+              
+                <a
+                  href="/posts/tech-20180404-cross/"
+                  
+                >
+                  <span class="post-nav__label">下一篇</span>
+                  <span class="post-nav__title">跨域问题</span>
+                </a>
+              
+            </nav>
+          
+        </article>
+      </section>
+    </div>
+  </section>
+
+  <section class="post-about-band">
+    <svg class="post-divider post-divider--content" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"></path>
+    </svg>
+    <div class="post-about-band__inner">
+      <section class="post-about" aria-label="关于年糕">
+  <div class="post-about__figure">
+    <div class="post-about__figure-card">
+      <img
+        class="post-about__image"
+        src="/images/mochi_real.png"
+        alt="年糕的个人形象照"
+      />
+    </div>
+  </div>
+
+  <div class="post-about__content">
+    <p class="post-about__eyebrow">ABOUT THE GARDENER</p>
+    <div class="post-about__header">
+      <h2 class="post-about__name">年糕</h2>
+      <div class="post-about__channels" aria-label="社交平台">
+        
+          <a href="/#about">小红书</a>
+        
+          <a href="/#about">B站</a>
+        
+          <a href="/#about">微信公众号</a>
+        
+      </div>
+    </div>
+    <p class="post-about__bio">年糕是一个喜欢把代码、灵感和日常心情慢慢种进花园里的人。会写点前端，做点设计，也认真记录那些看起来不盛大、但会在以后发芽的小事。</p>
+  </div>
+</section>
+
+    </div>
+  </section>
+</main>
+
+
+    <footer class="site-footer site-footer--post">
+  <div class="site-footer__inner">
+    <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
+    <p class="site-footer__copy">© 2026 Mochi Garden. All rights reserved.</p>
+  </div>
+</footer>
+
+    <script src="/vendor/gsap/gsap.min.js"></script>
+<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+
+<script src="/js/main.js"></script>
+
+  </body>
+</html>

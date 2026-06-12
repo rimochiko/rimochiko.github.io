@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta
+  name="description"
+  content="&lt;h1 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;此文的内容主要是来自看书的总结+小小的实践哦~会不断更新总结。&lt;/p&gt;"
+/>
+<title>JavaScriptの闭包 | 年糕的编绳花园</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
+  rel="stylesheet"
+/>
+<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
+<link rel="stylesheet" href="/css/style.css" />
+
+
+  <meta name="generator" content="Hexo 7.3.0"></head>
+  <body class="post-page">
+    <div
+      class="site-loading"
+      aria-live="polite"
+      aria-label="页面加载中"
+      data-sprite-src="/images/tech/girl_read_sprite.png"
+      data-frame-count="2"
+    >
+      <div class="site-loading__inner">
+        <div class="site-loading__girl" aria-hidden="true"></div>
+        <p class="site-loading__text">LOADING...</p>
+        <div class="site-loading__progress" aria-hidden="true">
+          <span class="site-loading__progress-bar"></span>
+        </div>
+      </div>
+    </div>
+    <svg class="visual-defs" aria-hidden="true" width="0" height="0">
+      <defs>
+        <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.018"
+            numOctaves="2"
+            seed="8"
+            result="noise"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="noise"
+            scale="18"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
+      </defs>
+    </svg>
+    
+<header class="site-header">
+  <a
+    class="site-logo is-small"
+    href="/"
+    aria-label="返回年糕的编绳花园首页"
+    data-default-logo="/images/logo.png"
+    data-small-logo="/images/logo_small.png"
+  >
+    <img src="/images/logo_small.png" alt="年糕的编绳花园" />
+  </a>
+
+  <button
+    class="menu-toggle"
+    type="button"
+    aria-label="打开菜单"
+    aria-expanded="false"
+    aria-controls="site-menu"
+  >
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <div class="site-menu-overlay" hidden>
+    <div class="site-menu-page">
+      <nav id="site-menu" class="site-menu" aria-label="主菜单">
+        
+          <a href="/#home">HOME</a>
+        
+          <a href="/#work">WORK</a>
+        
+          <a href="/#tech">TECH</a>
+        
+          <a href="/#diary">DIARY</a>
+        
+          <a href="/#about">ABOUT</a>
+        
+      </nav>
+    </div>
+  </div>
+</header>
+
+    
+<main class="post-shell post-shell--detail">
+  <section class="post-journal-band">
+    <div class="post-journal">
+      <section class="post-hero-band">
+        <div class="post-hero post-hero--no-cover" aria-labelledby="post-title">
+          
+
+          <div class="post-hero__content">
+            <span class="post-hero__eyebrow">DIARY LOG</span>
+            <span class="post-hero__date">2018.02.22</span>
+            <h1 id="post-title" class="post-title post-title--decorated">
+              <img
+                class="post-title__decor"
+                src="/images/decorates/flower2.png"
+                alt=""
+                aria-hidden="true"
+              />
+              <span>JavaScriptの闭包</span>
+            </h1>
+            <div class="post-meta" aria-label="文章信息">
+              <span>阅读约 7 分钟</span>
+              <span>#JavaScript</span>
+              <span>#博客</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="post-content-band">
+        <article class="post-main">
+          <div class="post-body-shell">
+            <div class="post-body post-body--entry"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>此文的内容主要是来自看书的总结+小小的实践哦~会不断更新总结。</p>
+<span id="more"></span>
+
+<h1 id="什么是闭包"><a href="#什么是闭包" class="headerlink" title="什么是闭包"></a>什么是闭包</h1><p>书上是这样定义闭包的：</p>
+<blockquote>
+<p>有权访问另一个函数作用域中变量的函数。</p>
+</blockquote>
+<p>举一个例子：</p>
+<pre><code>function test()&#123;
+    var a = 1;
+    var b = function()&#123;
+        return a;   
+    &#125;;
+    return b;
+&#125;
+
+var c = test();
+console.log(c()); //1
+</code></pre>
+<p>这里c是直接得到了b这个函数表达式，但是调用c之后可以得到test的局部变量a的值1，也就是c它访问到了test作用域中的变量。<br>其实我初学的时候一直不清楚闭包的意思，因为我感觉这种情况是理所当然的，噗，后来才知道原来就是说这个啊。</p>
+<h1 id="为什么会产生闭包"><a href="#为什么会产生闭包" class="headerlink" title="为什么会产生闭包"></a>为什么会产生闭包</h1><p><strong>究其根本，是因为b代表的函数包含test的作用域。</strong><br>在某个函数被调用时会做下面这些事：</p>
+<ol>
+<li>创建一个执行环境。</li>
+<li>创建相应的作用域链（复制函数的[[Scope]]来完成）。</li>
+<li>初始化函数的活动对象（arguments和其他命名参数），并被推入作用域最顶端。</li>
+</ol>
+<p>而在作用域链中，外部函数的活动对象始终处于第二位，外部函数的外部函数的活动对象处于第三位…直到作为作用域链终点的全局执行环境。</p>
+<p><strong>举个栗子</strong></p>
+<pre><code>function test(value1,value2)&#123;
+    if(value1 &lt; value2)
+        return -1;
+    return 0;
+&#125;
+var result = test(5,10);
+</code></pre>
+<p>以上首先定义了test函数，又在全局作用域中调用它。<br>第一次调用时，会创建一个包含this、arguments、value1和value2的活动对象。<br>全局执行环境的变量（this、result、test）则处于test执行环境作用域链中的第二位。<br><img src="/pimgs/20180202closure/1.png" alt="图片描述"><br>每个执行环境都有一个表示变量的对象，称为变量对象。<br>全局环境的变量对象一直存在，test()函数局部环境的变量对象只有在执行的时候会存在。</p>
+<p>函数的作用域链是保存在内部的[[Scope]]属性中。<br><strong>作用域本质是一个指针列表，只保存引用</strong>。<br>以下是最初的栗子中test()的原型内容：<br><img src="/pimgs/20180202closure/2.png" alt="图片描述"><br>匿名函数执行结束后，它的执行环境被销毁了，但是返回的<strong>活动对象没有消失</strong>，所以闭包也不会消失，依旧存在内存中，如果给这个对象赋值null，就可以解除关系。</p>
+<h1 id="原来如此"><a href="#原来如此" class="headerlink" title="原来如此"></a>原来如此</h1><p>让我们瞅瞅这段熟悉的代码：</p>
+<pre><code>function test()&#123;
+    var result = new Array();
+    for(var i=0;i&lt;10;i++)&#123;
+        result[i] = function()&#123;
+            return i;
+        &#125;
+    &#125;
+    return result;
+&#125;
+</code></pre>
+<p>这个函数的实际结果是每个函数都返回了10，因为它们实际的i都是同一个。<br>解决方法是用匿名函数：</p>
+<pre><code>function test()&#123;
+    var result = new Array();
+    for(var i=0;i&lt;10;i++)&#123;
+        result[i] = function(num)(
+            return function()&#123;
+                return num;
+            &#125;
+        &#125;(i);
+    &#125;
+    return result;
+&#125;
+</code></pre>
+<p>由于中间多加上了一层，即每次把一个num值传入，所以内部的函数是形成了各自num的闭包，于是就没有像之前一样共用了。</p>
+<h1 id="拓展-关于this"><a href="#拓展-关于this" class="headerlink" title="拓展-关于this"></a>拓展-关于this</h1><p>确定this值的情况（以运行时给予函数的）主要有以下几种：</p>
+<ol>
+<li>全局函数中，this等于window。</li>
+<li>作为某个对象的方法调用时，this等于那个对象。</li>
+</ol>
+<p>看看例子：</p>
+<pre><code>var obj = &#123;
+    name: &quot;Bob&quot;,
+    getName: function()&#123;
+        return function()&#123;
+            return this.name;
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>这里有一个闭包，但是闭包在形成的时候获取它的this和arguments值只会停止搜索到活动对象，所以它不会把外部包裹的function里的this保存起来。调用obj.getName()()会得到this.name是undefined，因为obj.getName()得到的就是里面return的函数，再次调用，其实是window在调用这个函数，所以this是window。<br>如果改成以下代码：</p>
+<pre><code>var obj = &#123;
+    name: &quot;Bob&quot;,
+    getName: function()&#123;
+        var that = this;
+        return function()&#123;
+            return that.name;
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>就会按预期一样输出Bob，因为that保存了this值，而闭包的作用域包括了外部function里的变量，所以可以访问到这个值。</p>
+</div>
+          </div>
+
+          
+            <nav class="post-nav" aria-label="文章切换">
+              
+                <a
+                  href="/posts/tech-20180301-post/"
+                  
+                >
+                  <span class="post-nav__label">上一篇</span>
+                  <span class="post-nav__title">一个由POST和URL引发的一系列提问</span>
+                </a>
+              
+              
+                <a
+                  href="/posts/tech-20180212-type/"
+                  
+                >
+                  <span class="post-nav__label">下一篇</span>
+                  <span class="post-nav__title">JavaScriptの类型</span>
+                </a>
+              
+            </nav>
+          
+        </article>
+      </section>
+    </div>
+  </section>
+
+  <section class="post-about-band">
+    <svg class="post-divider post-divider--content" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"></path>
+    </svg>
+    <div class="post-about-band__inner">
+      <section class="post-about" aria-label="关于年糕">
+  <div class="post-about__figure">
+    <div class="post-about__figure-card">
+      <img
+        class="post-about__image"
+        src="/images/mochi_real.png"
+        alt="年糕的个人形象照"
+      />
+    </div>
+  </div>
+
+  <div class="post-about__content">
+    <p class="post-about__eyebrow">ABOUT THE GARDENER</p>
+    <div class="post-about__header">
+      <h2 class="post-about__name">年糕</h2>
+      <div class="post-about__channels" aria-label="社交平台">
+        
+          <a href="/#about">小红书</a>
+        
+          <a href="/#about">B站</a>
+        
+          <a href="/#about">微信公众号</a>
+        
+      </div>
+    </div>
+    <p class="post-about__bio">年糕是一个喜欢把代码、灵感和日常心情慢慢种进花园里的人。会写点前端，做点设计，也认真记录那些看起来不盛大、但会在以后发芽的小事。</p>
+  </div>
+</section>
+
+    </div>
+  </section>
+</main>
+
+
+    <footer class="site-footer site-footer--post">
+  <div class="site-footer__inner">
+    <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
+    <p class="site-footer__copy">© 2026 Mochi Garden. All rights reserved.</p>
+  </div>
+</footer>
+
+    <script src="/vendor/gsap/gsap.min.js"></script>
+<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+
+<script src="/js/main.js"></script>
+
+  </body>
+</html>

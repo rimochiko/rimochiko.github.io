@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta
+  name="description"
+  content="&lt;p&gt;我带着心中的“愤怒”，终于写完JAVA WEB作业。终于可以学点想学的只是啦，然后突然碰到了一个童鞋问的问题，结果发生了这是一个连锁反应。&lt;/p&gt;"
+/>
+<title>一个由POST和URL引发的一系列提问 | 年糕的编绳花园</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
+  rel="stylesheet"
+/>
+<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
+<link rel="stylesheet" href="/css/style.css" />
+
+
+  <meta name="generator" content="Hexo 7.3.0"></head>
+  <body class="post-page">
+    <div
+      class="site-loading"
+      aria-live="polite"
+      aria-label="页面加载中"
+      data-sprite-src="/images/tech/girl_read_sprite.png"
+      data-frame-count="2"
+    >
+      <div class="site-loading__inner">
+        <div class="site-loading__girl" aria-hidden="true"></div>
+        <p class="site-loading__text">LOADING...</p>
+        <div class="site-loading__progress" aria-hidden="true">
+          <span class="site-loading__progress-bar"></span>
+        </div>
+      </div>
+    </div>
+    <svg class="visual-defs" aria-hidden="true" width="0" height="0">
+      <defs>
+        <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.018"
+            numOctaves="2"
+            seed="8"
+            result="noise"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="noise"
+            scale="18"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
+      </defs>
+    </svg>
+    
+<header class="site-header">
+  <a
+    class="site-logo is-small"
+    href="/"
+    aria-label="返回年糕的编绳花园首页"
+    data-default-logo="/images/logo.png"
+    data-small-logo="/images/logo_small.png"
+  >
+    <img src="/images/logo_small.png" alt="年糕的编绳花园" />
+  </a>
+
+  <button
+    class="menu-toggle"
+    type="button"
+    aria-label="打开菜单"
+    aria-expanded="false"
+    aria-controls="site-menu"
+  >
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <div class="site-menu-overlay" hidden>
+    <div class="site-menu-page">
+      <nav id="site-menu" class="site-menu" aria-label="主菜单">
+        
+          <a href="/#home">HOME</a>
+        
+          <a href="/#work">WORK</a>
+        
+          <a href="/#tech">TECH</a>
+        
+          <a href="/#diary">DIARY</a>
+        
+          <a href="/#about">ABOUT</a>
+        
+      </nav>
+    </div>
+  </div>
+</header>
+
+    
+<main class="post-shell post-shell--detail">
+  <section class="post-journal-band">
+    <div class="post-journal">
+      <section class="post-hero-band">
+        <div class="post-hero post-hero--no-cover" aria-labelledby="post-title">
+          
+
+          <div class="post-hero__content">
+            <span class="post-hero__eyebrow">DIARY LOG</span>
+            <span class="post-hero__date">2018.03.01</span>
+            <h1 id="post-title" class="post-title post-title--decorated">
+              <img
+                class="post-title__decor"
+                src="/images/decorates/flower2.png"
+                alt=""
+                aria-hidden="true"
+              />
+              <span>一个由POST和URL引发的一系列提问</span>
+            </h1>
+            <div class="post-meta" aria-label="文章信息">
+              <span>阅读约 5 分钟</span>
+              <span>#计算机网络</span>
+              <span>#博客</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="post-content-band">
+        <article class="post-main">
+          <div class="post-body-shell">
+            <div class="post-body post-body--entry"><p>我带着心中的“愤怒”，终于写完JAVA WEB作业。终于可以学点想学的只是啦，然后突然碰到了一个童鞋问的问题，结果发生了这是一个连锁反应。</p>
+<span id="more"></span>
+<h1 id="POST方法可以用URL来传参吗"><a href="#POST方法可以用URL来传参吗" class="headerlink" title="POST方法可以用URL来传参吗"></a>POST方法可以用URL来传参吗</h1><p>一个童鞋在群里提问说：“POST方法可以用URL来传参吗？”<br>然后我的第一反应是这个问题也太傻了吧，POST肯定是在主体里面传参呀！后面在群里说了几句，结果那位童鞋说，是面试官问他的问题，答案是可以。我本来就是个前端渣渣，经历后台也少，然后还那么肯定的说，瞬间就感觉好羞耻，马上就怂了。上网一搜发现有的人确实说可以，于是我就打开我的wireshark和网站开始实验。<br>一开始使用PHP，用POST方法去提交到一个带了参数的URL里面，结果是用$_POST只能获取到主体内的内容，用$_GET才能获取URL上的内容，查看报文也是，只有表单的内容放在主体里。<br>后面又用了JAVA，因为是用POST方法提交到Servlet去的，所以是调用了doPost方法，另外用getParameter()来获取数据结果显示的是URL上面的数据。后面查了一下很快就查到，它会优先去看GET里面的参数，如果有这个就不会再去看其他方法里有没有了。<br>所以这个结果，其实也知道，和我刚开始想的并没有很大的冲突，因为这种用URL带参数，本质上还是GET方法，所以说用POST方法来URL传参的说法并不严谨。</p>
+<h1 id="POST的数据一定要在表格里面吗"><a href="#POST的数据一定要在表格里面吗" class="headerlink" title="POST的数据一定要在表格里面吗"></a>POST的数据一定要在表格里面吗</h1><p>由于同时我还问了一些小伙伴，所以又有小伙伴问我，是不是POST方法只能用表单来实现？答案是否定的。在RFC文档里面只是规定了内容要放在主体上。后来我上网查询，发现POST提交的数据格式可以有下面几种：</p>
+<ul>
+<li>application&#x2F;x-www-form-urlencoded：最常见的表单提交数据格式</li>
+<li>multipart&#x2F;form-data：带有文件的表单提交方式</li>
+<li>application&#x2F;json：在Angular的Ajax提交用的就是这种方法</li>
+<li>text&#x2F;xml</li>
+</ul>
+<h1 id="那么用URL来传参的一定是GET方法吗"><a href="#那么用URL来传参的一定是GET方法吗" class="headerlink" title="那么用URL来传参的一定是GET方法吗"></a>那么用URL来传参的一定是GET方法吗</h1><p>这是师傅对我发出的提问，答案显然也不是的，查看RFC 2616文档发现DELETE、PUT这些都是从URL里面来解析参数。那么师傅又开始想，什么情况下应该把内容放在主体里面，什么时候又应该把内容放在URL里面呢？可以得知一些方便操作的东西是可以放在URL里面的，比如翻页呀搜索呀之类的，这样用户也方面，最后师傅去看axios的源码来查看他使用delete方法，结果师傅也越走越远…不过他最后说：</p>
+<blockquote>
+<p>后端的开发人员一般都会写一个方法获取url + body上的数据，再写两个方法一个专门用来获取url数据，一个专门用来获取body数据</p>
+</blockquote>
+<h1 id="结局"><a href="#结局" class="headerlink" title="结局"></a>结局</h1><p>我们班的大神最后看到了multipart&#x2F;form-data就想起了自己原来做安卓系统因为不知道它的存在，想了很久才把图片转编码传了上去。我想起自己原来写实训项目的时候也是用了base64编码，但是我做的是图片预览。然后他问我：“如果把一个txt文件改成jpg，你的网站也能提交成功吗？”然后我试了试，果然我没有处理这个BUG。后面上网查看发现有童鞋说，可以先把编码转成一个new Image再提取特征，看看是不是图片，也有童鞋说图片转成16机制有一段编码是完全相同的，可以靠这个来判断…然后在这个问题上越走越远了。</p>
+</div>
+          </div>
+
+          
+            <nav class="post-nav" aria-label="文章切换">
+              
+                <a
+                  href="/posts/life-20180301-res/"
+                  
+                >
+                  <span class="post-nav__label">上一篇</span>
+                  <span class="post-nav__title">生活 | 大三上学期寒假小结</span>
+                </a>
+              
+              
+                <a
+                  href="/posts/tech-20180202-closure/"
+                  
+                >
+                  <span class="post-nav__label">下一篇</span>
+                  <span class="post-nav__title">JavaScriptの闭包</span>
+                </a>
+              
+            </nav>
+          
+        </article>
+      </section>
+    </div>
+  </section>
+
+  <section class="post-about-band">
+    <svg class="post-divider post-divider--content" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"></path>
+    </svg>
+    <div class="post-about-band__inner">
+      <section class="post-about" aria-label="关于年糕">
+  <div class="post-about__figure">
+    <div class="post-about__figure-card">
+      <img
+        class="post-about__image"
+        src="/images/mochi_real.png"
+        alt="年糕的个人形象照"
+      />
+    </div>
+  </div>
+
+  <div class="post-about__content">
+    <p class="post-about__eyebrow">ABOUT THE GARDENER</p>
+    <div class="post-about__header">
+      <h2 class="post-about__name">年糕</h2>
+      <div class="post-about__channels" aria-label="社交平台">
+        
+          <a href="/#about">小红书</a>
+        
+          <a href="/#about">B站</a>
+        
+          <a href="/#about">微信公众号</a>
+        
+      </div>
+    </div>
+    <p class="post-about__bio">年糕是一个喜欢把代码、灵感和日常心情慢慢种进花园里的人。会写点前端，做点设计，也认真记录那些看起来不盛大、但会在以后发芽的小事。</p>
+  </div>
+</section>
+
+    </div>
+  </section>
+</main>
+
+
+    <footer class="site-footer site-footer--post">
+  <div class="site-footer__inner">
+    <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
+    <p class="site-footer__copy">© 2026 Mochi Garden. All rights reserved.</p>
+  </div>
+</footer>
+
+    <script src="/vendor/gsap/gsap.min.js"></script>
+<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+
+<script src="/js/main.js"></script>
+
+  </body>
+</html>

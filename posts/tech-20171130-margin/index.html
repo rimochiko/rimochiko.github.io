@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta
+  name="description"
+  content="&lt;h1 id=&#34;问题の起源&#34;&gt;&lt;a href=&#34;#问题の起源&#34; class=&#34;headerlink&#34; title=&#34;问题の起源&#34;&gt;&lt;/a&gt;问题の起源&lt;/h1&gt;&lt;p&gt;以前一直就听说圣杯布局，但是没有怎么去用过，然后这次偶然接触到了，就学习了一下。&lt;br&gt;这是一个我从别人写的文章中复制过来的，关于圣杯布局的比较简单的说明&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;通过缩放页面就可以发现，随着页面的宽度的变化，这三栏布局是中间盒子优先渲染，两边的盒子框子固定不变，即使页面宽度变小，也不影响我们的浏览&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;而通常是采用浮动布局和margin负值。&lt;/p&gt;"
+/>
+<title>圣杯布局引发对margin负值的研究 | 年糕的编绳花园</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
+  rel="stylesheet"
+/>
+<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
+<link rel="stylesheet" href="/css/style.css" />
+
+
+  <meta name="generator" content="Hexo 7.3.0"></head>
+  <body class="post-page">
+    <div
+      class="site-loading"
+      aria-live="polite"
+      aria-label="页面加载中"
+      data-sprite-src="/images/tech/girl_read_sprite.png"
+      data-frame-count="2"
+    >
+      <div class="site-loading__inner">
+        <div class="site-loading__girl" aria-hidden="true"></div>
+        <p class="site-loading__text">LOADING...</p>
+        <div class="site-loading__progress" aria-hidden="true">
+          <span class="site-loading__progress-bar"></span>
+        </div>
+      </div>
+    </div>
+    <svg class="visual-defs" aria-hidden="true" width="0" height="0">
+      <defs>
+        <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.018"
+            numOctaves="2"
+            seed="8"
+            result="noise"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="noise"
+            scale="18"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
+      </defs>
+    </svg>
+    
+<header class="site-header">
+  <a
+    class="site-logo is-small"
+    href="/"
+    aria-label="返回年糕的编绳花园首页"
+    data-default-logo="/images/logo.png"
+    data-small-logo="/images/logo_small.png"
+  >
+    <img src="/images/logo_small.png" alt="年糕的编绳花园" />
+  </a>
+
+  <button
+    class="menu-toggle"
+    type="button"
+    aria-label="打开菜单"
+    aria-expanded="false"
+    aria-controls="site-menu"
+  >
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <div class="site-menu-overlay" hidden>
+    <div class="site-menu-page">
+      <nav id="site-menu" class="site-menu" aria-label="主菜单">
+        
+          <a href="/#home">HOME</a>
+        
+          <a href="/#work">WORK</a>
+        
+          <a href="/#tech">TECH</a>
+        
+          <a href="/#diary">DIARY</a>
+        
+          <a href="/#about">ABOUT</a>
+        
+      </nav>
+    </div>
+  </div>
+</header>
+
+    
+<main class="post-shell post-shell--detail">
+  <section class="post-journal-band">
+    <div class="post-journal">
+      <section class="post-hero-band">
+        <div class="post-hero post-hero--no-cover" aria-labelledby="post-title">
+          
+
+          <div class="post-hero__content">
+            <span class="post-hero__eyebrow">DIARY LOG</span>
+            <span class="post-hero__date">2017.11.30</span>
+            <h1 id="post-title" class="post-title post-title--decorated">
+              <img
+                class="post-title__decor"
+                src="/images/decorates/flower2.png"
+                alt=""
+                aria-hidden="true"
+              />
+              <span>圣杯布局引发对margin负值的研究</span>
+            </h1>
+            <div class="post-meta" aria-label="文章信息">
+              <span>阅读约 9 分钟</span>
+              <span>#CSS</span>
+              <span>#博客</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="post-content-band">
+        <article class="post-main">
+          <div class="post-body-shell">
+            <div class="post-body post-body--entry"><h1 id="问题の起源"><a href="#问题の起源" class="headerlink" title="问题の起源"></a>问题の起源</h1><p>以前一直就听说圣杯布局，但是没有怎么去用过，然后这次偶然接触到了，就学习了一下。<br>这是一个我从别人写的文章中复制过来的，关于圣杯布局的比较简单的说明</p>
+<blockquote>
+<p>通过缩放页面就可以发现，随着页面的宽度的变化，这三栏布局是中间盒子优先渲染，两边的盒子框子固定不变，即使页面宽度变小，也不影响我们的浏览</p>
+</blockquote>
+<p>而通常是采用浮动布局和margin负值。</p>
+<span id="more"></span>
+
+<h2 id="一般の实现方法"><a href="#一般の实现方法" class="headerlink" title="一般の实现方法"></a>一般の实现方法</h2><p><strong>HTML结构</strong><br>首先定义一个主体div，再是left和right的div</p>
+<pre><code>&lt;div class=&quot;container&quot;&gt;
+    &lt;div class=&quot;main&quot;&gt;main&lt;/div&gt;
+    &lt;div class=&quot;left&quot;&gt;left&lt;/div&gt;
+    &lt;div class=&quot;right&quot;&gt;right&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<p><strong>CSS部分</strong><br>1.给container左边和右边赋上padding值，宽度分别就是能容纳的下left和right的div。<br>2.main DIV的宽度为100%。<br>3.main，left和right三个div都设置为左浮动。</p>
+<p>完成以上我们就会得到一个这样的结果：<br><img src="/pimgs/20171130margin/1.png" alt="图片描述"></p>
+<p>再然后我们给left一个margin-left:100%，此时会发现left移动到了第一行中：<br><img src="/pimgs/20171130margin/2.png" alt="图片描述"></p>
+<p>然后面对这个现象，我展开了一系列的思考和探究~</p>
+<h1 id="初次の发问"><a href="#初次の发问" class="headerlink" title="初次の发问"></a>初次の发问</h1><p><strong>Q：为什么left会跑去了第一行？</strong><br>A：这个其实我们大概心里是明白的。一开始，main的宽度是100%，所以第一行是无法再容纳后面同样是左浮动的div块。但是通过赋予了margin-left为-100%，这里的100%也就是父容器的宽度，浏览器计算出来是一个负值，就认为它能被容纳在第一行。</p>
+<h1 id="继续试验"><a href="#继续试验" class="headerlink" title="继续试验"></a>继续试验</h1><p>我们可以尝试改变margin-left的值，去看看div位置的变化。为了方便我们计算，另外写了一个类似的布局，内容区的宽度是100px，三个div的宽度也都是100px。<br><strong>HTML部分</strong></p>
+<pre><code>&lt;div class=&quot;container&quot;&gt;
+    &lt;div class=&quot;main&quot;&gt;main&lt;/div&gt;
+    &lt;div class=&quot;left&quot;&gt;left&lt;/div&gt;
+    &lt;div class=&quot;right&quot;&gt;right&lt;/div&gt; 
+&lt;/div&gt;
+</code></pre>
+<p><strong>CSS部分</strong></p>
+<pre><code>.container&#123;
+  width:100px;
+  margin:0;
+  padding:0 100px;
+  background:rgba(0,0,0,.3);
+&#125;
+
+div&#123;
+  float:left;
+  width:100px;
+  height:100px;
+&#125;
+.main&#123;
+  background:rgba(0,0,255,.4);
+&#125;
+.left&#123;
+  background:rgba(233,0,0,.4);
+&#125;
+.right&#123;
+  background:rgba(0,233,0,.4);
+&#125;
+</code></pre>
+<p>效果是这样的<br><img src="/pimgs/20171130margin/3.png" alt="图片描述"></p>
+<p>然后我们试着给left赋予不同的margin-left负值，会发现：<br>1.当margin-left在0px ~ -99px的时候，left会向左移动。<br><img src="/pimgs/20171130margin/4.png" alt="图片描述"></p>
+<p>2.当margin-left为-100px的时候，left上移动，与main重叠：<br><img src="/pimgs/20171130margin/5.png" alt="图片描述"></p>
+<p>所以margin-left是-100px的时候，显然是一个<strong>分界点</strong>。</p>
+<p>3.当margin-left的负值继续增加，left又会继续向左边移动：<br><img src="/pimgs/20171130margin/6.png" alt="图片描述"></p>
+<p>根据上面的情况，加以本宝宝的百度（笑），我们确定了想法，就是在计算元素的”宽度”的时候是会把margin-left+width得到结果，当-100px+100px&#x3D;0px的时候，就被认为第一行是还可以容纳的下，所以第二行的元素就到了第一行。<br>此时，我还找到了一篇文章，这篇文章比较合理的阐述了移动的原理：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/LiveWithIt/p/6024864.html">https://www.cnblogs.com/LiveWithIt/p/6024864.html</a></p>
+<h1 id="二次の提问"><a href="#二次の提问" class="headerlink" title="二次の提问"></a>二次の提问</h1><p>然而这里还有一个细节问题，就是left的移动其实是有一个范围的：<br><img src="/pimgs/20171130margin/7.png" alt="图片描述"></p>
+<p>画了红框的范围是container的一个padding区域，在left移动切换的时候，<br>当left的margin-left并没有达到-100px的时候，为什么它会向左移动，单纯从放不下的原理来说，它在原处不动也可以是一个合理的现象，那篇文章似乎也没有提到合理的原因，然后我继续试验。</p>
+<h1 id="再次实验"><a href="#再次实验" class="headerlink" title="再次实验"></a>再次实验</h1><p>我们从当left的margin-left为-100px开始，即main和left重叠的情况。<br>我们再给main一个margin-left负值为-50px，结果main和left一起向左边移动：<br><img src="/pimgs/20171130margin/8.png" alt="图片描述"></p>
+<p>再试验一种情况，把left的宽设为150px，margin-left设为-150px，main的margin-left是0，此时left的右边对齐了main的右边。<br><img src="/pimgs/20171130margin/9.png" alt="图片描述"></p>
+<p>所以应该隐隐约约可以发现了些什么…</p>
+<h1 id="我の小结论"><a href="#我の小结论" class="headerlink" title="我の小结论"></a>我の小结论</h1><p>合理的解释就是，在摆放元素位置的时候，它会计算出那个右边的值，并且会认为这就是元素的最后的标准线。</p>
+<p>1.解释<strong>继续实验</strong>中为什么margin-left为left宽度负值，left会和main重叠：<br>因为它会被认为宽度是0，所以从main的结束位置开始计算是100px+0px，所以元素要以100px为结束线，也就是它在100px的左边。</p>
+<p>2.解释<strong>再次实验</strong>中为什么更改main的margin-left，left会和它一直重叠：<br>根据1的推断，left的边界线计算结果一直都会是main的边界线。</p>
+<p>3.解释为什么left能在第二行向左边移动：<br>因为它会被认为宽度在1px<del>99px之间，所以它的边界线是在内容区中宽度为1px</del>99px之间，所以它能移动。</p>
+<p>其实也是我自己的猜想和推论，并不知道实际情况对不对QAQ，但是根据自己的测试情况来说，目前是都说得通的，望大神指点嘻嘻。</p>
+</div>
+          </div>
+
+          
+            <nav class="post-nav" aria-label="文章切换">
+              
+                <a
+                  href="/posts/tech-20180209-http/"
+                  
+                >
+                  <span class="post-nav__label">上一篇</span>
+                  <span class="post-nav__title">《图解HTTP》小结+实践理解</span>
+                </a>
+              
+              
+                <a
+                  href="/posts/tech-20170816-about-lorem/"
+                  
+                >
+                  <span class="post-nav__label">下一篇</span>
+                  <span class="post-nav__title">网页模板中经常出现的Lorem Ipsum</span>
+                </a>
+              
+            </nav>
+          
+        </article>
+      </section>
+    </div>
+  </section>
+
+  <section class="post-about-band">
+    <svg class="post-divider post-divider--content" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"></path>
+    </svg>
+    <div class="post-about-band__inner">
+      <section class="post-about" aria-label="关于年糕">
+  <div class="post-about__figure">
+    <div class="post-about__figure-card">
+      <img
+        class="post-about__image"
+        src="/images/mochi_real.png"
+        alt="年糕的个人形象照"
+      />
+    </div>
+  </div>
+
+  <div class="post-about__content">
+    <p class="post-about__eyebrow">ABOUT THE GARDENER</p>
+    <div class="post-about__header">
+      <h2 class="post-about__name">年糕</h2>
+      <div class="post-about__channels" aria-label="社交平台">
+        
+          <a href="/#about">小红书</a>
+        
+          <a href="/#about">B站</a>
+        
+          <a href="/#about">微信公众号</a>
+        
+      </div>
+    </div>
+    <p class="post-about__bio">年糕是一个喜欢把代码、灵感和日常心情慢慢种进花园里的人。会写点前端，做点设计，也认真记录那些看起来不盛大、但会在以后发芽的小事。</p>
+  </div>
+</section>
+
+    </div>
+  </section>
+</main>
+
+
+    <footer class="site-footer site-footer--post">
+  <div class="site-footer__inner">
+    <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
+    <p class="site-footer__copy">© 2026 Mochi Garden. All rights reserved.</p>
+  </div>
+</footer>
+
+    <script src="/vendor/gsap/gsap.min.js"></script>
+<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+
+<script src="/js/main.js"></script>
+
+  </body>
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta
+  name="description"
+  content="&lt;h1 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;唔，面试的时候被问到了，然后把之前自己知道的情况都说了一下，但是后面还是感觉这其中还是有很多细节可以继续扒，所以这里来小结一下，为什么是挖坑系列，因为我一次性肯定写不完，算是经历了此次几轮面试后的一个学习小结的开始吧。（如果有错误，欢迎提出）&lt;/p&gt;"
+/>
+<title>跨域问题 | 年糕的编绳花园</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
+  rel="stylesheet"
+/>
+<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
+<link rel="stylesheet" href="/css/style.css" />
+
+
+  <meta name="generator" content="Hexo 7.3.0"></head>
+  <body class="post-page">
+    <div
+      class="site-loading"
+      aria-live="polite"
+      aria-label="页面加载中"
+      data-sprite-src="/images/tech/girl_read_sprite.png"
+      data-frame-count="2"
+    >
+      <div class="site-loading__inner">
+        <div class="site-loading__girl" aria-hidden="true"></div>
+        <p class="site-loading__text">LOADING...</p>
+        <div class="site-loading__progress" aria-hidden="true">
+          <span class="site-loading__progress-bar"></span>
+        </div>
+      </div>
+    </div>
+    <svg class="visual-defs" aria-hidden="true" width="0" height="0">
+      <defs>
+        <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.018"
+            numOctaves="2"
+            seed="8"
+            result="noise"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="noise"
+            scale="18"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
+      </defs>
+    </svg>
+    
+<header class="site-header">
+  <a
+    class="site-logo is-small"
+    href="/"
+    aria-label="返回年糕的编绳花园首页"
+    data-default-logo="/images/logo.png"
+    data-small-logo="/images/logo_small.png"
+  >
+    <img src="/images/logo_small.png" alt="年糕的编绳花园" />
+  </a>
+
+  <button
+    class="menu-toggle"
+    type="button"
+    aria-label="打开菜单"
+    aria-expanded="false"
+    aria-controls="site-menu"
+  >
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <div class="site-menu-overlay" hidden>
+    <div class="site-menu-page">
+      <nav id="site-menu" class="site-menu" aria-label="主菜单">
+        
+          <a href="/#home">HOME</a>
+        
+          <a href="/#work">WORK</a>
+        
+          <a href="/#tech">TECH</a>
+        
+          <a href="/#diary">DIARY</a>
+        
+          <a href="/#about">ABOUT</a>
+        
+      </nav>
+    </div>
+  </div>
+</header>
+
+    
+<main class="post-shell post-shell--detail">
+  <section class="post-journal-band">
+    <div class="post-journal">
+      <section class="post-hero-band">
+        <div class="post-hero post-hero--no-cover" aria-labelledby="post-title">
+          
+
+          <div class="post-hero__content">
+            <span class="post-hero__eyebrow">DIARY LOG</span>
+            <span class="post-hero__date">2018.04.04</span>
+            <h1 id="post-title" class="post-title post-title--decorated">
+              <img
+                class="post-title__decor"
+                src="/images/decorates/flower2.png"
+                alt=""
+                aria-hidden="true"
+              />
+              <span>跨域问题</span>
+            </h1>
+            <div class="post-meta" aria-label="文章信息">
+              <span>阅读约 13 分钟</span>
+              <span>#浏览器</span>
+              <span>#博客</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="post-content-band">
+        <article class="post-main">
+          <div class="post-body-shell">
+            <div class="post-body post-body--entry"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>唔，面试的时候被问到了，然后把之前自己知道的情况都说了一下，但是后面还是感觉这其中还是有很多细节可以继续扒，所以这里来小结一下，为什么是挖坑系列，因为我一次性肯定写不完，算是经历了此次几轮面试后的一个学习小结的开始吧。（如果有错误，欢迎提出）</p>
+<span id="more"></span>
+
+<h1 id="什么是跨域问题？"><a href="#什么是跨域问题？" class="headerlink" title="什么是跨域问题？"></a>什么是跨域问题？</h1><p>之前看了很多文章，都没有很系统&#x2F;官方的一个定义。这里选了一个比较靠谱的说法:</p>
+<blockquote>
+<p>跨域是指一个域下的文档或脚本试图去请求另一个域下的资源，这里跨域是广义的。</p>
+</blockquote>
+<p>而我们通常说的问题来源于js发起的ajax请求、dom和js对象的跨域操作等。</p>
+<h2 id="浏览器同源政策"><a href="#浏览器同源政策" class="headerlink" title="浏览器同源政策"></a>浏览器同源政策</h2><p>也就是<code>协议</code>、<code>域名</code>和<code>端口号</code>一致，浏览器才会承认它们之间是不会存在跨域的限制。</p>
+<p><strong>注意</strong>：<code>www.a.baidu.com</code>和<code>www.b.baidu.com</code>这种二级域名不一样也是相当于域名不相同的）</p>
+<p><strong>常见限制如下</strong>：</p>
+<ol>
+<li>Cookie、LocalStorage 和 IndexDB 无法读取</li>
+<li>DOM 和 Js对象无法获得</li>
+<li>AJAX 请求不能发送</li>
+</ol>
+<p><strong>为什么要进行限制？</strong><br>浏览器为了能够减少网络安全攻击问题采取的。<br>比如你直接在某个网站嵌入一段代码，其中获取了document.cookie，然后通过一个请求发送给你的网站，这样就可以盗取别人的cookie信息。</p>
+<h2 id="实践提问区"><a href="#实践提问区" class="headerlink" title="实践提问区"></a>实践提问区</h2><p><strong>Q：如果发送一个Ajax请求发生跨域，浏览器会做出什么反应呢？</strong><br>我们来做一个页面A：localhost&#x2F;ajax：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">function get() &#123;</span><br><span class="line">	  var xhr = new XMLHttpRequest();</span><br><span class="line">	  xhr.open(&quot;get&quot;,&quot;http://127.0.0.1/ajax/data.json&quot;,true);</span><br><span class="line">	  xhr.onreadystatechange = function() &#123;</span><br><span class="line">		if(xhr.readyState == 4) &#123;</span><br><span class="line">			if(xhr.status == 200 || xhr.status == 304) &#123;</span><br><span class="line">             alert(xhr.resonseText);</span><br><span class="line">			&#125; else &#123;</span><br><span class="line">				alert(&quot;请求失败啦&quot;);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	  &#125;</span><br><span class="line">	  xhr.send(null);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在页面A中请求：127.0.0.1&#x2F;ajax&#x2F;data.json<br>（没错，localhost和127.0.0.1两个家伙其实是同一个页面(。・∀・)ノ，但是它们的域名并不一样）<br>运行这个函数去请求之后，浏览器报错啦！<br><img src="https://wx2.sinaimg.cn/mw690/0069luTRgy1frgrw4usrxj30b203ea9v.jpg" alt="图片描述"><br><img src="http://wx4.sinaimg.cn/large/0069luTRgy1frgrw4uxt4j30wn03s3yq.jpg" alt="图片描述"></p>
+<pre><code>Failed to load http://127.0.0.1/ajax/data.json: No &#39;Access-Control-Allow-Origin&#39; header is present on the requested resource. Origin &#39;http://localhost&#39; is therefore not allowed access.
+</code></pre>
+<p>可以看到，它说因为没有<code>Access-Control-Allow-Origin</code>出现在请求资源的头部信息中，所以不允许<code>http://localhost</code>通行。（这是不是也暗示了我们，其中一种解决方法呢）</p>
+<p><strong>Q：浏览器发送了请求吗？它有没有收到什么回应？</strong><br>之前不是说浏览器限制我们的发送吗？所以它发送了请求吗？打开控制台发现，它不仅发了一个data.json请求，格式为xhr，状态码是200。<br><img src="http://wx3.sinaimg.cn/large/0069luTRgy1frgrw4w342j30sl04y0t1.jpg" alt="图片描述"><br>瞅瞅下面这个报文的具体请求信息：<br><img src="https://wx1.sinaimg.cn/mw1024/0069luTRgy1frgrw9iag3j309g0ci0tb.jpg" alt="图片描述"></p>
+<p>再瞅瞅这个报文的Response：<br><img src="https://wx1.sinaimg.cn/mw1024/0069luTRgy1frgrw9hzjhj3078021t8j.jpg" alt="图片描述"></p>
+<p>唔，会发现它其实收到了这个回应呢。</p>
+<p><strong>Q：更换请求方式，情况会发生改变吗？</strong><br>我把请求方式从<code>GET</code>改成<code>PUT</code>，再去发送请求，除了和之前的弹错误警告框，控制台报错一样外，报文如下：<br><img src="https://wx1.sinaimg.cn/mw1024/0069luTRgy1frgrwke2dkj30b30d7dgj.jpg" alt="图片描述"></p>
+<p>可以发现它的请求方式变成了<code>OPTIONS</code>，且<code>response</code>是空。</p>
+<h1 id="简单-复杂请求"><a href="#简单-复杂请求" class="headerlink" title="简单&#x2F;复杂请求"></a>简单&#x2F;复杂请求</h1><p>为什么用<code>PUT</code>请求后，请求的方式变成了<code>OPTIONS</code>呢？这就涉及简单&#x2F;复杂请求的问题了。<br><strong>简单请求的条件</strong></p>
+<ol>
+<li>必须是<code>HEAD</code>、<code>GET</code>、<code>POST</code>中的其中一种请求方法。</li>
+<li>请求头选项只能有如下几个：<code>Accept</code>、<code>Accept-Language</code>、<code>Content-Language</code>、<code>Last-Event-ID</code>、<code>Content-Type</code>。</li>
+<li>Content-Type只能是以下之一：<code>application/x-www-form-urlencoded</code>、<code>multipart/form-data</code>、<code>text/plain</code>。</li>
+</ol>
+<p>当然啦，如果不是简单请求，自然就是复杂请求了。</p>
+<p><strong>区别：</strong><br>复杂请求会先发送一种”预请求”，服务端也会返回”预回应”作为响应。只有预请求成功返回，实际的请求才会继续发送，预请求以<code>OPTIONS</code>方法发送，所以可以看到之前那个<code>PUT</code>方法的报文是<code>OPTIONS</code>。</p>
+<p>Q：我有一个疑问，它控制台报错说是不允许客户端的请求，如果服务器端允许客户端域名进行请求的话，那发送就可以带上了请求，如果是这样的话，那也不能保护客户端的cookie安全啊0_0？</p>
+<h1 id="其他测验"><a href="#其他测验" class="headerlink" title="其他测验"></a>其他测验</h1><h2 id="localStorage"><a href="#localStorage" class="headerlink" title="localStorage"></a>localStorage</h2><p>我们依旧在页面A：localhost&#x2F;ajax，先写好一个设置localStorage的函数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">function setStorage() &#123;</span><br><span class="line">	 if(window.localStorage) &#123;</span><br><span class="line">	 	localStorage.setItem(&quot;text&quot;,&quot;你好&quot;);</span><br><span class="line">	 &#125; else &#123;</span><br><span class="line">	 	new Error(&quot;不支持LocalStorage&quot;);</span><br><span class="line">	 &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们再写一个获取localStorage的函数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">function getStorage() &#123;</span><br><span class="line">	 if(window.localStorage) &#123;</span><br><span class="line">	 	console.log(localStorage.getItem(&quot;text&quot;));</span><br><span class="line">	 &#125; else &#123;</span><br><span class="line">	 	new Error(&quot;不支持LocalStorage&quot;);</span><br><span class="line">	 &#125;	   	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们在localhost下点击设置，去127.0.0.1下面尝试获取，会发现结果是<code>null</code>。但是如果回到localhost页面，会发现出现了“你好”。另外我又在该目录下增加了一个页面，以localhost打开会发现它也能取到这个“你好”，因为它们是同源的所有没有这个限制。</p>
+<h1 id="Cookie相关"><a href="#Cookie相关" class="headerlink" title="Cookie相关"></a>Cookie相关</h1><p>我们先预先来剧透一下，暂时用jQuery的封装发送一个jsonp请求来实现跨域，再来看看请求的差别：</p>
+<pre><code>$.ajax(&#123;
+	url: &quot;http://127.0.0.1/ajax/data.json?callback=showData&quot;,
+	type: &quot;GET&quot;,
+	dataType: &quot;jsonp&quot;,
+	jsonpCallback: &quot;showData&quot;,
+	success: function(data) &#123;
+	   	 showData();
+	&#125;
+&#125;) 
+</code></pre>
+<p>发送请求的报文如下:<br><img src="https://wx4.sinaimg.cn/mw1024/0069luTRgy1frgrwu5zd6j30950algm4.jpg" alt="图片描述"></p>
+<p>和最开始没有解决跨域的请求相比，多了Cookie值：<br><img src="https://wx1.sinaimg.cn/mw1024/0069luTRgy1frgrw9iag3j309g0ci0tb.jpg" alt="图片描述"></p>
+<p>所以可以认为，浏览器在没有解决跨域问题之前，不会把Cookie带上去。</p>
+<h2 id="iframe"><a href="#iframe" class="headerlink" title="iframe"></a>iframe</h2><p>在页面里嵌入一个iframe标签，它也会产生这个问题吗，于是我们在<code>localhost/ajax/index.php</code>下又嵌了一个<code>localhost/ajax/index.php</code>，在iframe里面去点击向<code>127.0.0.1/ajax/index.php</code>发送请求，结果报错了，说明它是存在这个限制的。</p>
+<h1 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h1><p>可以说解决方法是烂大街了哈哈哈~</p>
+<h2 id="JSONP"><a href="#JSONP" class="headerlink" title="JSONP"></a>JSONP</h2><p>XHR请求存在跨域限制，但是script并不存在，利用这个特点，我们就出现了JSONP来解决跨域。</p>
+<h2 id="Nginx反向代理"><a href="#Nginx反向代理" class="headerlink" title="Nginx反向代理"></a>Nginx反向代理</h2><p><strong>Q：什么叫做反向代理？</strong><br>我们都明确代理的意思，就是“帮你做事情的人”。因为浏览器存在同源政策，无法进行跨域，但是服务器之间没有这样的约束，所以我们就设置这样一个代理机关，让客户误以为可以请求，实际上是转交了。<br>也就是说反向代理，代理的是服务器的角色。类似的情况还有对客户端的访问进行一个就近分配（CDN），或者分散流量等。</p>
+<p><strong>Q：那你知道正向代理吗？</strong><br>有反向代理，肯定有正向代理，而且就是方向反了。正向代理代理的是服务器，为什么它是正的？因为在很多年前，我们从局域网访问外网，其实就是通过代理去访问的，这时候代理代替了我们，比如我们使用VPN进行绿色上网。</p>
+<h2 id="postMessage"><a href="#postMessage" class="headerlink" title="postMessage"></a>postMessage</h2></div>
+          </div>
+
+          
+            <nav class="post-nav" aria-label="文章切换">
+              
+                <a
+                  href="/posts/tech-20180523-cache/"
+                  
+                >
+                  <span class="post-nav__label">上一篇</span>
+                  <span class="post-nav__title">浏览器の缓存机制</span>
+                </a>
+              
+              
+                <a
+                  href="/posts/tech-20180305-eventloop/"
+                  
+                >
+                  <span class="post-nav__label">下一篇</span>
+                  <span class="post-nav__title">JavaScript的事件循环</span>
+                </a>
+              
+            </nav>
+          
+        </article>
+      </section>
+    </div>
+  </section>
+
+  <section class="post-about-band">
+    <svg class="post-divider post-divider--content" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"></path>
+    </svg>
+    <div class="post-about-band__inner">
+      <section class="post-about" aria-label="关于年糕">
+  <div class="post-about__figure">
+    <div class="post-about__figure-card">
+      <img
+        class="post-about__image"
+        src="/images/mochi_real.png"
+        alt="年糕的个人形象照"
+      />
+    </div>
+  </div>
+
+  <div class="post-about__content">
+    <p class="post-about__eyebrow">ABOUT THE GARDENER</p>
+    <div class="post-about__header">
+      <h2 class="post-about__name">年糕</h2>
+      <div class="post-about__channels" aria-label="社交平台">
+        
+          <a href="/#about">小红书</a>
+        
+          <a href="/#about">B站</a>
+        
+          <a href="/#about">微信公众号</a>
+        
+      </div>
+    </div>
+    <p class="post-about__bio">年糕是一个喜欢把代码、灵感和日常心情慢慢种进花园里的人。会写点前端，做点设计，也认真记录那些看起来不盛大、但会在以后发芽的小事。</p>
+  </div>
+</section>
+
+    </div>
+  </section>
+</main>
+
+
+    <footer class="site-footer site-footer--post">
+  <div class="site-footer__inner">
+    <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
+    <p class="site-footer__copy">© 2026 Mochi Garden. All rights reserved.</p>
+  </div>
+</footer>
+
+    <script src="/vendor/gsap/gsap.min.js"></script>
+<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+
+<script src="/js/main.js"></script>
+
+  </body>
+</html>

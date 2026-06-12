@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta
+  name="description"
+  content="&lt;p&gt;我们希望3D图像也能在网页中实现，这样我们可以利用网页这个快捷的传播途径，进行更多可能的创作。随着HTML5的到来，WebGL的出现使得其成为可能，WebGL使得JS支持硬件3D加速渲染（同样的CSS3也得到了硬件3D加速渲染和动画）。&lt;br&gt;HTML5中的Canvas本身搭配的是2D绘图的API，但如果使用一些库，它也可以用于3D渲染，在不支持WebGL和CSS 3D的平台上，这是通常的代替方法。&lt;/p&gt;"
+/>
+<title>初识WEBGL | 年糕的编绳花园</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
+  rel="stylesheet"
+/>
+<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
+<link rel="stylesheet" href="/css/style.css" />
+
+
+  <meta name="generator" content="Hexo 7.3.0"></head>
+  <body class="post-page">
+    <div
+      class="site-loading"
+      aria-live="polite"
+      aria-label="页面加载中"
+      data-sprite-src="/images/tech/girl_read_sprite.png"
+      data-frame-count="2"
+    >
+      <div class="site-loading__inner">
+        <div class="site-loading__girl" aria-hidden="true"></div>
+        <p class="site-loading__text">LOADING...</p>
+        <div class="site-loading__progress" aria-hidden="true">
+          <span class="site-loading__progress-bar"></span>
+        </div>
+      </div>
+    </div>
+    <svg class="visual-defs" aria-hidden="true" width="0" height="0">
+      <defs>
+        <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.018"
+            numOctaves="2"
+            seed="8"
+            result="noise"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="noise"
+            scale="18"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
+      </defs>
+    </svg>
+    
+<header class="site-header">
+  <a
+    class="site-logo is-small"
+    href="/"
+    aria-label="返回年糕的编绳花园首页"
+    data-default-logo="/images/logo.png"
+    data-small-logo="/images/logo_small.png"
+  >
+    <img src="/images/logo_small.png" alt="年糕的编绳花园" />
+  </a>
+
+  <button
+    class="menu-toggle"
+    type="button"
+    aria-label="打开菜单"
+    aria-expanded="false"
+    aria-controls="site-menu"
+  >
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <div class="site-menu-overlay" hidden>
+    <div class="site-menu-page">
+      <nav id="site-menu" class="site-menu" aria-label="主菜单">
+        
+          <a href="/#home">HOME</a>
+        
+          <a href="/#work">WORK</a>
+        
+          <a href="/#tech">TECH</a>
+        
+          <a href="/#diary">DIARY</a>
+        
+          <a href="/#about">ABOUT</a>
+        
+      </nav>
+    </div>
+  </div>
+</header>
+
+    
+<main class="post-shell post-shell--detail">
+  <section class="post-journal-band">
+    <div class="post-journal">
+      <section class="post-hero-band">
+        <div class="post-hero post-hero--no-cover" aria-labelledby="post-title">
+          
+
+          <div class="post-hero__content">
+            <span class="post-hero__eyebrow">DIARY LOG</span>
+            <span class="post-hero__date">2019.04.07</span>
+            <h1 id="post-title" class="post-title post-title--decorated">
+              <img
+                class="post-title__decor"
+                src="/images/decorates/flower2.png"
+                alt=""
+                aria-hidden="true"
+              />
+              <span>初识WEBGL</span>
+            </h1>
+            <div class="post-meta" aria-label="文章信息">
+              <span>阅读约 5 分钟</span>
+              <span>#WEBGL</span>
+              <span>#博客</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="post-content-band">
+        <article class="post-main">
+          <div class="post-body-shell">
+            <div class="post-body post-body--entry"><p>我们希望3D图像也能在网页中实现，这样我们可以利用网页这个快捷的传播途径，进行更多可能的创作。随着HTML5的到来，WebGL的出现使得其成为可能，WebGL使得JS支持硬件3D加速渲染（同样的CSS3也得到了硬件3D加速渲染和动画）。<br>HTML5中的Canvas本身搭配的是2D绘图的API，但如果使用一些库，它也可以用于3D渲染，在不支持WebGL和CSS 3D的平台上，这是通常的代替方法。</p>
+<span id="more"></span>
+
+<h1 id="3D图形基础"><a href="#3D图形基础" class="headerlink" title="3D图形基础"></a>3D图形基础</h1><p>在我们开始了解WebGL之前，我们首先要掌握一些3D绘图的基本知识。</p>
+<blockquote>
+<p><strong>3D计算机图形</strong>是使用<strong>三个维度来表示几何数据</strong>（通常是笛卡尔坐标系），并存储在计算机中，用于计算和绘制成屏幕上2D图像的一类图形。它<strong>可以被存储起来随时浏览，也可用于实时显示</strong>。</p>
+</blockquote>
+<h2 id="3D图形元素"><a href="#3D图形元素" class="headerlink" title="3D图形元素"></a>3D图形元素</h2><p>一个3D图形不是我们想象的，一个创建就可以完完整整体现在你的眼前。<br>可能你一开始使用Three.js（一个封装了WebGL API的库）去写一些东西，你会觉得很疑惑，为什么我们需要创建很多个对象，最后再把它们组合在一起呢？这样是不是太麻烦了？<br>其实在其他图形编程里，往往也是使用这样的过程方法，把一个物体分成基本的形状和不同的材质元素等等，最后组合在一起，这样也是为了方便我们去编写不同的结果。</p>
+<p>一个3D图形元素往往由下面这些元素组成：</p>
+<ul>
+<li>3D坐标系：没有坐标，我们就无法确定每个物体放置的位置。</li>
+<li>网格、多边形与顶点：这些都是我们确定物体形状的东西。</li>
+<li>材质、纹理与光源：这些是为了确定物体的外观。</li>
+<li>变换与矩阵：方便我们去进行物理运动的计算。</li>
+<li>相机、透视、视口与投影：这些确定了我们肉眼看到的绘制的这个世界的视觉范围。</li>
+<li>着色器：它是一段代码，为了渲染出一个网格的最终图像，开发者需要准确定义各个元素以及它们之间是如何相互作用而生成最终的图像，这个工作就是由着色器来完成的。着色器实现了把网格像素点投影到屏幕上的算法。通常是用C语言编写，并且会被编译成GPU可以执行的代码。</li>
+</ul>
+<p><strong>Tips：着色器相关的补充</strong></p>
+<blockquote>
+<ol>
+<li>WebGL和CSS自定义滤镜都是使用OpenGL ES着色语言定义着色器。</li>
+<li>CSS滤镜中，着色器是可以配置的，着色器用来被定义CSS3滤镜的时候，被称为自定义滤镜。</li>
+<li>2D Canvas API不支持可编程着色器。</li>
+</ol>
+</blockquote>
+<h1 id="WebGL基础"><a href="#WebGL基础" class="headerlink" title="WebGL基础"></a>WebGL基础</h1><p>对WebGL的简单认识：</p>
+<ul>
+<li>WebGL是一套API。</li>
+<li>WebGL基于OpenGL ES 2.0（其中ES是嵌入式系统，表示用于小型计算机设备）。</li>
+<li>可以与其他web页面元素结合。</li>
+<li>为创建动态web应用而生。</li>
+<li>跨平台的。</li>
+<li>免费的。</li>
+</ul>
+<h2 id="WebGL运作过程"><a href="#WebGL运作过程" class="headerlink" title="WebGL运作过程"></a>WebGL运作过程</h2><ol>
+<li>创建一个Canvas。</li>
+<li>获取Canvas元素中的绘图上下文。</li>
+<li>初始化视口。</li>
+<li>创建包含待渲染数据（一般是顶点）的缓冲。</li>
+<li>创建定义顶点缓冲到屏幕空间转换规则的矩阵。</li>
+<li>创建一到多个着色器。</li>
+<li>参数初始化着色器</li>
+<li>绘制。</li>
+</ol>
+<h2 id="绘图图元"><a href="#绘图图元" class="headerlink" title="绘图图元"></a>绘图图元</h2><p>WebGL基于图元进行绘制。<br>图元就是不同类型的基本几何图案，包括了：三角形、点和线。三角形是最常用的。通常使用：</p>
+<ul>
+<li>三角形集（数组存储）</li>
+<li>三角形条带<br>图元如果以数组形式存储，这个数组就叫做缓冲，等待被绘制的顶点数据在缓冲中被定义。</li>
+</ul>
+<p>浏览器为了WebGL引入新的数据类型，比如Float32Array。这是一类缓冲数组，也成为类型化数组，是一种以二进制为存储方式的JS类型。它访问速度更快，耗费内存也更小。</p>
+<h2 id="着色器"><a href="#着色器" class="headerlink" title="着色器"></a>着色器</h2><p>一个着色器通常由两个部分组成：</p>
+<ul>
+<li>顶点着色器：负责把物体的坐标转换为2D显示区域中的坐标。</li>
+<li>片段着色器：计算转换好的顶点像素的最终颜色输出，基于各个元素比如颜色、纹理、光源等数值输入。</li>
+</ul>
+</div>
+          </div>
+
+          
+            <nav class="post-nav" aria-label="文章切换">
+              
+                <a
+                  href="/posts/tech-20190507-tcp/"
+                  
+                >
+                  <span class="post-nav__label">上一篇</span>
+                  <span class="post-nav__title">传输层的小结</span>
+                </a>
+              
+              
+                <a
+                  href="/posts/tech-20190401-three-material/"
+                  
+                >
+                  <span class="post-nav__label">下一篇</span>
+                  <span class="post-nav__title">Three.js材料篇</span>
+                </a>
+              
+            </nav>
+          
+        </article>
+      </section>
+    </div>
+  </section>
+
+  <section class="post-about-band">
+    <svg class="post-divider post-divider--content" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"></path>
+    </svg>
+    <div class="post-about-band__inner">
+      <section class="post-about" aria-label="关于年糕">
+  <div class="post-about__figure">
+    <div class="post-about__figure-card">
+      <img
+        class="post-about__image"
+        src="/images/mochi_real.png"
+        alt="年糕的个人形象照"
+      />
+    </div>
+  </div>
+
+  <div class="post-about__content">
+    <p class="post-about__eyebrow">ABOUT THE GARDENER</p>
+    <div class="post-about__header">
+      <h2 class="post-about__name">年糕</h2>
+      <div class="post-about__channels" aria-label="社交平台">
+        
+          <a href="/#about">小红书</a>
+        
+          <a href="/#about">B站</a>
+        
+          <a href="/#about">微信公众号</a>
+        
+      </div>
+    </div>
+    <p class="post-about__bio">年糕是一个喜欢把代码、灵感和日常心情慢慢种进花园里的人。会写点前端，做点设计，也认真记录那些看起来不盛大、但会在以后发芽的小事。</p>
+  </div>
+</section>
+
+    </div>
+  </section>
+</main>
+
+
+    <footer class="site-footer site-footer--post">
+  <div class="site-footer__inner">
+    <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
+    <p class="site-footer__copy">© 2026 Mochi Garden. All rights reserved.</p>
+  </div>
+</footer>
+
+    <script src="/vendor/gsap/gsap.min.js"></script>
+<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+
+<script src="/js/main.js"></script>
+
+  </body>
+</html>

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta
+  name="description"
+  content="&lt;p&gt;一直就很想学习WebGL相关的知识，现在也找到了工作，生活也差不多趋向稳定了，加上学校也没那么多课程了，所以我肯定要利用起来这个时间啊！因为腿摔伤了，国庆估计是在家躺7天，所以更加要抓住这么好的学习时机了。&lt;br&gt;如你所见，这系列文章都是我自己的碎碎叨，当然啦，目的是为了能更好的梳理自己学习的知识，加强印象，顺便再来做个总结，这样能更加扎实的学习。&lt;br&gt;我的情况是，有前端基础，有PS基础，无计算机图形学基础，没有学过OpenGL，而我觉得，立体的图像比起2D的来说，可能更难以理解，因为首先，没有图形学的基础，游戏建模的经验，所以要通过联想来达成对概念的理解是比较困难的，但是我觉得只要多看多试验，实在不行就问问身边的同学，不一定要是图形学的“专家”，美术生也是不错的选择哦！这样总会明白的，所以让我们开始今天的学习吧！&lt;/p&gt;"
+/>
+<title>Three.js自学碎碎叨（上） | 年糕的编绳花园</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
+  rel="stylesheet"
+/>
+<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
+<link rel="stylesheet" href="/css/style.css" />
+
+
+  <meta name="generator" content="Hexo 7.3.0"></head>
+  <body class="post-page">
+    <div
+      class="site-loading"
+      aria-live="polite"
+      aria-label="页面加载中"
+      data-sprite-src="/images/tech/girl_read_sprite.png"
+      data-frame-count="2"
+    >
+      <div class="site-loading__inner">
+        <div class="site-loading__girl" aria-hidden="true"></div>
+        <p class="site-loading__text">LOADING...</p>
+        <div class="site-loading__progress" aria-hidden="true">
+          <span class="site-loading__progress-bar"></span>
+        </div>
+      </div>
+    </div>
+    <svg class="visual-defs" aria-hidden="true" width="0" height="0">
+      <defs>
+        <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.018"
+            numOctaves="2"
+            seed="8"
+            result="noise"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="noise"
+            scale="18"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
+      </defs>
+    </svg>
+    
+<header class="site-header">
+  <a
+    class="site-logo is-small"
+    href="/"
+    aria-label="返回年糕的编绳花园首页"
+    data-default-logo="/images/logo.png"
+    data-small-logo="/images/logo_small.png"
+  >
+    <img src="/images/logo_small.png" alt="年糕的编绳花园" />
+  </a>
+
+  <button
+    class="menu-toggle"
+    type="button"
+    aria-label="打开菜单"
+    aria-expanded="false"
+    aria-controls="site-menu"
+  >
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <div class="site-menu-overlay" hidden>
+    <div class="site-menu-page">
+      <nav id="site-menu" class="site-menu" aria-label="主菜单">
+        
+          <a href="/#home">HOME</a>
+        
+          <a href="/#work">WORK</a>
+        
+          <a href="/#tech">TECH</a>
+        
+          <a href="/#diary">DIARY</a>
+        
+          <a href="/#about">ABOUT</a>
+        
+      </nav>
+    </div>
+  </div>
+</header>
+
+    
+<main class="post-shell post-shell--detail">
+  <section class="post-journal-band">
+    <div class="post-journal">
+      <section class="post-hero-band">
+        <div class="post-hero post-hero--no-cover" aria-labelledby="post-title">
+          
+
+          <div class="post-hero__content">
+            <span class="post-hero__eyebrow">DIARY LOG</span>
+            <span class="post-hero__date">2019.02.21</span>
+            <h1 id="post-title" class="post-title post-title--decorated">
+              <img
+                class="post-title__decor"
+                src="/images/decorates/flower2.png"
+                alt=""
+                aria-hidden="true"
+              />
+              <span>Three.js自学碎碎叨（上）</span>
+            </h1>
+            <div class="post-meta" aria-label="文章信息">
+              <span>阅读约 15 分钟</span>
+              <span>#Three.js</span>
+              <span>#博客</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="post-content-band">
+        <article class="post-main">
+          <div class="post-body-shell">
+            <div class="post-body post-body--entry"><p>一直就很想学习WebGL相关的知识，现在也找到了工作，生活也差不多趋向稳定了，加上学校也没那么多课程了，所以我肯定要利用起来这个时间啊！因为腿摔伤了，国庆估计是在家躺7天，所以更加要抓住这么好的学习时机了。<br>如你所见，这系列文章都是我自己的碎碎叨，当然啦，目的是为了能更好的梳理自己学习的知识，加强印象，顺便再来做个总结，这样能更加扎实的学习。<br>我的情况是，有前端基础，有PS基础，无计算机图形学基础，没有学过OpenGL，而我觉得，立体的图像比起2D的来说，可能更难以理解，因为首先，没有图形学的基础，游戏建模的经验，所以要通过联想来达成对概念的理解是比较困难的，但是我觉得只要多看多试验，实在不行就问问身边的同学，不一定要是图形学的“专家”，美术生也是不错的选择哦！这样总会明白的，所以让我们开始今天的学习吧！</p>
+<span id="more"></span>
+
+<h1 id="搜刮来的学习资料"><a href="#搜刮来的学习资料" class="headerlink" title="搜刮来的学习资料"></a>搜刮来的学习资料</h1><p>我的学习资料主要是来源于下面的清单（可是找了好久，才找到了这么多，当然还有加上百度各种文章）：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://threejs.org/docs/index.html#api">Three.js官方文档</a>：官方的肯定是杠杠的！</li>
+<li><a target="_blank" rel="noopener" href="http://www.yanhuangxueyuan.com/">郭隆邦的技术博客</a>：我觉得很适合没基础的人学习，就是网页的排版不太舒服。</li>
+<li><a target="_blank" rel="noopener" href="http://www.ituring.com.cn/book/1272">Three.js入门指南</a>：是很知乎上很著名的女神写的，内容虽然很简洁，但是对于没有图形学基础的人来看有的地方还是不好理解。</li>
+<li><a target="_blank" rel="noopener" href="https://ithelp.ithome.com.tw/articles/10197499">ａｅｓｔｈＥｔｉｃ，ＣＹＢＥＲの ａｕｄｉｏ &#x2F; ＶＩＳＵＡＬ，網頁中的聲音與影像研究</a>：这个写的很好，不过不适合初学者看，讲的也偏向于简单介绍吧</li>
+<li><a target="_blank" rel="noopener" href="http://www.hangge.com/blog/cache/search.php?key=three.js">航哥Three.js入门教程</a>：这个系列的文章还不错呢！</li>
+<li><a target="_blank" rel="noopener" href="https://www.jikexueyuan.com/course/webgl/">极客学院WebGL教程</a>：当然学生党没啥钱，现在只能看免费的</li>
+</ul>
+<h1 id="WebGL初印象"><a href="#WebGL初印象" class="headerlink" title="WebGL初印象"></a>WebGL初印象</h1><p>WebGL也是在Canvas上绘制成的。<br>但是它还是有一点不一样，因为它除了要HTML、JS来写之外，还需要一个叫做着色器语言的东西，而WebGL使用的是GLSL ES，这就是说作为前端的我们，还得去学习另一门语言才行。<br>至于这其中的道理就是，Javascript通过浏览器的JS解释器控制CPU，通过CPU来控制GPU，GPU就是图形处理器，着色器语言构成的代码被编译后再交给GPU去执行。所以在写WebGL的时候，你会看到一大段类似于C语言的代码字符串被赋予给一个变量。<br>而对于我们新手来说，肯定是一脸懵逼的，所以我们对WebGL有一个简单的印象后，从Three.js开始入手学习，Three.js对这些都进行了一个很好的封装，我们就可以先不去考虑这些稍微原生态的东西。</p>
+<h1 id="Three-js初印象"><a href="#Three-js初印象" class="headerlink" title="Three.js初印象"></a>Three.js初印象</h1><p>Github地址：<a target="_blank" rel="noopener" href="https://github.com/mrdoob/three.js">https://github.com/mrdoob/three.js</a><br>我们肯定要先从简单的入手啦！虽然官方git仓库东西丰富，看的眼花缭乱！我们可以直接引入一个three.min.js的cdn链接就开始写我们的程序。</p>
+<p>一般情况下，我们可以在HTML文档里先写一个canvas标签，最后把我们的内容挂载上去，但是大家似乎更倾向于一切都在JS代码中完成，也就是最后appendChild到body上面去。</p>
+<h2 id="三个要素"><a href="#三个要素" class="headerlink" title="三个要素"></a>三个要素</h2><p>我们可以想像自己是在拍摄一张照片！比如，要拍摄淘宝的商品图片。<br>这时候我们就需要布置一个场景，我们可以放（add）一个苹果，然后加一个光照，最后再拿相机摆好位置拍下来！然后再把成像洗出来。<br>而Three.js成像的过程也很类似于这样，我们每次要作一幅新画的时候，就需要一个场景（Scene）对象、照相机(Camera)对象，还有渲染器（Renderer）！</p>
+<h2 id="我的第一个例子"><a href="#我的第一个例子" class="headerlink" title="我的第一个例子"></a>我的第一个例子</h2><pre><code>var scene = new THREE.Scene();
+
+var box = new THREE.BoxGeometry(100, 100, 100);
+var material = new THREE.MeshLambertMaterial(&#123;color: 0x0000ff&#125;);
+var mesh = new THREE.Mesh(box, material);
+scene.add(mesh);
+
+var point = new THREE.PointLight(0xffffff);
+point.position.set(400, 200, 300);
+scene.add(point);
+
+var ambient = new THREE.AmbientLight(0x444444);
+scene.add(ambient);
+
+var width = window.innerWidth;
+var height = window.innerHeight;
+var k = width / height;
+var s = 100;
+
+var camera = new THREE.OrthographicCamera(-s*k, s*k, s, -s, 1, 1000);
+camera.position.set(200, 300, 200);
+camera.lookAt(scene.position);
+
+var renderer = new THREE.WebGLRenderer();
+renderer.setSize(width, height);
+renderer.setClearColor(0xb9d3ff, 1);
+document.body.appendChild(renderer.domElement);
+renderer.render(scene, camera);
+</code></pre>
+<p>以下是下面这段代码的预览图：<br><img src="/pimgs/history/0069luTRly1fvt1yhylhij30m80e3754.jpg" alt="图片描述"></p>
+<p>以上的大段代码来自于我学习资料中的第一个网站！看不懂没关系，这时候其实我也还没细细看呢，我们一个个来看哦！</p>
+<h3 id="场景篇"><a href="#场景篇" class="headerlink" title="场景篇"></a>场景篇</h3><p>第一段代码，是关于我们创建了一个场景对象的！<br>这个比较简单，就是new了一个对象:</p>
+<pre><code>var scene = new THREE.Scene();
+</code></pre>
+<p>不过后面我们可以看到相关的代码还有<code>scene.add(point);</code>之类的，其实就是类似于我们说过的，向场景里去添加东西啦！我们可以看看场景对象的内部结构：<br><img src="/pimgs/history/0069luTRly1fvt1yi7w7aj30m80e4ae0.jpg" alt="图片描述"><br>眼花缭乱，东西好多啊！但是我们可以看到它有一个children属性，下面放的就是一个数组，就是我们add进去的东西哦！这样就更好理解了！</p>
+<h3 id="盒子篇"><a href="#盒子篇" class="headerlink" title="盒子篇"></a>盒子篇</h3><p>可以看到，这个场景，我们就是放了一个正方体进去！</p>
+<pre><code>var box = new THREE.BoxGeometry(100, 100, 100);
+var material = new THREE.MeshLambertMaterial(&#123;color: 0x0000ff&#125;);
+var mesh = new THREE.Mesh(box, material);
+scene.add(mesh);
+</code></pre>
+<h4 id="BoxGeometry是什么呢"><a href="#BoxGeometry是什么呢" class="headerlink" title="BoxGeometry是什么呢"></a>BoxGeometry是什么呢</h4><p>当然就是创建一个“盒子”对象咯，也就是一个块，长方体呀正方体啊都可以，给它设置参数就行了。三个参数分别表示width, height和depth。这里都是100，所以就是一个正方体啦！（可以自己修改下参数试试）</p>
+<h4 id="为什么还有一个Material呢"><a href="#为什么还有一个Material呢" class="headerlink" title="为什么还有一个Material呢"></a>为什么还有一个Material呢</h4><p>我们可以看到，我们最后用Mesh这个方法，把Box和Material结合起来了，字如其名！Material就是材料啦！如果我们不给Box添加任何材料的话，那就是一个”骨架”了，所以这里可能和我一开始的想象不一样，我们需要给Box制定它的材质，这个东西才能出来！</p>
+<h3 id="光源篇"><a href="#光源篇" class="headerlink" title="光源篇"></a>光源篇</h3><p>我们可以想象，假如我们东西都摆好了，但是没有灯的话，就是一片漆黑，所以这里还有很多光源的对象。这里我们就先了解这里用的两种光：点光源（point）和环境光（ambient）。</p>
+<p>假如没有任何的光，它就是乌漆麻黑的看不见！！<br><img src="/pimgs/history/0069luTRly1fvt1yhw88rj30ke0fkjrc.jpg" alt="图片描述"></p>
+<p>那么首先我们来研究一下点光源！</p>
+<pre><code>var point = new THREE.PointLight(0xffffff);
+point.position.set(400, 200, 300);
+scene.add(point);
+</code></pre>
+<p>我们给它添加了白色的光，重要的是在于这个位置的理解。我们根据经验也可以推断是这是x，y和z三个坐标值。经过我不断的改变这个位置值，看下图分别是(100, 100, 0)和(100, 100, 100)的情况，我们可以根据光线的变化来推断出光源的位置，从而知道坐标轴的设置：<br><img src="/pimgs/history/0069luTRly1fvt1yhwsc0j30h20gmt9i.jpg" alt="图片描述"><br><img src="/pimgs/history/0069luTRly1fvt1yhww4yj30gu0get9e.jpg" alt="图片描述"><br>随后查过资料后，发现Three.js使用的确实是右手坐标系，这里是与OpenGL同步默认的情况：<br><img src="/pimgs/history/0069luTRly1fvt1ym3nzgj30an06yaa6.jpg" alt="图片描述"><br>下面我模拟了一下从(0, 0, 100)到(0, 200, 100)的变化情况，也就是灯光从下一直上升到了上面。<br><img src="/pimgs/history/0069luTRly1fvt1ymd1rtg30b70bn0we.gif" alt="图片描述"></p>
+<p>我们再来看看环境光～<br>我尝试着只给Cube添加一个#FFF最亮的白光，可以看到它全部都亮了，颜色就是我们最初给Cube的颜色。我们可以发现这个环境光是均匀的，不会像点光源一样有一个强弱的减少。也就是说我们可以利用它来给我们提供一个布景的基础。<br><img src="/pimgs/history/0069luTRly1fvt1ym3m8qj30k60h83yh.jpg" alt="图片描述"></p>
+<h3 id="照相机篇"><a href="#照相机篇" class="headerlink" title="照相机篇"></a>照相机篇</h3><p>照相机我觉得对于我们这种没有图形学基础和建模经验的人来说，应该是比较难理解的，首先是我们要知道有两种成像相机：</p>
+<ul>
+<li>正交投影照相机：Orthographic Camera</li>
+<li>透视投影照相机：PerspectiveCamera</li>
+</ul>
+<p>其中透视投影是符合我们眼睛成像的原理的，就是说东西并不是远近一样的大小，比如下面这张桌子，我们可以感觉到离我们近的这边要更“大”一些：<br><img src="/pimgs/history/0069luTRly1fvt1ymdyilj30c00ac40t.jpg" alt="图片描述"></p>
+<p>而正交投影就不一样了，比如我们可以看下面这张建模图，就是方方正正的，参考线都是平行的：<br><img src="/pimgs/history/0069luTRly1fvt1ywvjctj30fi0fkah9.jpg" alt="图片描述"></p>
+<p>好，下面我们来认识一下照相机里面的几个参数：左、右、上、下、近、远。<br>这就类似于你相机成像的位置，也就是说可能画布是无限大的，但是相机只能拍出部分景象。<br><img src="/pimgs/history/0069luTRly1fvt1ywl60hj30ic09wq40.jpg" alt="图片描述"><br>这里比较难理解的就是近和远，似乎又和我们想像的一样，根据我自己的测试，我感觉它更像一个盒子，就是说超出这个范围的东西都会被割掉。<br>比如，当我把near值调大一点的时候，可以看到出现了一个缺口，也就是说相机距离的很近，所以出现了一个三角形的缺口。<br><img src="/pimgs/history/0069luTRly1fvt1ywjbd8j30gm0f2mxk.jpg" alt="图片描述"><br>另外我们可以知道，这个左-右&#x2F;上-下的比例应该与画布的比例一样，要不然图像的宽高比肯定会变化，会被压缩。</p>
+<p>当然啦，我们有了一个相机，必定要设置好它的位置，以及它朝着的方向。</p>
+<h3 id="渲染器篇"><a href="#渲染器篇" class="headerlink" title="渲染器篇"></a>渲染器篇</h3><p>最后，一切就绪，我们就可以用渲染器把这个图像渲染出来。<br>然后用<code>document.body.appendChild(renderer.domElement);</code>把渲染器渲染出来的元素添加到body中，再调用render函数进行渲染，就完毕了。<br>如果想要做动画效果，就再函数里动态改变一些数值，重新调用渲染方法，就可以达到了。</p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>今天是我学习Three.js的第一天，我通过一个基本的例子，对Three.js里面的一些基础的概念有了一点了解。<br>不过有的细节还是不太懂，也有一些自己的疑问，这还需要后面更多的学习。<br>另外，因为我也是新手，可能会有一些自己理解的不对的地方，欢迎指出来！^—^</p>
+</div>
+          </div>
+
+          
+            <nav class="post-nav" aria-label="文章切换">
+              
+                <a
+                  href="/posts/tech-20190222-three/"
+                  
+                >
+                  <span class="post-nav__label">上一篇</span>
+                  <span class="post-nav__title">Three.js自学碎碎叨（下）</span>
+                </a>
+              
+              
+                <a
+                  href="/posts/life-20190210-perfume/"
+                  
+                >
+                  <span class="post-nav__label">下一篇</span>
+                  <span class="post-nav__title">生活 | 给Perfume写的信</span>
+                </a>
+              
+            </nav>
+          
+        </article>
+      </section>
+    </div>
+  </section>
+
+  <section class="post-about-band">
+    <svg class="post-divider post-divider--content" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"></path>
+    </svg>
+    <div class="post-about-band__inner">
+      <section class="post-about" aria-label="关于年糕">
+  <div class="post-about__figure">
+    <div class="post-about__figure-card">
+      <img
+        class="post-about__image"
+        src="/images/mochi_real.png"
+        alt="年糕的个人形象照"
+      />
+    </div>
+  </div>
+
+  <div class="post-about__content">
+    <p class="post-about__eyebrow">ABOUT THE GARDENER</p>
+    <div class="post-about__header">
+      <h2 class="post-about__name">年糕</h2>
+      <div class="post-about__channels" aria-label="社交平台">
+        
+          <a href="/#about">小红书</a>
+        
+          <a href="/#about">B站</a>
+        
+          <a href="/#about">微信公众号</a>
+        
+      </div>
+    </div>
+    <p class="post-about__bio">年糕是一个喜欢把代码、灵感和日常心情慢慢种进花园里的人。会写点前端，做点设计，也认真记录那些看起来不盛大、但会在以后发芽的小事。</p>
+  </div>
+</section>
+
+    </div>
+  </section>
+</main>
+
+
+    <footer class="site-footer site-footer--post">
+  <div class="site-footer__inner">
+    <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
+    <p class="site-footer__copy">© 2026 Mochi Garden. All rights reserved.</p>
+  </div>
+</footer>
+
+    <script src="/vendor/gsap/gsap.min.js"></script>
+<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+
+<script src="/js/main.js"></script>
+
+  </body>
+</html>

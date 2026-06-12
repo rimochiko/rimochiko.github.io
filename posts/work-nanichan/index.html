@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta
+  name="description"
+  content="&lt;p&gt;大三下学期的实训项目，选题是一个在线日语单词的记忆网站，想着出来可以帮自己坚持学日语呢。因为只有三周时间，所以这次我觉得自己能完成核心的记忆、测试，以及查词的功能就足够了。另外自己选择主要技术是vue.js + koa2+mysql+redis。因为还没有学过koa和redis，也所以这次正好可以练练，反正让我用JAVA写后台我是不愿意啦&amp;gt;_&amp;lt;。&lt;/p&gt;"
+/>
+<title>2018-纳尼酱 | 年糕的编绳花园</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
+  rel="stylesheet"
+/>
+<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
+<link rel="stylesheet" href="/css/style.css" />
+
+
+  <meta name="generator" content="Hexo 7.3.0"></head>
+  <body class="post-page">
+    <div
+      class="site-loading"
+      aria-live="polite"
+      aria-label="页面加载中"
+      data-sprite-src="/images/tech/girl_read_sprite.png"
+      data-frame-count="2"
+    >
+      <div class="site-loading__inner">
+        <div class="site-loading__girl" aria-hidden="true"></div>
+        <p class="site-loading__text">LOADING...</p>
+        <div class="site-loading__progress" aria-hidden="true">
+          <span class="site-loading__progress-bar"></span>
+        </div>
+      </div>
+    </div>
+    <svg class="visual-defs" aria-hidden="true" width="0" height="0">
+      <defs>
+        <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.018"
+            numOctaves="2"
+            seed="8"
+            result="noise"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="noise"
+            scale="18"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
+      </defs>
+    </svg>
+    
+<header class="site-header">
+  <a
+    class="site-logo is-small"
+    href="/"
+    aria-label="返回年糕的编绳花园首页"
+    data-default-logo="/images/logo.png"
+    data-small-logo="/images/logo_small.png"
+  >
+    <img src="/images/logo_small.png" alt="年糕的编绳花园" />
+  </a>
+
+  <button
+    class="menu-toggle"
+    type="button"
+    aria-label="打开菜单"
+    aria-expanded="false"
+    aria-controls="site-menu"
+  >
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <div class="site-menu-overlay" hidden>
+    <div class="site-menu-page">
+      <nav id="site-menu" class="site-menu" aria-label="主菜单">
+        
+          <a href="/#home">HOME</a>
+        
+          <a href="/#work">WORK</a>
+        
+          <a href="/#tech">TECH</a>
+        
+          <a href="/#diary">DIARY</a>
+        
+          <a href="/#about">ABOUT</a>
+        
+      </nav>
+    </div>
+  </div>
+</header>
+
+    
+<main class="post-shell post-shell--detail">
+  <section class="post-journal-band">
+    <div class="post-journal">
+      <section class="post-hero-band">
+        <div class="post-hero" aria-labelledby="post-title">
+          
+          <div class="post-hero__visual">
+            <div class="post-hero__photo-frame">
+              <img
+                class="post-hero__image"
+                src="/mcimages/work_nanichan/detail.png"
+                alt="2018-纳尼酱头图"
+              />
+            </div>
+          </div>
+          
+
+          <div class="post-hero__content">
+            <span class="post-hero__eyebrow">DIARY LOG</span>
+            <span class="post-hero__date">2018.07.21</span>
+            <h1 id="post-title" class="post-title post-title--decorated">
+              <img
+                class="post-title__decor"
+                src="/images/decorates/flower2.png"
+                alt=""
+                aria-hidden="true"
+              />
+              <span>2018-纳尼酱</span>
+            </h1>
+            <div class="post-meta" aria-label="文章信息">
+              <span>阅读约 21 分钟</span>
+              <span>#编程项目</span>
+              <span>#博客</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="post-content-band">
+        <article class="post-main">
+          <div class="post-body-shell">
+            <div class="post-body post-body--entry"><p>大三下学期的实训项目，选题是一个在线日语单词的记忆网站，想着出来可以帮自己坚持学日语呢。因为只有三周时间，所以这次我觉得自己能完成核心的记忆、测试，以及查词的功能就足够了。另外自己选择主要技术是vue.js + koa2+mysql+redis。因为还没有学过koa和redis，也所以这次正好可以练练，反正让我用JAVA写后台我是不愿意啦&gt;_&lt;。</p>
+<span id="more"></span>
+<h1 id="功能设计"><a href="#功能设计" class="headerlink" title="功能设计"></a>功能设计</h1><p>请看这张图：<br><img src="/mcimages/work_nanichan/func.png" alt="功能结构图"><br>其实一开始的时候，我的功能设置并不是这样的，但是在自己的能力内，然后边思考边修改，最终呈现的就是这样一个效果了。主要的导航其实就是“单词本”和“查单词”两个按钮。<br>登录之后的个人控制版面，就拥有和自己有关系的单词呀，计划呀，单词本和学习计划之类的管理。</p>
+<p><img src="/mcimages/work_nanichan/dataflow.png" alt="顶层数据流图"><br>这是顶层的数据流图，其实还有一些操作没有写出来。<br><img src="/mcimages/work_nanichan/dataflow2.png" alt="一级数据流图"><br>然后再介绍一下，我的实体，和实体之间的关系:<br><img src="/mcimages/work_nanichan/er.png" alt="E-R图"><br>这里有几个比较容易让人感觉迷惑的点：</p>
+<ol>
+<li>一般来说，一个单词会有多种意思（1:n），一种意思又对应多个例句（1:n）。我实际上是把每种意思重新插了一条进去，因为都放在一条的话，对例句的处理和显示会比较麻烦。如果拿单词+意思两个做主键的话，又容易产生很多数据杂糅，所以选择了这样一种折中的方法。</li>
+<li>关于计划，其实计划美名其曰是这样，但是实际上它主要就是一个桥梁，建立起用户和单词书之间的关系，不过其实也包含了几个字段，比如创建日期还有每日记忆的数量。</li>
+</ol>
+<h1 id="页面预览"><a href="#页面预览" class="headerlink" title="页面预览"></a>页面预览</h1><p>页面的设计自然是摆在最前面的，思考了好久才确定好了设计的风格，脑海里就是希望能简洁+可爱+扁平化，因为想要给人是一种比较有“活力”的网站，所以最后选了蓝绿色来做主题色，展示部分静态页面：<br><img src="/mcimages/work_nanichan/detail.png" alt="测试页面"><br><img src="/mcimages/work_nanichan/login.png" alt="登录页面"><br><img src="/mcimages/work_nanichan/query_detail.png" alt="查单词页面"><br><img src="/mcimages/work_nanichan/query.png" alt="单词结果页面"><br>再来摆一下自己设计的LOGO（字体用的是现成的）和默认头像，还是第一次自用Adobe Illustrator按自己的想法画出了正经的东西，虽然还是有很多不足（总感觉还是有点违和），但是不能在这上面花太多精力了，噗：<br><img src="/mcimages/work_nanichan/logo.png" alt="LOGO"><br><img src="/mcimages/work_nanichan/avatar.png" alt="默认头像"><br>对于这个界面的设计，自己其实还是纠结了很久的，不过后面经过慢慢的修改和调整，算是确定了一个自己想要的风格，也就是现在这个感觉。但是我觉得还可以使用更丰富可爱的插图来代替一些地方，不过那是长远的计划了。包括这个记单词的系统也是的，也还有很多日语学习的功能想要扩充。</p>
+<h1 id="技术相关"><a href="#技术相关" class="headerlink" title="技术相关"></a>技术相关</h1><p>其实做到后面之后，很多问题都是比较雷同的，所以这里我就讲几个比较频繁的问题吧</p>
+<h2 id="前端相关问题"><a href="#前端相关问题" class="headerlink" title="前端相关问题"></a>前端相关问题</h2><p><strong>Q:音频加载异步问题</strong><br>很明显的一个异步问题就是在载入音频的时候，因为要不停地切换音频的地址来播放单词的发音，用v-if对DOM进行删除和添加显示也好，用v-show来直接对source进行更换也好，它都会出现载入中断的错误。后面查询了一下百度后发现，需要在每次更换source的时候，先load一次，这样就能安全的进行更改了。但是还有一种情况是，可能单词的发音还没来得及发音，用户就已经切换成了下一个单词，最后的时候，我就把切换的间隔时间加长了，也正好可以利用这个时间显示一下正确答案。</p>
+<p><strong>Q:浮点问题</strong><br>这个超级有意思哈哈哈，就是我在统计我的正确率的时候，需要做一个百分号计算，然后我刚开始的做法就是<code>Math.floor(正确回答次数/总回答次数)*100</code>，结果后面发现，出现了一串小数点，然后就用.toFixed(2)来设置为2个小数点，但是算出来的还是有的情况是无数个小数。这样我马上意识到了JS的浮点精度之类的问题，最后就是一定要在结果都算完了后再进行.toFixed的计算。</p>
+<p><strong>Q：table-cell垂直居中起效的前置条件</strong><br>table-cell类似于表格中的tr，所以按照<code>verticle-align: middle</code>和<code>text-align: center</code>理论上是可以居中的。以下是我自己的测试结果：<br>table-cell这个盒子必须要有宽度和高度，要不然它就会只占内容那么个大小。并且宽度和高度必须是具体的数值，不能是百分比，要不然也没用（除非这个时候又有一个父盒子，设置为<code>display: table</code>，table-cell就会占满这个table）。<br>首先，如果table-cell里面的内容是inline&#x2F;inline-block，是可以垂直居中的。<br>如果是block的块，它只会在垂直上显示居中，水平方向要设置<code>margin: 0 auto</code>才能实现。</p>
+<p><strong>Q：table-cell水平排列起效的前置条件</strong><br>做的时候碰到了table-cell的块不能并排的情况。首先，如果父盒子是<code>display: table</code>，盒子都会挤在一条，并且按照设置的宽度比进行一个分配。这里的情况是，父盒子为block，也能并排在一起。</p>
+<p><strong>Q：在内容高度不足的时候，Footer能否贴近底端？</strong><br>传统的CSS来说，给容器设置一个min-height应该是可以定位，后面可以借助CSS3的sticky这个选项。</p>
+<p><strong>Q：v-charts进行图表统计展示</strong><br>v-charts是饿了么团队开发的一些vue图表组件，目前我还是简单的按照文档用了下，还是挺方便的，文档传送门：<a target="_blank" rel="noopener" href="https://v-charts.js.org/">https://v-charts.js.org/</a></p>
+<p><strong>Q：for…of理解错误</strong><br>必须要迭代器（Array，Set，Map等）才能进行类似操作：</p>
+<pre><code>for(var [key, value] of sth) &#123;
+  // ...
+&#125;
+</code></pre>
+<p>而普通的object并不是。</p>
+<h2 id="后端技术"><a href="#后端技术" class="headerlink" title="后端技术"></a>后端技术</h2><p><strong>Q：洋葱模型异步问题</strong><br>因为去数据库中调取数据是异步的，所以会有拿到的结果是空的情况，就算是用promise也不好使，因为KOA的ctx在返回body的时候必须写在最外层，写在promise的回调函数里没什么用。所以这个时候就用到了async和await来解决。<br>但是这里也有一个问题，就是如果这几个promise是在一个层次的，它是可以等前面的执行了再执行，但是如果是调用模块引入方式的，它并不会进行等待。所以最后的时候，我用回调函数的形式进行封装，然后完成了自己的需求。</p>
+<p><strong>Q：验证码的存储</strong><br>我准备做一个邮箱验证的功能，因为验证码是过一段时间会失效的，并且在用户断开网络后，重新连接，还是可能能用，所以最好还是存在数据库里面，但是存在内存里就够了（因为它还是会失效），所以这里就使用了redis来作为存储辅助。</p>
+<p><strong>Q：Koa2初认识</strong><br>使用<a target="_blank" rel="noopener" href="https://www.npmjs.com/package/koa2-generator">koa2-generator</a>搭建出一个项目结构。根据<code>koa-router</code>配置的内容来接受请求。<code>bodyparser</code>帮助我们规格化接收到的数据。</p>
+<p><strong>Q：如何实现token验证</strong><br>我没有使用cookie的方式来加载token验证，主要是在跨域的时候如果需要携带cookie就必须指定某一个域名才行，但是这个过程还是很纠结，因为百度了很多感觉说的不是很清楚这个过程。我最后的做法是后端把token存在redis里面，前端把token存在vuex和localStorage里面，在发送请求的时候直接放在了报文主体上。但是后面看了jerry的博文，才知道大家经常说的把token放在请求报文头用authorization字段来表明，是为了让用户感觉不到这个token的存在，这个时候我才恍然大悟哈哈哈。<br>有一个很常用的模块<a target="_blank" rel="noopener" href="https://npmjs.com/package/jsonwebtoken">jsonwebtoken</a>，可以直接根据一些信息生成一个token。</p>
+<pre><code> const token =const jwt = require(&#39;jsonwebtoken&#39;)
+ jwt.sign(&#123;
+    ...: ...
+  &#125;, &#39;...&#39;, &#123;
+    expiresIn: &#39;1h&#39;  //过期时间
+  &#125;);
+</code></pre>
+<p><strong>Q: Koa2解决跨域</strong><br>使用koa2-cors模块，很容易就能实现：</p>
+<pre><code>app.use(cors(&#123;
+  origin: &#39;http://localhost:8080&#39;,
+  exposeHeaders: [&#39;WWW-Authenticate&#39;, &#39;Server-Authorization&#39;],
+  maxAge: 5,
+  credentials: true,
+  allowMethods: [&#39;GET&#39;, &#39;POST&#39;, &#39;DELETE&#39;, &#39;PUT&#39;],
+  allowHeaders: [&#39;Content-Type&#39;, &#39;Authorization&#39;, &#39;Accept&#39;]
+&#125;))
+</code></pre>
+<p>这里有一个很有意思的地方就是，因为我设置了请求允许携带cookie（虽然并没有用到cookie，摔(′д｀ )…彡…彡），而且在实际开发过程中，它也不会直接就一个星号来结束，所以它的域名设置只能设置一个。但是我不仅仅是前端页面，我还有管理后台的前端页面也要进行申请，所以我要设置多个。后面发现唔，不能传数组，也不能拼接字符串，结果就是只能返回一个。最后的解决方法是借鉴了java里常用的一种方法：</p>
+<p>  origin: function (ctx) {<br>    if(ctx.request.header.origin &#x3D;&#x3D; ‘<a href="http://localhost:8080/">http://localhost:8080</a>‘ || ctx.request.header.origin &#x3D;&#x3D; ‘<a href="http://localhost:9528/">http://localhost:9528</a>‘)<br>    return ctx.request.header.origin;<br>  }</p>
+<p>也就是在配置koa2的时候，然后把申请的那个origin地址返回去，加上if语句来判断，这样就可以按照限定的进行跨域请求了。</p>
+<p><strong>Q：获取用户的IP地址</strong><br>这里要获取原本的reques对象，直接<code>let req = ctx.req</code>就是原本的对象，然后：</p>
+<pre><code>req.headers[&#39;x-forwarded-for&#39;] ||
+  req.connection.remoteAddress ||
+  req.socket.remoteAddress ||
+  req.connection.socket.remoteAddress;
+</code></pre>
+<p><strong>Q：传输过程中带有特殊字符，造成解析错误</strong><br>使用axios发送数据的时候，如果是设置了：</p>
+<pre><code>   headers: &#123;
+     &#39;Content-Type&#39;: &#39;application/x-www-form-urlencoded&#39;
+   &#125;
+</code></pre>
+<p>后台解析数据的时候，会解析错误。原因是因为发送的时候是一个整的JSON字符串，也就是它是一个key，它的属性为空，所以解析必定出错。<br>解决方法是发送的时候加一个转化的函数：</p>
+<pre><code>transformRequest: [function (data) &#123;
+    let ret = &#39;&#39;
+    for (let it in data) &#123;
+      ret += encodeURIComponent(it) + &#39;=&#39; + encodeURIComponent(data[it]) + &#39;&amp;&#39;
+    &#125;
+    return ret
+  &#125;]
+</code></pre>
+<p><strong>Q：Koa2操作redis</strong><br>电脑安装好redis，打开redis-cli。<br>项目中引入npm包<code>redis</code>，查看官方文档会发现很容易操作：<a target="_blank" rel="noopener" href="https://npmjs.com/package/redis">https://npmjs.com/package/redis</a></p>
+<p><strong>Q：实现邮箱验证</strong><br>使用<code>nodemailer</code>这个包，在网易邮箱或者QQ邮箱之类的注册好一个账号，开启它的SMTP服务，设置密码啥的。</p>
+<pre><code>var config = &#123;
+  host: &#39;...&#39;,
+  port: 25,
+  auth: &#123;
+    user: &#39;...&#39;,
+    pass: &#39;...&#39;
+  &#125;
+&#125;
+
+var transporter = nodemailer.createTransport(config)
+
+module.exports = function (mail) &#123;
+  transporter.sendMail(mail, function (error, info) &#123;
+    if(error) &#123;
+      return console.log(error);
+    &#125;
+    console.log(&#39;mail sent:&#39;, info.response);
+  &#125;);
+&#125;;
+</code></pre>
+<p>这个导出的模块函数直接接受一个写了邮件信息的对象，执行后就会去发送了：</p>
+<pre><code>var mail = &#123;
+  from: &#39;xxx &lt;..@.&gt;&#39;,
+  subject: &#39;...&#39;,
+  to: &#39;..@..&#39;,
+  text: &#39;...&#39;
+&#125;;
+</code></pre>
+<p><strong>Q：git退出服务的时候端口还是占用的情况</strong><br>对于后台应用，输入<code>npm run dev</code>方式启动是可以自动刷新服务的，如果是<code>npm run start</code>按了ctrl+c或者ctrl+d它的端口还是会被占用（应该是开了另一个线程吧）。<br>windows的话，以管理员模式打开命令行，输入<code>netstat -aon | findstr &#39;3000&#39;</code>就可以找到那个PID是多少，然后再<code>taskkill /pid 那个进程ID /f</code>强制进行关闭就可以了。</p>
+<h2 id="更好的写法"><a href="#更好的写法" class="headerlink" title="更好的写法"></a>更好的写法</h2><p>其实我的代码是非常，唔，糟糕的，因为写的很急忙，没有时间去整理。后面写着写着发现其实有很多更好的写法：</p>
+<ol>
+<li>在vuex的使用里，我完全可以把用户的信息写在一个对象里，但是我把他们属性一个个都分开写了，这样重复的代码就很多。</li>
+<li>在传props的时候，官方更推荐，传简单值，但是我写了很多对象嘻嘻，而且也没有约定好类型。</li>
+<li>在写后台的时候，我应该建立数据模型的，用面向对象的编程思维去做。</li>
+<li>给vue的对象属性之类的赋值它不会检测更新，这个时候官方更推荐用Object.assign()的做法。</li>
+<li>把图片转成base64编码可以直接用post方法传过去，不用formdata的创建，但是这样的话它对文件的大小也有要求的。</li>
+<li>node端要把HTTP的状态码都充分利用起来，这样直接抛一个错误过去，前端能用catch来捕捉错误判断最严重的侵权之类的错误，其他小错误就可以其他再判断了。</li>
+</ol>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>有一些东西都是初次接触，所以目前了解的都还比较浅，我的感觉就是好好看文档真的很重要，还有就是发现自己在计算机网络有的方面存在一切误解，希望自己能发现更多慢慢更正过来。再然后一个问题就是自己的进度不算快，仔细想了想这样的任务量老师可能还不会满意，所以后面我很努力的（赶集样的）把东西都做完了。当时做的时候可以说是风风火火了，答辩完下午就跑去北京实习了，最后的结果还算满意。</p>
+<blockquote>
+<p>2022年的糕糕有话说：说实话现在回去看当时的自己真的好稚嫩啊！！（甚至有的我自己都看不懂是在说什么问题了，这就是成长吗~~~&#x2F;&#x2F;&#x2F;(^v^)\~~~）哈哈哈哈哈</p>
+</blockquote>
+</div>
+          </div>
+
+          
+            <nav class="post-nav" aria-label="文章切换">
+              
+                <a
+                  href="/posts/life-20180808-res/"
+                  
+                >
+                  <span class="post-nav__label">上一篇</span>
+                  <span class="post-nav__title">生活 | 北京实习小记</span>
+                </a>
+              
+              
+                <a
+                  href="/posts/tech-20180605-multientry/"
+                  
+                >
+                  <span class="post-nav__label">下一篇</span>
+                  <span class="post-nav__title">vue-cli项目打包为多页面</span>
+                </a>
+              
+            </nav>
+          
+        </article>
+      </section>
+    </div>
+  </section>
+
+  <section class="post-about-band">
+    <svg class="post-divider post-divider--content" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"></path>
+    </svg>
+    <div class="post-about-band__inner">
+      <section class="post-about" aria-label="关于年糕">
+  <div class="post-about__figure">
+    <div class="post-about__figure-card">
+      <img
+        class="post-about__image"
+        src="/images/mochi_real.png"
+        alt="年糕的个人形象照"
+      />
+    </div>
+  </div>
+
+  <div class="post-about__content">
+    <p class="post-about__eyebrow">ABOUT THE GARDENER</p>
+    <div class="post-about__header">
+      <h2 class="post-about__name">年糕</h2>
+      <div class="post-about__channels" aria-label="社交平台">
+        
+          <a href="/#about">小红书</a>
+        
+          <a href="/#about">B站</a>
+        
+          <a href="/#about">微信公众号</a>
+        
+      </div>
+    </div>
+    <p class="post-about__bio">年糕是一个喜欢把代码、灵感和日常心情慢慢种进花园里的人。会写点前端，做点设计，也认真记录那些看起来不盛大、但会在以后发芽的小事。</p>
+  </div>
+</section>
+
+    </div>
+  </section>
+</main>
+
+
+    <footer class="site-footer site-footer--post">
+  <div class="site-footer__inner">
+    <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
+    <p class="site-footer__copy">© 2026 Mochi Garden. All rights reserved.</p>
+  </div>
+</footer>
+
+    <script src="/vendor/gsap/gsap.min.js"></script>
+<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+
+<script src="/js/main.js"></script>
+
+  </body>
+</html>

@@ -1,318 +1,450 @@
-<!doctype html>
-<html lang="zh-cn">
-<head>
-	<meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <!--Description-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta
+  name="description"
+  content="一个把代码、灵感和日常慢慢种进花园里的 Hexo 博客。"
+/>
+<title>年糕的编绳花园</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
+  rel="stylesheet"
+/>
+<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
+<link rel="stylesheet" href="/css/style.css" />
+
+
+  <meta name="generator" content="Hexo 7.3.0"></head>
+  <body class="">
+    <div
+      class="site-loading"
+      aria-live="polite"
+      aria-label="页面加载中"
+      data-sprite-src="/images/tech/girl_read_sprite.png"
+      data-frame-count="2"
+    >
+      <div class="site-loading__inner">
+        <div class="site-loading__girl" aria-hidden="true"></div>
+        <p class="site-loading__text">LOADING...</p>
+        <div class="site-loading__progress" aria-hidden="true">
+          <span class="site-loading__progress-bar"></span>
+        </div>
+      </div>
+    </div>
+    <svg class="visual-defs" aria-hidden="true" width="0" height="0">
+      <defs>
+        <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.018"
+            numOctaves="2"
+            seed="8"
+            result="noise"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="noise"
+            scale="18"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
+      </defs>
+    </svg>
     
-        <meta name="description" content="愿你有一个好心情~^-^">
+<header class="site-header">
+  <a
+    class="site-logo is-small"
+    href="/"
+    aria-label="返回年糕的编绳花园首页"
+    data-default-logo="/images/logo.png"
+    data-small-logo="/images/logo_small.png"
+  >
+    <img src="/images/logo_small.png" alt="年糕的编绳花园" />
+  </a>
+
+  <button
+    class="menu-toggle"
+    type="button"
+    aria-label="打开菜单"
+    aria-expanded="false"
+    aria-controls="site-menu"
+  >
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <div class="site-menu-overlay" hidden>
+    <div class="site-menu-page">
+      <nav id="site-menu" class="site-menu" aria-label="主菜单">
+        
+          <a href="/#home">HOME</a>
+        
+          <a href="/#work">WORK</a>
+        
+          <a href="/#tech">TECH</a>
+        
+          <a href="/#diary">DIARY</a>
+        
+          <a href="/#about">ABOUT</a>
+        
+      </nav>
+    </div>
+  </div>
+</header>
+
     
-
-    <!--Author-->
-    
-        <meta name="author" content="阿糕">
-    
-
-    <!-- Title -->
-    
-    <title>page | 阿糕家后院</title>
-    <!--[if lt IE 9]>
-        <script src="http://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
-        <script src="http://cdn.staticfile.org/respond.js/1.3.0/respond.min.js"></script>
-        <![endif]-->
-    <!-- Custom CSS -->
-    
-<link rel="stylesheet" href="/css/style.css">
-
-	<link href="https://cdn.bootcss.com/animate.css/3.5.2/animate.css" rel="stylesheet">
-    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
-    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
-<meta name="generator" content="Hexo 7.3.0"></head>
-<body class="mck-body animated fadeIn">
-    <div class="mck-loading" id="loading-container">
-        <div class="mck-loading-item">
-            <div class="mck-loading-text">
-                <span class="mck-loading-textcontent">正在努力加载中...</span>
-            </div>
+<main class="post-shell post-shell--archive">
+  <section class="post-hero-band">
+    <div class="post-hero" aria-labelledby="post-title">
+      <div class="post-hero__content archive-hero__content">
+        <span class="post-hero__eyebrow">TECH ARCHIVE</span>
+        <span class="post-hero__date">
+          33 篇文章
+        </span>
+        <h1 id="post-title" class="post-title">TECH</h1>
+        <div class="post-meta" aria-label="归档信息">
+          <span>按 tech layout 浏览文章</span>
+          
+            <span>第 3 / 4 页</span>
+          
         </div>
+      </div>
     </div>
-    <div class="mck-sidebar">
-        <canvas id="floating"></canvas>
-        <div class="mck-logo">
-            <img src="https://www.mochiko.cn/mcimages/logo.png" />
-        </div>
-        <div class="mck-menu">
-            <div class="mck-menu__collapse" id="mck-menu__collapse">
-                <span class="mck-menu__collapse_line"></span>
-                <span class="mck-menu__collapse_line"></span>
-            </div>
-            <div class="mck-menu__normal">
-                <div class="mck-menu-item">
-                    <a href="/">HOME</a>
+  </section>
+
+  <section class="post-content-band">
+    <article class="post-main">
+      <div class="post-body-shell">
+        <div class="post-body archive-showcase">
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="/posts/tech-20180927-promise/"
+              aria-label="查看文章：Promise的相关小结"
+              
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">Promise的相关小结</h2>
+                <p class="archive-card__excerpt">
+                  前言 网上关于Promise的文章确实是非常多了，但是自己实践的并不多，这里是针对自己的一个知识点小结和梳理，而且由Promise延伸出的关于事件循环的机制也是可以挖出很多东西的，不过这个总结可能就是涉及到一些皮毛，当然
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2018</span>
+                    <span class="archive-card__day">09.27</span>
+                  </div>
+                  <span class="archive-card__tag">#JavaScript</span>
+                  
                 </div>
-                <div class="mck-menu-item">
-                    <a href="/work/index.html">WORK</a>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="/posts/tech-20180605-multientry/"
+              aria-label="查看文章：vue-cli项目打包为多页面"
+              
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">vue-cli项目打包为多页面</h2>
+                <p class="archive-card__excerpt">
+                  老师布置了一个用JAVA四个框架写系统的作业，然后想趁这个机会把前端框架也用上吧，但是因为是开发传统的网页应用，所以还是多页面更适用，于是就想着怎么来改造一下可以让webpack打包结果成多页面形式，去网上搜索一下其实已
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2018</span>
+                    <span class="archive-card__day">06.05</span>
+                  </div>
+                  <span class="archive-card__tag">#vue.js</span>
+                  
                 </div>
-                <div class="mck-menu-item">
-                    <a href="/tech/index.html">TECH</a>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="/posts/tech-20180523-cache/"
+              aria-label="查看文章：浏览器の缓存机制"
+              
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">浏览器の缓存机制</h2>
+                <p class="archive-card__excerpt">
+                  前言 继续挖坑啦，这个也是上次面试和面试官说了很多的一个问题来着，然后我来好好重新研究研究，试着来了解一下浏览器以及和它相关的一些的缓存机制。因为是坑，所以也是缓慢更新的，如果有错误欢迎提出哦！ 文章部分是小结于《 We
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2018</span>
+                    <span class="archive-card__day">05.23</span>
+                  </div>
+                  <span class="archive-card__tag">#浏览器</span>
+                  
                 </div>
-                <div class="mck-menu-item">
-                    <a href="/life/index.html">LIFE</a>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="/posts/tech-20180404-cross/"
+              aria-label="查看文章：跨域问题"
+              
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">跨域问题</h2>
+                <p class="archive-card__excerpt">
+                  前言 唔，面试的时候被问到了，然后把之前自己知道的情况都说了一下，但是后面还是感觉这其中还是有很多细节可以继续扒，所以这里来小结一下，为什么是挖坑系列，因为我一次性肯定写不完，算是经历了此次几轮面试后的一个学习小结的开始
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2018</span>
+                    <span class="archive-card__day">04.04</span>
+                  </div>
+                  <span class="archive-card__tag">#浏览器</span>
+                  
                 </div>
-                <div class="mck-menu-item">
-                    <a href="/link/index.html">LINK</a>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="/posts/tech-20180305-eventloop/"
+              aria-label="查看文章：JavaScript的事件循环"
+              
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">JavaScript的事件循环</h2>
+                <p class="archive-card__excerpt">
+                  JavaScript的单线程意思是JS引擎在执行和解释JS代码的时候，都是在一个线程里完成的，而这个线程也就是所谓的“主线程”，但是实际上在处理其他的一些特殊操作的时候，是会为其开辟新的线程来专门执行，比如： 处理Aja
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2018</span>
+                    <span class="archive-card__day">03.05</span>
+                  </div>
+                  <span class="archive-card__tag">#JavaScript</span>
+                  
                 </div>
-                <div class="mck-menu-item">
-                    <a href="/map/index.html" class="mck-menu-item__new">
-                        <img src="https://www.mochiko.cn/mcimages/emoji1.png" class="mck-menu-item__new_icon animated bounce"/>TRAVEL
-                    </a>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="/posts/tech-20180304-extend/"
+              aria-label="查看文章：JavaScript常见的继承方式"
+              
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">JavaScript常见的继承方式</h2>
+                <p class="archive-card__excerpt">
+                  最近在看《JavaScript设计模式》，然后开篇复习了JavaScript中的几种继承方式，自己似乎也没有怎么仔细探究过，目前自己没怎么碰到过应用的场景（噗），所以借这次机会好好来屡屡思路。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2018</span>
+                    <span class="archive-card__day">03.04</span>
+                  </div>
+                  <span class="archive-card__tag">#JavaScript</span>
+                  
                 </div>
-            </div>
-        </div>
-        <div class="mck-footer">
-            <div class="mck-footer-text">MOCHIKO ❤ Since 2017</div>
-            <div class="mck-footer-text" id="busuanzi_container_site_pv">你是第<span id="busuanzi_value_site_pv"></span>个光临的童鞋！</div>
-        </div>
-    </div><!--header end-->
-	<!--main begin-->
-	<div class="mck-main">
-		<div class="mck-articles">
-    <div class="mck-articles-title mck-section-title">TECH</div>
-    <div class="mck-article-list">
-        
-            <a href="/2018/11/21/tech-20181121-https/index.html">
-    <div  class="mck-article-item">
-        
-        <div class="mck-article-cover" style="background-image: url(https://wx2.sinaimg.cn/mw690/0069luTRgy1fq4gc9pc83j30ao0f4whw.jpg);">
+              </div>
+            </a>
+          
             
-            <div class="mck-article-date">2018-11-21</div>
-        </div>
-        <div class="mck-article-detail">
-            <div class="mck-article-title">初识HTTPS</div>
-            <ul class="mck-article-tags">
-                
-                    
+            <a
+              class="archive-card archive-card--no-cover"
+              href="/posts/tech-20180301-post/"
+              aria-label="查看文章：一个由POST和URL引发的一系列提问"
+              
+            >
+              
 
-<li class="mck-post-tag"><a class="a_tag" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/index.html">计算机网络</a></li>
-                
-            </ul>
-        </div>
-    </div>
-</a>
-
-        
-            <a href="/2018/10/27/tech-20181027-cubizer/index.html">
-    <div  class="mck-article-item">
-        
-        <div class="mck-article-cover" style="background-image: url(https://wx2.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u4sjlj30aa03bdfo.jpg);">
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">一个由POST和URL引发的一系列提问</h2>
+                <p class="archive-card__excerpt">
+                  我带着心中的“愤怒”，终于写完JAVA WEB作业。终于可以学点想学的只是啦，然后突然碰到了一个童鞋问的问题，结果发生了这是一个连锁反应。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2018</span>
+                    <span class="archive-card__day">03.01</span>
+                  </div>
+                  <span class="archive-card__tag">#计算机网络</span>
+                  
+                </div>
+              </div>
+            </a>
+          
             
-            <div class="mck-article-date">2018-10-27</div>
-        </div>
-        <div class="mck-article-detail">
-            <div class="mck-article-title">初识贝塞尔曲线</div>
-            <ul class="mck-article-tags">
-                
-                    
+            <a
+              class="archive-card archive-card--no-cover"
+              href="/posts/tech-20180202-closure/"
+              aria-label="查看文章：JavaScriptの闭包"
+              
+            >
+              
 
-<li class="mck-post-tag"><a class="a_tag" href="/tags/CSS/index.html">CSS</a></li>
-                
-            </ul>
-        </div>
-    </div>
-</a>
-
-        
-            <a href="/2018/09/27/tech-20180927-promise/index.html">
-    <div  class="mck-article-item">
-        
-        <div class="mck-article-cover" style="background-image: url();">
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">JavaScriptの闭包</h2>
+                <p class="archive-card__excerpt">
+                  前言 此文的内容主要是来自看书的总结+小小的实践哦~会不断更新总结。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2018</span>
+                    <span class="archive-card__day">02.22</span>
+                  </div>
+                  <span class="archive-card__tag">#JavaScript</span>
+                  
+                </div>
+              </div>
+            </a>
+          
             
-                <div class="mck-tech-desc">前言网上关于Promise的文章确实是非常多了，但是自己实践的并不多，这里是针对自己的一个知识点小结和梳理，而且由Promise延伸出的关于事件循环的机制也是可</div>
-                
-            <div class="mck-article-date">2018-09-27</div>
-        </div>
-        <div class="mck-article-detail">
-            <div class="mck-article-title">Promise的相关小结</div>
-            <ul class="mck-article-tags">
-                
-                    
+            <a
+              class="archive-card archive-card--no-cover"
+              href="/posts/tech-20180212-type/"
+              aria-label="查看文章：JavaScriptの类型"
+              
+            >
+              
 
-<li class="mck-post-tag"><a class="a_tag" href="/tags/JavaScript/index.html">JavaScript</a></li>
-                
-            </ul>
-        </div>
-    </div>
-</a>
-
-        
-            <a href="/2018/06/05/tech-20180605-multientry/index.html">
-    <div  class="mck-article-item">
-        
-        <div class="mck-article-cover" style="background-image: url();">
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">JavaScriptの类型</h2>
+                <p class="archive-card__excerpt">
+                  前言 此篇小结来源与《你不知道的JavaScript》和《JavaScript高级程序设计》的结合？？或许是的，龟速总结中…
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2018</span>
+                    <span class="archive-card__day">02.12</span>
+                  </div>
+                  <span class="archive-card__tag">#JavaScript</span>
+                  
+                </div>
+              </div>
+            </a>
+          
             
-                <div class="mck-tech-desc">老师布置了一个用JAVA四个框架写系统的作业，然后想趁这个机会把前端框架也用上吧，但是因为是开发传统的网页应用，所以还是多页面更适用，于是就想着怎么来改造一下可</div>
-                
-            <div class="mck-article-date">2018-06-05</div>
-        </div>
-        <div class="mck-article-detail">
-            <div class="mck-article-title">vue-cli项目打包为多页面</div>
-            <ul class="mck-article-tags">
-                
-                    
+            <a
+              class="archive-card archive-card--no-cover"
+              href="/posts/tech-20180209-http/"
+              aria-label="查看文章：《图解HTTP》小结+实践理解"
+              
+            >
+              
 
-<li class="mck-post-tag"><a class="a_tag" href="/tags/vue-js/index.html">vue.js</a></li>
-                
-            </ul>
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">《图解HTTP》小结+实践理解</h2>
+                <p class="archive-card__excerpt">
+                  前言 计算机网络课程的学习已经是在大二下学期的时候了，过去了半年多，有很多东西似乎都忘记了QAQ。况且当时上课的时候就感觉专业术语多，很多知识也难以理解，但是还是硬着头皮学了下来，如今阅读《HTTP图解》这本书发现很好理
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2018</span>
+                    <span class="archive-card__day">02.09</span>
+                  </div>
+                  <span class="archive-card__tag">#计算机网络</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+
+          
+            <nav class="archive-nav" aria-label="归档翻页">
+              
+                <a class="archive-nav__link" href="/tech/page/2/">
+                  <span class="archive-nav__label">上一页</span>
+                  <span class="archive-nav__title">较新的文章</span>
+                </a>
+              
+
+              <div class="archive-nav__status">
+                第 3 页，共 4 页
+              </div>
+
+              
+                <a class="archive-nav__link" href="/tech/page/4/">
+                  <span class="archive-nav__label">下一页</span>
+                  <span class="archive-nav__title">更早的文章</span>
+                </a>
+              
+            </nav>
+          
         </div>
+      </div>
+    </article>
+    <svg class="post-divider post-divider--content" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"></path>
+    </svg>
+  </section>
+
+  <section class="post-about" aria-label="关于年糕">
+  <div class="post-about__figure">
+    <div class="post-about__figure-card">
+      <img
+        class="post-about__image"
+        src="/images/mochi_real.png"
+        alt="年糕的个人形象照"
+      />
     </div>
-</a>
+  </div>
 
+  <div class="post-about__content">
+    <p class="post-about__eyebrow">ABOUT THE GARDENER</p>
+    <div class="post-about__header">
+      <h2 class="post-about__name">年糕</h2>
+      <div class="post-about__channels" aria-label="社交平台">
         
-            <a href="/2018/05/23/tech-20180523-cache/index.html">
-    <div  class="mck-article-item">
+          <a href="/#about">小红书</a>
         
-        <div class="mck-article-cover" style="background-image: url(https://wx3.sinaimg.cn/mw1024/0076cOZ3gy1frmtv3m5erj30m80ifwhv.jpg);">
-            
-            <div class="mck-article-date">2018-05-23</div>
-        </div>
-        <div class="mck-article-detail">
-            <div class="mck-article-title">浏览器の缓存机制</div>
-            <ul class="mck-article-tags">
-                
-                    
-
-<li class="mck-post-tag"><a class="a_tag" href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/index.html">浏览器</a></li>
-                
-            </ul>
-        </div>
+          <a href="/#about">B站</a>
+        
+          <a href="/#about">微信公众号</a>
+        
+      </div>
     </div>
-</a>
+    <p class="post-about__bio">年糕是一个喜欢把代码、灵感和日常心情慢慢种进花园里的人。会写点前端，做点设计，也认真记录那些看起来不盛大、但会在以后发芽的小事。</p>
+  </div>
+</section>
 
-        
-            <a href="/2018/04/04/tech-20180404-cross/index.html">
-    <div  class="mck-article-item">
-        
-        <div class="mck-article-cover" style="background-image: url(https://wx2.sinaimg.cn/mw690/0069luTRgy1frgrw4usrxj30b203ea9v.jpg);">
-            
-            <div class="mck-article-date">2018-04-04</div>
-        </div>
-        <div class="mck-article-detail">
-            <div class="mck-article-title">跨域问题</div>
-            <ul class="mck-article-tags">
-                
-                    
+</main>
 
-<li class="mck-post-tag"><a class="a_tag" href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/index.html">浏览器</a></li>
-                
-            </ul>
-        </div>
-    </div>
-</a>
+    <footer class="site-footer">
+  <div class="site-footer__inner">
+    <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
+    <p class="site-footer__copy">© 2026 Mochi Garden. All rights reserved.</p>
+  </div>
+</footer>
 
-        
-            <a href="/2018/03/05/tech-20180305-eventloop/index.html">
-    <div  class="mck-article-item">
-        
-        <div class="mck-article-cover" style="background-image: url();">
-            
-                <div class="mck-tech-desc">JavaScript的单线程意思是JS引擎在执行和解释JS代码的时候，都是在一个线程里完成的，而这个线程也就是所谓的“主线程”，但是实际上在处理其他的一些特殊操</div>
-                
-            <div class="mck-article-date">2018-03-05</div>
-        </div>
-        <div class="mck-article-detail">
-            <div class="mck-article-title">JavaScript的事件循环</div>
-            <ul class="mck-article-tags">
-                
-                    
+    <script src="/vendor/gsap/gsap.min.js"></script>
+<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
 
-<li class="mck-post-tag"><a class="a_tag" href="/tags/JavaScript/index.html">JavaScript</a></li>
-                
-            </ul>
-        </div>
-    </div>
-</a>
+<script src="/js/main.js"></script>
 
-        
-            <a href="/2018/03/04/tech-20180304-extend/index.html">
-    <div  class="mck-article-item">
-        
-        <div class="mck-article-cover" style="background-image: url(https://wx1.sinaimg.cn/mw690/0069luTRgy1fp13owry3zj306x048t8o.jpg);">
-            
-            <div class="mck-article-date">2018-03-04</div>
-        </div>
-        <div class="mck-article-detail">
-            <div class="mck-article-title">JavaScript常见的继承方式</div>
-            <ul class="mck-article-tags">
-                
-                    
-
-<li class="mck-post-tag"><a class="a_tag" href="/tags/JavaScript/index.html">JavaScript</a></li>
-                
-            </ul>
-        </div>
-    </div>
-</a>
-
-        
-            <a href="/2018/03/01/tech-20180301-post/index.html">
-    <div  class="mck-article-item">
-        
-        <div class="mck-article-cover" style="background-image: url();">
-            
-                <div class="mck-tech-desc">我带着心中的“愤怒”，终于写完JAVAWEB作业。终于可以学点想学的只是啦，然后突然碰到了一个童鞋问的问题，结果发生了这是一个连锁反应。</div>
-                
-            <div class="mck-article-date">2018-03-01</div>
-        </div>
-        <div class="mck-article-detail">
-            <div class="mck-article-title">一个由POST和URL引发的一系列提问</div>
-            <ul class="mck-article-tags">
-                
-                    
-
-<li class="mck-post-tag"><a class="a_tag" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/index.html">计算机网络</a></li>
-                
-            </ul>
-        </div>
-    </div>
-</a>
-
-        
-    </div>
-    <div class="mck-article-more">
-        
-            <a class="extend prev" rel="prev" href="/tech/page/2/">上一页</a><a class="page-number" href="/tech/">1</a><a class="page-number" href="/tech/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/tech/page/4/">4</a><a class="extend next" rel="next" href="/tech/page/4/">下一页</a>
-        
-    </div>
-
-</div>
-    </div>
-	<!--footer begin-->
-    <script async src="/js/busuanzi.js"></script>
-    <script>
-    $(document).ready(function () {
-        setTimeout(() => {
-            $('#loading-container').fadeOut();
-        }, 2000);
-
-        $('#mck-menu__collapse').click(function() {
-            var menu = $('.mck-menu__normal');
-            if (menu.hasClass('opened')) {
-                $(this).removeClass('opened')
-                menu.removeClass('opened')
-            } else {
-                $(this).addClass('opened')
-                menu.addClass('opened')
-            }
-        })
-    })
-    </script>
-    <script src="https://cdn.bootcdn.net/ajax/libs/prettify/r298/prettify.min.js"></script>
-    <script type="text/javascript">
-        jQuery(document).ready(function () {
-        jQuery("pre").addClass("prettyprint linenums");
-        prettyPrint();
-        });
-    </script>
-    <script async src="/js/sakura.js"></script>
-</body>
+  </body>
 </html>

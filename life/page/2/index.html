@@ -1,176 +1,377 @@
-<!doctype html>
-<html lang="zh-cn">
-<head>
-	<meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <!--Description-->
-    
-        <meta name="description" content="愿你有一个好心情~^-^">
-    
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta
+  name="description"
+  content="一个把代码、灵感和日常慢慢种进花园里的 Hexo 博客。"
+/>
+<title>年糕的编绳花园</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
+  rel="stylesheet"
+/>
+<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
+<link rel="stylesheet" href="/css/style.css" />
 
-    <!--Author-->
-    
-        <meta name="author" content="阿糕">
-    
 
-    <!-- Title -->
+  <meta name="generator" content="Hexo 7.3.0"></head>
+  <body class="">
+    <div
+      class="site-loading"
+      aria-live="polite"
+      aria-label="页面加载中"
+      data-sprite-src="/images/tech/girl_read_sprite.png"
+      data-frame-count="2"
+    >
+      <div class="site-loading__inner">
+        <div class="site-loading__girl" aria-hidden="true"></div>
+        <p class="site-loading__text">LOADING...</p>
+        <div class="site-loading__progress" aria-hidden="true">
+          <span class="site-loading__progress-bar"></span>
+        </div>
+      </div>
+    </div>
+    <svg class="visual-defs" aria-hidden="true" width="0" height="0">
+      <defs>
+        <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.018"
+            numOctaves="2"
+            seed="8"
+            result="noise"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="noise"
+            scale="18"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
+      </defs>
+    </svg>
     
-    <title>page | 阿糕家后院</title>
-    <!--[if lt IE 9]>
-        <script src="http://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
-        <script src="http://cdn.staticfile.org/respond.js/1.3.0/respond.min.js"></script>
-        <![endif]-->
-    <!-- Custom CSS -->
+<header class="site-header">
+  <a
+    class="site-logo is-small"
+    href="/"
+    aria-label="返回年糕的编绳花园首页"
+    data-default-logo="/images/logo.png"
+    data-small-logo="/images/logo_small.png"
+  >
+    <img src="/images/logo_small.png" alt="年糕的编绳花园" />
+  </a>
+
+  <button
+    class="menu-toggle"
+    type="button"
+    aria-label="打开菜单"
+    aria-expanded="false"
+    aria-controls="site-menu"
+  >
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <div class="site-menu-overlay" hidden>
+    <div class="site-menu-page">
+      <nav id="site-menu" class="site-menu" aria-label="主菜单">
+        
+          <a href="/#home">HOME</a>
+        
+          <a href="/#work">WORK</a>
+        
+          <a href="/#tech">TECH</a>
+        
+          <a href="/#diary">DIARY</a>
+        
+          <a href="/#about">ABOUT</a>
+        
+      </nav>
+    </div>
+  </div>
+</header>
+
     
-<link rel="stylesheet" href="/css/style.css">
+<main class="post-shell post-shell--archive">
+  <section class="post-hero-band">
+    <div class="post-hero" aria-labelledby="post-title">
+      <div class="post-hero__content archive-hero__content">
+        <span class="post-hero__eyebrow">LIFE ARCHIVE</span>
+        <span class="post-hero__date">
+          17 篇文章
+        </span>
+        <h1 id="post-title" class="post-title">LIFE</h1>
+        <div class="post-meta" aria-label="归档信息">
+          <span>按 life layout 浏览文章</span>
+          
+            <span>第 2 / 2 页</span>
+          
+        </div>
+      </div>
+    </div>
+  </section>
 
-	<link href="https://cdn.bootcss.com/animate.css/3.5.2/animate.css" rel="stylesheet">
-    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
-    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
-<meta name="generator" content="Hexo 7.3.0"></head>
-<body class="mck-body animated fadeIn">
-    <div class="mck-loading" id="loading-container">
-        <div class="mck-loading-item">
-            <div class="mck-loading-text">
-                <span class="mck-loading-textcontent">正在努力加载中...</span>
-            </div>
-        </div>
-    </div>
-    <div class="mck-sidebar">
-        <canvas id="floating"></canvas>
-        <div class="mck-logo">
-            <img src="https://www.mochiko.cn/mcimages/logo.png" />
-        </div>
-        <div class="mck-menu">
-            <div class="mck-menu__collapse" id="mck-menu__collapse">
-                <span class="mck-menu__collapse_line"></span>
-                <span class="mck-menu__collapse_line"></span>
-            </div>
-            <div class="mck-menu__normal">
-                <div class="mck-menu-item">
-                    <a href="/">HOME</a>
-                </div>
-                <div class="mck-menu-item">
-                    <a href="/work/index.html">WORK</a>
-                </div>
-                <div class="mck-menu-item">
-                    <a href="/tech/index.html">TECH</a>
-                </div>
-                <div class="mck-menu-item">
-                    <a href="/life/index.html">LIFE</a>
-                </div>
-                <div class="mck-menu-item">
-                    <a href="/link/index.html">LINK</a>
-                </div>
-                <div class="mck-menu-item">
-                    <a href="/map/index.html" class="mck-menu-item__new">
-                        <img src="https://www.mochiko.cn/mcimages/emoji1.png" class="mck-menu-item__new_icon animated bounce"/>TRAVEL
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="mck-footer">
-            <div class="mck-footer-text">MOCHIKO ❤ Since 2017</div>
-            <div class="mck-footer-text" id="busuanzi_container_site_pv">你是第<span id="busuanzi_value_site_pv"></span>个光临的童鞋！</div>
-        </div>
-    </div><!--header end-->
-	<!--main begin-->
-	<div class="mck-main">
-		<div class="mck-lifes">
-    <div class="mck-lifes-title mck-section-title">LIFE</div>
-    <div class="mck-life-list">
-        
-            <a href="/2018/12/27/life-20181227-music/index.html" class="mck-life-item-container" target="get_post_url(item).outside ? '_blank' : '_self'">
-<div class="mck-life-item">
-        <div class="mck-life-item-left" style="background-image:url(https://www.mochiko.cn/mcimages/q1.png)">
-        </div>
-        <div class="mck-lifes-item-content">
-            <div class="mck-lifes-detail">
-                <div class="mck-life-title">音乐 | 2018年令我印象深刻的J-POP</div>
-            </div>
-            <div class="mck-life-desc">不知不觉2018年马上就要接近尾声了，我就想来回顾一下自己在2018年收获的令我印象深刻的日本流行音乐。</div>
-            <div class="mck-life-date">2018-12-27</div>
-        </div>
-</div>
-</a>
-        
-            <a href="/2018/08/08/life-20180808-res/index.html" class="mck-life-item-container" target="get_post_url(item).outside ? '_blank' : '_self'">
-<div class="mck-life-item">
-        <div class="mck-life-item-left" style="background-image:url(https://www.mochiko.cn/mcimages/q2.png)">
-        </div>
-        <div class="mck-lifes-item-content">
-            <div class="mck-lifes-detail">
-                <div class="mck-life-title">生活 | 北京实习小记</div>
-            </div>
-            <div class="mck-life-desc">自从上次实训完后，我一刻也没停歇的就坐车到了北京，来到了租的房子，然后等待着实习生活的开始。北京和长沙比起来真的凉快太多，晚上虽然也有30度，但是我却冷的要盖被</div>
-            <div class="mck-life-date">2018-08-08</div>
-        </div>
-</div>
-</a>
-        
-            <a href="/2018/03/01/life-20180301-res/index.html" class="mck-life-item-container" target="get_post_url(item).outside ? '_blank' : '_self'">
-<div class="mck-life-item">
-        <div class="mck-life-item-left" style="background-image:url(https://www.mochiko.cn/mcimages/q6.png)">
-        </div>
-        <div class="mck-lifes-item-content">
-            <div class="mck-lifes-detail">
-                <div class="mck-life-title">生活 | 大三上学期寒假小结</div>
-            </div>
-            <div class="mck-life-desc">大三上学期的寒假就要结束了，这个寒假的时间足足有两个月，可能是因为今年的暑假或许没有我的假期了，所以来好好补偿了一番。这个寒假的生活还算是比较丰富吧。</div>
-            <div class="mck-life-date">2018-03-01</div>
-        </div>
-</div>
-</a>
-        
-            <a href="/2018/02/10/life-20180210-res/index.html" class="mck-life-item-container" target="get_post_url(item).outside ? '_blank' : '_self'">
-<div class="mck-life-item">
-        <div class="mck-life-item-left" style="background-image:url(https://www.mochiko.cn/mcimages/q4.png)">
-        </div>
-        <div class="mck-lifes-item-content">
-            <div class="mck-lifes-detail">
-                <div class="mck-life-title">生活 | 大三上学期小结</div>
-            </div>
-            <div class="mck-life-desc">这个学期到现在这个日子来说，应该算是要完结了，虽然成绩还没出完，但是自己心里大概也有个底了。一开始的时候，还是有点惊讶，因为上个学期我竟然当了一回专业第一，自己</div>
-            <div class="mck-life-date">2018-02-10</div>
-        </div>
-</div>
-</a>
-        
-    </div>
-    <div class="mck-article-more">
-        
-            <a class="extend prev" rel="prev" href="/life/">上一页</a><a class="page-number" href="/life/">1</a><span class="page-number current">2</span>
-        
-    </div>
-</div>
-    </div>
-	<!--footer begin-->
-    <script async src="/js/busuanzi.js"></script>
-    <script>
-    $(document).ready(function () {
-        setTimeout(() => {
-            $('#loading-container').fadeOut();
-        }, 2000);
+  <section class="post-content-band">
+    <article class="post-main">
+      <div class="post-body-shell">
+        <div class="post-body archive-showcase">
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="/posts/life-20181227-music/"
+              aria-label="查看文章：音乐 | 2018年令我印象深刻的J-POP"
+              
+            >
+              
 
-        $('#mck-menu__collapse').click(function() {
-            var menu = $('.mck-menu__normal');
-            if (menu.hasClass('opened')) {
-                $(this).removeClass('opened')
-                menu.removeClass('opened')
-            } else {
-                $(this).addClass('opened')
-                menu.addClass('opened')
-            }
-        })
-    })
-    </script>
-    <script src="https://cdn.bootcdn.net/ajax/libs/prettify/r298/prettify.min.js"></script>
-    <script type="text/javascript">
-        jQuery(document).ready(function () {
-        jQuery("pre").addClass("prettyprint linenums");
-        prettyPrint();
-        });
-    </script>
-    <script async src="/js/sakura.js"></script>
-</body>
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">音乐 | 2018年令我印象深刻的J-POP</h2>
+                <p class="archive-card__excerpt">
+                  不知不觉2018年马上就要接近尾声了，我就想来回顾一下自己在2018年收获的令我印象深刻的日本流行音乐。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2018</span>
+                    <span class="archive-card__day">12.27</span>
+                  </div>
+                  <span class="archive-card__tag">#J-POP</span>
+                  
+                    <span class="archive-card__tag">#音乐</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="/posts/life-20180808-res/"
+              aria-label="查看文章：生活 | 北京实习小记"
+              
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">生活 | 北京实习小记</h2>
+                <p class="archive-card__excerpt">
+                  自从上次实训完后，我一刻也没停歇的就坐车到了北京，来到了租的房子，然后等待着实习生活的开始。北京和长沙比起来真的凉快太多，晚上虽然也有30度，但是我却冷的要盖被子睡觉。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2018</span>
+                    <span class="archive-card__day">08.08</span>
+                  </div>
+                  <span class="archive-card__tag">#碎碎念</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="/posts/life-20180301-res/"
+              aria-label="查看文章：生活 | 大三上学期寒假小结"
+              
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">生活 | 大三上学期寒假小结</h2>
+                <p class="archive-card__excerpt">
+                  大三上学期的寒假就要结束了，这个寒假的时间足足有两个月，可能是因为今年的暑假或许没有我的假期了，所以来好好补偿了一番。这个寒假的生活还算是比较丰富吧。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2018</span>
+                    <span class="archive-card__day">03.01</span>
+                  </div>
+                  <span class="archive-card__tag">#碎碎念</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="/posts/life-20180210-res/"
+              aria-label="查看文章：生活 | 大三上学期小结"
+              
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">生活 | 大三上学期小结</h2>
+                <p class="archive-card__excerpt">
+                  这个学期到现在这个日子来说，应该算是要完结了，虽然成绩还没出完，但是自己心里大概也有个底了。一开始的时候，还是有点惊讶，因为上个学期我竟然当了一回专业第一，自己完全都没觉得自己会有这种能力，我都是尽可能在短时间内花自己最
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2018</span>
+                    <span class="archive-card__day">02.10</span>
+                  </div>
+                  <span class="archive-card__tag">#碎碎念</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="/posts/life-20170710-res/"
+              aria-label="查看文章：生活 | 2017年上半年的小总结"
+              
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">生活 | 2017年上半年的小总结</h2>
+                <p class="archive-card__excerpt">
+                  2017年已经过去一半了（其实早就过去一半了），觉得还是应该回顾回顾这半年以及我这个学期的生活，重拾一些温馨的时光、发现自己的不足，希望下个学期要更加进步。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2017</span>
+                    <span class="archive-card__day">07.10</span>
+                  </div>
+                  <span class="archive-card__tag">#碎碎念</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="/posts/life-20170605-res/"
+              aria-label="查看文章：生活 | 第一次做项目大概完工后的感想"
+              
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">生活 | 第一次做项目大概完工后的感想</h2>
+                <p class="archive-card__excerpt">
+                  晶网点这个项目大概是完工了，这是自己第一次做项目，回顾整个过程，还是有很多不好的地方。 可能是我自己生性做事较真，又有点急性子，所以对自己的团队伙伴的进度逼的很急，伙伴们也挺努力的，虽然作业很多，但是还是按时完成了任务。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2017</span>
+                    <span class="archive-card__day">06.05</span>
+                  </div>
+                  <span class="archive-card__tag">#碎碎念</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="/posts/life-20170404-res/"
+              aria-label="查看文章：生活 | 大二下学期小结"
+              
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">生活 | 大二下学期小结</h2>
+                <p class="archive-card__excerpt">
+                  这个学期，成长了很多，也留下了一些遗憾。 刚开始让我加入学生会我是拒绝的，因为自己有一些想做的事情，但是因为自己优柔寡断，然后也很相信自己可以挤出时间升任这些人物，所以还是没有拒绝来自学长和老师的邀请，当起了人员缺损的补
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2017</span>
+                    <span class="archive-card__day">04.04</span>
+                  </div>
+                  <span class="archive-card__tag">#碎碎念</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+
+          
+            <nav class="archive-nav" aria-label="归档翻页">
+              
+                <a class="archive-nav__link" href="/life/">
+                  <span class="archive-nav__label">上一页</span>
+                  <span class="archive-nav__title">较新的文章</span>
+                </a>
+              
+
+              <div class="archive-nav__status">
+                第 2 页，共 2 页
+              </div>
+
+              
+                <span class="archive-nav__link archive-nav__link--placeholder" aria-hidden="true">
+                  <span class="archive-nav__label">下一页</span>
+                  <span class="archive-nav__title">没有下一页</span>
+                </span>
+              
+            </nav>
+          
+        </div>
+      </div>
+    </article>
+    <svg class="post-divider post-divider--content" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"></path>
+    </svg>
+  </section>
+
+  <section class="post-about" aria-label="关于年糕">
+  <div class="post-about__figure">
+    <div class="post-about__figure-card">
+      <img
+        class="post-about__image"
+        src="/images/mochi_real.png"
+        alt="年糕的个人形象照"
+      />
+    </div>
+  </div>
+
+  <div class="post-about__content">
+    <p class="post-about__eyebrow">ABOUT THE GARDENER</p>
+    <div class="post-about__header">
+      <h2 class="post-about__name">年糕</h2>
+      <div class="post-about__channels" aria-label="社交平台">
+        
+          <a href="/#about">小红书</a>
+        
+          <a href="/#about">B站</a>
+        
+          <a href="/#about">微信公众号</a>
+        
+      </div>
+    </div>
+    <p class="post-about__bio">年糕是一个喜欢把代码、灵感和日常心情慢慢种进花园里的人。会写点前端，做点设计，也认真记录那些看起来不盛大、但会在以后发芽的小事。</p>
+  </div>
+</section>
+
+</main>
+
+    <footer class="site-footer">
+  <div class="site-footer__inner">
+    <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
+    <p class="site-footer__copy">© 2026 Mochi Garden. All rights reserved.</p>
+  </div>
+</footer>
+
+    <script src="/vendor/gsap/gsap.min.js"></script>
+<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+
+<script src="/js/main.js"></script>
+
+  </body>
 </html>
