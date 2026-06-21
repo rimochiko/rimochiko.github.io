@@ -1,79 +1,148 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   <head>
-    <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta
-  name="description"
-  content="&lt;h1 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;唔，面试的时候被问到了，然后把之前自己知道的情况都说了一下，但是后面还是感觉这其中还是有很多细节可以继续扒，所以这里来小结一下，为什么是挖坑系列，因为我一次性肯定写不完，算是经历了此次几轮面试后的一个学习小结的开始吧。（如果有错误，欢迎提出）&lt;/p&gt;"
-/>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="&lt;h1 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;唔，面试的时候被问到了，然后把之前自己知道的情况都说了一下，但是后面还是感觉这其中还是有很多细节可以继续扒，所以这里来小结一下，为什么是挖坑系列，因为我一次性肯定写不完，算是经历了此次几轮面试后的一个学习小结的开始吧。（如果有错误，欢迎提出）&lt;/p&gt;">
 <title>跨域问题 | 年糕的编程花园</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link
-  href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
-  rel="stylesheet"
-/>
-<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
-<link rel="stylesheet" href="/css/style.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
 
 
   <meta name="generator" content="Hexo 7.3.0"></head>
   <body class="post-page">
-    <div
-      class="site-loading"
-      aria-live="polite"
-      aria-label="页面加载中"
-      data-sprite-src="/images/tech/girl_read_sprite.png"
-      data-frame-count="2"
-    >
+    <div class="site-loading" aria-live="polite" aria-label="页面加载中">
       <div class="site-loading__inner">
-        <div class="site-loading__girl" aria-hidden="true"></div>
+        <img class="site-loading__symbol" src="/images/logo_small.webp" alt aria-hidden="true" decoding="async" fetchpriority="high">
         <p class="site-loading__text">LOADING...</p>
         <div class="site-loading__progress" aria-hidden="true">
           <span class="site-loading__progress-bar"></span>
         </div>
+        <p class="site-loading__percent" aria-hidden="true">0%</p>
       </div>
     </div>
+    <script>
+      (() => {
+        const loading = document.querySelector(".site-loading");
+        const loadingProgressBar = document.querySelector(".site-loading__progress-bar");
+        const loadingPercent = document.querySelector(".site-loading__percent");
+        const MAX_LOADING_MS = 9000;
+        const MIN_LOADING_MS = 450;
+        const TRANSITION_MS = 540;
+
+        if (!loading || !loadingProgressBar) return;
+
+        window.__mochiLoadingStarted = true;
+        document.body.classList.add("is-loading");
+
+        const startTime = Date.now();
+        let progressTimer = null;
+        let forceHideTimer = null;
+        let minimumDelayTimer = null;
+        let finishTimer = null;
+        let hidden = false;
+        let pageReady = document.readyState === "complete";
+        let currentProgress = 0;
+        let minimumDurationReached = false;
+
+        const setProgress = (value) => {
+          currentProgress = Math.max(currentProgress, Math.min(value, 100));
+          const progressValue = `${currentProgress}%`;
+          loading.style.setProperty("--loading-progress", progressValue);
+          loadingProgressBar.style.width = progressValue;
+
+          if (loadingPercent) {
+            loadingPercent.textContent = `${Math.floor(currentProgress)}%`;
+          }
+        };
+
+        const canHideNow = () => pageReady && minimumDurationReached;
+
+        const hideLoading = () => {
+          if (hidden) return;
+          hidden = true;
+
+          if (progressTimer) window.clearInterval(progressTimer);
+          if (forceHideTimer) window.clearTimeout(forceHideTimer);
+          if (minimumDelayTimer) window.clearTimeout(minimumDelayTimer);
+          if (finishTimer) window.clearTimeout(finishTimer);
+
+          setProgress(100);
+          loading.classList.add("is-hidden");
+          document.body.classList.remove("is-loading");
+
+          window.setTimeout(() => {
+            loading.remove();
+          }, TRANSITION_MS);
+        };
+
+        const scheduleHide = () => {
+          if (!canHideNow() || finishTimer || hidden) return;
+
+          setProgress(Math.max(currentProgress, 96));
+          finishTimer = window.setTimeout(hideLoading, 260);
+        };
+
+        const requestHide = () => {
+          pageReady = true;
+          scheduleHide();
+        };
+
+        setProgress(3);
+
+        progressTimer = window.setInterval(() => {
+          const elapsed = Date.now() - startTime;
+          const warmupRatio = Math.min(elapsed / 3600, 1);
+
+          if (pageReady) {
+            setProgress(currentProgress + Math.max((99 - currentProgress) * 0.18, 1.1));
+            return;
+          }
+
+          if (currentProgress < 90) {
+            const targetProgress = 3 + (1 - Math.pow(1 - warmupRatio, 1.35)) * 87;
+            setProgress(targetProgress);
+            return;
+          }
+
+          setProgress(currentProgress + Math.max((94 - currentProgress) * 0.035, 0.04));
+        }, 140);
+
+        minimumDelayTimer = window.setTimeout(() => {
+          minimumDurationReached = true;
+          scheduleHide();
+        }, MIN_LOADING_MS);
+
+        forceHideTimer = window.setTimeout(() => {
+          pageReady = true;
+          minimumDurationReached = true;
+          hideLoading();
+        }, MAX_LOADING_MS);
+
+        if (document.readyState === "complete") {
+          requestHide();
+        } else {
+          window.addEventListener("load", requestHide, { once: true });
+        }
+      })();
+    </script>
     <svg class="visual-defs" aria-hidden="true" width="0" height="0">
       <defs>
         <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency="0.018"
-            numOctaves="2"
-            seed="8"
-            result="noise"
-          />
-          <feDisplacementMap
-            in="SourceGraphic"
-            in2="noise"
-            scale="18"
-            xChannelSelector="R"
-            yChannelSelector="G"
-          />
+          <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="8" result="noise"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="18" xChannelSelector="R" yChannelSelector="G"/>
         </filter>
       </defs>
     </svg>
     
 <header class="site-header">
-  <a
-    class="site-logo is-small"
-    href="/"
-    aria-label="返回年糕的编程花园首页"
-    data-default-logo="/images/logo.png"
-    data-small-logo="/images/logo_small.png"
-  >
-    <img src="/images/logo_small.png" alt="年糕的编程花园" />
+  <a class="site-logo is-small" href="/" aria-label="返回年糕的编程花园首页" data-default-logo="/images/logo.webp" data-small-logo="/images/logo_small.webp">
+    <img src="/images/logo_small.webp" alt="年糕的编程花园" decoding="async" fetchpriority="high">
   </a>
 
-  <button
-    class="menu-toggle"
-    type="button"
-    aria-label="打开菜单"
-    aria-expanded="false"
-    aria-controls="site-menu"
-  >
+  <button class="menu-toggle" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="site-menu">
     <span></span>
     <span></span>
     <span></span>
@@ -110,12 +179,7 @@
             <span class="post-hero__eyebrow">DIARY LOG</span>
             <span class="post-hero__date">2018.04.04</span>
             <h1 id="post-title" class="post-title post-title--decorated">
-              <img
-                class="post-title__decor"
-                src="/images/decorates/flower2.png"
-                alt=""
-                aria-hidden="true"
-              />
+              <img class="post-title__decor" src="/images/decorates/flower2.webp" alt aria-hidden="true" decoding="async">
               <span>跨域问题</span>
             </h1>
             <div class="post-meta" aria-label="文章信息">
@@ -149,14 +213,14 @@
 <p><strong>为什么要进行限制？</strong><br>浏览器为了能够减少网络安全攻击问题采取的。<br>比如你直接在某个网站嵌入一段代码，其中获取了document.cookie，然后通过一个请求发送给你的网站，这样就可以盗取别人的cookie信息。</p>
 <h2 id="实践提问区"><a href="#实践提问区" class="headerlink" title="实践提问区"></a>实践提问区</h2><p><strong>Q：如果发送一个Ajax请求发生跨域，浏览器会做出什么反应呢？</strong><br>我们来做一个页面A：localhost&#x2F;ajax：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">function get() &#123;</span><br><span class="line">	  var xhr = new XMLHttpRequest();</span><br><span class="line">	  xhr.open(&quot;get&quot;,&quot;http://127.0.0.1/ajax/data.json&quot;,true);</span><br><span class="line">	  xhr.onreadystatechange = function() &#123;</span><br><span class="line">		if(xhr.readyState == 4) &#123;</span><br><span class="line">			if(xhr.status == 200 || xhr.status == 304) &#123;</span><br><span class="line">             alert(xhr.resonseText);</span><br><span class="line">			&#125; else &#123;</span><br><span class="line">				alert(&quot;请求失败啦&quot;);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	  &#125;</span><br><span class="line">	  xhr.send(null);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在页面A中请求：127.0.0.1&#x2F;ajax&#x2F;data.json<br>（没错，localhost和127.0.0.1两个家伙其实是同一个页面(。・∀・)ノ，但是它们的域名并不一样）<br>运行这个函数去请求之后，浏览器报错啦！<br><img src="https://wx2.sinaimg.cn/mw690/0069luTRgy1frgrw4usrxj30b203ea9v.jpg" alt="图片描述"><br><img src="http://wx4.sinaimg.cn/large/0069luTRgy1frgrw4uxt4j30wn03s3yq.jpg" alt="图片描述"></p>
+<p>在页面A中请求：127.0.0.1&#x2F;ajax&#x2F;data.json<br>（没错，localhost和127.0.0.1两个家伙其实是同一个页面(。・∀・)ノ，但是它们的域名并不一样）<br>运行这个函数去请求之后，浏览器报错啦！<br><img alt="图片描述" data-lazy-src="https://wx2.sinaimg.cn/mw690/0069luTRgy1frgrw4usrxj30b203ea9v.jpg" loading="lazy" decoding="async"><br><img alt="图片描述" data-lazy-src="http://wx4.sinaimg.cn/large/0069luTRgy1frgrw4uxt4j30wn03s3yq.jpg" loading="lazy" decoding="async"></p>
 <pre><code>Failed to load http://127.0.0.1/ajax/data.json: No &#39;Access-Control-Allow-Origin&#39; header is present on the requested resource. Origin &#39;http://localhost&#39; is therefore not allowed access.
 </code></pre>
 <p>可以看到，它说因为没有<code>Access-Control-Allow-Origin</code>出现在请求资源的头部信息中，所以不允许<code>http://localhost</code>通行。（这是不是也暗示了我们，其中一种解决方法呢）</p>
-<p><strong>Q：浏览器发送了请求吗？它有没有收到什么回应？</strong><br>之前不是说浏览器限制我们的发送吗？所以它发送了请求吗？打开控制台发现，它不仅发了一个data.json请求，格式为xhr，状态码是200。<br><img src="http://wx3.sinaimg.cn/large/0069luTRgy1frgrw4w342j30sl04y0t1.jpg" alt="图片描述"><br>瞅瞅下面这个报文的具体请求信息：<br><img src="https://wx1.sinaimg.cn/mw1024/0069luTRgy1frgrw9iag3j309g0ci0tb.jpg" alt="图片描述"></p>
-<p>再瞅瞅这个报文的Response：<br><img src="https://wx1.sinaimg.cn/mw1024/0069luTRgy1frgrw9hzjhj3078021t8j.jpg" alt="图片描述"></p>
+<p><strong>Q：浏览器发送了请求吗？它有没有收到什么回应？</strong><br>之前不是说浏览器限制我们的发送吗？所以它发送了请求吗？打开控制台发现，它不仅发了一个data.json请求，格式为xhr，状态码是200。<br><img alt="图片描述" data-lazy-src="http://wx3.sinaimg.cn/large/0069luTRgy1frgrw4w342j30sl04y0t1.jpg" loading="lazy" decoding="async"><br>瞅瞅下面这个报文的具体请求信息：<br><img alt="图片描述" data-lazy-src="https://wx1.sinaimg.cn/mw1024/0069luTRgy1frgrw9iag3j309g0ci0tb.jpg" loading="lazy" decoding="async"></p>
+<p>再瞅瞅这个报文的Response：<br><img alt="图片描述" data-lazy-src="https://wx1.sinaimg.cn/mw1024/0069luTRgy1frgrw9hzjhj3078021t8j.jpg" loading="lazy" decoding="async"></p>
 <p>唔，会发现它其实收到了这个回应呢。</p>
-<p><strong>Q：更换请求方式，情况会发生改变吗？</strong><br>我把请求方式从<code>GET</code>改成<code>PUT</code>，再去发送请求，除了和之前的弹错误警告框，控制台报错一样外，报文如下：<br><img src="https://wx1.sinaimg.cn/mw1024/0069luTRgy1frgrwke2dkj30b30d7dgj.jpg" alt="图片描述"></p>
+<p><strong>Q：更换请求方式，情况会发生改变吗？</strong><br>我把请求方式从<code>GET</code>改成<code>PUT</code>，再去发送请求，除了和之前的弹错误警告框，控制台报错一样外，报文如下：<br><img alt="图片描述" data-lazy-src="https://wx1.sinaimg.cn/mw1024/0069luTRgy1frgrwke2dkj30b30d7dgj.jpg" loading="lazy" decoding="async"></p>
 <p>可以发现它的请求方式变成了<code>OPTIONS</code>，且<code>response</code>是空。</p>
 <h1 id="简单-复杂请求"><a href="#简单-复杂请求" class="headerlink" title="简单&#x2F;复杂请求"></a>简单&#x2F;复杂请求</h1><p>为什么用<code>PUT</code>请求后，请求的方式变成了<code>OPTIONS</code>呢？这就涉及简单&#x2F;复杂请求的问题了。<br><strong>简单请求的条件</strong></p>
 <ol>
@@ -183,8 +247,8 @@
 	&#125;
 &#125;) 
 </code></pre>
-<p>发送请求的报文如下:<br><img src="https://wx4.sinaimg.cn/mw1024/0069luTRgy1frgrwu5zd6j30950algm4.jpg" alt="图片描述"></p>
-<p>和最开始没有解决跨域的请求相比，多了Cookie值：<br><img src="https://wx1.sinaimg.cn/mw1024/0069luTRgy1frgrw9iag3j309g0ci0tb.jpg" alt="图片描述"></p>
+<p>发送请求的报文如下:<br><img alt="图片描述" data-lazy-src="https://wx4.sinaimg.cn/mw1024/0069luTRgy1frgrwu5zd6j30950algm4.jpg" loading="lazy" decoding="async"></p>
+<p>和最开始没有解决跨域的请求相比，多了Cookie值：<br><img alt="图片描述" data-lazy-src="https://wx1.sinaimg.cn/mw1024/0069luTRgy1frgrw9iag3j309g0ci0tb.jpg" loading="lazy" decoding="async"></p>
 <p>所以可以认为，浏览器在没有解决跨域问题之前，不会把Cookie带上去。</p>
 <h2 id="iframe"><a href="#iframe" class="headerlink" title="iframe"></a>iframe</h2><p>在页面里嵌入一个iframe标签，它也会产生这个问题吗，于是我们在<code>localhost/ajax/index.php</code>下又嵌了一个<code>localhost/ajax/index.php</code>，在iframe里面去点击向<code>127.0.0.1/ajax/index.php</code>发送请求，结果报错了，说明它是存在这个限制的。</p>
 <h1 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h1><p>可以说解决方法是烂大街了哈哈哈~</p>
@@ -197,19 +261,13 @@
           
             <nav class="post-nav" aria-label="文章切换">
               
-                <a
-                  href="/posts/tech-20180523-cache/"
-                  
-                >
+                <a href="/posts/tech-20180523-cache/">
                   <span class="post-nav__label">上一篇</span>
                   <span class="post-nav__title">浏览器の缓存机制</span>
                 </a>
               
               
-                <a
-                  href="/posts/tech-20180305-eventloop/"
-                  
-                >
+                <a href="/posts/tech-20180305-eventloop/">
                   <span class="post-nav__label">下一篇</span>
                   <span class="post-nav__title">JavaScript的事件循环</span>
                 </a>
@@ -223,17 +281,14 @@
 
   <section class="post-about-band">
     <svg class="post-divider post-divider--content" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"></path>
+      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"/>
     </svg>
     <div class="post-about-band__inner">
-      <section class="post-about" aria-label="关于年糕">
+      
+<section class="post-about" aria-label="关于年糕">
   <div class="post-about__figure">
     <div class="post-about__figure-card">
-      <img
-        class="post-about__image"
-        src="/images/mochi_real.png"
-        alt="年糕的个人形象照"
-      />
+      <img class="post-about__image" src="/images/mochi_real.webp" alt="年糕的个人形象照" loading="lazy" decoding="async">
     </div>
   </div>
 
@@ -243,11 +298,20 @@
       <h2 class="post-about__name">年糕</h2>
       <div class="post-about__channels" aria-label="社交平台">
         
-          <a href="/#about">小红书</a>
+          
+          
+            <a href="https://www.xiaohongshu.com/user/profile/659266b2000000002001f48e" target="&#34;_blank&#34;" rel="&#34;noopener" noreferrer&#34;>小红书</a>
+          
         
-          <a href="/#about">B站</a>
+          
+          
+            <a href="https://space.bilibili.com/3494369971669945" target="&#34;_blank&#34;" rel="&#34;noopener" noreferrer&#34;>B站</a>
+          
         
-          <a href="/#about">微信公众号</a>
+          
+          
+            <button type="button" data-wechat-modal-trigger>微信公众号</button>
+          
         
       </div>
     </div>
@@ -260,6 +324,17 @@
 </main>
 
 
+    <dialog class="wechat-modal" aria-labelledby="wechat-modal-title">
+      <button class="wechat-modal__close" type="button" aria-label="关闭微信公众号二维码弹窗" data-wechat-modal-close>
+        ×
+      </button>
+      <div class="wechat-modal__content">
+        <p class="wechat-modal__eyebrow">WECHAT OFFICIAL ACCOUNT</p>
+        <h2 id="wechat-modal-title" class="wechat-modal__title">微信公众号</h2>
+        <img class="wechat-modal__qrcode" src="/images/wx_qrcode.webp" alt="微信公众号二维码" loading="lazy" decoding="async">
+        <p class="wechat-modal__hint">扫码或搜索“年糕的编程花园”关注年糕的公众号</p>
+      </div>
+    </dialog>
     <footer class="site-footer site-footer--post">
   <div class="site-footer__inner">
     <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
@@ -267,10 +342,10 @@
   </div>
 </footer>
 
-    <script src="/vendor/gsap/gsap.min.js"></script>
-<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+    <script defer src="/vendor/gsap/gsap.min.js"></script>
+<script defer src="/vendor/gsap/ScrollTrigger.min.js"></script>
 
-<script src="/js/main.js"></script>
+<script defer src="/js/main.js"></script>
 
   </body>
 </html>

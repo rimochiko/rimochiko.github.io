@@ -14,7 +14,6 @@
   href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
   rel="stylesheet"
 />
-<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
 <link rel="stylesheet" href="/css/style.css" />
 
 
@@ -24,17 +23,128 @@
       class="site-loading"
       aria-live="polite"
       aria-label="页面加载中"
-      data-sprite-src="/images/tech/girl_read_sprite.png"
-      data-frame-count="2"
     >
       <div class="site-loading__inner">
-        <div class="site-loading__girl" aria-hidden="true"></div>
+        <img
+          class="site-loading__symbol"
+          src="/images/logo_small.webp"
+          alt=""
+          aria-hidden="true"
+          decoding="async"
+          fetchpriority="high"
+        />
         <p class="site-loading__text">LOADING...</p>
         <div class="site-loading__progress" aria-hidden="true">
           <span class="site-loading__progress-bar"></span>
         </div>
+        <p class="site-loading__percent" aria-hidden="true">0%</p>
       </div>
     </div>
+    <script>
+      (() => {
+        const loading = document.querySelector(".site-loading");
+        const loadingProgressBar = document.querySelector(".site-loading__progress-bar");
+        const loadingPercent = document.querySelector(".site-loading__percent");
+        const MAX_LOADING_MS = 9000;
+        const MIN_LOADING_MS = 450;
+        const TRANSITION_MS = 540;
+
+        if (!loading || !loadingProgressBar) return;
+
+        window.__mochiLoadingStarted = true;
+        document.body.classList.add("is-loading");
+
+        const startTime = Date.now();
+        let progressTimer = null;
+        let forceHideTimer = null;
+        let minimumDelayTimer = null;
+        let finishTimer = null;
+        let hidden = false;
+        let pageReady = document.readyState === "complete";
+        let currentProgress = 0;
+        let minimumDurationReached = false;
+
+        const setProgress = (value) => {
+          currentProgress = Math.max(currentProgress, Math.min(value, 100));
+          const progressValue = `${currentProgress}%`;
+          loading.style.setProperty("--loading-progress", progressValue);
+          loadingProgressBar.style.width = progressValue;
+
+          if (loadingPercent) {
+            loadingPercent.textContent = `${Math.floor(currentProgress)}%`;
+          }
+        };
+
+        const canHideNow = () => pageReady && minimumDurationReached;
+
+        const hideLoading = () => {
+          if (hidden) return;
+          hidden = true;
+
+          if (progressTimer) window.clearInterval(progressTimer);
+          if (forceHideTimer) window.clearTimeout(forceHideTimer);
+          if (minimumDelayTimer) window.clearTimeout(minimumDelayTimer);
+          if (finishTimer) window.clearTimeout(finishTimer);
+
+          setProgress(100);
+          loading.classList.add("is-hidden");
+          document.body.classList.remove("is-loading");
+
+          window.setTimeout(() => {
+            loading.remove();
+          }, TRANSITION_MS);
+        };
+
+        const scheduleHide = () => {
+          if (!canHideNow() || finishTimer || hidden) return;
+
+          setProgress(Math.max(currentProgress, 96));
+          finishTimer = window.setTimeout(hideLoading, 260);
+        };
+
+        const requestHide = () => {
+          pageReady = true;
+          scheduleHide();
+        };
+
+        setProgress(3);
+
+        progressTimer = window.setInterval(() => {
+          const elapsed = Date.now() - startTime;
+          const warmupRatio = Math.min(elapsed / 3600, 1);
+
+          if (pageReady) {
+            setProgress(currentProgress + Math.max((99 - currentProgress) * 0.18, 1.1));
+            return;
+          }
+
+          if (currentProgress < 90) {
+            const targetProgress = 3 + (1 - Math.pow(1 - warmupRatio, 1.35)) * 87;
+            setProgress(targetProgress);
+            return;
+          }
+
+          setProgress(currentProgress + Math.max((94 - currentProgress) * 0.035, 0.04));
+        }, 140);
+
+        minimumDelayTimer = window.setTimeout(() => {
+          minimumDurationReached = true;
+          scheduleHide();
+        }, MIN_LOADING_MS);
+
+        forceHideTimer = window.setTimeout(() => {
+          pageReady = true;
+          minimumDurationReached = true;
+          hideLoading();
+        }, MAX_LOADING_MS);
+
+        if (document.readyState === "complete") {
+          requestHide();
+        } else {
+          window.addEventListener("load", requestHide, { once: true });
+        }
+      })();
+    </script>
     <svg class="visual-defs" aria-hidden="true" width="0" height="0">
       <defs>
         <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
@@ -61,10 +171,15 @@
     class="site-logo is-small"
     href="/"
     aria-label="返回年糕的编程花园首页"
-    data-default-logo="/images/logo.png"
-    data-small-logo="/images/logo_small.png"
+    data-default-logo="/images/logo.webp"
+    data-small-logo="/images/logo_small.webp"
   >
-    <img src="/images/logo_small.png" alt="年糕的编程花园" />
+    <img
+      src="/images/logo_small.webp"
+      alt="年糕的编程花园"
+      decoding="async"
+      fetchpriority="high"
+    />
   </a>
 
   <button
@@ -105,15 +220,18 @@
       <div class="post-hero__content archive-hero__content">
         <span class="post-hero__eyebrow">ARCHIVE</span>
         <span class="post-hero__date">
-          3 篇文章
+          10 篇文章
         </span>
         <h1 id="post-title" class="post-title">花园归档</h1>
         <div class="post-meta" aria-label="归档信息">
           <span>按时间浏览全部文章</span>
           
-            <span>第 4 / 4 页</span>
+            <span>第 4 / 6 页</span>
           
         </div>
+      </div>
+      <div class="archive-hero__decor" aria-hidden="true">
+        <span class="archive-hero__reader"></span>
       </div>
     </div>
   </section>
@@ -126,21 +244,146 @@
             
             <a
               class="archive-card archive-card--no-cover"
-              href="/posts/tech-20171130-margin/"
-              aria-label="查看文章：圣杯布局引发对margin负值的研究"
+              href="/posts/tech-20190407-webgl/"
+              aria-label="查看文章：初识WEBGL"
               
             >
               
 
               <div class="archive-card__content">
-                <h2 class="archive-card__title">圣杯布局引发对margin负值的研究</h2>
+                <h2 class="archive-card__title">初识WEBGL</h2>
                 <p class="archive-card__excerpt">
-                  问题の起源 以前一直就听说圣杯布局，但是没有怎么去用过，然后这次偶然接触到了，就学习了一下。 这是一个我从别人写的文章中复制过来的，关于圣杯布局的比较简单的说明 通过缩放页面就可以发现，随着页面的宽度的变化，这三栏布局是
+                  我们希望3D图像也能在网页中实现，这样我们可以利用网页这个快捷的传播途径，进行更多可能的创作。随着HTML5的到来，WebGL的出现使得其成为可能，WebGL使得JS支持硬件3D加速渲染（同样的CSS3也得到了硬件3D加
                 </p>
                 <div class="archive-card__meta">
                   <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2017</span>
-                    <span class="archive-card__day">11.30</span>
+                    <span class="archive-card__year">2019</span>
+                    <span class="archive-card__day">04.07</span>
+                  </div>
+                  <span class="archive-card__tag">#WEBGL</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="/posts/tech-20190401-three-material/"
+              aria-label="查看文章：Three.js材料篇"
+              
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">Three.js材料篇</h2>
+                <p class="archive-card__excerpt">
+                  这次小糕来总结一下Three.js中的Material们，也就是物体所使用的材质，通俗的说，材质决定了物体给人看起来的感觉，比如现实生活中，有的东西会反光。 但是在3D世界里，还是稍微有些不同，所以我们来看看Three.
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2019</span>
+                    <span class="archive-card__day">04.01</span>
+                  </div>
+                  <span class="archive-card__tag">#Three.js</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="/posts/tech-20190312-huisufa/"
+              aria-label="查看文章：回溯法小结"
+              
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">回溯法小结</h2>
+                <p class="archive-card__excerpt">
+                  回溯法の定义 回溯法（探索与回溯法）是一种选优搜索法，又称为试探法，按选优条件向前搜索，以达到目标。但当探索到某一步时，发现原先选择并不优或达不到目标，就退回一步重新选择，这种走不通就退回再走的技术为回溯法。 以上来自百
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2019</span>
+                    <span class="archive-card__day">03.12</span>
+                  </div>
+                  <span class="archive-card__tag">#算法</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="/posts/tech-20190222-three/"
+              aria-label="查看文章：Three.js自学碎碎叨（下）"
+              
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">Three.js自学碎碎叨（下）</h2>
+                <p class="archive-card__excerpt">
+                  昨天终于把基本的东西给弄清楚了，然后也能写简单的DEMO了，今天主要是想想看还有没有更好的资料，然后继续写一些DEMO来加深一下印象，结果在B站发现了从油管上扒下来的Three.js系列教程，于是我就跟着它学了几节课，虽
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2019</span>
+                    <span class="archive-card__day">02.22</span>
+                  </div>
+                  <span class="archive-card__tag">#Three.js</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="/posts/tech-20190221-three/"
+              aria-label="查看文章：Three.js自学碎碎叨（上）"
+              
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">Three.js自学碎碎叨（上）</h2>
+                <p class="archive-card__excerpt">
+                  一直就很想学习WebGL相关的知识，现在也找到了工作，生活也差不多趋向稳定了，加上学校也没那么多课程了，所以我肯定要利用起来这个时间啊！因为腿摔伤了，国庆估计是在家躺7天，所以更加要抓住这么好的学习时机了。 如你所见，这
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2019</span>
+                    <span class="archive-card__day">02.21</span>
+                  </div>
+                  <span class="archive-card__tag">#Three.js</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="/posts/tech-20190203-gradient/"
+              aria-label="查看文章：CSS渐变小结"
+              
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">CSS渐变小结</h2>
+                <p class="archive-card__excerpt">
+                  因为我不喜欢背公式，希望自己能找到比较容易理解和推理的记忆方式吧，很早就感觉CSS3渐变的属性组成不太好记忆，所以今天终于挖了这个坑，其实也没什么很特别的，嘻嘻，如果有错误欢迎提出。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2019</span>
+                    <span class="archive-card__day">02.03</span>
                   </div>
                   <span class="archive-card__tag">#CSS</span>
                   
@@ -151,23 +394,23 @@
             
             <a
               class="archive-card archive-card--no-cover"
-              href="/posts/tech-20170816-about-lorem/"
-              aria-label="查看文章：网页模板中经常出现的Lorem Ipsum"
+              href="/posts/tech-20181121-https/"
+              aria-label="查看文章：初识HTTPS"
               
             >
               
 
               <div class="archive-card__content">
-                <h2 class="archive-card__title">网页模板中经常出现的Lorem Ipsum</h2>
+                <h2 class="archive-card__title">初识HTTPS</h2>
                 <p class="archive-card__excerpt">
-                  我经常在网页模板中看到一段拉丁文？？不知道是什么意思QAQ，结果今天有幸发现它是占位符。
+                  前言 我就是那块迟钝の糕同学，我一直都只知道HTTPS是HTTP+SSL&amp;#x2F;TLS两种协议共同构成的，但是对于其中的机制，可以说是很多环节都充满了各种疑问。这个学期我们开了信息安全课，可惜老师只是讲了一些加密的算
                 </p>
                 <div class="archive-card__meta">
                   <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2017</span>
-                    <span class="archive-card__day">08.16</span>
+                    <span class="archive-card__year">2018</span>
+                    <span class="archive-card__day">11.21</span>
                   </div>
-                  <span class="archive-card__tag">#HTML</span>
+                  <span class="archive-card__tag">#计算机网络</span>
                   
                 </div>
               </div>
@@ -176,23 +419,73 @@
             
             <a
               class="archive-card archive-card--no-cover"
-              href="/posts/tech-20170728-event/"
-              aria-label="查看文章：JS高级程序设计·事件"
+              href="/posts/tech-20181027-cubizer/"
+              aria-label="查看文章：初识贝塞尔曲线"
               
             >
               
 
               <div class="archive-card__content">
-                <h2 class="archive-card__title">JS高级程序设计·事件</h2>
+                <h2 class="archive-card__title">初识贝塞尔曲线</h2>
                 <p class="archive-card__excerpt">
-                  1 事件流 在我们点击某个按钮的时候，其实也点击了包含它的容器，以及整个页面。假使我们给按钮的点击添加了某个事件的触发，但我们也给对包含它的容器的点击添加了事件的触发，那一般情况下我们肯定不能舍去其中某个事件的发生，这就
+                  贝塞尔曲线在CSS动画中和canvas、svg绘图中都是比较重要的一个东西！所以我来好好的小结一下关于它的一些东西。
                 </p>
                 <div class="archive-card__meta">
                   <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2017</span>
-                    <span class="archive-card__day">07.28</span>
+                    <span class="archive-card__year">2018</span>
+                    <span class="archive-card__day">10.27</span>
+                  </div>
+                  <span class="archive-card__tag">#CSS</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="/posts/tech-20180927-promise/"
+              aria-label="查看文章：Promise的相关小结"
+              
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">Promise的相关小结</h2>
+                <p class="archive-card__excerpt">
+                  前言 网上关于Promise的文章确实是非常多了，但是自己实践的并不多，这里是针对自己的一个知识点小结和梳理，而且由Promise延伸出的关于事件循环的机制也是可以挖出很多东西的，不过这个总结可能就是涉及到一些皮毛，当然
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2018</span>
+                    <span class="archive-card__day">09.27</span>
                   </div>
                   <span class="archive-card__tag">#JavaScript</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="/posts/tech-20180605-multientry/"
+              aria-label="查看文章：vue-cli项目打包为多页面"
+              
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">vue-cli项目打包为多页面</h2>
+                <p class="archive-card__excerpt">
+                  老师布置了一个用JAVA四个框架写系统的作业，然后想趁这个机会把前端框架也用上吧，但是因为是开发传统的网页应用，所以还是多页面更适用，于是就想着怎么来改造一下可以让webpack打包结果成多页面形式，去网上搜索一下其实已
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2018</span>
+                    <span class="archive-card__day">06.05</span>
+                  </div>
+                  <span class="archive-card__tag">#vue.js</span>
                   
                 </div>
               </div>
@@ -209,14 +502,14 @@
               
 
               <div class="archive-nav__status">
-                第 4 页，共 4 页
+                第 4 页，共 6 页
               </div>
 
               
-                <span class="archive-nav__link archive-nav__link--placeholder" aria-hidden="true">
+                <a class="archive-nav__link" href="/categories/%E6%8A%80%E6%9C%AF%E6%89%93%E5%B7%A5%E4%BA%BA/page/5/">
                   <span class="archive-nav__label">下一页</span>
-                  <span class="archive-nav__title">没有下一页</span>
-                </span>
+                  <span class="archive-nav__title">更早的文章</span>
+                </a>
               
             </nav>
           
@@ -228,13 +521,16 @@
     </svg>
   </section>
 
-  <section class="post-about" aria-label="关于年糕">
+  
+<section class="post-about" aria-label="关于年糕">
   <div class="post-about__figure">
     <div class="post-about__figure-card">
       <img
         class="post-about__image"
-        src="/images/mochi_real.png"
+        src="/images/mochi_real.webp"
         alt="年糕的个人形象照"
+        loading="lazy"
+        decoding="async"
       />
     </div>
   </div>
@@ -245,11 +541,26 @@
       <h2 class="post-about__name">年糕</h2>
       <div class="post-about__channels" aria-label="社交平台">
         
-          <a href="/#about">小红书</a>
+          
+          
+            <a
+              href="https://www.xiaohongshu.com/user/profile/659266b2000000002001f48e"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >小红书</a>
+          
         
-          <a href="/#about">B站</a>
+          
+          
+            <a
+              href="https://space.bilibili.com/3494369971669945"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >B站</a>
+          
         
-          <a href="/#about">微信公众号</a>
+          
+          
+            <button type="button" data-wechat-modal-trigger>微信公众号</button>
+          
         
       </div>
     </div>
@@ -259,6 +570,23 @@
 
 </main>
 
+    <dialog class="wechat-modal" aria-labelledby="wechat-modal-title">
+      <button class="wechat-modal__close" type="button" aria-label="关闭微信公众号二维码弹窗" data-wechat-modal-close>
+        ×
+      </button>
+      <div class="wechat-modal__content">
+        <p class="wechat-modal__eyebrow">WECHAT OFFICIAL ACCOUNT</p>
+        <h2 id="wechat-modal-title" class="wechat-modal__title">微信公众号</h2>
+        <img
+          class="wechat-modal__qrcode"
+          src="/images/wx_qrcode.webp"
+          alt="微信公众号二维码"
+          loading="lazy"
+          decoding="async"
+        />
+        <p class="wechat-modal__hint">扫码或搜索“年糕的编程花园”关注年糕的公众号</p>
+      </div>
+    </dialog>
     <footer class="site-footer">
   <div class="site-footer__inner">
     <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
@@ -266,10 +594,10 @@
   </div>
 </footer>
 
-    <script src="/vendor/gsap/gsap.min.js"></script>
-<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+    <script defer src="/vendor/gsap/gsap.min.js"></script>
+<script defer src="/vendor/gsap/ScrollTrigger.min.js"></script>
 
-<script src="/js/main.js"></script>
+<script defer src="/js/main.js"></script>
 
   </body>
 </html>

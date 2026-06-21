@@ -1,79 +1,148 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   <head>
-    <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta
-  name="description"
-  content="&lt;p&gt;因为疫情的缘故，国庆回京后很久都没有出门过了，这个时间点好不容易缓和了些，所以我也打算着去一趟一直都没有去过的北海公园。&lt;/p&gt;"
-/>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="&lt;p&gt;因为疫情的缘故，国庆回京后很久都没有出门过了，这个时间点好不容易缓和了些，所以我也打算着去一趟一直都没有去过的北海公园。&lt;/p&gt;">
 <title>北海环行 | 年糕的编程花园</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link
-  href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
-  rel="stylesheet"
-/>
-<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
-<link rel="stylesheet" href="/css/style.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
 
 
   <meta name="generator" content="Hexo 7.3.0"></head>
   <body class="post-page">
-    <div
-      class="site-loading"
-      aria-live="polite"
-      aria-label="页面加载中"
-      data-sprite-src="/images/tech/girl_read_sprite.png"
-      data-frame-count="2"
-    >
+    <div class="site-loading" aria-live="polite" aria-label="页面加载中">
       <div class="site-loading__inner">
-        <div class="site-loading__girl" aria-hidden="true"></div>
+        <img class="site-loading__symbol" src="/images/logo_small.webp" alt aria-hidden="true" decoding="async" fetchpriority="high">
         <p class="site-loading__text">LOADING...</p>
         <div class="site-loading__progress" aria-hidden="true">
           <span class="site-loading__progress-bar"></span>
         </div>
+        <p class="site-loading__percent" aria-hidden="true">0%</p>
       </div>
     </div>
+    <script>
+      (() => {
+        const loading = document.querySelector(".site-loading");
+        const loadingProgressBar = document.querySelector(".site-loading__progress-bar");
+        const loadingPercent = document.querySelector(".site-loading__percent");
+        const MAX_LOADING_MS = 9000;
+        const MIN_LOADING_MS = 450;
+        const TRANSITION_MS = 540;
+
+        if (!loading || !loadingProgressBar) return;
+
+        window.__mochiLoadingStarted = true;
+        document.body.classList.add("is-loading");
+
+        const startTime = Date.now();
+        let progressTimer = null;
+        let forceHideTimer = null;
+        let minimumDelayTimer = null;
+        let finishTimer = null;
+        let hidden = false;
+        let pageReady = document.readyState === "complete";
+        let currentProgress = 0;
+        let minimumDurationReached = false;
+
+        const setProgress = (value) => {
+          currentProgress = Math.max(currentProgress, Math.min(value, 100));
+          const progressValue = `${currentProgress}%`;
+          loading.style.setProperty("--loading-progress", progressValue);
+          loadingProgressBar.style.width = progressValue;
+
+          if (loadingPercent) {
+            loadingPercent.textContent = `${Math.floor(currentProgress)}%`;
+          }
+        };
+
+        const canHideNow = () => pageReady && minimumDurationReached;
+
+        const hideLoading = () => {
+          if (hidden) return;
+          hidden = true;
+
+          if (progressTimer) window.clearInterval(progressTimer);
+          if (forceHideTimer) window.clearTimeout(forceHideTimer);
+          if (minimumDelayTimer) window.clearTimeout(minimumDelayTimer);
+          if (finishTimer) window.clearTimeout(finishTimer);
+
+          setProgress(100);
+          loading.classList.add("is-hidden");
+          document.body.classList.remove("is-loading");
+
+          window.setTimeout(() => {
+            loading.remove();
+          }, TRANSITION_MS);
+        };
+
+        const scheduleHide = () => {
+          if (!canHideNow() || finishTimer || hidden) return;
+
+          setProgress(Math.max(currentProgress, 96));
+          finishTimer = window.setTimeout(hideLoading, 260);
+        };
+
+        const requestHide = () => {
+          pageReady = true;
+          scheduleHide();
+        };
+
+        setProgress(3);
+
+        progressTimer = window.setInterval(() => {
+          const elapsed = Date.now() - startTime;
+          const warmupRatio = Math.min(elapsed / 3600, 1);
+
+          if (pageReady) {
+            setProgress(currentProgress + Math.max((99 - currentProgress) * 0.18, 1.1));
+            return;
+          }
+
+          if (currentProgress < 90) {
+            const targetProgress = 3 + (1 - Math.pow(1 - warmupRatio, 1.35)) * 87;
+            setProgress(targetProgress);
+            return;
+          }
+
+          setProgress(currentProgress + Math.max((94 - currentProgress) * 0.035, 0.04));
+        }, 140);
+
+        minimumDelayTimer = window.setTimeout(() => {
+          minimumDurationReached = true;
+          scheduleHide();
+        }, MIN_LOADING_MS);
+
+        forceHideTimer = window.setTimeout(() => {
+          pageReady = true;
+          minimumDurationReached = true;
+          hideLoading();
+        }, MAX_LOADING_MS);
+
+        if (document.readyState === "complete") {
+          requestHide();
+        } else {
+          window.addEventListener("load", requestHide, { once: true });
+        }
+      })();
+    </script>
     <svg class="visual-defs" aria-hidden="true" width="0" height="0">
       <defs>
         <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency="0.018"
-            numOctaves="2"
-            seed="8"
-            result="noise"
-          />
-          <feDisplacementMap
-            in="SourceGraphic"
-            in2="noise"
-            scale="18"
-            xChannelSelector="R"
-            yChannelSelector="G"
-          />
+          <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="8" result="noise"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="18" xChannelSelector="R" yChannelSelector="G"/>
         </filter>
       </defs>
     </svg>
     
 <header class="site-header">
-  <a
-    class="site-logo is-small"
-    href="/"
-    aria-label="返回年糕的编程花园首页"
-    data-default-logo="/images/logo.png"
-    data-small-logo="/images/logo_small.png"
-  >
-    <img src="/images/logo_small.png" alt="年糕的编程花园" />
+  <a class="site-logo is-small" href="/" aria-label="返回年糕的编程花园首页" data-default-logo="/images/logo.webp" data-small-logo="/images/logo_small.webp">
+    <img src="/images/logo_small.webp" alt="年糕的编程花园" decoding="async" fetchpriority="high">
   </a>
 
-  <button
-    class="menu-toggle"
-    type="button"
-    aria-label="打开菜单"
-    aria-expanded="false"
-    aria-controls="site-menu"
-  >
+  <button class="menu-toggle" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="site-menu">
     <span></span>
     <span></span>
     <span></span>
@@ -107,11 +176,9 @@
           
           <div class="post-hero__visual">
             <div class="post-hero__photo-frame">
-              <img
-                class="post-hero__image"
-                src="/timgs/2022beihai/1.png"
-                alt="北海环行头图"
-              />
+              <span class="post-hero__image-wrap lazy-media">
+                <img class="post-hero__image" data-lazy-src="/timgs/2022beihai/1.png" alt="北海环行头图" loading="eager" decoding="async" fetchpriority="high">
+              </span>
             </div>
           </div>
           
@@ -120,12 +187,7 @@
             <span class="post-hero__eyebrow">DIARY LOG</span>
             <span class="post-hero__date">2022.10.23</span>
             <h1 id="post-title" class="post-title post-title--decorated">
-              <img
-                class="post-title__decor"
-                src="/images/decorates/flower2.png"
-                alt=""
-                aria-hidden="true"
-              />
+              <img class="post-title__decor" src="/images/decorates/flower2.webp" alt aria-hidden="true" decoding="async">
               <span>北海环行</span>
             </h1>
             <div class="post-meta" aria-label="文章信息">
@@ -146,9 +208,9 @@
 <blockquote>
 <p>北海公园全园以北海为中心，辽、金、元在此建离宫，明、清辟为帝王御苑，属于中国古代皇家园林</p>
 </blockquote>
-<p><img src="/timgs/2022beihai/2.png" alt="白塔"></p>
-<p>这个时候我是有些纠结的，从地图来看，这个地方是一个很大环。<br>我来这里还有一个目的，就是想购买北海公园的文创商品。进门处不远有一个很简陋的文创篷子，里面就是简单的摆着几个冰箱贴，我有些踌躇，觉得应该还有一个更大规模的店铺。<br>也没有纠结太多了，就直接直走前行（北侧），向更远的一边走。<br><img src="/timgs/2022beihai/3.png" alt="白塔"></p>
-<p>从远处眺望白塔，确实很好看，令人心旷神怡。不停的往前行走，塔就离自己越来越近（不过白塔寺上次已经去过了呢&gt;-&lt;，从另一个角度看，被有一番滋味）。<br><img src="/timgs/2022beihai/4.png" alt="白塔"></p>
+<p><img alt="白塔" data-lazy-src="/timgs/2022beihai/2.png" loading="lazy" decoding="async"></p>
+<p>这个时候我是有些纠结的，从地图来看，这个地方是一个很大环。<br>我来这里还有一个目的，就是想购买北海公园的文创商品。进门处不远有一个很简陋的文创篷子，里面就是简单的摆着几个冰箱贴，我有些踌躇，觉得应该还有一个更大规模的店铺。<br>也没有纠结太多了，就直接直走前行（北侧），向更远的一边走。<br><img alt="白塔" data-lazy-src="/timgs/2022beihai/3.png" loading="lazy" decoding="async"></p>
+<p>从远处眺望白塔，确实很好看，令人心旷神怡。不停的往前行走，塔就离自己越来越近（不过白塔寺上次已经去过了呢&gt;-&lt;，从另一个角度看，被有一番滋味）。<br><img alt="白塔" data-lazy-src="/timgs/2022beihai/4.png" loading="lazy" decoding="async"></p>
 <p>在这里拍照片、散步健身的老人和大人有很多，因为这是一个环形，确实很适合跑路来着。</p>
 <p>走着会路过几个古建筑。</p>
 <h2 id="小西天-铁影壁"><a href="#小西天-铁影壁" class="headerlink" title="小西天 &amp; 铁影壁"></a>小西天 &amp; 铁影壁</h2><blockquote>
@@ -162,27 +224,27 @@
 <h1 id="快雪堂"><a href="#快雪堂" class="headerlink" title="快雪堂"></a>快雪堂</h1><blockquote>
 <p>快雪堂始建于乾隆四十四年（1775年）。四周由彩绘游廊连接，快雪堂东西两侧的游廊内嵌有晋代至元代二十位书法家八十篇墨迹石刻四十八方，其中王羲之《快雪时晴帖》与乾隆皇帝所作的《快雪堂记》最为著名。</p>
 </blockquote>
-<p>这里一进去就感觉很雅致，难怪是文人墨客的书香之地。<br><img src="/timgs/2022beihai/5.png" alt="猫"></p>
+<p>这里一进去就感觉很雅致，难怪是文人墨客的书香之地。<br><img alt="猫" data-lazy-src="/timgs/2022beihai/5.png" loading="lazy" decoding="async"></p>
 <p>这里有很多猫咪o(&#x3D;•ェ•&#x3D;)m，也有不少人在喂猫。</p>
 <h1 id="静心斋"><a href="#静心斋" class="headerlink" title="静心斋"></a>静心斋</h1><blockquote>
 <p>静心斋占地面积约八千七百平方米，是北海最精巧的一处园中之园。静心斋原为明代普通官房，清乾隆二十四年（1757年）在扩建“西天梵境”时修建了静心斋（当时称“镜清斋”）也称“乾隆小花园”</p>
 </blockquote>
 <p>这里有很多小姐姐们在抓住秋天最后的身影。</p>
-<p><img src="/timgs/2022beihai/6.png" alt="秋天的尾巴"></p>
-<p><img src="/timgs/2022beihai/7.png" alt="秋天的尾巴"></p>
-<h1 id="西门"><a href="#西门" class="headerlink" title="西门"></a>西门</h1><p><img src="/timgs/2022beihai/9.png" alt="秋天的尾巴"></p>
-<p>好尴尬！不知道为啥，我走着走着，结果直接走到大门口了。但是我还没找到那个文创店T-T<br>然后我就只能先往前走了，因为看着从这里没办法去到东侧。<br><img src="/timgs/2022beihai/10.png" alt="秋天的尾巴"></p>
-<p>这条大马路真的很惬意的感觉，夕阳西下，四周是“海”，人们悠闲的来来往往。<br><img src="/timgs/2022beihai/13.png" alt="秋天的尾巴"></p>
-<h1 id="琼华岛-永安桥"><a href="#琼华岛-永安桥" class="headerlink" title="琼华岛+永安桥"></a>琼华岛+永安桥</h1><p>功夫不负有心人，我看到了南门的入口，询问过后知道原来门票一天内都是可以重复使用的，很开心的就进去了。<br>这里就像一个小岛一样。——琼华岛简称琼岛，因岛上建有白塔，故又俗称“白塔山”。<br><img src="/timgs/2022beihai/1.png" alt="永安桥"></p>
+<p><img alt="秋天的尾巴" data-lazy-src="/timgs/2022beihai/6.png" loading="lazy" decoding="async"></p>
+<p><img alt="秋天的尾巴" data-lazy-src="/timgs/2022beihai/7.png" loading="lazy" decoding="async"></p>
+<h1 id="西门"><a href="#西门" class="headerlink" title="西门"></a>西门</h1><p><img alt="秋天的尾巴" data-lazy-src="/timgs/2022beihai/9.png" loading="lazy" decoding="async"></p>
+<p>好尴尬！不知道为啥，我走着走着，结果直接走到大门口了。但是我还没找到那个文创店T-T<br>然后我就只能先往前走了，因为看着从这里没办法去到东侧。<br><img alt="秋天的尾巴" data-lazy-src="/timgs/2022beihai/10.png" loading="lazy" decoding="async"></p>
+<p>这条大马路真的很惬意的感觉，夕阳西下，四周是“海”，人们悠闲的来来往往。<br><img alt="秋天的尾巴" data-lazy-src="/timgs/2022beihai/13.png" loading="lazy" decoding="async"></p>
+<h1 id="琼华岛-永安桥"><a href="#琼华岛-永安桥" class="headerlink" title="琼华岛+永安桥"></a>琼华岛+永安桥</h1><p>功夫不负有心人，我看到了南门的入口，询问过后知道原来门票一天内都是可以重复使用的，很开心的就进去了。<br>这里就像一个小岛一样。——琼华岛简称琼岛，因岛上建有白塔，故又俗称“白塔山”。<br><img alt="永安桥" data-lazy-src="/timgs/2022beihai/1.png" loading="lazy" decoding="async"></p>
 <p>从这里进去离白塔很近。</p>
 <blockquote>
 <p>永安桥前身是元代的一座木桥，明代称“太液桥”，乾隆八年（1743年）改建为三曲折，三孔拱券石桥</p>
 </blockquote>
 <p>文创店就坐落在这里面，他们有一个收集盖章的活动，当你每个节气的章收集满后，可以排队去拿一个年度印章册子（一个像皇帝那个书轴一样的东西，很高大上），感觉他们还是很会做生意的啦。</p>
-<h1 id="五道营胡同"><a href="#五道营胡同" class="headerlink" title="五道营胡同"></a>五道营胡同</h1><p>马上就要到吃饭的时间了，因为约了朋友去五道营胡同吃火锅，所以乘上了公交车（但是坐反了方向😂）<br><img src="/timgs/2022beihai/8.png" alt="公交影子"><br>从公交上看过去，真的很美，很阔达，心情超级好。</p>
-<p><img src="/timgs/2022beihai/12.png" alt="秋天的尾巴"></p>
+<h1 id="五道营胡同"><a href="#五道营胡同" class="headerlink" title="五道营胡同"></a>五道营胡同</h1><p>马上就要到吃饭的时间了，因为约了朋友去五道营胡同吃火锅，所以乘上了公交车（但是坐反了方向😂）<br><img alt="公交影子" data-lazy-src="/timgs/2022beihai/8.png" loading="lazy" decoding="async"><br>从公交上看过去，真的很美，很阔达，心情超级好。</p>
+<p><img alt="秋天的尾巴" data-lazy-src="/timgs/2022beihai/12.png" loading="lazy" decoding="async"></p>
 <p>五道营胡同也算是小网红街了，他坐落在雍和宫附近，虽然我个人觉得里面的东西性价比都很一般。</p>
-<p><img src="/timgs/2022beihai/11.png" alt="秋天的尾巴"></p>
+<p><img alt="秋天的尾巴" data-lazy-src="/timgs/2022beihai/11.png" loading="lazy" decoding="async"></p>
 <p>不过在这种环境下还是挺惬意的，我们去的火锅店果然人满为患，排队等了N久，肚子都饿坏了(⊙﹏⊙)。<br>后面在一家私人奶茶店喝了一点东西，想了想还是放弃了T-T，感觉这个地方还是不推荐专程来吧。<br>今天又是梦幻平静的一天~晚安(￣o￣) . z Z。</p>
 </div>
           </div>
@@ -190,19 +252,13 @@
           
             <nav class="post-nav" aria-label="文章切换">
               
-                <a
-                  href="/posts/work-drawhgs-2022/"
-                  
-                >
+                <a href="/posts/work-drawhgs-2022/">
                   <span class="post-nav__label">上一篇</span>
                   <span class="post-nav__title">2022~2023-花果山同人合集</span>
                 </a>
               
               
-                <a
-                  href="/posts/tech-20220822-unity/"
-                  
-                >
+                <a href="/posts/tech-20220822-unity/">
                   <span class="post-nav__label">下一篇</span>
                   <span class="post-nav__title">Unity跨平台原理</span>
                 </a>
@@ -216,17 +272,14 @@
 
   <section class="post-about-band">
     <svg class="post-divider post-divider--content" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"></path>
+      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"/>
     </svg>
     <div class="post-about-band__inner">
-      <section class="post-about" aria-label="关于年糕">
+      
+<section class="post-about" aria-label="关于年糕">
   <div class="post-about__figure">
     <div class="post-about__figure-card">
-      <img
-        class="post-about__image"
-        src="/images/mochi_real.png"
-        alt="年糕的个人形象照"
-      />
+      <img class="post-about__image" src="/images/mochi_real.webp" alt="年糕的个人形象照" loading="lazy" decoding="async">
     </div>
   </div>
 
@@ -236,11 +289,20 @@
       <h2 class="post-about__name">年糕</h2>
       <div class="post-about__channels" aria-label="社交平台">
         
-          <a href="/#about">小红书</a>
+          
+          
+            <a href="https://www.xiaohongshu.com/user/profile/659266b2000000002001f48e" target="&#34;_blank&#34;" rel="&#34;noopener" noreferrer&#34;>小红书</a>
+          
         
-          <a href="/#about">B站</a>
+          
+          
+            <a href="https://space.bilibili.com/3494369971669945" target="&#34;_blank&#34;" rel="&#34;noopener" noreferrer&#34;>B站</a>
+          
         
-          <a href="/#about">微信公众号</a>
+          
+          
+            <button type="button" data-wechat-modal-trigger>微信公众号</button>
+          
         
       </div>
     </div>
@@ -253,6 +315,17 @@
 </main>
 
 
+    <dialog class="wechat-modal" aria-labelledby="wechat-modal-title">
+      <button class="wechat-modal__close" type="button" aria-label="关闭微信公众号二维码弹窗" data-wechat-modal-close>
+        ×
+      </button>
+      <div class="wechat-modal__content">
+        <p class="wechat-modal__eyebrow">WECHAT OFFICIAL ACCOUNT</p>
+        <h2 id="wechat-modal-title" class="wechat-modal__title">微信公众号</h2>
+        <img class="wechat-modal__qrcode" src="/images/wx_qrcode.webp" alt="微信公众号二维码" loading="lazy" decoding="async">
+        <p class="wechat-modal__hint">扫码或搜索“年糕的编程花园”关注年糕的公众号</p>
+      </div>
+    </dialog>
     <footer class="site-footer site-footer--post">
   <div class="site-footer__inner">
     <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
@@ -260,10 +333,10 @@
   </div>
 </footer>
 
-    <script src="/vendor/gsap/gsap.min.js"></script>
-<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+    <script defer src="/vendor/gsap/gsap.min.js"></script>
+<script defer src="/vendor/gsap/ScrollTrigger.min.js"></script>
 
-<script src="/js/main.js"></script>
+<script defer src="/js/main.js"></script>
 
   </body>
 </html>

@@ -1,79 +1,148 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   <head>
-    <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta
-  name="description"
-  content="&lt;p&gt;最近在看《JavaScript设计模式》，然后开篇复习了JavaScript中的几种继承方式，自己似乎也没有怎么仔细探究过，目前自己没怎么碰到过应用的场景（噗），所以借这次机会好好来屡屡思路。&lt;/p&gt;"
-/>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="&lt;p&gt;最近在看《JavaScript设计模式》，然后开篇复习了JavaScript中的几种继承方式，自己似乎也没有怎么仔细探究过，目前自己没怎么碰到过应用的场景（噗），所以借这次机会好好来屡屡思路。&lt;/p&gt;">
 <title>JavaScript常见的继承方式 | 年糕的编程花园</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link
-  href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
-  rel="stylesheet"
-/>
-<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
-<link rel="stylesheet" href="/css/style.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
 
 
   <meta name="generator" content="Hexo 7.3.0"></head>
   <body class="post-page">
-    <div
-      class="site-loading"
-      aria-live="polite"
-      aria-label="页面加载中"
-      data-sprite-src="/images/tech/girl_read_sprite.png"
-      data-frame-count="2"
-    >
+    <div class="site-loading" aria-live="polite" aria-label="页面加载中">
       <div class="site-loading__inner">
-        <div class="site-loading__girl" aria-hidden="true"></div>
+        <img class="site-loading__symbol" src="/images/logo_small.webp" alt aria-hidden="true" decoding="async" fetchpriority="high">
         <p class="site-loading__text">LOADING...</p>
         <div class="site-loading__progress" aria-hidden="true">
           <span class="site-loading__progress-bar"></span>
         </div>
+        <p class="site-loading__percent" aria-hidden="true">0%</p>
       </div>
     </div>
+    <script>
+      (() => {
+        const loading = document.querySelector(".site-loading");
+        const loadingProgressBar = document.querySelector(".site-loading__progress-bar");
+        const loadingPercent = document.querySelector(".site-loading__percent");
+        const MAX_LOADING_MS = 9000;
+        const MIN_LOADING_MS = 450;
+        const TRANSITION_MS = 540;
+
+        if (!loading || !loadingProgressBar) return;
+
+        window.__mochiLoadingStarted = true;
+        document.body.classList.add("is-loading");
+
+        const startTime = Date.now();
+        let progressTimer = null;
+        let forceHideTimer = null;
+        let minimumDelayTimer = null;
+        let finishTimer = null;
+        let hidden = false;
+        let pageReady = document.readyState === "complete";
+        let currentProgress = 0;
+        let minimumDurationReached = false;
+
+        const setProgress = (value) => {
+          currentProgress = Math.max(currentProgress, Math.min(value, 100));
+          const progressValue = `${currentProgress}%`;
+          loading.style.setProperty("--loading-progress", progressValue);
+          loadingProgressBar.style.width = progressValue;
+
+          if (loadingPercent) {
+            loadingPercent.textContent = `${Math.floor(currentProgress)}%`;
+          }
+        };
+
+        const canHideNow = () => pageReady && minimumDurationReached;
+
+        const hideLoading = () => {
+          if (hidden) return;
+          hidden = true;
+
+          if (progressTimer) window.clearInterval(progressTimer);
+          if (forceHideTimer) window.clearTimeout(forceHideTimer);
+          if (minimumDelayTimer) window.clearTimeout(minimumDelayTimer);
+          if (finishTimer) window.clearTimeout(finishTimer);
+
+          setProgress(100);
+          loading.classList.add("is-hidden");
+          document.body.classList.remove("is-loading");
+
+          window.setTimeout(() => {
+            loading.remove();
+          }, TRANSITION_MS);
+        };
+
+        const scheduleHide = () => {
+          if (!canHideNow() || finishTimer || hidden) return;
+
+          setProgress(Math.max(currentProgress, 96));
+          finishTimer = window.setTimeout(hideLoading, 260);
+        };
+
+        const requestHide = () => {
+          pageReady = true;
+          scheduleHide();
+        };
+
+        setProgress(3);
+
+        progressTimer = window.setInterval(() => {
+          const elapsed = Date.now() - startTime;
+          const warmupRatio = Math.min(elapsed / 3600, 1);
+
+          if (pageReady) {
+            setProgress(currentProgress + Math.max((99 - currentProgress) * 0.18, 1.1));
+            return;
+          }
+
+          if (currentProgress < 90) {
+            const targetProgress = 3 + (1 - Math.pow(1 - warmupRatio, 1.35)) * 87;
+            setProgress(targetProgress);
+            return;
+          }
+
+          setProgress(currentProgress + Math.max((94 - currentProgress) * 0.035, 0.04));
+        }, 140);
+
+        minimumDelayTimer = window.setTimeout(() => {
+          minimumDurationReached = true;
+          scheduleHide();
+        }, MIN_LOADING_MS);
+
+        forceHideTimer = window.setTimeout(() => {
+          pageReady = true;
+          minimumDurationReached = true;
+          hideLoading();
+        }, MAX_LOADING_MS);
+
+        if (document.readyState === "complete") {
+          requestHide();
+        } else {
+          window.addEventListener("load", requestHide, { once: true });
+        }
+      })();
+    </script>
     <svg class="visual-defs" aria-hidden="true" width="0" height="0">
       <defs>
         <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency="0.018"
-            numOctaves="2"
-            seed="8"
-            result="noise"
-          />
-          <feDisplacementMap
-            in="SourceGraphic"
-            in2="noise"
-            scale="18"
-            xChannelSelector="R"
-            yChannelSelector="G"
-          />
+          <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="8" result="noise"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="18" xChannelSelector="R" yChannelSelector="G"/>
         </filter>
       </defs>
     </svg>
     
 <header class="site-header">
-  <a
-    class="site-logo is-small"
-    href="/"
-    aria-label="返回年糕的编程花园首页"
-    data-default-logo="/images/logo.png"
-    data-small-logo="/images/logo_small.png"
-  >
-    <img src="/images/logo_small.png" alt="年糕的编程花园" />
+  <a class="site-logo is-small" href="/" aria-label="返回年糕的编程花园首页" data-default-logo="/images/logo.webp" data-small-logo="/images/logo_small.webp">
+    <img src="/images/logo_small.webp" alt="年糕的编程花园" decoding="async" fetchpriority="high">
   </a>
 
-  <button
-    class="menu-toggle"
-    type="button"
-    aria-label="打开菜单"
-    aria-expanded="false"
-    aria-controls="site-menu"
-  >
+  <button class="menu-toggle" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="site-menu">
     <span></span>
     <span></span>
     <span></span>
@@ -110,12 +179,7 @@
             <span class="post-hero__eyebrow">DIARY LOG</span>
             <span class="post-hero__date">2018.03.04</span>
             <h1 id="post-title" class="post-title post-title--decorated">
-              <img
-                class="post-title__decor"
-                src="/images/decorates/flower2.png"
-                alt=""
-                aria-hidden="true"
-              />
+              <img class="post-title__decor" src="/images/decorates/flower2.webp" alt aria-hidden="true" decoding="async">
               <span>JavaScript常见的继承方式</span>
             </h1>
             <div class="post-meta" aria-label="文章信息">
@@ -154,7 +218,7 @@ var Xixi = new Student(2);
 <pre><code>function Person()&#123;&#125;
 var person = new Person();
 </code></pre>
-<p><img src="https://wx1.sinaimg.cn/mw690/0069luTRgy1fp13owry3zj306x048t8o.jpg" alt="图片描述"></p>
+<p><img alt="图片描述" data-lazy-src="https://wx1.sinaimg.cn/mw690/0069luTRgy1fp13owry3zj306x048t8o.jpg" loading="lazy" decoding="async"></p>
 <p>此图为Person的prototype内容，可以看到constructor属性实际指向的就是Person()函数。（小绿色框框内和外面绿色框框其实是同一个内容）。</p>
 <p>3.Object.create构造的。</p>
 <pre><code>var person = &#123;&#125;;
@@ -169,7 +233,7 @@ var Hehe = new Person();
 console.log(Person.prototype);
 console.log(Hehe);
 </code></pre>
-<p>以上代码运行结果：<br><img src="https://wx4.sinaimg.cn/mw690/0069luTRgy1fp13p0i3m6j308t062wek.jpg" alt="图片描述"></p>
+<p>以上代码运行结果：<br><img alt="图片描述" data-lazy-src="https://wx4.sinaimg.cn/mw690/0069luTRgy1fp13p0i3m6j308t062wek.jpg" loading="lazy" decoding="async"></p>
 <p>可以瞧见，这里Hehe的<code>_proto_</code>是指向了<code>Person.prototype</code>。</p>
 <p><strong>问：new关键字的作用是什么？</strong><br>new关键字运作的过程如下，引用自《JavaScript》高级程序设计：</p>
 <blockquote>
@@ -184,7 +248,7 @@ var Hehe = Person();
 console.log(Hehe.telephone);
 </code></pre>
 <p>去掉new关键词赋予Person()，会报错，而输出<code>window.telphone</code>得到的就是<code>[&#39;000-0000-0000&#39;]</code>。因为函数的返回值（没有返回值所以是undefined）赋予给了Hehe，尝试去读取undefined的属性，报错了。而此时函数运行中的this是全局变量window。</p>
-<p><strong>So，回归类式继承，仔细看看诞生的嘻嘻和哈哈两位同学</strong><br><img src="https://wx1.sinaimg.cn/mw690/0069luTRgy1fp13p0lgjvj3074053jre.jpg" alt="图片描述"></p>
+<p><strong>So，回归类式继承，仔细看看诞生的嘻嘻和哈哈两位同学</strong><br><img alt="图片描述" data-lazy-src="https://wx1.sinaimg.cn/mw690/0069luTRgy1fp13p0lgjvj3074053jre.jpg" loading="lazy" decoding="async"></p>
 <p>会发现，各自都有自己的班级名属性，但是原型指向的是同一个Person实例，所以如果嘻嘻有两个号码，或者他要更改自己的号码，那哈哈的电话号码也会发生变化，他们只能共享这个电话号码。</p>
 <h1 id="方式2-构造函数继承"><a href="#方式2-构造函数继承" class="headerlink" title="方式2 构造函数继承"></a>方式2 构造函数继承</h1><p>例子</p>
 <pre><code>function Person(name) &#123;
@@ -207,7 +271,7 @@ var Xixi = new Student(&#39;Xixi&#39;, 2);
 <p>1.先判断F是否为一个函数，如果不是一个函数，那么将抛出TypeError异常。<br>2.创建一个内部类型空列表list<br>3.然后如果参数除去thisArg外还有其他参数的话，就将这些值添加到list中<br>4.thisArg和list作为F内部属性[[Call]]的参数传入调用进行函数的执行操作</p>
 </blockquote>
 <p>简而言之就是它把一个函数的对象上下文改成了由 thisArg指定的新对象。</p>
-<p><strong>So，回归构造函数继承，仔细看看诞生的嘻嘻和哈哈两位同学</strong><br><img src="https://wx2.sinaimg.cn/mw690/0069luTRgy1fp13p0kvooj307y03t3yf.jpg" alt="图片描述"></p>
+<p><strong>So，回归构造函数继承，仔细看看诞生的嘻嘻和哈哈两位同学</strong><br><img alt="图片描述" data-lazy-src="https://wx2.sinaimg.cn/mw690/0069luTRgy1fp13p0kvooj307y03t3yf.jpg" loading="lazy" decoding="async"></p>
 <p>可以看到两个实例都拥有了className和name两个属性，因为call方法的运行类似于执行了<code>Haha.name=&#39;Haha&#39;</code>和<code>Xixi.name=&#39;Xixi&#39;</code>。<br>但是因为没有与父类的原型相联系，所以父类原型中的方法，不能得到继承。运行Haha.showName()会得到报错。</p>
 <h1 id="方式3-组合继承"><a href="#方式3-组合继承" class="headerlink" title="方式3 组合继承"></a>方式3 组合继承</h1><p>例子</p>
 <pre><code>function Person(name) &#123;
@@ -249,8 +313,8 @@ Xixi.telephone.push(&quot;111-1111-1111&quot;);
 var Haha = inheritObject(person);
 Haha.name = &quot;Haha&quot;;
 </code></pre>
-<p><strong>仔细看看诞生的嘻嘻和哈哈两位同学</strong><br><img src="https://wx1.sinaimg.cn/mw690/0069luTRgy1fp13p0paxfj30ao05tgln.jpg" alt="图片描述"></p>
-<p>这里.name给Xixi实例添加了一个自己的name属性，而push操作是直接影响原型中引用变量，所以改进之后又有了下面这种方式。<br>在这里我产生了一个疑问，为什么name属性是自己添加新的，而telephone是采用原来的。于是添加了一个age属性，执行Xixi.age++操作。<br><img src="https://wx4.sinaimg.cn/mw690/0069luTRgy1fp13p0ohwij307603n0sl.jpg" alt="图片描述"></p>
+<p><strong>仔细看看诞生的嘻嘻和哈哈两位同学</strong><br><img alt="图片描述" data-lazy-src="https://wx1.sinaimg.cn/mw690/0069luTRgy1fp13p0paxfj30ao05tgln.jpg" loading="lazy" decoding="async"></p>
+<p>这里.name给Xixi实例添加了一个自己的name属性，而push操作是直接影响原型中引用变量，所以改进之后又有了下面这种方式。<br>在这里我产生了一个疑问，为什么name属性是自己添加新的，而telephone是采用原来的。于是添加了一个age属性，执行Xixi.age++操作。<br><img alt="图片描述" data-lazy-src="https://wx4.sinaimg.cn/mw690/0069luTRgy1fp13p0ohwij307603n0sl.jpg" loading="lazy" decoding="async"></p>
 <p>这里可以看到实例重新添加了一个age属性，所以我们可以说只要是改变原型属性的值，就会把新的属性加在实例上，引用不改变是因为引用的地址还没有改变。</p>
 <h1 id="方式5-寄生式继承"><a href="#方式5-寄生式继承" class="headerlink" title="方式5 寄生式继承"></a>方式5 寄生式继承</h1><p>寄生式继承是在原型继承的基础之上，我们需要再添加一下代码：</p>
 <pre><code>function createPerson(obj) &#123;
@@ -299,8 +363,8 @@ Student.prototype.showClassName = function() &#123;
 var Xixi = new Student(&#39;Xixi&#39;,2);
 var Haha = new Student(&#39;Haha&#39;,1);
 </code></pre>
-<p>以下为嘻嘻和哈哈的内容：<br><img src="https://wx2.sinaimg.cn/mw690/0069luTRgy1fp13p0p7xfj308w06zt8u.jpg" alt="图片描述"></p>
-<p>可以对比一下组合式继承的结果：<br><img src="https://wx3.sinaimg.cn/mw690/0069luTRgy1fp13p0pto3j308d06jaa3.jpg" alt="图片描述"></p>
+<p>以下为嘻嘻和哈哈的内容：<br><img alt="图片描述" data-lazy-src="https://wx2.sinaimg.cn/mw690/0069luTRgy1fp13p0p7xfj308w06zt8u.jpg" loading="lazy" decoding="async"></p>
+<p>可以对比一下组合式继承的结果：<br><img alt="图片描述" data-lazy-src="https://wx3.sinaimg.cn/mw690/0069luTRgy1fp13p0pto3j308d06jaa3.jpg" loading="lazy" decoding="async"></p>
 <p>不同的地方在于把子类原型的构造函数改成了实例对应的构造函数，在组合继承中子类原型直属并没有constructor属性。</p>
 </div>
           </div>
@@ -308,19 +372,13 @@ var Haha = new Student(&#39;Haha&#39;,1);
           
             <nav class="post-nav" aria-label="文章切换">
               
-                <a
-                  href="/posts/tech-20180305-eventloop/"
-                  
-                >
+                <a href="/posts/tech-20180305-eventloop/">
                   <span class="post-nav__label">上一篇</span>
                   <span class="post-nav__title">JavaScript的事件循环</span>
                 </a>
               
               
-                <a
-                  href="/posts/life-20180301-res/"
-                  
-                >
+                <a href="/posts/life-20180301-res/">
                   <span class="post-nav__label">下一篇</span>
                   <span class="post-nav__title">大三上学期寒假小结</span>
                 </a>
@@ -334,17 +392,14 @@ var Haha = new Student(&#39;Haha&#39;,1);
 
   <section class="post-about-band">
     <svg class="post-divider post-divider--content" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"></path>
+      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"/>
     </svg>
     <div class="post-about-band__inner">
-      <section class="post-about" aria-label="关于年糕">
+      
+<section class="post-about" aria-label="关于年糕">
   <div class="post-about__figure">
     <div class="post-about__figure-card">
-      <img
-        class="post-about__image"
-        src="/images/mochi_real.png"
-        alt="年糕的个人形象照"
-      />
+      <img class="post-about__image" src="/images/mochi_real.webp" alt="年糕的个人形象照" loading="lazy" decoding="async">
     </div>
   </div>
 
@@ -354,11 +409,20 @@ var Haha = new Student(&#39;Haha&#39;,1);
       <h2 class="post-about__name">年糕</h2>
       <div class="post-about__channels" aria-label="社交平台">
         
-          <a href="/#about">小红书</a>
+          
+          
+            <a href="https://www.xiaohongshu.com/user/profile/659266b2000000002001f48e" target="&#34;_blank&#34;" rel="&#34;noopener" noreferrer&#34;>小红书</a>
+          
         
-          <a href="/#about">B站</a>
+          
+          
+            <a href="https://space.bilibili.com/3494369971669945" target="&#34;_blank&#34;" rel="&#34;noopener" noreferrer&#34;>B站</a>
+          
         
-          <a href="/#about">微信公众号</a>
+          
+          
+            <button type="button" data-wechat-modal-trigger>微信公众号</button>
+          
         
       </div>
     </div>
@@ -371,6 +435,17 @@ var Haha = new Student(&#39;Haha&#39;,1);
 </main>
 
 
+    <dialog class="wechat-modal" aria-labelledby="wechat-modal-title">
+      <button class="wechat-modal__close" type="button" aria-label="关闭微信公众号二维码弹窗" data-wechat-modal-close>
+        ×
+      </button>
+      <div class="wechat-modal__content">
+        <p class="wechat-modal__eyebrow">WECHAT OFFICIAL ACCOUNT</p>
+        <h2 id="wechat-modal-title" class="wechat-modal__title">微信公众号</h2>
+        <img class="wechat-modal__qrcode" src="/images/wx_qrcode.webp" alt="微信公众号二维码" loading="lazy" decoding="async">
+        <p class="wechat-modal__hint">扫码或搜索“年糕的编程花园”关注年糕的公众号</p>
+      </div>
+    </dialog>
     <footer class="site-footer site-footer--post">
   <div class="site-footer__inner">
     <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
@@ -378,10 +453,10 @@ var Haha = new Student(&#39;Haha&#39;,1);
   </div>
 </footer>
 
-    <script src="/vendor/gsap/gsap.min.js"></script>
-<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+    <script defer src="/vendor/gsap/gsap.min.js"></script>
+<script defer src="/vendor/gsap/ScrollTrigger.min.js"></script>
 
-<script src="/js/main.js"></script>
+<script defer src="/js/main.js"></script>
 
   </body>
 </html>

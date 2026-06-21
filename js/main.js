@@ -1,4 +1,6 @@
-gsap.registerPlugin(ScrollTrigger);
+if (typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 const switchSiteLogo = (useSmall) => {
   const siteLogo = document.querySelector(".site-logo");
@@ -15,45 +17,138 @@ const switchSiteLogo = (useSmall) => {
   siteLogo.classList.toggle("is-small", useSmall);
 };
 
-const setupLoadingScreen = () => {
-  const loading = document.querySelector(".site-loading");
-  const loadingGirl = document.querySelector(".site-loading__girl");
-  const loadingProgressBar = document.querySelector(".site-loading__progress-bar");
-  const loadingSessionKey = "mochi-garden:loading-seen";
-  const MAX_LOADING_MS = 5000;
-  const MIN_LOADING_MS = 480;
-  const TRANSITION_MS = 460;
+const isWorksInLogoSwitchZone = (worksSection) => {
+  if (!worksSection) return false;
 
-  if (!loading || !loadingGirl || !loadingProgressBar) return;
+  const rect = worksSection.getBoundingClientRect();
+  const viewportCore = window.innerHeight * 0.5;
+  return rect.top <= viewportCore;
+};
 
-  const removeLoading = () => {
-    document.body.classList.remove("is-loading");
-    loading.style.setProperty("--loading-progress", "100%");
-    loading.remove();
+const setupLazyMedia = () => {
+  const lazyBackgrounds = Array.from(document.querySelectorAll("[data-lazy-bg]")).filter(
+    (element) => !element.dataset.lazyBound,
+  );
+  const lazyImages = Array.from(document.querySelectorAll("img[data-lazy-src]")).filter(
+    (image) => !image.dataset.lazyBound,
+  );
+
+  const loadBackground = (element) => {
+    const src = element.dataset.lazyBg;
+    if (!src) {
+      element.classList.add("is-error");
+      return;
+    }
+
+    element.classList.add("lazy-media", "lazy-media--bg");
+
+    const image = new Image();
+
+    image.onload = () => {
+      element.style.backgroundImage = `url("${src}")`;
+      element.classList.add("is-loaded");
+      element.removeAttribute("data-lazy-bg");
+    };
+
+    image.onerror = () => {
+      element.classList.add("is-error");
+    };
+
+    image.src = src;
   };
 
-  let hasSeenLoading = false;
+  const loadImage = (image) => {
+    const loadingTarget = image.closest(".post-image-content, .post-hero__image-wrap") || image;
+    const src = image.dataset.lazySrc;
+    if (!src) {
+      loadingTarget.classList.add("is-error");
+      return;
+    }
 
-  try {
-    hasSeenLoading = window.sessionStorage.getItem(loadingSessionKey) === "1";
-  } catch (error) {
-    hasSeenLoading = false;
-  }
+    loadingTarget.classList.add("lazy-media");
 
-  if (hasSeenLoading) {
-    removeLoading();
+    const markLoaded = () => {
+      loadingTarget.classList.add("is-loaded");
+      image.removeAttribute("data-lazy-src");
+    };
+
+    const markError = () => {
+      loadingTarget.classList.add("is-error");
+    };
+
+    image.addEventListener("load", markLoaded, { once: true });
+    image.addEventListener("error", markError, { once: true });
+    image.src = src;
+
+    if (image.complete && image.naturalWidth > 0) {
+      markLoaded();
+    }
+  };
+
+  const lazyTargets = [
+    ...lazyBackgrounds.map((element) => ({ element, load: () => loadBackground(element) })),
+    ...lazyImages.map((image) => ({ element: image, load: () => loadImage(image) })),
+  ];
+
+  if (!("IntersectionObserver" in window)) {
+    lazyTargets.forEach(({ element, load }) => {
+      element.dataset.lazyBound = "true";
+      load();
+    });
     return;
   }
 
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const target = entry.target;
+        const item = lazyTargets.find(({ element }) => element === target);
+        if (!item) return;
+
+        observer.unobserve(target);
+        item.load();
+      });
+    },
+    {
+      rootMargin: "520px 0px",
+      threshold: 0.01,
+    },
+  );
+
+  lazyTargets.forEach(({ element, load }) => {
+    element.dataset.lazyBound = "true";
+    if (
+      element instanceof HTMLImageElement &&
+      (element.loading === "eager" || element.getAttribute("fetchpriority") === "high")
+    ) {
+      load();
+      return;
+    }
+
+    observer.observe(element);
+  });
+};
+
+const setupLoadingScreen = () => {
+  if (window.__mochiLoadingStarted) return;
+
+  const loading = document.querySelector(".site-loading");
+  const loadingProgressBar = document.querySelector(".site-loading__progress-bar");
+  const loadingPercent = document.querySelector(".site-loading__percent");
+  const MAX_LOADING_MS = 9000;
+  const MIN_LOADING_MS = 450;
+  const TRANSITION_MS = 540;
+
+  if (!loading || !loadingProgressBar) return;
+
   document.body.classList.add("is-loading");
 
-  const spriteSrc = loading.dataset.spriteSrc;
-  const frameCount = Number.parseInt(loading.dataset.frameCount || "1", 10);
   const startTime = Date.now();
-  let frameTimer = null;
   let progressTimer = null;
   let forceHideTimer = null;
   let minimumDelayTimer = null;
+  let finishTimer = null;
   let hidden = false;
   let pageReady = document.readyState === "complete";
   let currentProgress = 0;
@@ -61,45 +156,40 @@ const setupLoadingScreen = () => {
 
   const setProgress = (value) => {
     currentProgress = Math.max(currentProgress, Math.min(value, 100));
-    loading.style.setProperty("--loading-progress", `${currentProgress}%`);
+    const progressValue = `${currentProgress}%`;
+    loading.style.setProperty("--loading-progress", progressValue);
+    loadingProgressBar.style.width = progressValue;
+    if (loadingPercent) {
+      loadingPercent.textContent = `${Math.floor(currentProgress)}%`;
+    }
   };
 
   const canHideNow = () => pageReady && minimumDurationReached;
 
-  if (spriteSrc) {
-    loadingGirl.style.backgroundImage = `url("${spriteSrc}")`;
-  }
-
-  if (spriteSrc && frameCount > 1) {
-    let frameIndex = 0;
-    loadingGirl.style.backgroundSize = `${frameCount * 100}% 100%`;
-    loadingGirl.style.backgroundPosition = "0 0";
-
-    frameTimer = window.setInterval(() => {
-      frameIndex = (frameIndex + 1) % frameCount;
-      loadingGirl.style.backgroundPosition = `${(frameIndex / (frameCount - 1 || 1)) * 100}% 0`;
-    }, 420);
-  }
-
-  setProgress(8);
+  setProgress(3);
 
   progressTimer = window.setInterval(() => {
     const elapsed = Date.now() - startTime;
-    const ratio = Math.min(elapsed / MAX_LOADING_MS, 1);
-    const easedProgress = pageReady
-      ? 92 + ratio * 6
-      : 8 + (1 - Math.exp(-ratio * 3.2)) * 84;
-    setProgress(easedProgress);
-  }, 120);
+    const warmupRatio = Math.min(elapsed / 3600, 1);
+
+    if (pageReady) {
+      setProgress(currentProgress + Math.max((99 - currentProgress) * 0.18, 1.1));
+      return;
+    }
+
+    if (currentProgress < 90) {
+      const targetProgress = 3 + (1 - Math.pow(1 - warmupRatio, 1.35)) * 87;
+      setProgress(targetProgress);
+      return;
+    }
+
+    setProgress(currentProgress + Math.max((94 - currentProgress) * 0.035, 0.04));
+  }, 140);
 
   const hideLoading = () => {
     if (hidden) return;
     hidden = true;
 
-    if (frameTimer) {
-      window.clearInterval(frameTimer);
-      frameTimer = null;
-    }
     if (progressTimer) {
       window.clearInterval(progressTimer);
       progressTimer = null;
@@ -112,14 +202,12 @@ const setupLoadingScreen = () => {
       window.clearTimeout(minimumDelayTimer);
       minimumDelayTimer = null;
     }
+    if (finishTimer) {
+      window.clearTimeout(finishTimer);
+      finishTimer = null;
+    }
 
     setProgress(100);
-
-    try {
-      window.sessionStorage.setItem(loadingSessionKey, "1");
-    } catch (error) {
-      // Ignore sessionStorage failures and fall back to first-load behavior.
-    }
 
     loading.classList.add("is-hidden");
     document.body.classList.remove("is-loading");
@@ -129,21 +217,21 @@ const setupLoadingScreen = () => {
     }, TRANSITION_MS);
   };
 
+  const scheduleHide = () => {
+    if (!canHideNow() || finishTimer || hidden) return;
+
+    setProgress(Math.max(currentProgress, 96));
+    finishTimer = window.setTimeout(hideLoading, 260);
+  };
+
   const requestHide = () => {
     pageReady = true;
-    setProgress(96);
-
-    if (canHideNow()) {
-      hideLoading();
-    }
+    scheduleHide();
   };
 
   minimumDelayTimer = window.setTimeout(() => {
     minimumDurationReached = true;
-
-    if (canHideNow()) {
-      hideLoading();
-    }
+    scheduleHide();
   }, MIN_LOADING_MS);
 
   forceHideTimer = window.setTimeout(() => {
@@ -161,9 +249,10 @@ const setupLoadingScreen = () => {
 
 const setupScrollScene = () => {
   const road = document.querySelector(".work-road-wrap");
+  const roadBg = road?.querySelector(".road-bg");
   const mochi = document.querySelector(".scroll-mochi");
 
-  if (!road || !mochi) return;
+  if (!road || !roadBg || !mochi) return;
 
   const normalSrc = mochi.dataset.normalSrc;
   const spriteSrc = mochi.dataset.spriteSrc;
@@ -177,6 +266,7 @@ const setupScrollScene = () => {
   let stopDelayTimer = null;
   const STOP_DELAY_MS = 280;
   const MOTION_THRESHOLD = 8;
+  const WALK_START_VIEWPORT_RATIO = 0.64;
   const isVisibleInViewport = () => {
     const rect = mochi.getBoundingClientRect();
     return rect.bottom > 0 && rect.top < window.innerHeight;
@@ -239,25 +329,31 @@ const setupScrollScene = () => {
     }, 250);
   };
 
-  const buildWalkTween = () => {
-    const roadWrapHeight = road.offsetHeight;
-    const viewportHeight = window.innerHeight;
-    // 女孩行走距离 = 滚动距离（road 从 50% 出现到底部）
-    // 这样女孩移动速度与滚动速度 1:1，看起来始终在视口内行走
-    const travelDistance = Math.max(roadWrapHeight - viewportHeight * 0.5, 0);
+  const getWalkBounds = () => {
+    const roadRect = road.getBoundingClientRect();
+    const roadBgRect = roadBg.getBoundingClientRect();
+    const mochiHeight = mochi.offsetHeight;
+    const startY = roadBgRect.top - roadRect.top;
+    const endY = roadBgRect.bottom - roadRect.top - mochiHeight;
+    return {
+      startY,
+      endY: Math.max(endY, startY),
+    };
+  };
 
-    gsap.set(mochi, { xPercent: -50, opacity: 1 });
+  const buildWalkTween = () => {
+    gsap.set(mochi, { xPercent: -50, y: () => getWalkBounds().startY, opacity: 1 });
 
     return gsap.fromTo(
       mochi,
-      { xPercent: -50, y: 0, opacity: 1 },
+      { xPercent: -50, y: () => getWalkBounds().startY, opacity: 1 },
       {
         xPercent: -50,
-        y: travelDistance,
+        y: () => getWalkBounds().endY,
         ease: "none",
         scrollTrigger: {
           trigger: road,
-          start: "top 50%",
+          start: () => `top ${Math.round(window.innerHeight * WALK_START_VIEWPORT_RATIO)}px`,
           end: "bottom bottom",
           scrub: true,
           invalidateOnRefresh: true,
@@ -287,15 +383,19 @@ const setupScrollScene = () => {
   buildWalkTween();
   setStillFrame("forward");
 
-  ScrollTrigger.create({
-    trigger: road,
-    start: "top 85%",
-    end: "bottom top",
-    onEnter: () => switchSiteLogo(true),
-    onEnterBack: () => switchSiteLogo(true),
-    onLeaveBack: () => switchSiteLogo(false),
-    onLeave: () => switchSiteLogo(true),
-  });
+  if ("ResizeObserver" in window) {
+    let resizeRefreshTimer = null;
+    const refreshWalkTween = () => {
+      if (resizeRefreshTimer) window.clearTimeout(resizeRefreshTimer);
+      resizeRefreshTimer = window.setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 120);
+    };
+    const resizeObserver = new ResizeObserver(refreshWalkTween);
+    resizeObserver.observe(road);
+    resizeObserver.observe(roadBg);
+    resizeObserver.observe(mochi);
+  }
 
   ScrollTrigger.addEventListener("scrollStart", () => {
     if (isVisibleInViewport()) startWalking(walkingDirection);
@@ -311,14 +411,24 @@ const setupWorksLogoTrigger = () => {
   const worksSection = document.querySelector(".scene-work");
   if (!worksSection) return;
 
+  const updateLogoState = () => {
+    switchSiteLogo(isWorksInLogoSwitchZone(worksSection));
+  };
+
   ScrollTrigger.create({
     trigger: worksSection,
-    start: "top 85%",
+    start: "top center",
     end: "bottom top",
-    onEnter: () => switchSiteLogo(true),
-    onEnterBack: () => switchSiteLogo(true),
-    onLeaveBack: () => switchSiteLogo(false),
+    invalidateOnRefresh: true,
+    onEnter: updateLogoState,
+    onEnterBack: updateLogoState,
+    onLeaveBack: updateLogoState,
+    onRefresh: updateLogoState,
+    onUpdate: updateLogoState,
   });
+
+  updateLogoState();
+  window.addEventListener("resize", updateLogoState);
 };
 
 const setupFloat = () => {
@@ -350,12 +460,23 @@ const setupHomeMaskCarousel = () => {
   }
 
   let activeIndex = 0;
+  const hydrateSlide = (slide) => {
+    const src = slide.dataset.src;
+    if (src && !slide.getAttribute("href")) {
+      slide.setAttribute("href", src);
+    }
+  };
 
   const setActiveSlide = (nextIndex) => {
+    hydrateSlide(slides[nextIndex]);
     slides[activeIndex].classList.remove("is-active");
     slides[nextIndex].classList.add("is-active");
     activeIndex = nextIndex;
   };
+
+  window.setTimeout(() => {
+    hydrateSlide(slides[1]);
+  }, 900);
 
   window.setInterval(() => {
     const nextIndex = (activeIndex + 1) % slides.length;
@@ -555,6 +676,47 @@ const setupFishingItems = () => {
 
   positionBubbles();
   window.addEventListener("resize", positionBubbles);
+};
+
+const setupWechatModal = () => {
+  const modal = document.querySelector(".wechat-modal");
+  const triggers = Array.from(document.querySelectorAll("[data-wechat-modal-trigger]"));
+  const closeButton = modal?.querySelector("[data-wechat-modal-close]");
+
+  if (!modal || triggers.length === 0) return;
+
+  const openModal = () => {
+    if (typeof modal.showModal === "function") {
+      modal.showModal();
+      return;
+    }
+
+    modal.setAttribute("open", "");
+  };
+
+  const closeModal = () => {
+    if (typeof modal.close === "function") {
+      modal.close();
+      return;
+    }
+
+    modal.removeAttribute("open");
+  };
+
+  triggers.forEach((trigger) => {
+    trigger.addEventListener("click", (event) => {
+      event.preventDefault();
+      openModal();
+    });
+  });
+
+  closeButton?.addEventListener("click", closeModal);
+
+  modal.addEventListener("click", (event) => {
+    if (event.target === modal) {
+      closeModal();
+    }
+  });
 };
 
 const setupTechGirl = () => {
@@ -925,6 +1087,34 @@ const setupPostImages = () => {
   const postBody = document.querySelector(".post-body");
   if (!postBody) return;
 
+  const prepareLazyImage = (image) => {
+    if (!image.dataset.lazySrc) {
+      const src = image.getAttribute("src");
+      if (src) {
+        image.dataset.lazySrc = src;
+        image.removeAttribute("src");
+      }
+    }
+  };
+
+  const wrapImageContent = (image) => {
+    if (image.closest(".post-image-content")) return;
+
+    const content = document.createElement("span");
+    content.className = "post-image-content lazy-media";
+    image.parentNode?.insertBefore(content, image);
+    content.appendChild(image);
+  };
+
+  const figureImages = Array.from(
+    postBody.querySelectorAll("figure:not(.highlight) img"),
+  );
+
+  figureImages.forEach((image) => {
+    wrapImageContent(image);
+    prepareLazyImage(image);
+  });
+
   const candidateImages = Array.from(
     postBody.querySelectorAll("p img, li img, blockquote img"),
   ).filter((image) => !image.closest("figure") && !image.closest(".post-image-frame"));
@@ -934,10 +1124,15 @@ const setupPostImages = () => {
     frame.className = "post-image-frame";
     image.parentNode?.insertBefore(frame, image);
     frame.appendChild(image);
+    wrapImageContent(image);
+    prepareLazyImage(image);
   });
+
 };
 
 setupLoadingScreen();
+setupPostImages();
+setupLazyMedia();
 
 window.addEventListener("load", () => {
   setupMenu();
@@ -951,7 +1146,7 @@ window.addEventListener("load", () => {
   setupTechGirl();
   setupFishingGirl();
   setupFishingItems();
+  setupWechatModal();
   setupPostEntrance();
   setupCodeHighlight();
-  setupPostImages();
 });

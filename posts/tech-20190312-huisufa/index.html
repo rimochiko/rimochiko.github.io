@@ -1,82 +1,151 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   <head>
-    <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta
-  name="description"
-  content="&lt;h1 id=&#34;回溯法の定义&#34;&gt;&lt;a href=&#34;#回溯法の定义&#34; class=&#34;headerlink&#34; title=&#34;回溯法の定义&#34;&gt;&lt;/a&gt;回溯法の定义&lt;/h1&gt;&lt;blockquote&gt;
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="&lt;h1 id=&#34;回溯法の定义&#34;&gt;&lt;a href=&#34;#回溯法の定义&#34; class=&#34;headerlink&#34; title=&#34;回溯法の定义&#34;&gt;&lt;/a&gt;回溯法の定义&lt;/h1&gt;&lt;blockquote&gt;
 &lt;p&gt;回溯法（探索与回溯法）是一种选优搜索法，又称为试探法，按选优条件向前搜索，以达到目标。但当探索到某一步时，发现原先选择并不优或达不到目标，就退回一步重新选择，这种走不通就退回再走的技术为回溯法。&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;以上来自百度百科。&lt;/p&gt;"
-/>
+&lt;p&gt;以上来自百度百科。&lt;/p&gt;">
 <title>回溯法小结 | 年糕的编程花园</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link
-  href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
-  rel="stylesheet"
-/>
-<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
-<link rel="stylesheet" href="/css/style.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
 
 
   <meta name="generator" content="Hexo 7.3.0"></head>
   <body class="post-page">
-    <div
-      class="site-loading"
-      aria-live="polite"
-      aria-label="页面加载中"
-      data-sprite-src="/images/tech/girl_read_sprite.png"
-      data-frame-count="2"
-    >
+    <div class="site-loading" aria-live="polite" aria-label="页面加载中">
       <div class="site-loading__inner">
-        <div class="site-loading__girl" aria-hidden="true"></div>
+        <img class="site-loading__symbol" src="/images/logo_small.webp" alt aria-hidden="true" decoding="async" fetchpriority="high">
         <p class="site-loading__text">LOADING...</p>
         <div class="site-loading__progress" aria-hidden="true">
           <span class="site-loading__progress-bar"></span>
         </div>
+        <p class="site-loading__percent" aria-hidden="true">0%</p>
       </div>
     </div>
+    <script>
+      (() => {
+        const loading = document.querySelector(".site-loading");
+        const loadingProgressBar = document.querySelector(".site-loading__progress-bar");
+        const loadingPercent = document.querySelector(".site-loading__percent");
+        const MAX_LOADING_MS = 9000;
+        const MIN_LOADING_MS = 450;
+        const TRANSITION_MS = 540;
+
+        if (!loading || !loadingProgressBar) return;
+
+        window.__mochiLoadingStarted = true;
+        document.body.classList.add("is-loading");
+
+        const startTime = Date.now();
+        let progressTimer = null;
+        let forceHideTimer = null;
+        let minimumDelayTimer = null;
+        let finishTimer = null;
+        let hidden = false;
+        let pageReady = document.readyState === "complete";
+        let currentProgress = 0;
+        let minimumDurationReached = false;
+
+        const setProgress = (value) => {
+          currentProgress = Math.max(currentProgress, Math.min(value, 100));
+          const progressValue = `${currentProgress}%`;
+          loading.style.setProperty("--loading-progress", progressValue);
+          loadingProgressBar.style.width = progressValue;
+
+          if (loadingPercent) {
+            loadingPercent.textContent = `${Math.floor(currentProgress)}%`;
+          }
+        };
+
+        const canHideNow = () => pageReady && minimumDurationReached;
+
+        const hideLoading = () => {
+          if (hidden) return;
+          hidden = true;
+
+          if (progressTimer) window.clearInterval(progressTimer);
+          if (forceHideTimer) window.clearTimeout(forceHideTimer);
+          if (minimumDelayTimer) window.clearTimeout(minimumDelayTimer);
+          if (finishTimer) window.clearTimeout(finishTimer);
+
+          setProgress(100);
+          loading.classList.add("is-hidden");
+          document.body.classList.remove("is-loading");
+
+          window.setTimeout(() => {
+            loading.remove();
+          }, TRANSITION_MS);
+        };
+
+        const scheduleHide = () => {
+          if (!canHideNow() || finishTimer || hidden) return;
+
+          setProgress(Math.max(currentProgress, 96));
+          finishTimer = window.setTimeout(hideLoading, 260);
+        };
+
+        const requestHide = () => {
+          pageReady = true;
+          scheduleHide();
+        };
+
+        setProgress(3);
+
+        progressTimer = window.setInterval(() => {
+          const elapsed = Date.now() - startTime;
+          const warmupRatio = Math.min(elapsed / 3600, 1);
+
+          if (pageReady) {
+            setProgress(currentProgress + Math.max((99 - currentProgress) * 0.18, 1.1));
+            return;
+          }
+
+          if (currentProgress < 90) {
+            const targetProgress = 3 + (1 - Math.pow(1 - warmupRatio, 1.35)) * 87;
+            setProgress(targetProgress);
+            return;
+          }
+
+          setProgress(currentProgress + Math.max((94 - currentProgress) * 0.035, 0.04));
+        }, 140);
+
+        minimumDelayTimer = window.setTimeout(() => {
+          minimumDurationReached = true;
+          scheduleHide();
+        }, MIN_LOADING_MS);
+
+        forceHideTimer = window.setTimeout(() => {
+          pageReady = true;
+          minimumDurationReached = true;
+          hideLoading();
+        }, MAX_LOADING_MS);
+
+        if (document.readyState === "complete") {
+          requestHide();
+        } else {
+          window.addEventListener("load", requestHide, { once: true });
+        }
+      })();
+    </script>
     <svg class="visual-defs" aria-hidden="true" width="0" height="0">
       <defs>
         <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency="0.018"
-            numOctaves="2"
-            seed="8"
-            result="noise"
-          />
-          <feDisplacementMap
-            in="SourceGraphic"
-            in2="noise"
-            scale="18"
-            xChannelSelector="R"
-            yChannelSelector="G"
-          />
+          <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="8" result="noise"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="18" xChannelSelector="R" yChannelSelector="G"/>
         </filter>
       </defs>
     </svg>
     
 <header class="site-header">
-  <a
-    class="site-logo is-small"
-    href="/"
-    aria-label="返回年糕的编程花园首页"
-    data-default-logo="/images/logo.png"
-    data-small-logo="/images/logo_small.png"
-  >
-    <img src="/images/logo_small.png" alt="年糕的编程花园" />
+  <a class="site-logo is-small" href="/" aria-label="返回年糕的编程花园首页" data-default-logo="/images/logo.webp" data-small-logo="/images/logo_small.webp">
+    <img src="/images/logo_small.webp" alt="年糕的编程花园" decoding="async" fetchpriority="high">
   </a>
 
-  <button
-    class="menu-toggle"
-    type="button"
-    aria-label="打开菜单"
-    aria-expanded="false"
-    aria-controls="site-menu"
-  >
+  <button class="menu-toggle" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="site-menu">
     <span></span>
     <span></span>
     <span></span>
@@ -113,12 +182,7 @@
             <span class="post-hero__eyebrow">DIARY LOG</span>
             <span class="post-hero__date">2019.03.12</span>
             <h1 id="post-title" class="post-title post-title--decorated">
-              <img
-                class="post-title__decor"
-                src="/images/decorates/flower2.png"
-                alt=""
-                aria-hidden="true"
-              />
+              <img class="post-title__decor" src="/images/decorates/flower2.webp" alt aria-hidden="true" decoding="async">
               <span>回溯法小结</span>
             </h1>
             <div class="post-meta" aria-label="文章信息">
@@ -139,11 +203,11 @@
 <p>以上来自百度百科。</p>
 <span id="more"></span>
 
-<h1 id="回溯法の解空间"><a href="#回溯法の解空间" class="headerlink" title="回溯法の解空间"></a>回溯法の解空间</h1><p>就是要<strong>找出这个问题所有的解</strong>，在这些解里面<strong>筛选出最优解</strong>。<br>举个例子，0-1背包的问题，假设我们有A，B，C三个物品，我们要判断选择装进哪些物品。从我们的背包里没有任何东西开始，我们按顺序一个个物品来判断是不是把它装进去。那么我们就可能出现两种想法：<br><strong>想法一</strong><br>对每一个物品判断是装还是不装，然后画出一个不规范的的图：<br><img src="/pimgs/history/0069luTRgy1fo89f26fs8j30gz0avdg2.jpg" alt="图片描述"></p>
+<h1 id="回溯法の解空间"><a href="#回溯法の解空间" class="headerlink" title="回溯法の解空间"></a>回溯法の解空间</h1><p>就是要<strong>找出这个问题所有的解</strong>，在这些解里面<strong>筛选出最优解</strong>。<br>举个例子，0-1背包的问题，假设我们有A，B，C三个物品，我们要判断选择装进哪些物品。从我们的背包里没有任何东西开始，我们按顺序一个个物品来判断是不是把它装进去。那么我们就可能出现两种想法：<br><strong>想法一</strong><br>对每一个物品判断是装还是不装，然后画出一个不规范的的图：<br><img alt="图片描述" data-lazy-src="/pimgs/history/0069luTRgy1fo89f26fs8j30gz0avdg2.jpg" loading="lazy" decoding="async"></p>
 <p>在这个图中，连线旁边的数字：1表示装入背包中，0表示不装入背包。第一层中，我们判断是否放入A，放入就是1那条岔路，反之是0那条岔路，所以很直观地，我们就可以得到所有可能出现的8个情况：</p>
 <pre><code>&#123;(1,1,1),(1,1,0),(1,0,1),(1,0,0),(0,1,1),(0,1,0),(0,0,1),(0,0,0)&#125;
 </code></pre>
-<p><strong>想法二</strong><br>我们假设自己一开始要从三个里面选一个来装入，所以就有了：<br><img src="/pimgs/history/0069luTRgy1fo89f285oej30ef08pq2z.jpg" alt="图片描述"></p>
+<p><strong>想法二</strong><br>我们假设自己一开始要从三个里面选一个来装入，所以就有了：<br><img alt="图片描述" data-lazy-src="/pimgs/history/0069luTRgy1fo89f285oej30ef08pq2z.jpg" loading="lazy" decoding="async"></p>
 <p>（但是01背包问题并不适合用这种方法来解，所以这里就是与上面的树做一个对比）<br>如上图则表示，我们从A,B,C三个中先选择一个装入，如果第一轮选择了A，那么剩下就还有选择B或者C</p>
 <p>而想法一的想法，其实就能形成一颗<strong>子集树</strong>，它在每次选择的时候，是在一个有限选择集合S里面进行选择，01背包中，这个S就是{0,1}，而想法二能形成一颗排列树，它在每次进行选择的时候是在给出的选项S中作选择，这里是{A,B,C}。<br>所以回溯法的写法，也有两种，<strong>子集树的写法和排列树的写法，做题的时候要自己选择更加合适的方法来解决。</strong></p>
 <h1 id="回溯法の公式"><a href="#回溯法の公式" class="headerlink" title="回溯法の公式"></a>回溯法の公式</h1><p>每种算法都可以选择递归和迭代的方式来写，显然这里用迭代方式来写是很麻烦的，可以说也没有人选择这样的方法，所以我们都采用递归来写。</p>
@@ -188,8 +252,8 @@
 <blockquote>
 <p>皇后不能在同一行，同一列或者同一斜线</p>
 </blockquote>
-<p><img src="/pimgs/history/0069luTRgy1fo89f4zxb5j306p06dt8j.jpg" alt="图片描述"></p>
-<p><strong>排列树方法</strong>：<br>假如n&#x3D;4，初始化x数组中每个取值为0,1,2,3，ok函数也和子集树一样，我们的for循环中i也可能有0,1,2,3四种选择，因为是采用了交换，不出现两个重复的值，所以和子集树相比，走过的路要少一些。<br><img src="/pimgs/history/0069luTRgy1fo89f50kcej305z05p743.jpg" alt="图片描述"></p>
+<p><img alt="图片描述" data-lazy-src="/pimgs/history/0069luTRgy1fo89f4zxb5j306p06dt8j.jpg" loading="lazy" decoding="async"></p>
+<p><strong>排列树方法</strong>：<br>假如n&#x3D;4，初始化x数组中每个取值为0,1,2,3，ok函数也和子集树一样，我们的for循环中i也可能有0,1,2,3四种选择，因为是采用了交换，不出现两个重复的值，所以和子集树相比，走过的路要少一些。<br><img alt="图片描述" data-lazy-src="/pimgs/history/0069luTRgy1fo89f50kcej305z05p743.jpg" loading="lazy" decoding="async"></p>
 <h1 id="效率の提高"><a href="#效率の提高" class="headerlink" title="效率の提高"></a>效率の提高</h1><p>为了提高算法的效率，我们可以从ok()函数来入手：</p>
 <ol>
 <li>计算简单</li>
@@ -203,19 +267,13 @@
           
             <nav class="post-nav" aria-label="文章切换">
               
-                <a
-                  href="/posts/tech-20190401-three-material/"
-                  
-                >
+                <a href="/posts/tech-20190401-three-material/">
                   <span class="post-nav__label">上一篇</span>
                   <span class="post-nav__title">Three.js材料篇</span>
                 </a>
               
               
-                <a
-                  href="/posts/tech-20190222-three/"
-                  
-                >
+                <a href="/posts/tech-20190222-three/">
                   <span class="post-nav__label">下一篇</span>
                   <span class="post-nav__title">Three.js自学碎碎叨（下）</span>
                 </a>
@@ -229,17 +287,14 @@
 
   <section class="post-about-band">
     <svg class="post-divider post-divider--content" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"></path>
+      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"/>
     </svg>
     <div class="post-about-band__inner">
-      <section class="post-about" aria-label="关于年糕">
+      
+<section class="post-about" aria-label="关于年糕">
   <div class="post-about__figure">
     <div class="post-about__figure-card">
-      <img
-        class="post-about__image"
-        src="/images/mochi_real.png"
-        alt="年糕的个人形象照"
-      />
+      <img class="post-about__image" src="/images/mochi_real.webp" alt="年糕的个人形象照" loading="lazy" decoding="async">
     </div>
   </div>
 
@@ -249,11 +304,20 @@
       <h2 class="post-about__name">年糕</h2>
       <div class="post-about__channels" aria-label="社交平台">
         
-          <a href="/#about">小红书</a>
+          
+          
+            <a href="https://www.xiaohongshu.com/user/profile/659266b2000000002001f48e" target="&#34;_blank&#34;" rel="&#34;noopener" noreferrer&#34;>小红书</a>
+          
         
-          <a href="/#about">B站</a>
+          
+          
+            <a href="https://space.bilibili.com/3494369971669945" target="&#34;_blank&#34;" rel="&#34;noopener" noreferrer&#34;>B站</a>
+          
         
-          <a href="/#about">微信公众号</a>
+          
+          
+            <button type="button" data-wechat-modal-trigger>微信公众号</button>
+          
         
       </div>
     </div>
@@ -266,6 +330,17 @@
 </main>
 
 
+    <dialog class="wechat-modal" aria-labelledby="wechat-modal-title">
+      <button class="wechat-modal__close" type="button" aria-label="关闭微信公众号二维码弹窗" data-wechat-modal-close>
+        ×
+      </button>
+      <div class="wechat-modal__content">
+        <p class="wechat-modal__eyebrow">WECHAT OFFICIAL ACCOUNT</p>
+        <h2 id="wechat-modal-title" class="wechat-modal__title">微信公众号</h2>
+        <img class="wechat-modal__qrcode" src="/images/wx_qrcode.webp" alt="微信公众号二维码" loading="lazy" decoding="async">
+        <p class="wechat-modal__hint">扫码或搜索“年糕的编程花园”关注年糕的公众号</p>
+      </div>
+    </dialog>
     <footer class="site-footer site-footer--post">
   <div class="site-footer__inner">
     <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
@@ -273,10 +348,10 @@
   </div>
 </footer>
 
-    <script src="/vendor/gsap/gsap.min.js"></script>
-<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+    <script defer src="/vendor/gsap/gsap.min.js"></script>
+<script defer src="/vendor/gsap/ScrollTrigger.min.js"></script>
 
-<script src="/js/main.js"></script>
+<script defer src="/js/main.js"></script>
 
   </body>
 </html>

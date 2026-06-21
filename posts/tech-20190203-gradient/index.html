@@ -1,79 +1,148 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   <head>
-    <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta
-  name="description"
-  content="&lt;p&gt;因为我不喜欢背公式，希望自己能找到比较容易理解和推理的记忆方式吧，很早就感觉CSS3渐变的属性组成不太好记忆，所以今天终于挖了这个坑，其实也没什么很特别的，嘻嘻，如果有错误欢迎提出。&lt;/p&gt;"
-/>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="&lt;p&gt;因为我不喜欢背公式，希望自己能找到比较容易理解和推理的记忆方式吧，很早就感觉CSS3渐变的属性组成不太好记忆，所以今天终于挖了这个坑，其实也没什么很特别的，嘻嘻，如果有错误欢迎提出。&lt;/p&gt;">
 <title>CSS渐变小结 | 年糕的编程花园</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link
-  href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
-  rel="stylesheet"
-/>
-<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
-<link rel="stylesheet" href="/css/style.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
 
 
   <meta name="generator" content="Hexo 7.3.0"></head>
   <body class="post-page">
-    <div
-      class="site-loading"
-      aria-live="polite"
-      aria-label="页面加载中"
-      data-sprite-src="/images/tech/girl_read_sprite.png"
-      data-frame-count="2"
-    >
+    <div class="site-loading" aria-live="polite" aria-label="页面加载中">
       <div class="site-loading__inner">
-        <div class="site-loading__girl" aria-hidden="true"></div>
+        <img class="site-loading__symbol" src="/images/logo_small.webp" alt aria-hidden="true" decoding="async" fetchpriority="high">
         <p class="site-loading__text">LOADING...</p>
         <div class="site-loading__progress" aria-hidden="true">
           <span class="site-loading__progress-bar"></span>
         </div>
+        <p class="site-loading__percent" aria-hidden="true">0%</p>
       </div>
     </div>
+    <script>
+      (() => {
+        const loading = document.querySelector(".site-loading");
+        const loadingProgressBar = document.querySelector(".site-loading__progress-bar");
+        const loadingPercent = document.querySelector(".site-loading__percent");
+        const MAX_LOADING_MS = 9000;
+        const MIN_LOADING_MS = 450;
+        const TRANSITION_MS = 540;
+
+        if (!loading || !loadingProgressBar) return;
+
+        window.__mochiLoadingStarted = true;
+        document.body.classList.add("is-loading");
+
+        const startTime = Date.now();
+        let progressTimer = null;
+        let forceHideTimer = null;
+        let minimumDelayTimer = null;
+        let finishTimer = null;
+        let hidden = false;
+        let pageReady = document.readyState === "complete";
+        let currentProgress = 0;
+        let minimumDurationReached = false;
+
+        const setProgress = (value) => {
+          currentProgress = Math.max(currentProgress, Math.min(value, 100));
+          const progressValue = `${currentProgress}%`;
+          loading.style.setProperty("--loading-progress", progressValue);
+          loadingProgressBar.style.width = progressValue;
+
+          if (loadingPercent) {
+            loadingPercent.textContent = `${Math.floor(currentProgress)}%`;
+          }
+        };
+
+        const canHideNow = () => pageReady && minimumDurationReached;
+
+        const hideLoading = () => {
+          if (hidden) return;
+          hidden = true;
+
+          if (progressTimer) window.clearInterval(progressTimer);
+          if (forceHideTimer) window.clearTimeout(forceHideTimer);
+          if (minimumDelayTimer) window.clearTimeout(minimumDelayTimer);
+          if (finishTimer) window.clearTimeout(finishTimer);
+
+          setProgress(100);
+          loading.classList.add("is-hidden");
+          document.body.classList.remove("is-loading");
+
+          window.setTimeout(() => {
+            loading.remove();
+          }, TRANSITION_MS);
+        };
+
+        const scheduleHide = () => {
+          if (!canHideNow() || finishTimer || hidden) return;
+
+          setProgress(Math.max(currentProgress, 96));
+          finishTimer = window.setTimeout(hideLoading, 260);
+        };
+
+        const requestHide = () => {
+          pageReady = true;
+          scheduleHide();
+        };
+
+        setProgress(3);
+
+        progressTimer = window.setInterval(() => {
+          const elapsed = Date.now() - startTime;
+          const warmupRatio = Math.min(elapsed / 3600, 1);
+
+          if (pageReady) {
+            setProgress(currentProgress + Math.max((99 - currentProgress) * 0.18, 1.1));
+            return;
+          }
+
+          if (currentProgress < 90) {
+            const targetProgress = 3 + (1 - Math.pow(1 - warmupRatio, 1.35)) * 87;
+            setProgress(targetProgress);
+            return;
+          }
+
+          setProgress(currentProgress + Math.max((94 - currentProgress) * 0.035, 0.04));
+        }, 140);
+
+        minimumDelayTimer = window.setTimeout(() => {
+          minimumDurationReached = true;
+          scheduleHide();
+        }, MIN_LOADING_MS);
+
+        forceHideTimer = window.setTimeout(() => {
+          pageReady = true;
+          minimumDurationReached = true;
+          hideLoading();
+        }, MAX_LOADING_MS);
+
+        if (document.readyState === "complete") {
+          requestHide();
+        } else {
+          window.addEventListener("load", requestHide, { once: true });
+        }
+      })();
+    </script>
     <svg class="visual-defs" aria-hidden="true" width="0" height="0">
       <defs>
         <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency="0.018"
-            numOctaves="2"
-            seed="8"
-            result="noise"
-          />
-          <feDisplacementMap
-            in="SourceGraphic"
-            in2="noise"
-            scale="18"
-            xChannelSelector="R"
-            yChannelSelector="G"
-          />
+          <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="8" result="noise"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="18" xChannelSelector="R" yChannelSelector="G"/>
         </filter>
       </defs>
     </svg>
     
 <header class="site-header">
-  <a
-    class="site-logo is-small"
-    href="/"
-    aria-label="返回年糕的编程花园首页"
-    data-default-logo="/images/logo.png"
-    data-small-logo="/images/logo_small.png"
-  >
-    <img src="/images/logo_small.png" alt="年糕的编程花园" />
+  <a class="site-logo is-small" href="/" aria-label="返回年糕的编程花园首页" data-default-logo="/images/logo.webp" data-small-logo="/images/logo_small.webp">
+    <img src="/images/logo_small.webp" alt="年糕的编程花园" decoding="async" fetchpriority="high">
   </a>
 
-  <button
-    class="menu-toggle"
-    type="button"
-    aria-label="打开菜单"
-    aria-expanded="false"
-    aria-controls="site-menu"
-  >
+  <button class="menu-toggle" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="site-menu">
     <span></span>
     <span></span>
     <span></span>
@@ -110,12 +179,7 @@
             <span class="post-hero__eyebrow">DIARY LOG</span>
             <span class="post-hero__date">2019.02.03</span>
             <h1 id="post-title" class="post-title post-title--decorated">
-              <img
-                class="post-title__decor"
-                src="/images/decorates/flower2.png"
-                alt=""
-                aria-hidden="true"
-              />
+              <img class="post-title__decor" src="/images/decorates/flower2.webp" alt aria-hidden="true" decoding="async">
               <span>CSS渐变小结</span>
             </h1>
             <div class="post-meta" aria-label="文章信息">
@@ -144,27 +208,27 @@ linear-gradient(180deg, red, blue);
 linear-gradient(180deg, red 10%, blue 20%);
 </code></pre>
 <h1 id="关于方向"><a href="#关于方向" class="headerlink" title="关于方向"></a>关于方向</h1><p>方向有两种写法，可以是写top、bottom、left、right，也可以是写具体的角度。</p>
-<h2 id="不写方向"><a href="#不写方向" class="headerlink" title="不写方向"></a>不写方向</h2><p>默认情况下是上-&gt;下：<br><img src="/pimgs/20190203gradient/0069luTRgy1fqfyanfm40j305h01c0sh.jpg" alt="图片描述"></p>
+<h2 id="不写方向"><a href="#不写方向" class="headerlink" title="不写方向"></a>不写方向</h2><p>默认情况下是上-&gt;下：<br><img alt="图片描述" data-lazy-src="/pimgs/20190203gradient/0069luTRgy1fqfyanfm40j305h01c0sh.jpg" loading="lazy" decoding="async"></p>
 <pre><code>background: linear-gradient(red,blue);
 </code></pre>
 <h2 id="使用方向单词"><a href="#使用方向单词" class="headerlink" title="使用方向单词"></a>使用方向单词</h2><pre><code>to 某个方向（目的地）
 </code></pre>
 <p>这里的值可以是单纯的top，也可以是如top left（左上）这样的组合搭配。<br><strong>Tip</strong>：left top搭配中词语的顺序变换也没有影响。</p>
 <p>而它的方向就是以这个<code>目的地</code>为目标，径直发射过去。<br><strong>举例：</strong><br>向右下角（right bottom &#x2F; bottom right）发射过去啦~</p>
-<p><img src="/pimgs/20190203gradient/0069luTRgy1fqfyb3bnflj305g0190sh.jpg" alt="图片描述"></p>
+<p><img alt="图片描述" data-lazy-src="/pimgs/20190203gradient/0069luTRgy1fqfyb3bnflj305g0190sh.jpg" loading="lazy" decoding="async"></p>
 <pre><code>background: linear-gradient(to right bottom, red , blue);
 </code></pre>
 <h2 id="使用角度"><a href="#使用角度" class="headerlink" title="使用角度"></a>使用角度</h2><p><strong>角度的范围：</strong><br>可以是负数到正数！它会进行%360deg的运算，所以0deg和360deg&#x2F;-360deg是一样的啦。</p>
-<p><strong>角度的判断：</strong><br>让我们先回到不填写方法的时候，渐变是red(1)-&gt;blue(2)，但是在0deg的情况下，渐变方向是blue(2)-&gt;red(1)：<br><img src="/pimgs/20190203gradient/0069luTRgy1fqfyb3cn96j305h01c0sh.jpg" alt="图片描述"></p>
+<p><strong>角度的判断：</strong><br>让我们先回到不填写方法的时候，渐变是red(1)-&gt;blue(2)，但是在0deg的情况下，渐变方向是blue(2)-&gt;red(1)：<br><img alt="图片描述" data-lazy-src="/pimgs/20190203gradient/0069luTRgy1fqfyb3cn96j305h01c0sh.jpg" loading="lazy" decoding="async"></p>
 <pre><code>background: linear-gradient(0deg , red , blue)
 </code></pre>
-<p>随后多次实验会发现，这个角度其实不像transform那种旋转的角度，同样也可以认为是一个发射的角度：<br><img src="/pimgs/20190203gradient/0069luTRgy1fqfyb3d8mnj305f05hwed.jpg" alt="图片描述"></p>
+<p>随后多次实验会发现，这个角度其实不像transform那种旋转的角度，同样也可以认为是一个发射的角度：<br><img alt="图片描述" data-lazy-src="/pimgs/20190203gradient/0069luTRgy1fqfyb3d8mnj305f05hwed.jpg" loading="lazy" decoding="async"></p>
 <p>所以呀，就可以认为是像这张图一样的，可以把red作为自己的出发点，然后对着某个角度发射过去。<br>所以在不写方向的默认情况下，<code>linear-gradient(red,blue);</code>这个角度其实相当于是<code>linear-gradient(180deg, red,blue)</code>。</p>
 <h1 id="关于百分比"><a href="#关于百分比" class="headerlink" title="关于百分比"></a>关于百分比</h1><p>我们在写颜色的时候后面可以在接一个百分比，这个百分比在MDN中的解释是：</p>
 <blockquote>
 <p>渐近线的颜色停止点在该位置有特定的颜色。该位置可以被指定为线长度的百分比或一个绝对长度。为实现期望的效果，可以指定任意多个颜色停止点。</p>
 </blockquote>
-<p>说实话，我感觉这个解释还是比较模糊，我个人觉得这个终点应该是渐变的终点，所以我开始了小探究（<strong>怕被打扰思维的童鞋直接跳过这里，看最后一段吧（怕被打）</strong>），但同样还是要存在一个颜色开始的起点，所以来实验一下：<br><strong>1.</strong><br><img src="https://www.mochiko.cn/pimgs/20190203gradient/0069luTRgy1fqfyb3e3swj305e01b0gy.jpg" alt="图片描述"></p>
+<p>说实话，我感觉这个解释还是比较模糊，我个人觉得这个终点应该是渐变的终点，所以我开始了小探究（<strong>怕被打扰思维的童鞋直接跳过这里，看最后一段吧（怕被打）</strong>），但同样还是要存在一个颜色开始的起点，所以来实验一下：<br><strong>1.</strong><br><img alt="图片描述" data-lazy-src="https://www.mochiko.cn/pimgs/20190203gradient/0069luTRgy1fqfyb3e3swj305e01b0gy.jpg" loading="lazy" decoding="async"></p>
 <pre><code>linear-gradient(to right, red 0%, blue 0%)
 </code></pre>
 <p>因为red设置了0%为终点，按照计算blue应该从0%开始，而blue也同样设置0%为渐变终点，所以blue就全部都占满了，且不存在渐变。</p>
@@ -172,7 +236,7 @@ linear-gradient(180deg, red 10%, blue 20%);
 <li>渐变范围：0%~0%</li>
 <li>blue颜色范围：0%~100%</li>
 </ul>
-<p><strong>2.</strong><br><img src="https://www.mochiko.cn/pimgs/20190203gradient/0069luTRgy1fqfyb3fr76j305h01c0jy.jpg" alt="图片描述"></p>
+<p><strong>2.</strong><br><img alt="图片描述" data-lazy-src="https://www.mochiko.cn/pimgs/20190203gradient/0069luTRgy1fqfyb3fr76j305h01c0jy.jpg" loading="lazy" decoding="async"></p>
 <pre><code>linear-gradient(to right, red 10%, blue 0%)
 </code></pre>
 <p>整个div的宽度是200px，red是10%，可以发现它截止的地方正好是<code>200*10%=20px</code>，但是blue的渐变终点是0。想象一下，就好像红色部分把蓝色的开头给遮住了，所以这个时候没有产生渐变，同样如果blue &lt;&#x3D; 10%都不会有这个渐变。</p>
@@ -180,7 +244,7 @@ linear-gradient(180deg, red 10%, blue 20%);
 <li>渐变范围：10%~0%（大于起点，所以不存在）</li>
 <li>blue颜色范围：10%~100%</li>
 </ul>
-<p><strong>3.</strong><br><img src="/pimgs/20190203gradient/0069luTRgy1fqfyb3f0pkj30500180kx.jpg" alt="图片描述"></p>
+<p><strong>3.</strong><br><img alt="图片描述" data-lazy-src="/pimgs/20190203gradient/0069luTRgy1fqfyb3f0pkj30500180kx.jpg" loading="lazy" decoding="async"></p>
 <pre><code>linear-gradient(to right, red 0%, blue 10%)
 </code></pre>
 <p>So，如果blue是10%，按照计算，蓝色应该从0%的位置开始，但是渐变的终点是10%，所以会有10%长度的渐变出现。</p>
@@ -188,7 +252,7 @@ linear-gradient(180deg, red 10%, blue 20%);
 <li>渐变范围：0%~10%</li>
 <li>blue颜色范围：0%~100%</li>
 </ul>
-<p><strong>4.</strong><br>来个复杂的情况：<br><img src="/pimgs/20190203gradient/0069luTRgy1fqfyczxlxxj304w0160m9.jpg" alt="图片描述"></p>
+<p><strong>4.</strong><br>来个复杂的情况：<br><img alt="图片描述" data-lazy-src="/pimgs/20190203gradient/0069luTRgy1fqfyczxlxxj304w0160m9.jpg" loading="lazy" decoding="async"></p>
 <pre><code>linear-gradient(to right, red 40%, blue 50%,yellow 60%);
 </code></pre>
 <p>首先红色部分在40%的时候止步，蓝色的渐变到50%的时候才结束，所以中间有10%的渐变，同理蓝色和黄色部分也有10%的渐变。</p>
@@ -202,7 +266,7 @@ linear-gradient(180deg, red 10%, blue 20%);
 <ol start="5">
 <li></li>
 </ol>
-<p><img src="/pimgs/20190203gradient/0069luTRgy1fqfyczxu1lj306g0263ya.jpg" alt="图片描述"></p>
+<p><img alt="图片描述" data-lazy-src="/pimgs/20190203gradient/0069luTRgy1fqfyczxu1lj306g0263ya.jpg" loading="lazy" decoding="async"></p>
 <pre><code>linear-gradient(to right, red 40%, blue 50%,yellow 0%);
 </code></pre>
 <p>把黄色部分设为0%，也就是黄色渐变在0%的时候就结束了，这个时候到蓝色部分正好是容器的一半（50%）。</p>
@@ -223,19 +287,13 @@ linear-gradient(180deg, red 10%, blue 20%);
           
             <nav class="post-nav" aria-label="文章切换">
               
-                <a
-                  href="/posts/life-20190210-perfume/"
-                  
-                >
+                <a href="/posts/life-20190210-perfume/">
                   <span class="post-nav__label">上一篇</span>
                   <span class="post-nav__title">给Perfume写的信</span>
                 </a>
               
               
-                <a
-                  href="/posts/life-20181227-music/"
-                  
-                >
+                <a href="/posts/life-20181227-music/">
                   <span class="post-nav__label">下一篇</span>
                   <span class="post-nav__title">音乐 | 2018年令我印象深刻的J-POP</span>
                 </a>
@@ -249,17 +307,14 @@ linear-gradient(180deg, red 10%, blue 20%);
 
   <section class="post-about-band">
     <svg class="post-divider post-divider--content" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"></path>
+      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"/>
     </svg>
     <div class="post-about-band__inner">
-      <section class="post-about" aria-label="关于年糕">
+      
+<section class="post-about" aria-label="关于年糕">
   <div class="post-about__figure">
     <div class="post-about__figure-card">
-      <img
-        class="post-about__image"
-        src="/images/mochi_real.png"
-        alt="年糕的个人形象照"
-      />
+      <img class="post-about__image" src="/images/mochi_real.webp" alt="年糕的个人形象照" loading="lazy" decoding="async">
     </div>
   </div>
 
@@ -269,11 +324,20 @@ linear-gradient(180deg, red 10%, blue 20%);
       <h2 class="post-about__name">年糕</h2>
       <div class="post-about__channels" aria-label="社交平台">
         
-          <a href="/#about">小红书</a>
+          
+          
+            <a href="https://www.xiaohongshu.com/user/profile/659266b2000000002001f48e" target="&#34;_blank&#34;" rel="&#34;noopener" noreferrer&#34;>小红书</a>
+          
         
-          <a href="/#about">B站</a>
+          
+          
+            <a href="https://space.bilibili.com/3494369971669945" target="&#34;_blank&#34;" rel="&#34;noopener" noreferrer&#34;>B站</a>
+          
         
-          <a href="/#about">微信公众号</a>
+          
+          
+            <button type="button" data-wechat-modal-trigger>微信公众号</button>
+          
         
       </div>
     </div>
@@ -286,6 +350,17 @@ linear-gradient(180deg, red 10%, blue 20%);
 </main>
 
 
+    <dialog class="wechat-modal" aria-labelledby="wechat-modal-title">
+      <button class="wechat-modal__close" type="button" aria-label="关闭微信公众号二维码弹窗" data-wechat-modal-close>
+        ×
+      </button>
+      <div class="wechat-modal__content">
+        <p class="wechat-modal__eyebrow">WECHAT OFFICIAL ACCOUNT</p>
+        <h2 id="wechat-modal-title" class="wechat-modal__title">微信公众号</h2>
+        <img class="wechat-modal__qrcode" src="/images/wx_qrcode.webp" alt="微信公众号二维码" loading="lazy" decoding="async">
+        <p class="wechat-modal__hint">扫码或搜索“年糕的编程花园”关注年糕的公众号</p>
+      </div>
+    </dialog>
     <footer class="site-footer site-footer--post">
   <div class="site-footer__inner">
     <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
@@ -293,10 +368,10 @@ linear-gradient(180deg, red 10%, blue 20%);
   </div>
 </footer>
 
-    <script src="/vendor/gsap/gsap.min.js"></script>
-<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+    <script defer src="/vendor/gsap/gsap.min.js"></script>
+<script defer src="/vendor/gsap/ScrollTrigger.min.js"></script>
 
-<script src="/js/main.js"></script>
+<script defer src="/js/main.js"></script>
 
   </body>
 </html>

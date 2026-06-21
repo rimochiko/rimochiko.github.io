@@ -14,7 +14,6 @@
   href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
   rel="stylesheet"
 />
-<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
 <link rel="stylesheet" href="/css/style.css" />
 
 
@@ -24,17 +23,128 @@
       class="site-loading"
       aria-live="polite"
       aria-label="页面加载中"
-      data-sprite-src="/images/tech/girl_read_sprite.png"
-      data-frame-count="2"
     >
       <div class="site-loading__inner">
-        <div class="site-loading__girl" aria-hidden="true"></div>
+        <img
+          class="site-loading__symbol"
+          src="/images/logo_small.webp"
+          alt=""
+          aria-hidden="true"
+          decoding="async"
+          fetchpriority="high"
+        />
         <p class="site-loading__text">LOADING...</p>
         <div class="site-loading__progress" aria-hidden="true">
           <span class="site-loading__progress-bar"></span>
         </div>
+        <p class="site-loading__percent" aria-hidden="true">0%</p>
       </div>
     </div>
+    <script>
+      (() => {
+        const loading = document.querySelector(".site-loading");
+        const loadingProgressBar = document.querySelector(".site-loading__progress-bar");
+        const loadingPercent = document.querySelector(".site-loading__percent");
+        const MAX_LOADING_MS = 9000;
+        const MIN_LOADING_MS = 450;
+        const TRANSITION_MS = 540;
+
+        if (!loading || !loadingProgressBar) return;
+
+        window.__mochiLoadingStarted = true;
+        document.body.classList.add("is-loading");
+
+        const startTime = Date.now();
+        let progressTimer = null;
+        let forceHideTimer = null;
+        let minimumDelayTimer = null;
+        let finishTimer = null;
+        let hidden = false;
+        let pageReady = document.readyState === "complete";
+        let currentProgress = 0;
+        let minimumDurationReached = false;
+
+        const setProgress = (value) => {
+          currentProgress = Math.max(currentProgress, Math.min(value, 100));
+          const progressValue = `${currentProgress}%`;
+          loading.style.setProperty("--loading-progress", progressValue);
+          loadingProgressBar.style.width = progressValue;
+
+          if (loadingPercent) {
+            loadingPercent.textContent = `${Math.floor(currentProgress)}%`;
+          }
+        };
+
+        const canHideNow = () => pageReady && minimumDurationReached;
+
+        const hideLoading = () => {
+          if (hidden) return;
+          hidden = true;
+
+          if (progressTimer) window.clearInterval(progressTimer);
+          if (forceHideTimer) window.clearTimeout(forceHideTimer);
+          if (minimumDelayTimer) window.clearTimeout(minimumDelayTimer);
+          if (finishTimer) window.clearTimeout(finishTimer);
+
+          setProgress(100);
+          loading.classList.add("is-hidden");
+          document.body.classList.remove("is-loading");
+
+          window.setTimeout(() => {
+            loading.remove();
+          }, TRANSITION_MS);
+        };
+
+        const scheduleHide = () => {
+          if (!canHideNow() || finishTimer || hidden) return;
+
+          setProgress(Math.max(currentProgress, 96));
+          finishTimer = window.setTimeout(hideLoading, 260);
+        };
+
+        const requestHide = () => {
+          pageReady = true;
+          scheduleHide();
+        };
+
+        setProgress(3);
+
+        progressTimer = window.setInterval(() => {
+          const elapsed = Date.now() - startTime;
+          const warmupRatio = Math.min(elapsed / 3600, 1);
+
+          if (pageReady) {
+            setProgress(currentProgress + Math.max((99 - currentProgress) * 0.18, 1.1));
+            return;
+          }
+
+          if (currentProgress < 90) {
+            const targetProgress = 3 + (1 - Math.pow(1 - warmupRatio, 1.35)) * 87;
+            setProgress(targetProgress);
+            return;
+          }
+
+          setProgress(currentProgress + Math.max((94 - currentProgress) * 0.035, 0.04));
+        }, 140);
+
+        minimumDelayTimer = window.setTimeout(() => {
+          minimumDurationReached = true;
+          scheduleHide();
+        }, MIN_LOADING_MS);
+
+        forceHideTimer = window.setTimeout(() => {
+          pageReady = true;
+          minimumDurationReached = true;
+          hideLoading();
+        }, MAX_LOADING_MS);
+
+        if (document.readyState === "complete") {
+          requestHide();
+        } else {
+          window.addEventListener("load", requestHide, { once: true });
+        }
+      })();
+    </script>
     <svg class="visual-defs" aria-hidden="true" width="0" height="0">
       <defs>
         <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
@@ -61,10 +171,15 @@
     class="site-logo is-small"
     href="/"
     aria-label="返回年糕的编程花园首页"
-    data-default-logo="/images/logo.png"
-    data-small-logo="/images/logo_small.png"
+    data-default-logo="/images/logo.webp"
+    data-small-logo="/images/logo_small.webp"
   >
-    <img src="/images/logo_small.png" alt="年糕的编程花园" />
+    <img
+      src="/images/logo_small.webp"
+      alt="年糕的编程花园"
+      decoding="async"
+      fetchpriority="high"
+    />
   </a>
 
   <button
@@ -105,13 +220,18 @@
       <div class="post-hero__content archive-hero__content">
         <span class="post-hero__eyebrow">ARCHIVE</span>
         <span class="post-hero__date">
-          56 篇文章
+          88 篇文章
         </span>
         <h1 id="post-title" class="post-title">花园归档</h1>
         <div class="post-meta" aria-label="归档信息">
           <span>按时间浏览全部文章</span>
           
+            <span>第 1 / 2 页</span>
+          
         </div>
+      </div>
+      <div class="archive-hero__decor" aria-hidden="true">
+        <span class="archive-hero__reader"></span>
       </div>
     </div>
   </section>
@@ -123,6 +243,141 @@
           
             
             <a
+              class="archive-card archive-card--no-cover"
+              href="https://mp.weixin.qq.com/s/GrQoAZAv9re5-RrxN9JF0w"
+              aria-label="查看文章：AI给了我标准答案，但我想守护那点&#34;活人味&#34;"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">AI给了我标准答案，但我想守护那点&#34;活人味&#34;</h2>
+                <p class="archive-card__excerpt">
+                  讨论 AI 给出高效标准答案之后，人依然想保留的个人表达、犹豫、偏好与不那么标准的生命感。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2026</span>
+                    <span class="archive-card__day">05.03</span>
+                  </div>
+                  <span class="archive-card__tag">#碎碎念</span>
+                  
+                    <span class="archive-card__tag">#AI</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="https://mp.weixin.qq.com/s/rKC5ueyhiPT0TTC_xvTAYQ"
+              aria-label="查看文章：当所有人都在“装小龙虾”时，什么才是你真正的支点？"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">当所有人都在“装小龙虾”时，什么才是你真正的支点？</h2>
+                <p class="archive-card__excerpt">
+                  借一个流行表达反思自我定位与外部期待，追问在热闹的角色扮演之外，真正能支撑自己的是什么。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2026</span>
+                    <span class="archive-card__day">03.15</span>
+                  </div>
+                  <span class="archive-card__tag">#碎碎念</span>
+                  
+                    <span class="archive-card__tag">#成长</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="https://mp.weixin.qq.com/s/hM9irOZ5vdEE3UekHQ8AEA"
+              aria-label="查看文章：我，偶尔六点下班，赶赴一场音乐演出"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">我，偶尔六点下班，赶赴一场音乐演出</h2>
+                <p class="archive-card__excerpt">
+                  记录一次下班后奔赴音乐演出的体验，在工作秩序之外，重新感受生活缝隙里的热爱与自由。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2025</span>
+                    <span class="archive-card__day">12.21</span>
+                  </div>
+                  <span class="archive-card__tag">#生活</span>
+                  
+                    <span class="archive-card__tag">#碎碎念</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="https://mp.weixin.qq.com/s/-JegusYDSNPO2N5De2rjtQ"
+              aria-label="查看文章：我逐渐挣脱了完美主义的枷锁"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">我逐渐挣脱了完美主义的枷锁</h2>
+                <p class="archive-card__excerpt">
+                  回顾自己与完美主义相处的过程，记录从苛责、拖延到允许不完美发生的心理转变。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2025</span>
+                    <span class="archive-card__day">11.15</span>
+                  </div>
+                  <span class="archive-card__tag">#碎碎念</span>
+                  
+                    <span class="archive-card__tag">#成长</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="https://mp.weixin.qq.com/s/L4-B1jy8C6nuoET8qg60BA"
+              aria-label="查看文章：独立开发成长日记（Day 1）"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">独立开发成长日记（Day 1）</h2>
+                <p class="archive-card__excerpt">
+                  独立开发成长日记的开篇，记录开始行动时的想法、目标、焦虑与对未来节奏的初步探索。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2025</span>
+                    <span class="archive-card__day">10.06</span>
+                  </div>
+                  <span class="archive-card__tag">#碎碎念</span>
+                  
+                    <span class="archive-card__tag">#成长</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
               class="archive-card archive-card--with-cover"
               href="https://www.bilibili.com/video/BV1Tr42177eK/"
               aria-label="查看文章：看了今泉爱夏的LIVE..."
@@ -130,7 +385,10 @@
             >
               
                 <div class="archive-card__cover-wrap">
-                  <div class="archive-card__cover" style="background-image: url('/wimgs/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20240714170632.png')"></div>
+                  <div
+                    class="archive-card__cover lazy-media lazy-media--bg"
+                    data-lazy-bg="/wimgs/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20240714170632.png"
+                  ></div>
                 </div>
               
 
@@ -252,107 +510,27 @@
               </div>
             </a>
           
-            
-            <a
-              class="archive-card archive-card--no-cover"
-              href="/posts/life-20180210-res/"
-              aria-label="查看文章：大三上学期小结"
-              
-            >
-              
 
-              <div class="archive-card__content">
-                <h2 class="archive-card__title">大三上学期小结</h2>
-                <p class="archive-card__excerpt">
-                  这个学期到现在这个日子来说，应该算是要完结了，虽然成绩还没出完，但是自己心里大概也有个底了。一开始的时候，还是有点惊讶，因为上个学期我竟然当了一回专业第一，自己完全都没觉得自己会有这种能力，我都是尽可能在短时间内花自己最
-                </p>
-                <div class="archive-card__meta">
-                  <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2018</span>
-                    <span class="archive-card__day">02.10</span>
-                  </div>
-                  <span class="archive-card__tag">#碎碎念</span>
-                  
-                </div>
-              </div>
-            </a>
           
-            
-            <a
-              class="archive-card archive-card--no-cover"
-              href="/posts/life-20170710-res/"
-              aria-label="查看文章：2017年上半年的小总结"
+            <nav class="archive-nav" aria-label="归档翻页">
               
-            >
+                <span class="archive-nav__link archive-nav__link--placeholder" aria-hidden="true">
+                  <span class="archive-nav__label">上一页</span>
+                  <span class="archive-nav__title">没有上一页</span>
+                </span>
               
 
-              <div class="archive-card__content">
-                <h2 class="archive-card__title">2017年上半年的小总结</h2>
-                <p class="archive-card__excerpt">
-                  2017年已经过去一半了（其实早就过去一半了），觉得还是应该回顾回顾这半年以及我这个学期的生活，重拾一些温馨的时光、发现自己的不足，希望下个学期要更加进步。
-                </p>
-                <div class="archive-card__meta">
-                  <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2017</span>
-                    <span class="archive-card__day">07.10</span>
-                  </div>
-                  <span class="archive-card__tag">#碎碎念</span>
-                  
-                </div>
+              <div class="archive-nav__status">
+                第 1 页，共 2 页
               </div>
-            </a>
-          
-            
-            <a
-              class="archive-card archive-card--no-cover"
-              href="/posts/life-20170605-res/"
-              aria-label="查看文章：第一次做项目大概完工后的感想"
-              
-            >
-              
 
-              <div class="archive-card__content">
-                <h2 class="archive-card__title">第一次做项目大概完工后的感想</h2>
-                <p class="archive-card__excerpt">
-                  晶网点这个项目大概是完工了，这是自己第一次做项目，回顾整个过程，还是有很多不好的地方。 可能是我自己生性做事较真，又有点急性子，所以对自己的团队伙伴的进度逼的很急，伙伴们也挺努力的，虽然作业很多，但是还是按时完成了任务。
-                </p>
-                <div class="archive-card__meta">
-                  <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2017</span>
-                    <span class="archive-card__day">06.05</span>
-                  </div>
-                  <span class="archive-card__tag">#碎碎念</span>
-                  
-                </div>
-              </div>
-            </a>
-          
-            
-            <a
-              class="archive-card archive-card--no-cover"
-              href="/posts/life-20170404-res/"
-              aria-label="查看文章：大二下学期小结"
               
-            >
+                <a class="archive-nav__link" href="/tags/%E7%A2%8E%E7%A2%8E%E5%BF%B5/page/2/">
+                  <span class="archive-nav__label">下一页</span>
+                  <span class="archive-nav__title">更早的文章</span>
+                </a>
               
-
-              <div class="archive-card__content">
-                <h2 class="archive-card__title">大二下学期小结</h2>
-                <p class="archive-card__excerpt">
-                  这个学期，成长了很多，也留下了一些遗憾。 刚开始让我加入学生会我是拒绝的，因为自己有一些想做的事情，但是因为自己优柔寡断，然后也很相信自己可以挤出时间升任这些人物，所以还是没有拒绝来自学长和老师的邀请，当起了人员缺损的补
-                </p>
-                <div class="archive-card__meta">
-                  <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2017</span>
-                    <span class="archive-card__day">04.04</span>
-                  </div>
-                  <span class="archive-card__tag">#碎碎念</span>
-                  
-                </div>
-              </div>
-            </a>
-          
-
+            </nav>
           
         </div>
       </div>
@@ -362,13 +540,16 @@
     </svg>
   </section>
 
-  <section class="post-about" aria-label="关于年糕">
+  
+<section class="post-about" aria-label="关于年糕">
   <div class="post-about__figure">
     <div class="post-about__figure-card">
       <img
         class="post-about__image"
-        src="/images/mochi_real.png"
+        src="/images/mochi_real.webp"
         alt="年糕的个人形象照"
+        loading="lazy"
+        decoding="async"
       />
     </div>
   </div>
@@ -379,11 +560,26 @@
       <h2 class="post-about__name">年糕</h2>
       <div class="post-about__channels" aria-label="社交平台">
         
-          <a href="/#about">小红书</a>
+          
+          
+            <a
+              href="https://www.xiaohongshu.com/user/profile/659266b2000000002001f48e"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >小红书</a>
+          
         
-          <a href="/#about">B站</a>
+          
+          
+            <a
+              href="https://space.bilibili.com/3494369971669945"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >B站</a>
+          
         
-          <a href="/#about">微信公众号</a>
+          
+          
+            <button type="button" data-wechat-modal-trigger>微信公众号</button>
+          
         
       </div>
     </div>
@@ -393,6 +589,23 @@
 
 </main>
 
+    <dialog class="wechat-modal" aria-labelledby="wechat-modal-title">
+      <button class="wechat-modal__close" type="button" aria-label="关闭微信公众号二维码弹窗" data-wechat-modal-close>
+        ×
+      </button>
+      <div class="wechat-modal__content">
+        <p class="wechat-modal__eyebrow">WECHAT OFFICIAL ACCOUNT</p>
+        <h2 id="wechat-modal-title" class="wechat-modal__title">微信公众号</h2>
+        <img
+          class="wechat-modal__qrcode"
+          src="/images/wx_qrcode.webp"
+          alt="微信公众号二维码"
+          loading="lazy"
+          decoding="async"
+        />
+        <p class="wechat-modal__hint">扫码或搜索“年糕的编程花园”关注年糕的公众号</p>
+      </div>
+    </dialog>
     <footer class="site-footer">
   <div class="site-footer__inner">
     <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
@@ -400,10 +613,10 @@
   </div>
 </footer>
 
-    <script src="/vendor/gsap/gsap.min.js"></script>
-<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+    <script defer src="/vendor/gsap/gsap.min.js"></script>
+<script defer src="/vendor/gsap/ScrollTrigger.min.js"></script>
 
-<script src="/js/main.js"></script>
+<script defer src="/js/main.js"></script>
 
   </body>
 </html>

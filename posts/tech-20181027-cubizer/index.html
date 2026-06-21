@@ -1,79 +1,148 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   <head>
-    <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta
-  name="description"
-  content="&lt;p&gt;贝塞尔曲线在CSS动画中和canvas、svg绘图中都是比较重要的一个东西！所以我来好好的小结一下关于它的一些东西。&lt;/p&gt;"
-/>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="&lt;p&gt;贝塞尔曲线在CSS动画中和canvas、svg绘图中都是比较重要的一个东西！所以我来好好的小结一下关于它的一些东西。&lt;/p&gt;">
 <title>初识贝塞尔曲线 | 年糕的编程花园</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link
-  href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
-  rel="stylesheet"
-/>
-<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
-<link rel="stylesheet" href="/css/style.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
 
 
   <meta name="generator" content="Hexo 7.3.0"></head>
   <body class="post-page">
-    <div
-      class="site-loading"
-      aria-live="polite"
-      aria-label="页面加载中"
-      data-sprite-src="/images/tech/girl_read_sprite.png"
-      data-frame-count="2"
-    >
+    <div class="site-loading" aria-live="polite" aria-label="页面加载中">
       <div class="site-loading__inner">
-        <div class="site-loading__girl" aria-hidden="true"></div>
+        <img class="site-loading__symbol" src="/images/logo_small.webp" alt aria-hidden="true" decoding="async" fetchpriority="high">
         <p class="site-loading__text">LOADING...</p>
         <div class="site-loading__progress" aria-hidden="true">
           <span class="site-loading__progress-bar"></span>
         </div>
+        <p class="site-loading__percent" aria-hidden="true">0%</p>
       </div>
     </div>
+    <script>
+      (() => {
+        const loading = document.querySelector(".site-loading");
+        const loadingProgressBar = document.querySelector(".site-loading__progress-bar");
+        const loadingPercent = document.querySelector(".site-loading__percent");
+        const MAX_LOADING_MS = 9000;
+        const MIN_LOADING_MS = 450;
+        const TRANSITION_MS = 540;
+
+        if (!loading || !loadingProgressBar) return;
+
+        window.__mochiLoadingStarted = true;
+        document.body.classList.add("is-loading");
+
+        const startTime = Date.now();
+        let progressTimer = null;
+        let forceHideTimer = null;
+        let minimumDelayTimer = null;
+        let finishTimer = null;
+        let hidden = false;
+        let pageReady = document.readyState === "complete";
+        let currentProgress = 0;
+        let minimumDurationReached = false;
+
+        const setProgress = (value) => {
+          currentProgress = Math.max(currentProgress, Math.min(value, 100));
+          const progressValue = `${currentProgress}%`;
+          loading.style.setProperty("--loading-progress", progressValue);
+          loadingProgressBar.style.width = progressValue;
+
+          if (loadingPercent) {
+            loadingPercent.textContent = `${Math.floor(currentProgress)}%`;
+          }
+        };
+
+        const canHideNow = () => pageReady && minimumDurationReached;
+
+        const hideLoading = () => {
+          if (hidden) return;
+          hidden = true;
+
+          if (progressTimer) window.clearInterval(progressTimer);
+          if (forceHideTimer) window.clearTimeout(forceHideTimer);
+          if (minimumDelayTimer) window.clearTimeout(minimumDelayTimer);
+          if (finishTimer) window.clearTimeout(finishTimer);
+
+          setProgress(100);
+          loading.classList.add("is-hidden");
+          document.body.classList.remove("is-loading");
+
+          window.setTimeout(() => {
+            loading.remove();
+          }, TRANSITION_MS);
+        };
+
+        const scheduleHide = () => {
+          if (!canHideNow() || finishTimer || hidden) return;
+
+          setProgress(Math.max(currentProgress, 96));
+          finishTimer = window.setTimeout(hideLoading, 260);
+        };
+
+        const requestHide = () => {
+          pageReady = true;
+          scheduleHide();
+        };
+
+        setProgress(3);
+
+        progressTimer = window.setInterval(() => {
+          const elapsed = Date.now() - startTime;
+          const warmupRatio = Math.min(elapsed / 3600, 1);
+
+          if (pageReady) {
+            setProgress(currentProgress + Math.max((99 - currentProgress) * 0.18, 1.1));
+            return;
+          }
+
+          if (currentProgress < 90) {
+            const targetProgress = 3 + (1 - Math.pow(1 - warmupRatio, 1.35)) * 87;
+            setProgress(targetProgress);
+            return;
+          }
+
+          setProgress(currentProgress + Math.max((94 - currentProgress) * 0.035, 0.04));
+        }, 140);
+
+        minimumDelayTimer = window.setTimeout(() => {
+          minimumDurationReached = true;
+          scheduleHide();
+        }, MIN_LOADING_MS);
+
+        forceHideTimer = window.setTimeout(() => {
+          pageReady = true;
+          minimumDurationReached = true;
+          hideLoading();
+        }, MAX_LOADING_MS);
+
+        if (document.readyState === "complete") {
+          requestHide();
+        } else {
+          window.addEventListener("load", requestHide, { once: true });
+        }
+      })();
+    </script>
     <svg class="visual-defs" aria-hidden="true" width="0" height="0">
       <defs>
         <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency="0.018"
-            numOctaves="2"
-            seed="8"
-            result="noise"
-          />
-          <feDisplacementMap
-            in="SourceGraphic"
-            in2="noise"
-            scale="18"
-            xChannelSelector="R"
-            yChannelSelector="G"
-          />
+          <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="8" result="noise"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="18" xChannelSelector="R" yChannelSelector="G"/>
         </filter>
       </defs>
     </svg>
     
 <header class="site-header">
-  <a
-    class="site-logo is-small"
-    href="/"
-    aria-label="返回年糕的编程花园首页"
-    data-default-logo="/images/logo.png"
-    data-small-logo="/images/logo_small.png"
-  >
-    <img src="/images/logo_small.png" alt="年糕的编程花园" />
+  <a class="site-logo is-small" href="/" aria-label="返回年糕的编程花园首页" data-default-logo="/images/logo.webp" data-small-logo="/images/logo_small.webp">
+    <img src="/images/logo_small.webp" alt="年糕的编程花园" decoding="async" fetchpriority="high">
   </a>
 
-  <button
-    class="menu-toggle"
-    type="button"
-    aria-label="打开菜单"
-    aria-expanded="false"
-    aria-controls="site-menu"
-  >
+  <button class="menu-toggle" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="site-menu">
     <span></span>
     <span></span>
     <span></span>
@@ -110,12 +179,7 @@
             <span class="post-hero__eyebrow">DIARY LOG</span>
             <span class="post-hero__date">2018.10.27</span>
             <h1 id="post-title" class="post-title post-title--decorated">
-              <img
-                class="post-title__decor"
-                src="/images/decorates/flower2.png"
-                alt=""
-                aria-hidden="true"
-              />
+              <img class="post-title__decor" src="/images/decorates/flower2.webp" alt aria-hidden="true" decoding="async">
               <span>初识贝塞尔曲线</span>
             </h1>
             <div class="post-meta" aria-label="文章信息">
@@ -137,7 +201,7 @@
 </blockquote>
 <p>贝塞尔曲线被广泛用于制图软件中。<br>以前描述曲线并没有很好的方法，直到它的出现。<br>如果你用过PS、AI之类的制图软件，想必一定会很好理解。</p>
 <p>你可以登录<a target="_blank" rel="noopener" href="https://bezier.method.ac/">https://bezier.method.ac/</a>这个网站，在线学习体验使用PS中的钢笔工具，进行绘制各种形状的图案。</p>
-<h1 id="二次贝塞尔曲线"><a href="#二次贝塞尔曲线" class="headerlink" title="二次贝塞尔曲线"></a>二次贝塞尔曲线</h1><p><img src="https://wx2.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u4sjlj30aa03bdfo.jpg" alt="图片描述"></p>
+<h1 id="二次贝塞尔曲线"><a href="#二次贝塞尔曲线" class="headerlink" title="二次贝塞尔曲线"></a>二次贝塞尔曲线</h1><p><img alt="图片描述" data-lazy-src="https://wx2.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u4sjlj30aa03bdfo.jpg" loading="lazy" decoding="async"></p>
 <p>二次贝塞尔曲线，我们要绘制出来需要指定：</p>
 <ul>
 <li>起点</li>
@@ -145,15 +209,15 @@
 <li>控制点</li>
 </ul>
 <p>我们可以看到如图所示，在控制点和起点的中点，连接上了控制点与终点的中点，这根线的终点，就是与曲线相交的一个点。<br>可以认为控制点像一个磁铁一样，把线吸了过去。</p>
-<p><img src="https://wx3.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u4sylj306d03l3ya.jpg" alt="图片描述"></p>
-<p><em>多边二次贝塞尔曲线</em><br>可以看到有两个控制点，这样连续画出来了。<br>如果想要连贯的曲线，那么它们的控制点应该是中心对称的。<br><img src="https://wx4.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u4pl2j3069052jr6.jpg" alt="图片描述"></p>
-<h1 id="三次贝塞尔曲线"><a href="#三次贝塞尔曲线" class="headerlink" title="三次贝塞尔曲线"></a>三次贝塞尔曲线</h1><p>三次贝塞尔曲线可以包括一个拐点。<br>它拥有两个控制点，两个控制点中间的中点，分别连接控制点与起点、终点的连线的中点。这两根线的中点分别相连接，这个中点就是和曲线相交的地方（有点绕，看图就明白了！）<br><img src="https://wx1.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u4xosj309w05ijr8.jpg" alt="图片描述"></p>
-<p>这一般也是绘图软件里常用的：<br><img src="https://wx4.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u5x1bj30jl0790su.jpg" alt="图片描述"></p>
+<p><img alt="图片描述" data-lazy-src="https://wx3.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u4sylj306d03l3ya.jpg" loading="lazy" decoding="async"></p>
+<p><em>多边二次贝塞尔曲线</em><br>可以看到有两个控制点，这样连续画出来了。<br>如果想要连贯的曲线，那么它们的控制点应该是中心对称的。<br><img alt="图片描述" data-lazy-src="https://wx4.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u4pl2j3069052jr6.jpg" loading="lazy" decoding="async"></p>
+<h1 id="三次贝塞尔曲线"><a href="#三次贝塞尔曲线" class="headerlink" title="三次贝塞尔曲线"></a>三次贝塞尔曲线</h1><p>三次贝塞尔曲线可以包括一个拐点。<br>它拥有两个控制点，两个控制点中间的中点，分别连接控制点与起点、终点的连线的中点。这两根线的中点分别相连接，这个中点就是和曲线相交的地方（有点绕，看图就明白了！）<br><img alt="图片描述" data-lazy-src="https://wx1.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u4xosj309w05ijr8.jpg" loading="lazy" decoding="async"></p>
+<p>这一般也是绘图软件里常用的：<br><img alt="图片描述" data-lazy-src="https://wx4.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u5x1bj30jl0790su.jpg" loading="lazy" decoding="async"></p>
 <h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="在CSS中的应用"><a href="#在CSS中的应用" class="headerlink" title="在CSS中的应用"></a>在CSS中的应用</h2><p>我们可以指定动画的运动曲线。在CSS中运用的也是三次贝塞尔曲线。</p>
 <pre><code>cubic-bezier(控制点x1, 控制点y1, 控制点x2, 控制点y2)
 </code></pre>
-<p>这个代表的是速度曲线，也就是y值是速度，可以看到粉红色和蓝色的圆点就是两个控制点：<br><img src="https://wx2.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u5w19j309n099gll.jpg" alt="图片描述"></p>
-<p>而我们CSS中内置的一些默认的属性值，实际上是存了贝塞尔曲线的一些预设:<br><img src="https://wx2.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u6ucgj30fv03z0so.jpg" alt="图片描述"></p>
+<p>这个代表的是速度曲线，也就是y值是速度，可以看到粉红色和蓝色的圆点就是两个控制点：<br><img alt="图片描述" data-lazy-src="https://wx2.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u5w19j309n099gll.jpg" loading="lazy" decoding="async"></p>
+<p>而我们CSS中内置的一些默认的属性值，实际上是存了贝塞尔曲线的一些预设:<br><img alt="图片描述" data-lazy-src="https://wx2.sinaimg.cn/mw690/0076cOZ3gy1fwmm2u6ucgj30fv03z0so.jpg" loading="lazy" decoding="async"></p>
 <p>更多可以在：<a target="_blank" rel="noopener" href="http://cubic-bezier.com/#.17,.67,1,.63">贝塞尔CSS在线体验</a> 这里进行体验。</p>
 <h2 id="SVG"><a href="#SVG" class="headerlink" title="SVG"></a>SVG</h2><p>在SVG中定义一个二次贝塞尔曲线，用字母Q来表示，紧跟控制点和终点坐标：</p>
 <pre><code>&lt;path d=&quot;M30 75 Q240 30, 300 120&quot; style=&quot;stroke: black; fill: none;&quot;/&gt;
@@ -189,19 +253,13 @@ ctx.stroke();
           
             <nav class="post-nav" aria-label="文章切换">
               
-                <a
-                  href="/posts/tech-20181121-https/"
-                  
-                >
+                <a href="/posts/tech-20181121-https/">
                   <span class="post-nav__label">上一篇</span>
                   <span class="post-nav__title">初识HTTPS</span>
                 </a>
               
               
-                <a
-                  href="/posts/tech-20180927-promise/"
-                  
-                >
+                <a href="/posts/tech-20180927-promise/">
                   <span class="post-nav__label">下一篇</span>
                   <span class="post-nav__title">Promise的相关小结</span>
                 </a>
@@ -215,17 +273,14 @@ ctx.stroke();
 
   <section class="post-about-band">
     <svg class="post-divider post-divider--content" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"></path>
+      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"/>
     </svg>
     <div class="post-about-band__inner">
-      <section class="post-about" aria-label="关于年糕">
+      
+<section class="post-about" aria-label="关于年糕">
   <div class="post-about__figure">
     <div class="post-about__figure-card">
-      <img
-        class="post-about__image"
-        src="/images/mochi_real.png"
-        alt="年糕的个人形象照"
-      />
+      <img class="post-about__image" src="/images/mochi_real.webp" alt="年糕的个人形象照" loading="lazy" decoding="async">
     </div>
   </div>
 
@@ -235,11 +290,20 @@ ctx.stroke();
       <h2 class="post-about__name">年糕</h2>
       <div class="post-about__channels" aria-label="社交平台">
         
-          <a href="/#about">小红书</a>
+          
+          
+            <a href="https://www.xiaohongshu.com/user/profile/659266b2000000002001f48e" target="&#34;_blank&#34;" rel="&#34;noopener" noreferrer&#34;>小红书</a>
+          
         
-          <a href="/#about">B站</a>
+          
+          
+            <a href="https://space.bilibili.com/3494369971669945" target="&#34;_blank&#34;" rel="&#34;noopener" noreferrer&#34;>B站</a>
+          
         
-          <a href="/#about">微信公众号</a>
+          
+          
+            <button type="button" data-wechat-modal-trigger>微信公众号</button>
+          
         
       </div>
     </div>
@@ -252,6 +316,17 @@ ctx.stroke();
 </main>
 
 
+    <dialog class="wechat-modal" aria-labelledby="wechat-modal-title">
+      <button class="wechat-modal__close" type="button" aria-label="关闭微信公众号二维码弹窗" data-wechat-modal-close>
+        ×
+      </button>
+      <div class="wechat-modal__content">
+        <p class="wechat-modal__eyebrow">WECHAT OFFICIAL ACCOUNT</p>
+        <h2 id="wechat-modal-title" class="wechat-modal__title">微信公众号</h2>
+        <img class="wechat-modal__qrcode" src="/images/wx_qrcode.webp" alt="微信公众号二维码" loading="lazy" decoding="async">
+        <p class="wechat-modal__hint">扫码或搜索“年糕的编程花园”关注年糕的公众号</p>
+      </div>
+    </dialog>
     <footer class="site-footer site-footer--post">
   <div class="site-footer__inner">
     <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
@@ -259,10 +334,10 @@ ctx.stroke();
   </div>
 </footer>
 
-    <script src="/vendor/gsap/gsap.min.js"></script>
-<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+    <script defer src="/vendor/gsap/gsap.min.js"></script>
+<script defer src="/vendor/gsap/ScrollTrigger.min.js"></script>
 
-<script src="/js/main.js"></script>
+<script defer src="/js/main.js"></script>
 
   </body>
 </html>

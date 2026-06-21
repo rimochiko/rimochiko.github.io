@@ -1,79 +1,148 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   <head>
-    <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta
-  name="description"
-  content="&lt;h1 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;我就是那块迟钝の糕同学，我一直都只知道HTTPS是HTTP+SSL&amp;#x2F;TLS两种协议共同构成的，但是对于其中的机制，可以说是很多环节都充满了各种疑问。这个学期我们开了信息安全课，可惜老师只是讲了一些加密的算法，加上教材的语言真的太深奥了，于是我自己去借了一些书籍查看，最后终于弄清楚了自己的一些疑问。噗！必须要推荐《&lt;a href=&#34;https://book.douban.com/subject/26265544/&#34;&gt;图解密码技术&lt;/a&gt;》这本书啊~（本文也是缓慢补坑）&lt;/p&gt;"
-/>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="&lt;h1 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;我就是那块迟钝の糕同学，我一直都只知道HTTPS是HTTP+SSL&amp;#x2F;TLS两种协议共同构成的，但是对于其中的机制，可以说是很多环节都充满了各种疑问。这个学期我们开了信息安全课，可惜老师只是讲了一些加密的算法，加上教材的语言真的太深奥了，于是我自己去借了一些书籍查看，最后终于弄清楚了自己的一些疑问。噗！必须要推荐《&lt;a href=&#34;https://book.douban.com/subject/26265544/&#34;&gt;图解密码技术&lt;/a&gt;》这本书啊~（本文也是缓慢补坑）&lt;/p&gt;">
 <title>初识HTTPS | 年糕的编程花园</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link
-  href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
-  rel="stylesheet"
-/>
-<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
-<link rel="stylesheet" href="/css/style.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
 
 
   <meta name="generator" content="Hexo 7.3.0"></head>
   <body class="post-page">
-    <div
-      class="site-loading"
-      aria-live="polite"
-      aria-label="页面加载中"
-      data-sprite-src="/images/tech/girl_read_sprite.png"
-      data-frame-count="2"
-    >
+    <div class="site-loading" aria-live="polite" aria-label="页面加载中">
       <div class="site-loading__inner">
-        <div class="site-loading__girl" aria-hidden="true"></div>
+        <img class="site-loading__symbol" src="/images/logo_small.webp" alt aria-hidden="true" decoding="async" fetchpriority="high">
         <p class="site-loading__text">LOADING...</p>
         <div class="site-loading__progress" aria-hidden="true">
           <span class="site-loading__progress-bar"></span>
         </div>
+        <p class="site-loading__percent" aria-hidden="true">0%</p>
       </div>
     </div>
+    <script>
+      (() => {
+        const loading = document.querySelector(".site-loading");
+        const loadingProgressBar = document.querySelector(".site-loading__progress-bar");
+        const loadingPercent = document.querySelector(".site-loading__percent");
+        const MAX_LOADING_MS = 9000;
+        const MIN_LOADING_MS = 450;
+        const TRANSITION_MS = 540;
+
+        if (!loading || !loadingProgressBar) return;
+
+        window.__mochiLoadingStarted = true;
+        document.body.classList.add("is-loading");
+
+        const startTime = Date.now();
+        let progressTimer = null;
+        let forceHideTimer = null;
+        let minimumDelayTimer = null;
+        let finishTimer = null;
+        let hidden = false;
+        let pageReady = document.readyState === "complete";
+        let currentProgress = 0;
+        let minimumDurationReached = false;
+
+        const setProgress = (value) => {
+          currentProgress = Math.max(currentProgress, Math.min(value, 100));
+          const progressValue = `${currentProgress}%`;
+          loading.style.setProperty("--loading-progress", progressValue);
+          loadingProgressBar.style.width = progressValue;
+
+          if (loadingPercent) {
+            loadingPercent.textContent = `${Math.floor(currentProgress)}%`;
+          }
+        };
+
+        const canHideNow = () => pageReady && minimumDurationReached;
+
+        const hideLoading = () => {
+          if (hidden) return;
+          hidden = true;
+
+          if (progressTimer) window.clearInterval(progressTimer);
+          if (forceHideTimer) window.clearTimeout(forceHideTimer);
+          if (minimumDelayTimer) window.clearTimeout(minimumDelayTimer);
+          if (finishTimer) window.clearTimeout(finishTimer);
+
+          setProgress(100);
+          loading.classList.add("is-hidden");
+          document.body.classList.remove("is-loading");
+
+          window.setTimeout(() => {
+            loading.remove();
+          }, TRANSITION_MS);
+        };
+
+        const scheduleHide = () => {
+          if (!canHideNow() || finishTimer || hidden) return;
+
+          setProgress(Math.max(currentProgress, 96));
+          finishTimer = window.setTimeout(hideLoading, 260);
+        };
+
+        const requestHide = () => {
+          pageReady = true;
+          scheduleHide();
+        };
+
+        setProgress(3);
+
+        progressTimer = window.setInterval(() => {
+          const elapsed = Date.now() - startTime;
+          const warmupRatio = Math.min(elapsed / 3600, 1);
+
+          if (pageReady) {
+            setProgress(currentProgress + Math.max((99 - currentProgress) * 0.18, 1.1));
+            return;
+          }
+
+          if (currentProgress < 90) {
+            const targetProgress = 3 + (1 - Math.pow(1 - warmupRatio, 1.35)) * 87;
+            setProgress(targetProgress);
+            return;
+          }
+
+          setProgress(currentProgress + Math.max((94 - currentProgress) * 0.035, 0.04));
+        }, 140);
+
+        minimumDelayTimer = window.setTimeout(() => {
+          minimumDurationReached = true;
+          scheduleHide();
+        }, MIN_LOADING_MS);
+
+        forceHideTimer = window.setTimeout(() => {
+          pageReady = true;
+          minimumDurationReached = true;
+          hideLoading();
+        }, MAX_LOADING_MS);
+
+        if (document.readyState === "complete") {
+          requestHide();
+        } else {
+          window.addEventListener("load", requestHide, { once: true });
+        }
+      })();
+    </script>
     <svg class="visual-defs" aria-hidden="true" width="0" height="0">
       <defs>
         <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency="0.018"
-            numOctaves="2"
-            seed="8"
-            result="noise"
-          />
-          <feDisplacementMap
-            in="SourceGraphic"
-            in2="noise"
-            scale="18"
-            xChannelSelector="R"
-            yChannelSelector="G"
-          />
+          <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="8" result="noise"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="18" xChannelSelector="R" yChannelSelector="G"/>
         </filter>
       </defs>
     </svg>
     
 <header class="site-header">
-  <a
-    class="site-logo is-small"
-    href="/"
-    aria-label="返回年糕的编程花园首页"
-    data-default-logo="/images/logo.png"
-    data-small-logo="/images/logo_small.png"
-  >
-    <img src="/images/logo_small.png" alt="年糕的编程花园" />
+  <a class="site-logo is-small" href="/" aria-label="返回年糕的编程花园首页" data-default-logo="/images/logo.webp" data-small-logo="/images/logo_small.webp">
+    <img src="/images/logo_small.webp" alt="年糕的编程花园" decoding="async" fetchpriority="high">
   </a>
 
-  <button
-    class="menu-toggle"
-    type="button"
-    aria-label="打开菜单"
-    aria-expanded="false"
-    aria-controls="site-menu"
-  >
+  <button class="menu-toggle" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="site-menu">
     <span></span>
     <span></span>
     <span></span>
@@ -110,12 +179,7 @@
             <span class="post-hero__eyebrow">DIARY LOG</span>
             <span class="post-hero__date">2018.11.21</span>
             <h1 id="post-title" class="post-title post-title--decorated">
-              <img
-                class="post-title__decor"
-                src="/images/decorates/flower2.png"
-                alt=""
-                aria-hidden="true"
-              />
+              <img class="post-title__decor" src="/images/decorates/flower2.webp" alt aria-hidden="true" decoding="async">
               <span>初识HTTPS</span>
             </h1>
             <div class="post-meta" aria-label="文章信息">
@@ -164,7 +228,7 @@
 <p>消息认证码是一种与密钥相关的单项散列函数</p>
 </blockquote>
 <p>所以两者区别在于：<br>消息—（单项散列函数）——&gt;散列值<br>消息—（消息认证码+密钥）—&gt;MAC值</p>
-<p>下面插一个我自己画的消息验证码小剧场：<br><img src="https://wx2.sinaimg.cn/mw690/0069luTRgy1fq4gc9pc83j30ao0f4whw.jpg" alt="消息验证码小剧场"></p>
+<p>下面插一个我自己画的消息验证码小剧场：<br><img alt="消息验证码小剧场" data-lazy-src="https://wx2.sinaimg.cn/mw690/0069luTRgy1fq4gc9pc83j30ao0f4whw.jpg" loading="lazy" decoding="async"></p>
 <p><strong>消息验证码存在的问题</strong>:<br><strong>重放攻击</strong><br>假设Mallory去Alice银行向自己在Bob银行的账号存100块。<br>Alice把这个消息算出MAC值后把消息一起给了Bob银行，然后Bob银行发现是Alice银行发的，且内容也是正确的。<br>假如Mallory把这个消息重复发N次，那Bob每次肯定都会给Mallory的账号打钱啊。</p>
 <p>解决方法:</p>
 <ol>
@@ -184,9 +248,9 @@
 <blockquote>
 <p>证书实质是一个数据结构，是一种由一个可信任的权威机构签署的数据集合。</p>
 </blockquote>
-<p>而证书本身也分为很多种，常见的比如：PKI证书、PGP证书等。<br>数字证书举例（模拟教材画的图，其中CA是指<strong>签证机构</strong>）：<br><img src="https://wx2.sinaimg.cn/mw690/0069luTRgy1fqci7yv2lqj30c3080mx3.jpg" alt="图片描述"></p>
+<p>而证书本身也分为很多种，常见的比如：PKI证书、PGP证书等。<br>数字证书举例（模拟教材画的图，其中CA是指<strong>签证机构</strong>）：<br><img alt="图片描述" data-lazy-src="https://wx2.sinaimg.cn/mw690/0069luTRgy1fqci7yv2lqj30c3080mx3.jpg" loading="lazy" decoding="async"></p>
 <p>Q：那么Alice怎么确定手上的公钥匙Bob的呢？<br>A：Alice可以向Bob&#x2F;证书机构索要公钥证书，然后Alice拿签证机构（CA）的公钥去验证这个签名，就可以获得Bob真实的公钥。</p>
-<h1 id="SSL-TLS协议"><a href="#SSL-TLS协议" class="headerlink" title="SSL&#x2F;TLS协议"></a>SSL&#x2F;TLS协议</h1><p>SSL&#x2F;TLS协议在网络层次中的位置：<br><img src="https://wx2.sinaimg.cn/mw690/0069luTRgy1fqci7yvlmsj30c8059wec.jpg" alt="图片描述"></p>
+<h1 id="SSL-TLS协议"><a href="#SSL-TLS协议" class="headerlink" title="SSL&#x2F;TLS协议"></a>SSL&#x2F;TLS协议</h1><p>SSL&#x2F;TLS协议在网络层次中的位置：<br><img alt="图片描述" data-lazy-src="https://wx2.sinaimg.cn/mw690/0069luTRgy1fqci7yvlmsj30c8059wec.jpg" loading="lazy" decoding="async"></p>
 <p><strong>Q:SSL协议和TLS协议的关系</strong><br>A：TLS是SSL 3.0版本上的升级而来的。</p>
 <p><strong>Q:SSL协议和TLS协议只能搭配HTTP使用吗</strong><br>A：显然不是的，它们可以搭配很多协议。比如搭配发送邮件的SMTP协议和接受邮件的POP协议来使用。</p>
 <h2 id="SSL-TLS提供通信密码框架"><a href="#SSL-TLS提供通信密码框架" class="headerlink" title="SSL&#x2F;TLS提供通信密码框架"></a>SSL&#x2F;TLS提供通信密码框架</h2><p>在前文中我们讲到的一些技术，搭配起来就能够增加HTTP协议的安全性，但是这些技术里面也有很多不同的加密算法，比如分享公钥我们可以用公钥算法也可以用Diffie-Hellmanfan方法，这个是我们自己可以自由搭配选择的，哪个部分的方法很弱，我们就可以再替换那个部分的方法。<br>但是如果完全客户自定义了，很可能会出现沟通的障碍，因为接收方和发送方的加密解密方法应该是配套的。所以官方提供了一些加密套餐组合，叫做<strong>密码套件</strong>，供我们选择。</p>
@@ -196,19 +260,13 @@
           
             <nav class="post-nav" aria-label="文章切换">
               
-                <a
-                  href="/posts/life-20181227-music/"
-                  
-                >
+                <a href="/posts/life-20181227-music/">
                   <span class="post-nav__label">上一篇</span>
                   <span class="post-nav__title">音乐 | 2018年令我印象深刻的J-POP</span>
                 </a>
               
               
-                <a
-                  href="/posts/tech-20181027-cubizer/"
-                  
-                >
+                <a href="/posts/tech-20181027-cubizer/">
                   <span class="post-nav__label">下一篇</span>
                   <span class="post-nav__title">初识贝塞尔曲线</span>
                 </a>
@@ -222,17 +280,14 @@
 
   <section class="post-about-band">
     <svg class="post-divider post-divider--content" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"></path>
+      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"/>
     </svg>
     <div class="post-about-band__inner">
-      <section class="post-about" aria-label="关于年糕">
+      
+<section class="post-about" aria-label="关于年糕">
   <div class="post-about__figure">
     <div class="post-about__figure-card">
-      <img
-        class="post-about__image"
-        src="/images/mochi_real.png"
-        alt="年糕的个人形象照"
-      />
+      <img class="post-about__image" src="/images/mochi_real.webp" alt="年糕的个人形象照" loading="lazy" decoding="async">
     </div>
   </div>
 
@@ -242,11 +297,20 @@
       <h2 class="post-about__name">年糕</h2>
       <div class="post-about__channels" aria-label="社交平台">
         
-          <a href="/#about">小红书</a>
+          
+          
+            <a href="https://www.xiaohongshu.com/user/profile/659266b2000000002001f48e" target="&#34;_blank&#34;" rel="&#34;noopener" noreferrer&#34;>小红书</a>
+          
         
-          <a href="/#about">B站</a>
+          
+          
+            <a href="https://space.bilibili.com/3494369971669945" target="&#34;_blank&#34;" rel="&#34;noopener" noreferrer&#34;>B站</a>
+          
         
-          <a href="/#about">微信公众号</a>
+          
+          
+            <button type="button" data-wechat-modal-trigger>微信公众号</button>
+          
         
       </div>
     </div>
@@ -259,6 +323,17 @@
 </main>
 
 
+    <dialog class="wechat-modal" aria-labelledby="wechat-modal-title">
+      <button class="wechat-modal__close" type="button" aria-label="关闭微信公众号二维码弹窗" data-wechat-modal-close>
+        ×
+      </button>
+      <div class="wechat-modal__content">
+        <p class="wechat-modal__eyebrow">WECHAT OFFICIAL ACCOUNT</p>
+        <h2 id="wechat-modal-title" class="wechat-modal__title">微信公众号</h2>
+        <img class="wechat-modal__qrcode" src="/images/wx_qrcode.webp" alt="微信公众号二维码" loading="lazy" decoding="async">
+        <p class="wechat-modal__hint">扫码或搜索“年糕的编程花园”关注年糕的公众号</p>
+      </div>
+    </dialog>
     <footer class="site-footer site-footer--post">
   <div class="site-footer__inner">
     <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
@@ -266,10 +341,10 @@
   </div>
 </footer>
 
-    <script src="/vendor/gsap/gsap.min.js"></script>
-<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+    <script defer src="/vendor/gsap/gsap.min.js"></script>
+<script defer src="/vendor/gsap/ScrollTrigger.min.js"></script>
 
-<script src="/js/main.js"></script>
+<script defer src="/js/main.js"></script>
 
   </body>
 </html>

@@ -1,79 +1,148 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   <head>
-    <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta
-  name="description"
-  content="&lt;p&gt;大四的毕业设计作品，是一款文档协作平台。因为基本上没啥事了，所以来了一个很大胆的技术选择，全都选的自己不熟悉或者没用过的框架。我在实习的时候对公司的文档工具执念很深（当时觉得很好用），所以毕业设计就选了这样的主题。&lt;/p&gt;"
-/>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="&lt;p&gt;大四的毕业设计作品，是一款文档协作平台。因为基本上没啥事了，所以来了一个很大胆的技术选择，全都选的自己不熟悉或者没用过的框架。我在实习的时候对公司的文档工具执念很深（当时觉得很好用），所以毕业设计就选了这样的主题。&lt;/p&gt;">
 <title>2019-墨鱼笔记 | 年糕的编程花园</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link
-  href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
-  rel="stylesheet"
-/>
-<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
-<link rel="stylesheet" href="/css/style.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
 
 
   <meta name="generator" content="Hexo 7.3.0"></head>
   <body class="post-page">
-    <div
-      class="site-loading"
-      aria-live="polite"
-      aria-label="页面加载中"
-      data-sprite-src="/images/tech/girl_read_sprite.png"
-      data-frame-count="2"
-    >
+    <div class="site-loading" aria-live="polite" aria-label="页面加载中">
       <div class="site-loading__inner">
-        <div class="site-loading__girl" aria-hidden="true"></div>
+        <img class="site-loading__symbol" src="/images/logo_small.webp" alt aria-hidden="true" decoding="async" fetchpriority="high">
         <p class="site-loading__text">LOADING...</p>
         <div class="site-loading__progress" aria-hidden="true">
           <span class="site-loading__progress-bar"></span>
         </div>
+        <p class="site-loading__percent" aria-hidden="true">0%</p>
       </div>
     </div>
+    <script>
+      (() => {
+        const loading = document.querySelector(".site-loading");
+        const loadingProgressBar = document.querySelector(".site-loading__progress-bar");
+        const loadingPercent = document.querySelector(".site-loading__percent");
+        const MAX_LOADING_MS = 9000;
+        const MIN_LOADING_MS = 450;
+        const TRANSITION_MS = 540;
+
+        if (!loading || !loadingProgressBar) return;
+
+        window.__mochiLoadingStarted = true;
+        document.body.classList.add("is-loading");
+
+        const startTime = Date.now();
+        let progressTimer = null;
+        let forceHideTimer = null;
+        let minimumDelayTimer = null;
+        let finishTimer = null;
+        let hidden = false;
+        let pageReady = document.readyState === "complete";
+        let currentProgress = 0;
+        let minimumDurationReached = false;
+
+        const setProgress = (value) => {
+          currentProgress = Math.max(currentProgress, Math.min(value, 100));
+          const progressValue = `${currentProgress}%`;
+          loading.style.setProperty("--loading-progress", progressValue);
+          loadingProgressBar.style.width = progressValue;
+
+          if (loadingPercent) {
+            loadingPercent.textContent = `${Math.floor(currentProgress)}%`;
+          }
+        };
+
+        const canHideNow = () => pageReady && minimumDurationReached;
+
+        const hideLoading = () => {
+          if (hidden) return;
+          hidden = true;
+
+          if (progressTimer) window.clearInterval(progressTimer);
+          if (forceHideTimer) window.clearTimeout(forceHideTimer);
+          if (minimumDelayTimer) window.clearTimeout(minimumDelayTimer);
+          if (finishTimer) window.clearTimeout(finishTimer);
+
+          setProgress(100);
+          loading.classList.add("is-hidden");
+          document.body.classList.remove("is-loading");
+
+          window.setTimeout(() => {
+            loading.remove();
+          }, TRANSITION_MS);
+        };
+
+        const scheduleHide = () => {
+          if (!canHideNow() || finishTimer || hidden) return;
+
+          setProgress(Math.max(currentProgress, 96));
+          finishTimer = window.setTimeout(hideLoading, 260);
+        };
+
+        const requestHide = () => {
+          pageReady = true;
+          scheduleHide();
+        };
+
+        setProgress(3);
+
+        progressTimer = window.setInterval(() => {
+          const elapsed = Date.now() - startTime;
+          const warmupRatio = Math.min(elapsed / 3600, 1);
+
+          if (pageReady) {
+            setProgress(currentProgress + Math.max((99 - currentProgress) * 0.18, 1.1));
+            return;
+          }
+
+          if (currentProgress < 90) {
+            const targetProgress = 3 + (1 - Math.pow(1 - warmupRatio, 1.35)) * 87;
+            setProgress(targetProgress);
+            return;
+          }
+
+          setProgress(currentProgress + Math.max((94 - currentProgress) * 0.035, 0.04));
+        }, 140);
+
+        minimumDelayTimer = window.setTimeout(() => {
+          minimumDurationReached = true;
+          scheduleHide();
+        }, MIN_LOADING_MS);
+
+        forceHideTimer = window.setTimeout(() => {
+          pageReady = true;
+          minimumDurationReached = true;
+          hideLoading();
+        }, MAX_LOADING_MS);
+
+        if (document.readyState === "complete") {
+          requestHide();
+        } else {
+          window.addEventListener("load", requestHide, { once: true });
+        }
+      })();
+    </script>
     <svg class="visual-defs" aria-hidden="true" width="0" height="0">
       <defs>
         <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency="0.018"
-            numOctaves="2"
-            seed="8"
-            result="noise"
-          />
-          <feDisplacementMap
-            in="SourceGraphic"
-            in2="noise"
-            scale="18"
-            xChannelSelector="R"
-            yChannelSelector="G"
-          />
+          <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="8" result="noise"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="18" xChannelSelector="R" yChannelSelector="G"/>
         </filter>
       </defs>
     </svg>
     
 <header class="site-header">
-  <a
-    class="site-logo is-small"
-    href="/"
-    aria-label="返回年糕的编程花园首页"
-    data-default-logo="/images/logo.png"
-    data-small-logo="/images/logo_small.png"
-  >
-    <img src="/images/logo_small.png" alt="年糕的编程花园" />
+  <a class="site-logo is-small" href="/" aria-label="返回年糕的编程花园首页" data-default-logo="/images/logo.webp" data-small-logo="/images/logo_small.webp">
+    <img src="/images/logo_small.webp" alt="年糕的编程花园" decoding="async" fetchpriority="high">
   </a>
 
-  <button
-    class="menu-toggle"
-    type="button"
-    aria-label="打开菜单"
-    aria-expanded="false"
-    aria-controls="site-menu"
-  >
+  <button class="menu-toggle" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="site-menu">
     <span></span>
     <span></span>
     <span></span>
@@ -107,11 +176,9 @@
           
           <div class="post-hero__visual">
             <div class="post-hero__photo-frame">
-              <img
-                class="post-hero__image"
-                src="/mcimages/work_cuttle/moji1.png"
-                alt="2019-墨鱼笔记头图"
-              />
+              <span class="post-hero__image-wrap lazy-media">
+                <img class="post-hero__image" data-lazy-src="/mcimages/work_cuttle/moji1.png" alt="2019-墨鱼笔记头图" loading="eager" decoding="async" fetchpriority="high">
+              </span>
             </div>
           </div>
           
@@ -120,12 +187,7 @@
             <span class="post-hero__eyebrow">DIARY LOG</span>
             <span class="post-hero__date">2019.07.21</span>
             <h1 id="post-title" class="post-title post-title--decorated">
-              <img
-                class="post-title__decor"
-                src="/images/decorates/flower2.png"
-                alt=""
-                aria-hidden="true"
-              />
+              <img class="post-title__decor" src="/images/decorates/flower2.webp" alt aria-hidden="true" decoding="async">
               <span>2019-墨鱼笔记</span>
             </h1>
             <div class="post-meta" aria-label="文章信息">
@@ -142,12 +204,12 @@
           <div class="post-body-shell">
             <div class="post-body post-body--entry"><p>大四的毕业设计作品，是一款文档协作平台。因为基本上没啥事了，所以来了一个很大胆的技术选择，全都选的自己不熟悉或者没用过的框架。我在实习的时候对公司的文档工具执念很深（当时觉得很好用），所以毕业设计就选了这样的主题。</p>
 <span id="more"></span>
-<h1 id="功能设计"><a href="#功能设计" class="headerlink" title="功能设计"></a>功能设计</h1><p><img src="/mcimages/work_cuttle/func.png" alt="功能设计图"><br>现在回过头去看，我为啥要做这么多功能呢（笑哭），想要的功能太多，实际搞得最后没有很多时间把东西做的更加深入一些。<br><img src="/mcimages/work_cuttle/er.png" alt="ER图"></p>
+<h1 id="功能设计"><a href="#功能设计" class="headerlink" title="功能设计"></a>功能设计</h1><p><img alt="功能设计图" data-lazy-src="/mcimages/work_cuttle/func.png" loading="lazy" decoding="async"><br>现在回过头去看，我为啥要做这么多功能呢（笑哭），想要的功能太多，实际搞得最后没有很多时间把东西做的更加深入一些。<br><img alt="ER图" data-lazy-src="/mcimages/work_cuttle/er.png" loading="lazy" decoding="async"></p>
 <blockquote>
 <p>文档竟然还做了草稿保存的机制，不得不感叹真是细节满满啊，可惜答辩的评委老师压根就不注意这些，只能说看你做这个毕设到底是为了锻炼自己还是为了拿到一时的荣誉感，不过聪明的人其实可以两者取舍一下，我当时还是笨了一些(～￣(OO)￣)ブ。</p>
 </blockquote>
-<p>发布文档和文档协作过程是本文档编辑与协同平台的核心功能之一。为了用户体验系统需要对用户的草稿进行保存，要实现这个功能就必须要分创建文章和更新文章两种情况来分别考虑。系统会根据用户的角色类型来确定是否具有发布公开文档的权限，另外还会根据用户的操作状态来临时保存文档草稿。<br>草稿保存的时候是在用户输入暂停的间隙内进行请求的发送，另外为了防止用户意外断开连接，在草稿未进行保存的情况下，还会运用到HTML5中的LocalStorage来将草稿文本数据保存在本地浏览器，以便用户下次打开界面也可以收到意外中断的数据。由于文档分为公开文档和非公开文档，所以在发布的时候，针对于这个也会有不同的选择和保存结果。<br>在团队中进行文档发布与普通用户发布的机制是一样的，唯一不同的地方在于团队文档更新的时候可能会产生冲突，所以如图所示显示了文档加锁和协作发布文档流程图。另外在更新中产生的草稿文件，在编辑的时候也是要加锁的，不过图中没有融合草稿机制绘制，所以在此补充。<br><img src="/mcimages/work_cuttle/lock.png" alt="锁机制"><br>这里协作机制本来可以做的比较出彩，但是因为时间问题，我当时就没有去研究websocket之类的牛逼的方式了，采用了锁的机制（我当时也调研了不少，这个也是语雀啊包括我们公司当时内部的做法，不过现在时代已经进步了。</p>
-<h1 id="界面预览"><a href="#界面预览" class="headerlink" title="界面预览"></a>界面预览</h1><p>这里针对系统的设计又花费了一点点小心思。为什么选择墨鱼当LOGO，必然是贴切这个文档平台的。<br><img src="/mcimages/work_cuttle/moji1.png" alt="登录"><br><img src="/mcimages/work_cuttle/moji2.png" alt="个人首页"><br>个人首页有关于自己的数据统计，还有最近浏览和编辑过的文档。<br><img src="/mcimages/work_cuttle/moji5.png" alt="文档编辑"><br>在文本文档的创建中要实现一个比较简易的富文本编辑器，由于使用了Markdown转换的插件，所以只能支持一些简单样式编辑，包括了如图所示的编辑器工具栏中拥有的加粗加斜，插入一到六等级的标题、插入文摘引用块、插入各编程语言的代码高亮块和插图等功能，其中插图包括了本地上传和网络获取两种方式。<br><img src="/mcimages/work_cuttle/moji6.png" alt="文档编辑"><br><img src="/mcimages/work_cuttle/moji7.png" alt="文档编辑"><br>图画文档包括了两种类型的图画，一种是如图所示为思维图的绘制，一种是所示的简单流程图的绘制，这里用到了开源的G6库进行开发这两种图画的编辑器。<br>其中思维图的编辑器拥有放大缩小画布、添加同辈节点和添加子辈的操作按钮，用户双击思维图中的节点，就可以进入节点文字编辑状态更新内容。流程图的编辑器除了工具栏外，还拥有节点栏，可以选择心仪的节点拖拽至画布内，随后进行连线或修改。<br><img src="/mcimages/work_cuttle/moji8.png" alt="文档评论"><br>以及常规的评论功能（竟然还有点赞（笑哭））。<br><img src="/mcimages/work_cuttle/moji3.png" alt="私信系统"><br><img src="/mcimages/work_cuttle/moji9.png" alt="私信系统"><br>还有团队管理…(我的精力真滴旺盛啊~~)<br><img src="/mcimages/work_cuttle/moji10.png" alt="私信系统"><br>为什么想做这个私信，其实包含了一些个人的私心，当时看了很多后台界面的设计，好心水这个对话框。</p>
+<p>发布文档和文档协作过程是本文档编辑与协同平台的核心功能之一。为了用户体验系统需要对用户的草稿进行保存，要实现这个功能就必须要分创建文章和更新文章两种情况来分别考虑。系统会根据用户的角色类型来确定是否具有发布公开文档的权限，另外还会根据用户的操作状态来临时保存文档草稿。<br>草稿保存的时候是在用户输入暂停的间隙内进行请求的发送，另外为了防止用户意外断开连接，在草稿未进行保存的情况下，还会运用到HTML5中的LocalStorage来将草稿文本数据保存在本地浏览器，以便用户下次打开界面也可以收到意外中断的数据。由于文档分为公开文档和非公开文档，所以在发布的时候，针对于这个也会有不同的选择和保存结果。<br>在团队中进行文档发布与普通用户发布的机制是一样的，唯一不同的地方在于团队文档更新的时候可能会产生冲突，所以如图所示显示了文档加锁和协作发布文档流程图。另外在更新中产生的草稿文件，在编辑的时候也是要加锁的，不过图中没有融合草稿机制绘制，所以在此补充。<br><img alt="锁机制" data-lazy-src="/mcimages/work_cuttle/lock.png" loading="lazy" decoding="async"><br>这里协作机制本来可以做的比较出彩，但是因为时间问题，我当时就没有去研究websocket之类的牛逼的方式了，采用了锁的机制（我当时也调研了不少，这个也是语雀啊包括我们公司当时内部的做法，不过现在时代已经进步了。</p>
+<h1 id="界面预览"><a href="#界面预览" class="headerlink" title="界面预览"></a>界面预览</h1><p>这里针对系统的设计又花费了一点点小心思。为什么选择墨鱼当LOGO，必然是贴切这个文档平台的。<br><img alt="登录" data-lazy-src="/mcimages/work_cuttle/moji1.png" loading="lazy" decoding="async"><br><img alt="个人首页" data-lazy-src="/mcimages/work_cuttle/moji2.png" loading="lazy" decoding="async"><br>个人首页有关于自己的数据统计，还有最近浏览和编辑过的文档。<br><img alt="文档编辑" data-lazy-src="/mcimages/work_cuttle/moji5.png" loading="lazy" decoding="async"><br>在文本文档的创建中要实现一个比较简易的富文本编辑器，由于使用了Markdown转换的插件，所以只能支持一些简单样式编辑，包括了如图所示的编辑器工具栏中拥有的加粗加斜，插入一到六等级的标题、插入文摘引用块、插入各编程语言的代码高亮块和插图等功能，其中插图包括了本地上传和网络获取两种方式。<br><img alt="文档编辑" data-lazy-src="/mcimages/work_cuttle/moji6.png" loading="lazy" decoding="async"><br><img alt="文档编辑" data-lazy-src="/mcimages/work_cuttle/moji7.png" loading="lazy" decoding="async"><br>图画文档包括了两种类型的图画，一种是如图所示为思维图的绘制，一种是所示的简单流程图的绘制，这里用到了开源的G6库进行开发这两种图画的编辑器。<br>其中思维图的编辑器拥有放大缩小画布、添加同辈节点和添加子辈的操作按钮，用户双击思维图中的节点，就可以进入节点文字编辑状态更新内容。流程图的编辑器除了工具栏外，还拥有节点栏，可以选择心仪的节点拖拽至画布内，随后进行连线或修改。<br><img alt="文档评论" data-lazy-src="/mcimages/work_cuttle/moji8.png" loading="lazy" decoding="async"><br>以及常规的评论功能（竟然还有点赞（笑哭））。<br><img alt="私信系统" data-lazy-src="/mcimages/work_cuttle/moji3.png" loading="lazy" decoding="async"><br><img alt="私信系统" data-lazy-src="/mcimages/work_cuttle/moji9.png" loading="lazy" decoding="async"><br>还有团队管理…(我的精力真滴旺盛啊~~)<br><img alt="私信系统" data-lazy-src="/mcimages/work_cuttle/moji10.png" loading="lazy" decoding="async"><br>为什么想做这个私信，其实包含了一些个人的私心，当时看了很多后台界面的设计，好心水这个对话框。</p>
 <h1 id="使用技术"><a href="#使用技术" class="headerlink" title="使用技术"></a>使用技术</h1><p><strong>前端开发</strong><br>框架：React.js 16.7.0<br>状态管理工具：Mobx 5.9.4<br>工具库：G6 2.0<br>运行浏览器： IE 11及以上版本<br>开发工具：VS Code、Git Bash</p>
 <p><strong>后端开发</strong><br>框架：TypeORM 0.2.16、Vepser 0.1.9<br>数据库：MySQL 5.7.14<br>工具库：Moment.js 2.24.0<br>运行环境：Node.js 10.15.0<br>开发工具：VS Code、Git Bash</p>
 <blockquote>
@@ -160,19 +222,13 @@
           
             <nav class="post-nav" aria-label="文章切换">
               
-                <a
-                  href="/posts/life-20211115-luxun/"
-                  
-                >
+                <a href="/posts/life-20211115-luxun/">
                   <span class="post-nav__label">上一篇</span>
                   <span class="post-nav__title">追随迅哥的脚步</span>
                 </a>
               
               
-                <a
-                  href="/posts/tech-20190507-tcp/"
-                  
-                >
+                <a href="/posts/tech-20190507-tcp/">
                   <span class="post-nav__label">下一篇</span>
                   <span class="post-nav__title">传输层的小结</span>
                 </a>
@@ -186,17 +242,14 @@
 
   <section class="post-about-band">
     <svg class="post-divider post-divider--content" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"></path>
+      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"/>
     </svg>
     <div class="post-about-band__inner">
-      <section class="post-about" aria-label="关于年糕">
+      
+<section class="post-about" aria-label="关于年糕">
   <div class="post-about__figure">
     <div class="post-about__figure-card">
-      <img
-        class="post-about__image"
-        src="/images/mochi_real.png"
-        alt="年糕的个人形象照"
-      />
+      <img class="post-about__image" src="/images/mochi_real.webp" alt="年糕的个人形象照" loading="lazy" decoding="async">
     </div>
   </div>
 
@@ -206,11 +259,20 @@
       <h2 class="post-about__name">年糕</h2>
       <div class="post-about__channels" aria-label="社交平台">
         
-          <a href="/#about">小红书</a>
+          
+          
+            <a href="https://www.xiaohongshu.com/user/profile/659266b2000000002001f48e" target="&#34;_blank&#34;" rel="&#34;noopener" noreferrer&#34;>小红书</a>
+          
         
-          <a href="/#about">B站</a>
+          
+          
+            <a href="https://space.bilibili.com/3494369971669945" target="&#34;_blank&#34;" rel="&#34;noopener" noreferrer&#34;>B站</a>
+          
         
-          <a href="/#about">微信公众号</a>
+          
+          
+            <button type="button" data-wechat-modal-trigger>微信公众号</button>
+          
         
       </div>
     </div>
@@ -223,6 +285,17 @@
 </main>
 
 
+    <dialog class="wechat-modal" aria-labelledby="wechat-modal-title">
+      <button class="wechat-modal__close" type="button" aria-label="关闭微信公众号二维码弹窗" data-wechat-modal-close>
+        ×
+      </button>
+      <div class="wechat-modal__content">
+        <p class="wechat-modal__eyebrow">WECHAT OFFICIAL ACCOUNT</p>
+        <h2 id="wechat-modal-title" class="wechat-modal__title">微信公众号</h2>
+        <img class="wechat-modal__qrcode" src="/images/wx_qrcode.webp" alt="微信公众号二维码" loading="lazy" decoding="async">
+        <p class="wechat-modal__hint">扫码或搜索“年糕的编程花园”关注年糕的公众号</p>
+      </div>
+    </dialog>
     <footer class="site-footer site-footer--post">
   <div class="site-footer__inner">
     <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
@@ -230,10 +303,10 @@
   </div>
 </footer>
 
-    <script src="/vendor/gsap/gsap.min.js"></script>
-<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+    <script defer src="/vendor/gsap/gsap.min.js"></script>
+<script defer src="/vendor/gsap/ScrollTrigger.min.js"></script>
 
-<script src="/js/main.js"></script>
+<script defer src="/js/main.js"></script>
 
   </body>
 </html>

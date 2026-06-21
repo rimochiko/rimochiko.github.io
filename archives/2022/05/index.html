@@ -14,7 +14,6 @@
   href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
   rel="stylesheet"
 />
-<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
 <link rel="stylesheet" href="/css/style.css" />
 
 
@@ -24,17 +23,128 @@
       class="site-loading"
       aria-live="polite"
       aria-label="页面加载中"
-      data-sprite-src="/images/tech/girl_read_sprite.png"
-      data-frame-count="2"
     >
       <div class="site-loading__inner">
-        <div class="site-loading__girl" aria-hidden="true"></div>
+        <img
+          class="site-loading__symbol"
+          src="/images/logo_small.webp"
+          alt=""
+          aria-hidden="true"
+          decoding="async"
+          fetchpriority="high"
+        />
         <p class="site-loading__text">LOADING...</p>
         <div class="site-loading__progress" aria-hidden="true">
           <span class="site-loading__progress-bar"></span>
         </div>
+        <p class="site-loading__percent" aria-hidden="true">0%</p>
       </div>
     </div>
+    <script>
+      (() => {
+        const loading = document.querySelector(".site-loading");
+        const loadingProgressBar = document.querySelector(".site-loading__progress-bar");
+        const loadingPercent = document.querySelector(".site-loading__percent");
+        const MAX_LOADING_MS = 9000;
+        const MIN_LOADING_MS = 450;
+        const TRANSITION_MS = 540;
+
+        if (!loading || !loadingProgressBar) return;
+
+        window.__mochiLoadingStarted = true;
+        document.body.classList.add("is-loading");
+
+        const startTime = Date.now();
+        let progressTimer = null;
+        let forceHideTimer = null;
+        let minimumDelayTimer = null;
+        let finishTimer = null;
+        let hidden = false;
+        let pageReady = document.readyState === "complete";
+        let currentProgress = 0;
+        let minimumDurationReached = false;
+
+        const setProgress = (value) => {
+          currentProgress = Math.max(currentProgress, Math.min(value, 100));
+          const progressValue = `${currentProgress}%`;
+          loading.style.setProperty("--loading-progress", progressValue);
+          loadingProgressBar.style.width = progressValue;
+
+          if (loadingPercent) {
+            loadingPercent.textContent = `${Math.floor(currentProgress)}%`;
+          }
+        };
+
+        const canHideNow = () => pageReady && minimumDurationReached;
+
+        const hideLoading = () => {
+          if (hidden) return;
+          hidden = true;
+
+          if (progressTimer) window.clearInterval(progressTimer);
+          if (forceHideTimer) window.clearTimeout(forceHideTimer);
+          if (minimumDelayTimer) window.clearTimeout(minimumDelayTimer);
+          if (finishTimer) window.clearTimeout(finishTimer);
+
+          setProgress(100);
+          loading.classList.add("is-hidden");
+          document.body.classList.remove("is-loading");
+
+          window.setTimeout(() => {
+            loading.remove();
+          }, TRANSITION_MS);
+        };
+
+        const scheduleHide = () => {
+          if (!canHideNow() || finishTimer || hidden) return;
+
+          setProgress(Math.max(currentProgress, 96));
+          finishTimer = window.setTimeout(hideLoading, 260);
+        };
+
+        const requestHide = () => {
+          pageReady = true;
+          scheduleHide();
+        };
+
+        setProgress(3);
+
+        progressTimer = window.setInterval(() => {
+          const elapsed = Date.now() - startTime;
+          const warmupRatio = Math.min(elapsed / 3600, 1);
+
+          if (pageReady) {
+            setProgress(currentProgress + Math.max((99 - currentProgress) * 0.18, 1.1));
+            return;
+          }
+
+          if (currentProgress < 90) {
+            const targetProgress = 3 + (1 - Math.pow(1 - warmupRatio, 1.35)) * 87;
+            setProgress(targetProgress);
+            return;
+          }
+
+          setProgress(currentProgress + Math.max((94 - currentProgress) * 0.035, 0.04));
+        }, 140);
+
+        minimumDelayTimer = window.setTimeout(() => {
+          minimumDurationReached = true;
+          scheduleHide();
+        }, MIN_LOADING_MS);
+
+        forceHideTimer = window.setTimeout(() => {
+          pageReady = true;
+          minimumDurationReached = true;
+          hideLoading();
+        }, MAX_LOADING_MS);
+
+        if (document.readyState === "complete") {
+          requestHide();
+        } else {
+          window.addEventListener("load", requestHide, { once: true });
+        }
+      })();
+    </script>
     <svg class="visual-defs" aria-hidden="true" width="0" height="0">
       <defs>
         <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
@@ -61,10 +171,15 @@
     class="site-logo is-small"
     href="/"
     aria-label="返回年糕的编程花园首页"
-    data-default-logo="/images/logo.png"
-    data-small-logo="/images/logo_small.png"
+    data-default-logo="/images/logo.webp"
+    data-small-logo="/images/logo_small.webp"
   >
-    <img src="/images/logo_small.png" alt="年糕的编程花园" />
+    <img
+      src="/images/logo_small.webp"
+      alt="年糕的编程花园"
+      decoding="async"
+      fetchpriority="high"
+    />
   </a>
 
   <button
@@ -105,13 +220,16 @@
       <div class="post-hero__content archive-hero__content">
         <span class="post-hero__eyebrow">ARCHIVE</span>
         <span class="post-hero__date">
-          56 篇文章
+          88 篇文章
         </span>
         <h1 id="post-title" class="post-title">花园归档</h1>
         <div class="post-meta" aria-label="归档信息">
           <span>按时间浏览全部文章</span>
           
         </div>
+      </div>
+      <div class="archive-hero__decor" aria-hidden="true">
+        <span class="archive-hero__reader"></span>
       </div>
     </div>
   </section>
@@ -130,7 +248,10 @@
             >
               
                 <div class="archive-card__cover-wrap">
-                  <div class="archive-card__cover" style="background-image: url('/pimgs/unity/%E5%9B%BE%E7%89%873.png')"></div>
+                  <div
+                    class="archive-card__cover lazy-media lazy-media--bg"
+                    data-lazy-bg="/pimgs/unity/%E5%9B%BE%E7%89%873.png"
+                  ></div>
                 </div>
               
 
@@ -160,13 +281,16 @@
     </svg>
   </section>
 
-  <section class="post-about" aria-label="关于年糕">
+  
+<section class="post-about" aria-label="关于年糕">
   <div class="post-about__figure">
     <div class="post-about__figure-card">
       <img
         class="post-about__image"
-        src="/images/mochi_real.png"
+        src="/images/mochi_real.webp"
         alt="年糕的个人形象照"
+        loading="lazy"
+        decoding="async"
       />
     </div>
   </div>
@@ -177,11 +301,26 @@
       <h2 class="post-about__name">年糕</h2>
       <div class="post-about__channels" aria-label="社交平台">
         
-          <a href="/#about">小红书</a>
+          
+          
+            <a
+              href="https://www.xiaohongshu.com/user/profile/659266b2000000002001f48e"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >小红书</a>
+          
         
-          <a href="/#about">B站</a>
+          
+          
+            <a
+              href="https://space.bilibili.com/3494369971669945"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >B站</a>
+          
         
-          <a href="/#about">微信公众号</a>
+          
+          
+            <button type="button" data-wechat-modal-trigger>微信公众号</button>
+          
         
       </div>
     </div>
@@ -191,6 +330,23 @@
 
 </main>
 
+    <dialog class="wechat-modal" aria-labelledby="wechat-modal-title">
+      <button class="wechat-modal__close" type="button" aria-label="关闭微信公众号二维码弹窗" data-wechat-modal-close>
+        ×
+      </button>
+      <div class="wechat-modal__content">
+        <p class="wechat-modal__eyebrow">WECHAT OFFICIAL ACCOUNT</p>
+        <h2 id="wechat-modal-title" class="wechat-modal__title">微信公众号</h2>
+        <img
+          class="wechat-modal__qrcode"
+          src="/images/wx_qrcode.webp"
+          alt="微信公众号二维码"
+          loading="lazy"
+          decoding="async"
+        />
+        <p class="wechat-modal__hint">扫码或搜索“年糕的编程花园”关注年糕的公众号</p>
+      </div>
+    </dialog>
     <footer class="site-footer">
   <div class="site-footer__inner">
     <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
@@ -198,10 +354,10 @@
   </div>
 </footer>
 
-    <script src="/vendor/gsap/gsap.min.js"></script>
-<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+    <script defer src="/vendor/gsap/gsap.min.js"></script>
+<script defer src="/vendor/gsap/ScrollTrigger.min.js"></script>
 
-<script src="/js/main.js"></script>
+<script defer src="/js/main.js"></script>
 
   </body>
 </html>

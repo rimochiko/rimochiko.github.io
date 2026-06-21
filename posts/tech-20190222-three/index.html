@@ -1,79 +1,148 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   <head>
-    <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta
-  name="description"
-  content="&lt;p&gt;昨天终于把基本的东西给弄清楚了，然后也能写简单的DEMO了，今天主要是想想看还有没有更好的资料，然后继续写一些DEMO来加深一下印象，结果在B站发现了从油管上扒下来的Three.js系列教程，于是我就跟着它学了几节课，虽然英文听的不怎么明白，但是完全No problem，不影响学习。所以在这里来梳理一下今天学到的一些知识。&lt;/p&gt;"
-/>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="&lt;p&gt;昨天终于把基本的东西给弄清楚了，然后也能写简单的DEMO了，今天主要是想想看还有没有更好的资料，然后继续写一些DEMO来加深一下印象，结果在B站发现了从油管上扒下来的Three.js系列教程，于是我就跟着它学了几节课，虽然英文听的不怎么明白，但是完全No problem，不影响学习。所以在这里来梳理一下今天学到的一些知识。&lt;/p&gt;">
 <title>Three.js自学碎碎叨（下） | 年糕的编程花园</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link
-  href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
-  rel="stylesheet"
-/>
-<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
-<link rel="stylesheet" href="/css/style.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
 
 
   <meta name="generator" content="Hexo 7.3.0"></head>
   <body class="post-page">
-    <div
-      class="site-loading"
-      aria-live="polite"
-      aria-label="页面加载中"
-      data-sprite-src="/images/tech/girl_read_sprite.png"
-      data-frame-count="2"
-    >
+    <div class="site-loading" aria-live="polite" aria-label="页面加载中">
       <div class="site-loading__inner">
-        <div class="site-loading__girl" aria-hidden="true"></div>
+        <img class="site-loading__symbol" src="/images/logo_small.webp" alt aria-hidden="true" decoding="async" fetchpriority="high">
         <p class="site-loading__text">LOADING...</p>
         <div class="site-loading__progress" aria-hidden="true">
           <span class="site-loading__progress-bar"></span>
         </div>
+        <p class="site-loading__percent" aria-hidden="true">0%</p>
       </div>
     </div>
+    <script>
+      (() => {
+        const loading = document.querySelector(".site-loading");
+        const loadingProgressBar = document.querySelector(".site-loading__progress-bar");
+        const loadingPercent = document.querySelector(".site-loading__percent");
+        const MAX_LOADING_MS = 9000;
+        const MIN_LOADING_MS = 450;
+        const TRANSITION_MS = 540;
+
+        if (!loading || !loadingProgressBar) return;
+
+        window.__mochiLoadingStarted = true;
+        document.body.classList.add("is-loading");
+
+        const startTime = Date.now();
+        let progressTimer = null;
+        let forceHideTimer = null;
+        let minimumDelayTimer = null;
+        let finishTimer = null;
+        let hidden = false;
+        let pageReady = document.readyState === "complete";
+        let currentProgress = 0;
+        let minimumDurationReached = false;
+
+        const setProgress = (value) => {
+          currentProgress = Math.max(currentProgress, Math.min(value, 100));
+          const progressValue = `${currentProgress}%`;
+          loading.style.setProperty("--loading-progress", progressValue);
+          loadingProgressBar.style.width = progressValue;
+
+          if (loadingPercent) {
+            loadingPercent.textContent = `${Math.floor(currentProgress)}%`;
+          }
+        };
+
+        const canHideNow = () => pageReady && minimumDurationReached;
+
+        const hideLoading = () => {
+          if (hidden) return;
+          hidden = true;
+
+          if (progressTimer) window.clearInterval(progressTimer);
+          if (forceHideTimer) window.clearTimeout(forceHideTimer);
+          if (minimumDelayTimer) window.clearTimeout(minimumDelayTimer);
+          if (finishTimer) window.clearTimeout(finishTimer);
+
+          setProgress(100);
+          loading.classList.add("is-hidden");
+          document.body.classList.remove("is-loading");
+
+          window.setTimeout(() => {
+            loading.remove();
+          }, TRANSITION_MS);
+        };
+
+        const scheduleHide = () => {
+          if (!canHideNow() || finishTimer || hidden) return;
+
+          setProgress(Math.max(currentProgress, 96));
+          finishTimer = window.setTimeout(hideLoading, 260);
+        };
+
+        const requestHide = () => {
+          pageReady = true;
+          scheduleHide();
+        };
+
+        setProgress(3);
+
+        progressTimer = window.setInterval(() => {
+          const elapsed = Date.now() - startTime;
+          const warmupRatio = Math.min(elapsed / 3600, 1);
+
+          if (pageReady) {
+            setProgress(currentProgress + Math.max((99 - currentProgress) * 0.18, 1.1));
+            return;
+          }
+
+          if (currentProgress < 90) {
+            const targetProgress = 3 + (1 - Math.pow(1 - warmupRatio, 1.35)) * 87;
+            setProgress(targetProgress);
+            return;
+          }
+
+          setProgress(currentProgress + Math.max((94 - currentProgress) * 0.035, 0.04));
+        }, 140);
+
+        minimumDelayTimer = window.setTimeout(() => {
+          minimumDurationReached = true;
+          scheduleHide();
+        }, MIN_LOADING_MS);
+
+        forceHideTimer = window.setTimeout(() => {
+          pageReady = true;
+          minimumDurationReached = true;
+          hideLoading();
+        }, MAX_LOADING_MS);
+
+        if (document.readyState === "complete") {
+          requestHide();
+        } else {
+          window.addEventListener("load", requestHide, { once: true });
+        }
+      })();
+    </script>
     <svg class="visual-defs" aria-hidden="true" width="0" height="0">
       <defs>
         <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency="0.018"
-            numOctaves="2"
-            seed="8"
-            result="noise"
-          />
-          <feDisplacementMap
-            in="SourceGraphic"
-            in2="noise"
-            scale="18"
-            xChannelSelector="R"
-            yChannelSelector="G"
-          />
+          <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="8" result="noise"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="18" xChannelSelector="R" yChannelSelector="G"/>
         </filter>
       </defs>
     </svg>
     
 <header class="site-header">
-  <a
-    class="site-logo is-small"
-    href="/"
-    aria-label="返回年糕的编程花园首页"
-    data-default-logo="/images/logo.png"
-    data-small-logo="/images/logo_small.png"
-  >
-    <img src="/images/logo_small.png" alt="年糕的编程花园" />
+  <a class="site-logo is-small" href="/" aria-label="返回年糕的编程花园首页" data-default-logo="/images/logo.webp" data-small-logo="/images/logo_small.webp">
+    <img src="/images/logo_small.webp" alt="年糕的编程花园" decoding="async" fetchpriority="high">
   </a>
 
-  <button
-    class="menu-toggle"
-    type="button"
-    aria-label="打开菜单"
-    aria-expanded="false"
-    aria-controls="site-menu"
-  >
+  <button class="menu-toggle" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="site-menu">
     <span></span>
     <span></span>
     <span></span>
@@ -110,12 +179,7 @@
             <span class="post-hero__eyebrow">DIARY LOG</span>
             <span class="post-hero__date">2019.02.22</span>
             <h1 id="post-title" class="post-title post-title--decorated">
-              <img
-                class="post-title__decor"
-                src="/images/decorates/flower2.png"
-                alt=""
-                aria-hidden="true"
-              />
+              <img class="post-title__decor" src="/images/decorates/flower2.webp" alt aria-hidden="true" decoding="async">
               <span>Three.js自学碎碎叨（下）</span>
             </h1>
             <div class="post-meta" aria-label="文章信息">
@@ -132,7 +196,7 @@
           <div class="post-body-shell">
             <div class="post-body post-body--entry"><p>昨天终于把基本的东西给弄清楚了，然后也能写简单的DEMO了，今天主要是想想看还有没有更好的资料，然后继续写一些DEMO来加深一下印象，结果在B站发现了从油管上扒下来的Three.js系列教程，于是我就跟着它学了几节课，虽然英文听的不怎么明白，但是完全No problem，不影响学习。所以在这里来梳理一下今天学到的一些知识。</p>
 <span id="more"></span>
-<p>这是今天最后的成品…感觉像在跳街舞？？<br><img src="/pimgs/history/0069luTRly1fvua4dnmspg307q06618e.gif" alt="图片描述"></p>
+<p>这是今天最后的成品…感觉像在跳街舞？？<br><img alt="图片描述" data-lazy-src="/pimgs/history/0069luTRly1fvua4dnmspg307q06618e.gif" loading="lazy" decoding="async"></p>
 <h1 id="一些新的东西"><a href="#一些新的东西" class="headerlink" title="一些新的东西"></a>一些新的东西</h1><h2 id="建立坐标轴"><a href="#建立坐标轴" class="headerlink" title="建立坐标轴"></a>建立坐标轴</h2><p>我们可以向场景中添加坐标轴，来帮助我们更好的理解！</p>
 <pre><code>var axis = new THREE.AxisHelper(30);
 scene.add(axis);
@@ -142,7 +206,7 @@ scene.add(axis);
 <pre><code>var grid = new THREE.GridHelper(100, 20, 0xff0000, 0x000000);
 scene.add(grid);
 </code></pre>
-<p>这里的参数分别是：网格长度、网格块大小。所以这里是100&#x2F;20&#x3D;5，5长度一个块。最后两个参数是表示颜色的。第一个颜色叫做中心线颜色，第二个就是网格的颜色。<br><img src="https://www.mochiko.cn/pimgs/history/0069luTRly1fvua4cg38vj30m80csafj.jpeg" alt="图片描述"><br>可以看到这里，穿过中心的两条线就是红色啦！然后网格是黑色。</p>
+<p>这里的参数分别是：网格长度、网格块大小。所以这里是100&#x2F;20&#x3D;5，5长度一个块。最后两个参数是表示颜色的。第一个颜色叫做中心线颜色，第二个就是网格的颜色。<br><img alt="图片描述" data-lazy-src="https://www.mochiko.cn/pimgs/history/0069luTRly1fvua4cg38vj30m80csafj.jpeg" loading="lazy" decoding="async"><br>可以看到这里，穿过中心的两条线就是红色啦！然后网格是黑色。</p>
 <h2 id="PlaneGeometry"><a href="#PlaneGeometry" class="headerlink" title="PlaneGeometry"></a>PlaneGeometry</h2><p>建立一个平面。<br>这里平面的主要用途其实是想把那个阴影给投出来。它和其他几何体是一样的，除了基本的形状外，还需要指定一个材料，最后结合：</p>
 <pre><code>var planeGeometry = new THREE.PlaneGeometry(30, 30, 30);
 var planeMeterial = new THREE.MeshLambertMaterial(&#123;
@@ -164,7 +228,7 @@ var plane = new THREE.Mesh(planeGeometry, planeMeterial);
 </li>
 </ol>
 <p>然后就OK了。</p>
-<h2 id="使用dat-GUI来控制"><a href="#使用dat-GUI来控制" class="headerlink" title="使用dat GUI来控制"></a>使用dat GUI来控制</h2><p>github仓库：<a target="_blank" rel="noopener" href="https://github.com/dataarts/dat.gui/tree/master/build">https://github.com/dataarts/dat.gui/tree/master/build</a><br>这里直接把那个打包好的文件下载来引用就行了。<br>使用这个我们可以用面板的形式来控制参数，从而动态更改展示的效果，比如：<br><img src="https://www.mochiko.cn/pimgs/history/0069luTRly1fvua4cq8upj30m80f17at.jpeg" alt="图片描述"><br>看，我这可以通过动态修改数据来让方块进行旋转～</p>
+<h2 id="使用dat-GUI来控制"><a href="#使用dat-GUI来控制" class="headerlink" title="使用dat GUI来控制"></a>使用dat GUI来控制</h2><p>github仓库：<a target="_blank" rel="noopener" href="https://github.com/dataarts/dat.gui/tree/master/build">https://github.com/dataarts/dat.gui/tree/master/build</a><br>这里直接把那个打包好的文件下载来引用就行了。<br>使用这个我们可以用面板的形式来控制参数，从而动态更改展示的效果，比如：<br><img alt="图片描述" data-lazy-src="https://www.mochiko.cn/pimgs/history/0069luTRly1fvua4cq8upj30m80f17at.jpeg" loading="lazy" decoding="async"><br>看，我这可以通过动态修改数据来让方块进行旋转～</p>
 <pre><code>var guiControls = new function () &#123;
     this.rotationX = 0.01;
     this.rotationY = 0.01;
@@ -195,19 +259,13 @@ datGUI.add(guiControls, &#39;rotationZ&#39;, 0);
           
             <nav class="post-nav" aria-label="文章切换">
               
-                <a
-                  href="/posts/tech-20190312-huisufa/"
-                  
-                >
+                <a href="/posts/tech-20190312-huisufa/">
                   <span class="post-nav__label">上一篇</span>
                   <span class="post-nav__title">回溯法小结</span>
                 </a>
               
               
-                <a
-                  href="/posts/tech-20190221-three/"
-                  
-                >
+                <a href="/posts/tech-20190221-three/">
                   <span class="post-nav__label">下一篇</span>
                   <span class="post-nav__title">Three.js自学碎碎叨（上）</span>
                 </a>
@@ -221,17 +279,14 @@ datGUI.add(guiControls, &#39;rotationZ&#39;, 0);
 
   <section class="post-about-band">
     <svg class="post-divider post-divider--content" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"></path>
+      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"/>
     </svg>
     <div class="post-about-band__inner">
-      <section class="post-about" aria-label="关于年糕">
+      
+<section class="post-about" aria-label="关于年糕">
   <div class="post-about__figure">
     <div class="post-about__figure-card">
-      <img
-        class="post-about__image"
-        src="/images/mochi_real.png"
-        alt="年糕的个人形象照"
-      />
+      <img class="post-about__image" src="/images/mochi_real.webp" alt="年糕的个人形象照" loading="lazy" decoding="async">
     </div>
   </div>
 
@@ -241,11 +296,20 @@ datGUI.add(guiControls, &#39;rotationZ&#39;, 0);
       <h2 class="post-about__name">年糕</h2>
       <div class="post-about__channels" aria-label="社交平台">
         
-          <a href="/#about">小红书</a>
+          
+          
+            <a href="https://www.xiaohongshu.com/user/profile/659266b2000000002001f48e" target="&#34;_blank&#34;" rel="&#34;noopener" noreferrer&#34;>小红书</a>
+          
         
-          <a href="/#about">B站</a>
+          
+          
+            <a href="https://space.bilibili.com/3494369971669945" target="&#34;_blank&#34;" rel="&#34;noopener" noreferrer&#34;>B站</a>
+          
         
-          <a href="/#about">微信公众号</a>
+          
+          
+            <button type="button" data-wechat-modal-trigger>微信公众号</button>
+          
         
       </div>
     </div>
@@ -258,6 +322,17 @@ datGUI.add(guiControls, &#39;rotationZ&#39;, 0);
 </main>
 
 
+    <dialog class="wechat-modal" aria-labelledby="wechat-modal-title">
+      <button class="wechat-modal__close" type="button" aria-label="关闭微信公众号二维码弹窗" data-wechat-modal-close>
+        ×
+      </button>
+      <div class="wechat-modal__content">
+        <p class="wechat-modal__eyebrow">WECHAT OFFICIAL ACCOUNT</p>
+        <h2 id="wechat-modal-title" class="wechat-modal__title">微信公众号</h2>
+        <img class="wechat-modal__qrcode" src="/images/wx_qrcode.webp" alt="微信公众号二维码" loading="lazy" decoding="async">
+        <p class="wechat-modal__hint">扫码或搜索“年糕的编程花园”关注年糕的公众号</p>
+      </div>
+    </dialog>
     <footer class="site-footer site-footer--post">
   <div class="site-footer__inner">
     <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
@@ -265,10 +340,10 @@ datGUI.add(guiControls, &#39;rotationZ&#39;, 0);
   </div>
 </footer>
 
-    <script src="/vendor/gsap/gsap.min.js"></script>
-<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+    <script defer src="/vendor/gsap/gsap.min.js"></script>
+<script defer src="/vendor/gsap/ScrollTrigger.min.js"></script>
 
-<script src="/js/main.js"></script>
+<script defer src="/js/main.js"></script>
 
   </body>
 </html>

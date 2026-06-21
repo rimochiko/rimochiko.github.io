@@ -1,83 +1,152 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   <head>
-    <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta
-  name="description"
-  content="&lt;h1 id=&#34;问题の起源&#34;&gt;&lt;a href=&#34;#问题の起源&#34; class=&#34;headerlink&#34; title=&#34;问题の起源&#34;&gt;&lt;/a&gt;问题の起源&lt;/h1&gt;&lt;p&gt;以前一直就听说圣杯布局，但是没有怎么去用过，然后这次偶然接触到了，就学习了一下。&lt;br&gt;这是一个我从别人写的文章中复制过来的，关于圣杯布局的比较简单的说明&lt;/p&gt;
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="&lt;h1 id=&#34;问题の起源&#34;&gt;&lt;a href=&#34;#问题の起源&#34; class=&#34;headerlink&#34; title=&#34;问题の起源&#34;&gt;&lt;/a&gt;问题の起源&lt;/h1&gt;&lt;p&gt;以前一直就听说圣杯布局，但是没有怎么去用过，然后这次偶然接触到了，就学习了一下。&lt;br&gt;这是一个我从别人写的文章中复制过来的，关于圣杯布局的比较简单的说明&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;通过缩放页面就可以发现，随着页面的宽度的变化，这三栏布局是中间盒子优先渲染，两边的盒子框子固定不变，即使页面宽度变小，也不影响我们的浏览&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;而通常是采用浮动布局和margin负值。&lt;/p&gt;"
-/>
+&lt;p&gt;而通常是采用浮动布局和margin负值。&lt;/p&gt;">
 <title>圣杯布局引发对margin负值的研究 | 年糕的编程花园</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link
-  href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
-  rel="stylesheet"
-/>
-<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
-<link rel="stylesheet" href="/css/style.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
 
 
   <meta name="generator" content="Hexo 7.3.0"></head>
   <body class="post-page">
-    <div
-      class="site-loading"
-      aria-live="polite"
-      aria-label="页面加载中"
-      data-sprite-src="/images/tech/girl_read_sprite.png"
-      data-frame-count="2"
-    >
+    <div class="site-loading" aria-live="polite" aria-label="页面加载中">
       <div class="site-loading__inner">
-        <div class="site-loading__girl" aria-hidden="true"></div>
+        <img class="site-loading__symbol" src="/images/logo_small.webp" alt aria-hidden="true" decoding="async" fetchpriority="high">
         <p class="site-loading__text">LOADING...</p>
         <div class="site-loading__progress" aria-hidden="true">
           <span class="site-loading__progress-bar"></span>
         </div>
+        <p class="site-loading__percent" aria-hidden="true">0%</p>
       </div>
     </div>
+    <script>
+      (() => {
+        const loading = document.querySelector(".site-loading");
+        const loadingProgressBar = document.querySelector(".site-loading__progress-bar");
+        const loadingPercent = document.querySelector(".site-loading__percent");
+        const MAX_LOADING_MS = 9000;
+        const MIN_LOADING_MS = 450;
+        const TRANSITION_MS = 540;
+
+        if (!loading || !loadingProgressBar) return;
+
+        window.__mochiLoadingStarted = true;
+        document.body.classList.add("is-loading");
+
+        const startTime = Date.now();
+        let progressTimer = null;
+        let forceHideTimer = null;
+        let minimumDelayTimer = null;
+        let finishTimer = null;
+        let hidden = false;
+        let pageReady = document.readyState === "complete";
+        let currentProgress = 0;
+        let minimumDurationReached = false;
+
+        const setProgress = (value) => {
+          currentProgress = Math.max(currentProgress, Math.min(value, 100));
+          const progressValue = `${currentProgress}%`;
+          loading.style.setProperty("--loading-progress", progressValue);
+          loadingProgressBar.style.width = progressValue;
+
+          if (loadingPercent) {
+            loadingPercent.textContent = `${Math.floor(currentProgress)}%`;
+          }
+        };
+
+        const canHideNow = () => pageReady && minimumDurationReached;
+
+        const hideLoading = () => {
+          if (hidden) return;
+          hidden = true;
+
+          if (progressTimer) window.clearInterval(progressTimer);
+          if (forceHideTimer) window.clearTimeout(forceHideTimer);
+          if (minimumDelayTimer) window.clearTimeout(minimumDelayTimer);
+          if (finishTimer) window.clearTimeout(finishTimer);
+
+          setProgress(100);
+          loading.classList.add("is-hidden");
+          document.body.classList.remove("is-loading");
+
+          window.setTimeout(() => {
+            loading.remove();
+          }, TRANSITION_MS);
+        };
+
+        const scheduleHide = () => {
+          if (!canHideNow() || finishTimer || hidden) return;
+
+          setProgress(Math.max(currentProgress, 96));
+          finishTimer = window.setTimeout(hideLoading, 260);
+        };
+
+        const requestHide = () => {
+          pageReady = true;
+          scheduleHide();
+        };
+
+        setProgress(3);
+
+        progressTimer = window.setInterval(() => {
+          const elapsed = Date.now() - startTime;
+          const warmupRatio = Math.min(elapsed / 3600, 1);
+
+          if (pageReady) {
+            setProgress(currentProgress + Math.max((99 - currentProgress) * 0.18, 1.1));
+            return;
+          }
+
+          if (currentProgress < 90) {
+            const targetProgress = 3 + (1 - Math.pow(1 - warmupRatio, 1.35)) * 87;
+            setProgress(targetProgress);
+            return;
+          }
+
+          setProgress(currentProgress + Math.max((94 - currentProgress) * 0.035, 0.04));
+        }, 140);
+
+        minimumDelayTimer = window.setTimeout(() => {
+          minimumDurationReached = true;
+          scheduleHide();
+        }, MIN_LOADING_MS);
+
+        forceHideTimer = window.setTimeout(() => {
+          pageReady = true;
+          minimumDurationReached = true;
+          hideLoading();
+        }, MAX_LOADING_MS);
+
+        if (document.readyState === "complete") {
+          requestHide();
+        } else {
+          window.addEventListener("load", requestHide, { once: true });
+        }
+      })();
+    </script>
     <svg class="visual-defs" aria-hidden="true" width="0" height="0">
       <defs>
         <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency="0.018"
-            numOctaves="2"
-            seed="8"
-            result="noise"
-          />
-          <feDisplacementMap
-            in="SourceGraphic"
-            in2="noise"
-            scale="18"
-            xChannelSelector="R"
-            yChannelSelector="G"
-          />
+          <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="8" result="noise"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="18" xChannelSelector="R" yChannelSelector="G"/>
         </filter>
       </defs>
     </svg>
     
 <header class="site-header">
-  <a
-    class="site-logo is-small"
-    href="/"
-    aria-label="返回年糕的编程花园首页"
-    data-default-logo="/images/logo.png"
-    data-small-logo="/images/logo_small.png"
-  >
-    <img src="/images/logo_small.png" alt="年糕的编程花园" />
+  <a class="site-logo is-small" href="/" aria-label="返回年糕的编程花园首页" data-default-logo="/images/logo.webp" data-small-logo="/images/logo_small.webp">
+    <img src="/images/logo_small.webp" alt="年糕的编程花园" decoding="async" fetchpriority="high">
   </a>
 
-  <button
-    class="menu-toggle"
-    type="button"
-    aria-label="打开菜单"
-    aria-expanded="false"
-    aria-controls="site-menu"
-  >
+  <button class="menu-toggle" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="site-menu">
     <span></span>
     <span></span>
     <span></span>
@@ -114,12 +183,7 @@
             <span class="post-hero__eyebrow">DIARY LOG</span>
             <span class="post-hero__date">2017.11.30</span>
             <h1 id="post-title" class="post-title post-title--decorated">
-              <img
-                class="post-title__decor"
-                src="/images/decorates/flower2.png"
-                alt=""
-                aria-hidden="true"
-              />
+              <img class="post-title__decor" src="/images/decorates/flower2.webp" alt aria-hidden="true" decoding="async">
               <span>圣杯布局引发对margin负值的研究</span>
             </h1>
             <div class="post-meta" aria-label="文章信息">
@@ -149,8 +213,8 @@
 &lt;/div&gt;
 </code></pre>
 <p><strong>CSS部分</strong><br>1.给container左边和右边赋上padding值，宽度分别就是能容纳的下left和right的div。<br>2.main DIV的宽度为100%。<br>3.main，left和right三个div都设置为左浮动。</p>
-<p>完成以上我们就会得到一个这样的结果：<br><img src="/pimgs/20171130margin/1.png" alt="图片描述"></p>
-<p>再然后我们给left一个margin-left:100%，此时会发现left移动到了第一行中：<br><img src="/pimgs/20171130margin/2.png" alt="图片描述"></p>
+<p>完成以上我们就会得到一个这样的结果：<br><img alt="图片描述" data-lazy-src="/pimgs/20171130margin/1.png" loading="lazy" decoding="async"></p>
+<p>再然后我们给left一个margin-left:100%，此时会发现left移动到了第一行中：<br><img alt="图片描述" data-lazy-src="/pimgs/20171130margin/2.png" loading="lazy" decoding="async"></p>
 <p>然后面对这个现象，我展开了一系列的思考和探究~</p>
 <h1 id="初次の发问"><a href="#初次の发问" class="headerlink" title="初次の发问"></a>初次の发问</h1><p><strong>Q：为什么left会跑去了第一行？</strong><br>A：这个其实我们大概心里是明白的。一开始，main的宽度是100%，所以第一行是无法再容纳后面同样是左浮动的div块。但是通过赋予了margin-left为-100%，这里的100%也就是父容器的宽度，浏览器计算出来是一个负值，就认为它能被容纳在第一行。</p>
 <h1 id="继续试验"><a href="#继续试验" class="headerlink" title="继续试验"></a>继续试验</h1><p>我们可以尝试改变margin-left的值，去看看div位置的变化。为了方便我们计算，另外写了一个类似的布局，内容区的宽度是100px，三个div的宽度也都是100px。<br><strong>HTML部分</strong></p>
@@ -183,16 +247,16 @@ div&#123;
   background:rgba(0,233,0,.4);
 &#125;
 </code></pre>
-<p>效果是这样的<br><img src="/pimgs/20171130margin/3.png" alt="图片描述"></p>
-<p>然后我们试着给left赋予不同的margin-left负值，会发现：<br>1.当margin-left在0px ~ -99px的时候，left会向左移动。<br><img src="/pimgs/20171130margin/4.png" alt="图片描述"></p>
-<p>2.当margin-left为-100px的时候，left上移动，与main重叠：<br><img src="/pimgs/20171130margin/5.png" alt="图片描述"></p>
+<p>效果是这样的<br><img alt="图片描述" data-lazy-src="/pimgs/20171130margin/3.png" loading="lazy" decoding="async"></p>
+<p>然后我们试着给left赋予不同的margin-left负值，会发现：<br>1.当margin-left在0px ~ -99px的时候，left会向左移动。<br><img alt="图片描述" data-lazy-src="/pimgs/20171130margin/4.png" loading="lazy" decoding="async"></p>
+<p>2.当margin-left为-100px的时候，left上移动，与main重叠：<br><img alt="图片描述" data-lazy-src="/pimgs/20171130margin/5.png" loading="lazy" decoding="async"></p>
 <p>所以margin-left是-100px的时候，显然是一个<strong>分界点</strong>。</p>
-<p>3.当margin-left的负值继续增加，left又会继续向左边移动：<br><img src="/pimgs/20171130margin/6.png" alt="图片描述"></p>
+<p>3.当margin-left的负值继续增加，left又会继续向左边移动：<br><img alt="图片描述" data-lazy-src="/pimgs/20171130margin/6.png" loading="lazy" decoding="async"></p>
 <p>根据上面的情况，加以本宝宝的百度（笑），我们确定了想法，就是在计算元素的”宽度”的时候是会把margin-left+width得到结果，当-100px+100px&#x3D;0px的时候，就被认为第一行是还可以容纳的下，所以第二行的元素就到了第一行。<br>此时，我还找到了一篇文章，这篇文章比较合理的阐述了移动的原理：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/LiveWithIt/p/6024864.html">https://www.cnblogs.com/LiveWithIt/p/6024864.html</a></p>
-<h1 id="二次の提问"><a href="#二次の提问" class="headerlink" title="二次の提问"></a>二次の提问</h1><p>然而这里还有一个细节问题，就是left的移动其实是有一个范围的：<br><img src="/pimgs/20171130margin/7.png" alt="图片描述"></p>
+<h1 id="二次の提问"><a href="#二次の提问" class="headerlink" title="二次の提问"></a>二次の提问</h1><p>然而这里还有一个细节问题，就是left的移动其实是有一个范围的：<br><img alt="图片描述" data-lazy-src="/pimgs/20171130margin/7.png" loading="lazy" decoding="async"></p>
 <p>画了红框的范围是container的一个padding区域，在left移动切换的时候，<br>当left的margin-left并没有达到-100px的时候，为什么它会向左移动，单纯从放不下的原理来说，它在原处不动也可以是一个合理的现象，那篇文章似乎也没有提到合理的原因，然后我继续试验。</p>
-<h1 id="再次实验"><a href="#再次实验" class="headerlink" title="再次实验"></a>再次实验</h1><p>我们从当left的margin-left为-100px开始，即main和left重叠的情况。<br>我们再给main一个margin-left负值为-50px，结果main和left一起向左边移动：<br><img src="/pimgs/20171130margin/8.png" alt="图片描述"></p>
-<p>再试验一种情况，把left的宽设为150px，margin-left设为-150px，main的margin-left是0，此时left的右边对齐了main的右边。<br><img src="/pimgs/20171130margin/9.png" alt="图片描述"></p>
+<h1 id="再次实验"><a href="#再次实验" class="headerlink" title="再次实验"></a>再次实验</h1><p>我们从当left的margin-left为-100px开始，即main和left重叠的情况。<br>我们再给main一个margin-left负值为-50px，结果main和left一起向左边移动：<br><img alt="图片描述" data-lazy-src="/pimgs/20171130margin/8.png" loading="lazy" decoding="async"></p>
+<p>再试验一种情况，把left的宽设为150px，margin-left设为-150px，main的margin-left是0，此时left的右边对齐了main的右边。<br><img alt="图片描述" data-lazy-src="/pimgs/20171130margin/9.png" loading="lazy" decoding="async"></p>
 <p>所以应该隐隐约约可以发现了些什么…</p>
 <h1 id="我の小结论"><a href="#我の小结论" class="headerlink" title="我の小结论"></a>我の小结论</h1><p>合理的解释就是，在摆放元素位置的时候，它会计算出那个右边的值，并且会认为这就是元素的最后的标准线。</p>
 <p>1.解释<strong>继续实验</strong>中为什么margin-left为left宽度负值，left会和main重叠：<br>因为它会被认为宽度是0，所以从main的结束位置开始计算是100px+0px，所以元素要以100px为结束线，也就是它在100px的左边。</p>
@@ -205,19 +269,13 @@ div&#123;
           
             <nav class="post-nav" aria-label="文章切换">
               
-                <a
-                  href="/posts/tech-20180209-http/"
-                  
-                >
+                <a href="/posts/tech-20180209-http/">
                   <span class="post-nav__label">上一篇</span>
                   <span class="post-nav__title">《图解HTTP》小结+实践理解</span>
                 </a>
               
               
-                <a
-                  href="/posts/tech-20170816-about-lorem/"
-                  
-                >
+                <a href="/posts/tech-20170816-about-lorem/">
                   <span class="post-nav__label">下一篇</span>
                   <span class="post-nav__title">网页模板中经常出现的Lorem Ipsum</span>
                 </a>
@@ -231,17 +289,14 @@ div&#123;
 
   <section class="post-about-band">
     <svg class="post-divider post-divider--content" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"></path>
+      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"/>
     </svg>
     <div class="post-about-band__inner">
-      <section class="post-about" aria-label="关于年糕">
+      
+<section class="post-about" aria-label="关于年糕">
   <div class="post-about__figure">
     <div class="post-about__figure-card">
-      <img
-        class="post-about__image"
-        src="/images/mochi_real.png"
-        alt="年糕的个人形象照"
-      />
+      <img class="post-about__image" src="/images/mochi_real.webp" alt="年糕的个人形象照" loading="lazy" decoding="async">
     </div>
   </div>
 
@@ -251,11 +306,20 @@ div&#123;
       <h2 class="post-about__name">年糕</h2>
       <div class="post-about__channels" aria-label="社交平台">
         
-          <a href="/#about">小红书</a>
+          
+          
+            <a href="https://www.xiaohongshu.com/user/profile/659266b2000000002001f48e" target="&#34;_blank&#34;" rel="&#34;noopener" noreferrer&#34;>小红书</a>
+          
         
-          <a href="/#about">B站</a>
+          
+          
+            <a href="https://space.bilibili.com/3494369971669945" target="&#34;_blank&#34;" rel="&#34;noopener" noreferrer&#34;>B站</a>
+          
         
-          <a href="/#about">微信公众号</a>
+          
+          
+            <button type="button" data-wechat-modal-trigger>微信公众号</button>
+          
         
       </div>
     </div>
@@ -268,6 +332,17 @@ div&#123;
 </main>
 
 
+    <dialog class="wechat-modal" aria-labelledby="wechat-modal-title">
+      <button class="wechat-modal__close" type="button" aria-label="关闭微信公众号二维码弹窗" data-wechat-modal-close>
+        ×
+      </button>
+      <div class="wechat-modal__content">
+        <p class="wechat-modal__eyebrow">WECHAT OFFICIAL ACCOUNT</p>
+        <h2 id="wechat-modal-title" class="wechat-modal__title">微信公众号</h2>
+        <img class="wechat-modal__qrcode" src="/images/wx_qrcode.webp" alt="微信公众号二维码" loading="lazy" decoding="async">
+        <p class="wechat-modal__hint">扫码或搜索“年糕的编程花园”关注年糕的公众号</p>
+      </div>
+    </dialog>
     <footer class="site-footer site-footer--post">
   <div class="site-footer__inner">
     <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
@@ -275,10 +350,10 @@ div&#123;
   </div>
 </footer>
 
-    <script src="/vendor/gsap/gsap.min.js"></script>
-<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+    <script defer src="/vendor/gsap/gsap.min.js"></script>
+<script defer src="/vendor/gsap/ScrollTrigger.min.js"></script>
 
-<script src="/js/main.js"></script>
+<script defer src="/js/main.js"></script>
 
   </body>
 </html>

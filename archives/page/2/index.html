@@ -14,7 +14,6 @@
   href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
   rel="stylesheet"
 />
-<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
 <link rel="stylesheet" href="/css/style.css" />
 
 
@@ -24,17 +23,128 @@
       class="site-loading"
       aria-live="polite"
       aria-label="页面加载中"
-      data-sprite-src="/images/tech/girl_read_sprite.png"
-      data-frame-count="2"
     >
       <div class="site-loading__inner">
-        <div class="site-loading__girl" aria-hidden="true"></div>
+        <img
+          class="site-loading__symbol"
+          src="/images/logo_small.webp"
+          alt=""
+          aria-hidden="true"
+          decoding="async"
+          fetchpriority="high"
+        />
         <p class="site-loading__text">LOADING...</p>
         <div class="site-loading__progress" aria-hidden="true">
           <span class="site-loading__progress-bar"></span>
         </div>
+        <p class="site-loading__percent" aria-hidden="true">0%</p>
       </div>
     </div>
+    <script>
+      (() => {
+        const loading = document.querySelector(".site-loading");
+        const loadingProgressBar = document.querySelector(".site-loading__progress-bar");
+        const loadingPercent = document.querySelector(".site-loading__percent");
+        const MAX_LOADING_MS = 9000;
+        const MIN_LOADING_MS = 450;
+        const TRANSITION_MS = 540;
+
+        if (!loading || !loadingProgressBar) return;
+
+        window.__mochiLoadingStarted = true;
+        document.body.classList.add("is-loading");
+
+        const startTime = Date.now();
+        let progressTimer = null;
+        let forceHideTimer = null;
+        let minimumDelayTimer = null;
+        let finishTimer = null;
+        let hidden = false;
+        let pageReady = document.readyState === "complete";
+        let currentProgress = 0;
+        let minimumDurationReached = false;
+
+        const setProgress = (value) => {
+          currentProgress = Math.max(currentProgress, Math.min(value, 100));
+          const progressValue = `${currentProgress}%`;
+          loading.style.setProperty("--loading-progress", progressValue);
+          loadingProgressBar.style.width = progressValue;
+
+          if (loadingPercent) {
+            loadingPercent.textContent = `${Math.floor(currentProgress)}%`;
+          }
+        };
+
+        const canHideNow = () => pageReady && minimumDurationReached;
+
+        const hideLoading = () => {
+          if (hidden) return;
+          hidden = true;
+
+          if (progressTimer) window.clearInterval(progressTimer);
+          if (forceHideTimer) window.clearTimeout(forceHideTimer);
+          if (minimumDelayTimer) window.clearTimeout(minimumDelayTimer);
+          if (finishTimer) window.clearTimeout(finishTimer);
+
+          setProgress(100);
+          loading.classList.add("is-hidden");
+          document.body.classList.remove("is-loading");
+
+          window.setTimeout(() => {
+            loading.remove();
+          }, TRANSITION_MS);
+        };
+
+        const scheduleHide = () => {
+          if (!canHideNow() || finishTimer || hidden) return;
+
+          setProgress(Math.max(currentProgress, 96));
+          finishTimer = window.setTimeout(hideLoading, 260);
+        };
+
+        const requestHide = () => {
+          pageReady = true;
+          scheduleHide();
+        };
+
+        setProgress(3);
+
+        progressTimer = window.setInterval(() => {
+          const elapsed = Date.now() - startTime;
+          const warmupRatio = Math.min(elapsed / 3600, 1);
+
+          if (pageReady) {
+            setProgress(currentProgress + Math.max((99 - currentProgress) * 0.18, 1.1));
+            return;
+          }
+
+          if (currentProgress < 90) {
+            const targetProgress = 3 + (1 - Math.pow(1 - warmupRatio, 1.35)) * 87;
+            setProgress(targetProgress);
+            return;
+          }
+
+          setProgress(currentProgress + Math.max((94 - currentProgress) * 0.035, 0.04));
+        }, 140);
+
+        minimumDelayTimer = window.setTimeout(() => {
+          minimumDurationReached = true;
+          scheduleHide();
+        }, MIN_LOADING_MS);
+
+        forceHideTimer = window.setTimeout(() => {
+          pageReady = true;
+          minimumDurationReached = true;
+          hideLoading();
+        }, MAX_LOADING_MS);
+
+        if (document.readyState === "complete") {
+          requestHide();
+        } else {
+          window.addEventListener("load", requestHide, { once: true });
+        }
+      })();
+    </script>
     <svg class="visual-defs" aria-hidden="true" width="0" height="0">
       <defs>
         <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
@@ -61,10 +171,15 @@
     class="site-logo is-small"
     href="/"
     aria-label="返回年糕的编程花园首页"
-    data-default-logo="/images/logo.png"
-    data-small-logo="/images/logo_small.png"
+    data-default-logo="/images/logo.webp"
+    data-small-logo="/images/logo_small.webp"
   >
-    <img src="/images/logo_small.png" alt="年糕的编程花园" />
+    <img
+      src="/images/logo_small.webp"
+      alt="年糕的编程花园"
+      decoding="async"
+      fetchpriority="high"
+    />
   </a>
 
   <button
@@ -111,9 +226,12 @@
         <div class="post-meta" aria-label="归档信息">
           <span>按时间浏览全部文章</span>
           
-            <span>第 2 / 6 页</span>
+            <span>第 2 / 9 页</span>
           
         </div>
+      </div>
+      <div class="archive-hero__decor" aria-hidden="true">
+        <span class="archive-hero__reader"></span>
       </div>
     </div>
   </section>
@@ -125,123 +243,26 @@
           
             
             <a
-              class="archive-card archive-card--with-cover"
-              href="https://mp.weixin.qq.com/s/w3YD6igWir7Po6rhu91BFg"
-              aria-label="查看文章：Evening Cinema 霓虹灯照耀下的浪漫夜晚"
+              class="archive-card archive-card--no-cover"
+              href="https://mp.weixin.qq.com/s/zVwUdv4BzLevkdPiM2qf3Q"
+              aria-label="查看文章：一口气让 AI 一次写出 9 种网页风格"
               target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
             >
               
-                <div class="archive-card__cover-wrap">
-                  <div class="archive-card__cover" style="background-image: url('/wimgs/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20240714103611.png')"></div>
-                </div>
-              
 
               <div class="archive-card__content">
-                <h2 class="archive-card__title">Evening Cinema 霓虹灯照耀下的浪漫夜晚</h2>
+                <h2 class="archive-card__title">一口气让 AI 一次写出 9 种网页风格</h2>
                 <p class="archive-card__excerpt">
-                  不管是各类音乐人持续在翻唱的《Plastic Love》，还是之前流行的蒸汽波音乐，都在把带有历史印记的 City Pop 再度拉到大家的眼前。听到 City Pop，就会让人眼前浮现都市光影，人们流连于繁华街景的景象。
+                  记录一次让 AI 批量生成多种网页风格的实验，比较不同视觉方向下的提示、实现和设计稳定性。
                 </p>
                 <div class="archive-card__meta">
                   <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2023</span>
-                    <span class="archive-card__day">09.09</span>
+                    <span class="archive-card__year">2026</span>
+                    <span class="archive-card__day">03.23</span>
                   </div>
-                  <span class="archive-card__tag">#J-POP</span>
+                  <span class="archive-card__tag">#AI</span>
                   
-                    <span class="archive-card__tag">#音乐</span>
-                  
-                </div>
-              </div>
-            </a>
-          
-            
-            <a
-              class="archive-card archive-card--with-cover"
-              href="https://mp.weixin.qq.com/s/aN29JhHd2LW2vD8FcnJiCg"
-              aria-label="查看文章：花亦山忏心刻情设计与实现分析"
-              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
-            >
-              
-                <div class="archive-card__cover-wrap">
-                  <div class="archive-card__cover" style="background-image: url('/wimgs/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20240714105510.png')"></div>
-                </div>
-              
-
-              <div class="archive-card__content">
-                <h2 class="archive-card__title">花亦山忏心刻情设计与实现分析</h2>
-                <p class="archive-card__excerpt">
-                  忏心刻情是花亦山10月的新活动，体验完的整体感受是该活动的立意设计很完整，大的框架主题和中心是一致且有深度的，小的细节也包含了一些很流行的社会实事在里面，比较好的做到了传统与时代的结合。
-                </p>
-                <div class="archive-card__meta">
-                  <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2023</span>
-                    <span class="archive-card__day">09.09</span>
-                  </div>
-                  <span class="archive-card__tag">#游戏</span>
-                  
-                    <span class="archive-card__tag">#产品设计</span>
-                  
-                </div>
-              </div>
-            </a>
-          
-            
-            <a
-              class="archive-card archive-card--with-cover"
-              href="https://mp.weixin.qq.com/s/MD9cD4YNOJz5aBKm-tkTmQ"
-              aria-label="查看文章：利用AI辅助做一个简单的对话游戏"
-              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
-            >
-              
-                <div class="archive-card__cover-wrap">
-                  <div class="archive-card__cover" style="background-image: url('/wimgs/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20240714165431.png')"></div>
-                </div>
-              
-
-              <div class="archive-card__content">
-                <h2 class="archive-card__title">利用AI辅助做一个简单的对话游戏</h2>
-                <p class="archive-card__excerpt">
-                  种下一篇新的记录，留给以后慢慢回看。
-                </p>
-                <div class="archive-card__meta">
-                  <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2023</span>
-                    <span class="archive-card__day">09.03</span>
-                  </div>
-                  <span class="archive-card__tag">#cocos</span>
-                  
-                    <span class="archive-card__tag">#AI</span>
-                  
-                </div>
-              </div>
-            </a>
-          
-            
-            <a
-              class="archive-card archive-card--with-cover"
-              href="/posts/life-20230218-wanshousi/"
-              aria-label="查看文章：游记 | 万寿寺+石刻艺术博物馆一日游"
-              
-            >
-              
-                <div class="archive-card__cover-wrap">
-                  <div class="archive-card__cover" style="background-image: url('/timgs/2023wss/_4.png')"></div>
-                </div>
-              
-
-              <div class="archive-card__content">
-                <h2 class="archive-card__title">游记 | 万寿寺+石刻艺术博物馆一日游</h2>
-                <p class="archive-card__excerpt">
-                  在某一个充满阳光的冬日，我出发前往传说中不久前才开设的博物馆——北京艺术博物馆。
-                </p>
-                <div class="archive-card__meta">
-                  <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2023</span>
-                    <span class="archive-card__day">02.18</span>
-                  </div>
-                  <span class="archive-card__tag">#北京印象</span>
-                  
-                    <span class="archive-card__tag">#游记</span>
+                    <span class="archive-card__tag">#前端</span>
                   
                 </div>
               </div>
@@ -250,114 +271,25 @@
             
             <a
               class="archive-card archive-card--no-cover"
-              href="/posts/life-20230122-2022res/"
-              aria-label="查看文章：2022年小结"
-              
+              href="https://mp.weixin.qq.com/s/rKC5ueyhiPT0TTC_xvTAYQ"
+              aria-label="查看文章：当所有人都在“装小龙虾”时，什么才是你真正的支点？"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
             >
               
 
               <div class="archive-card__content">
-                <h2 class="archive-card__title">2022年小结</h2>
+                <h2 class="archive-card__title">当所有人都在“装小龙虾”时，什么才是你真正的支点？</h2>
                 <p class="archive-card__excerpt">
-                  工作后因为很多内容都是在公司系统里写过一次，也就一直没有怎么正经写过年终总结了，年纪越大急性越不好了，趁着还有一些回忆，今年还是来补一个。
+                  借一个流行表达反思自我定位与外部期待，追问在热闹的角色扮演之外，真正能支撑自己的是什么。
                 </p>
                 <div class="archive-card__meta">
                   <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2023</span>
-                    <span class="archive-card__day">01.22</span>
+                    <span class="archive-card__year">2026</span>
+                    <span class="archive-card__day">03.15</span>
                   </div>
                   <span class="archive-card__tag">#碎碎念</span>
                   
-                </div>
-              </div>
-            </a>
-          
-            
-            <a
-              class="archive-card archive-card--with-cover"
-              href="/posts/life-20230108/"
-              aria-label="查看文章：疫情放开后的第一次游玩"
-              
-            >
-              
-                <div class="archive-card__cover-wrap">
-                  <div class="archive-card__cover" style="background-image: url('/timgs/2022cygy/8.png')"></div>
-                </div>
-              
-
-              <div class="archive-card__content">
-                <h2 class="archive-card__title">疫情放开后的第一次游玩</h2>
-                <p class="archive-card__excerpt">
-                  现在是杨康的时代，在经历了几个月恐怖又紧张的阶段，人们的生活终于又逐渐恢复了正常。我作为一个似乎没有症状？又或许还没感染的家伙（好家伙~），也忍不住及时行乐了，毕竟在1个月前那般强制全员复工已经让我做好了“必死”（日语）
-                </p>
-                <div class="archive-card__meta">
-                  <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2023</span>
-                    <span class="archive-card__day">01.08</span>
-                  </div>
-                  <span class="archive-card__tag">#北京印象</span>
-                  
-                    <span class="archive-card__tag">#游记</span>
-                  
-                </div>
-              </div>
-            </a>
-          
-            
-            <a
-              class="archive-card archive-card--with-cover"
-              href="/posts/work-drawhgs-2022/"
-              aria-label="查看文章：2022~2023-花果山同人合集"
-              
-            >
-              
-                <div class="archive-card__cover-wrap">
-                  <div class="archive-card__cover" style="background-image: url('/mcimages/manga/moonyuze.png')"></div>
-                </div>
-              
-
-              <div class="archive-card__content">
-                <h2 class="archive-card__title">2022~2023-花果山同人合集</h2>
-                <p class="archive-card__excerpt">
-                  狗花感谢你教我画画！！因为有花果山的存在，我画画的动力都增加了不少。
-                </p>
-                <div class="archive-card__meta">
-                  <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2022</span>
-                    <span class="archive-card__day">12.21</span>
-                  </div>
-                  <span class="archive-card__tag">#画画</span>
-                  
-                </div>
-              </div>
-            </a>
-          
-            
-            <a
-              class="archive-card archive-card--with-cover"
-              href="/posts/life-20221023-beihai/"
-              aria-label="查看文章：北海环行"
-              
-            >
-              
-                <div class="archive-card__cover-wrap">
-                  <div class="archive-card__cover" style="background-image: url('/timgs/2022beihai/1.png')"></div>
-                </div>
-              
-
-              <div class="archive-card__content">
-                <h2 class="archive-card__title">北海环行</h2>
-                <p class="archive-card__excerpt">
-                  因为疫情的缘故，国庆回京后很久都没有出门过了，这个时间点好不容易缓和了些，所以我也打算着去一趟一直都没有去过的北海公园。
-                </p>
-                <div class="archive-card__meta">
-                  <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2022</span>
-                    <span class="archive-card__day">10.23</span>
-                  </div>
-                  <span class="archive-card__tag">#北京印象</span>
-                  
-                    <span class="archive-card__tag">#游记</span>
+                    <span class="archive-card__tag">#成长</span>
                   
                 </div>
               </div>
@@ -366,23 +298,25 @@
             
             <a
               class="archive-card archive-card--no-cover"
-              href="/posts/tech-20220822-unity/"
-              aria-label="查看文章：Unity跨平台原理"
-              
+              href="https://mp.weixin.qq.com/s/iBANkxprbhG8oB3WrOJY3g"
+              aria-label="查看文章：告别“玄学”指令：六个有科学依据的Prompt技巧"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
             >
               
 
               <div class="archive-card__content">
-                <h2 class="archive-card__title">Unity跨平台原理</h2>
+                <h2 class="archive-card__title">告别“玄学”指令：六个有科学依据的Prompt技巧</h2>
                 <p class="archive-card__excerpt">
-                  众所周知，Unity可以产出兼容各个平台的游戏软件，这里咱虽然还是一个Unity入门者，可以先从底层来了解一下Unity为何能做到这种能力，这背后其实还挺有意思，因为它可能会涵盖很多计算机的基础知识。本文的一些信息主要是
+                  整理六个更有依据的 Prompt 方法，尝试把“凭感觉调指令”变成更可解释、可复用的 AI 协作技巧。
                 </p>
                 <div class="archive-card__meta">
                   <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2022</span>
-                    <span class="archive-card__day">08.22</span>
+                    <span class="archive-card__year">2026</span>
+                    <span class="archive-card__day">03.08</span>
                   </div>
-                  <span class="archive-card__tag">#Unity</span>
+                  <span class="archive-card__tag">#AI</span>
+                  
+                    <span class="archive-card__tag">#学习</span>
                   
                 </div>
               </div>
@@ -391,23 +325,187 @@
             
             <a
               class="archive-card archive-card--no-cover"
-              href="/posts/tech-20230422-ws/"
-              aria-label="查看文章：WebSocket那些事"
-              
+              href="https://mp.weixin.qq.com/s/yx2gY1uJMA4_63c0jDXKpg"
+              aria-label="查看文章：AI写完了一半的代码，我们却感觉更忙了"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
             >
               
 
               <div class="archive-card__content">
-                <h2 class="archive-card__title">WebSocket那些事</h2>
+                <h2 class="archive-card__title">AI写完了一半的代码，我们却感觉更忙了</h2>
                 <p class="archive-card__excerpt">
-                  我对WebSocket的了解与阐述。 它出现の背景 我们知道HTTP 1.0一个请求建立，就需要经历一次TCP连接，这样会导致三次握手和四次挥手的重复成本较多。 所以在HTTP 1.1的时候出现了keep-alive这个
+                  讨论 AI 帮忙写代码之后，开发者为何仍然感到更忙：需求理解、审查、整合和责任并没有消失。
                 </p>
                 <div class="archive-card__meta">
                   <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2022</span>
-                    <span class="archive-card__day">08.22</span>
+                    <span class="archive-card__year">2026</span>
+                    <span class="archive-card__day">03.01</span>
                   </div>
-                  <span class="archive-card__tag">#计算机网络</span>
+                  <span class="archive-card__tag">#AI</span>
+                  
+                    <span class="archive-card__tag">#编程</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="https://mp.weixin.qq.com/s/gGHjcVrJdxhtjfVc6809hA"
+              aria-label="查看文章：从标准答案到多解世界：Software 2.0让我重新学会了“学习”"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">从标准答案到多解世界：Software 2.0让我重新学会了“学习”</h2>
+                <p class="archive-card__excerpt">
+                  从 Software 2.0 带来的范式变化出发，反思学习不再只是寻找标准答案，而是理解问题空间与多种解法。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2026</span>
+                    <span class="archive-card__day">02.19</span>
+                  </div>
+                  <span class="archive-card__tag">#AI</span>
+                  
+                    <span class="archive-card__tag">#学习</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="https://mp.weixin.qq.com/s/XdGJihdAaH54r6G-JfPTCQ"
+              aria-label="查看文章：和年糕一起啃技术：AI 总是“忘掉设定”怎么办？用写小说的场景带你秒懂 Skills"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">和年糕一起啃技术：AI 总是“忘掉设定”怎么办？用写小说的场景带你秒懂 Skills</h2>
+                <p class="archive-card__excerpt">
+                  用写小说的场景解释 Skills 的作用，帮助理解如何让 AI 更稳定地记住规则、背景和任务设定。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2026</span>
+                    <span class="archive-card__day">02.01</span>
+                  </div>
+                  <span class="archive-card__tag">#AI</span>
+                  
+                    <span class="archive-card__tag">#Skill</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="https://mp.weixin.qq.com/s/rbgC6kxHOnzc1FHvylCHNg"
+              aria-label="查看文章：规律的深夜告警：接口超时异常背后的故事"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">规律的深夜告警：接口超时异常背后的故事</h2>
+                <p class="archive-card__excerpt">
+                  围绕一次规律性深夜告警展开排查记录，复盘接口超时背后的系统行为、定位过程和工程经验。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2026</span>
+                    <span class="archive-card__day">01.17</span>
+                  </div>
+                  <span class="archive-card__tag">#后端</span>
+                  
+                    <span class="archive-card__tag">#故障排查</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="https://mp.weixin.qq.com/s/PXjsAGibzxKrbTsq61Bqgg"
+              aria-label="查看文章：3小时做出2000人参与的CHIIKAWA角色测试网页，我的完整实现路径"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">3小时做出2000人参与的CHIIKAWA角色测试网页，我的完整实现路径</h2>
+                <p class="archive-card__excerpt">
+                  复盘一个角色测试网页从想法到上线传播的完整路径，包含开发实现、页面设计和参与数据带来的反馈。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2026</span>
+                    <span class="archive-card__day">01.10</span>
+                  </div>
+                  <span class="archive-card__tag">#编程项目</span>
+                  
+                    <span class="archive-card__tag">#前端</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="https://mp.weixin.qq.com/s/g8_r-X7_mz1jH-RdSiCa2A"
+              aria-label="查看文章：当技术实现变得“廉价”，我们的价值究竟在哪里？"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">当技术实现变得“廉价”，我们的价值究竟在哪里？</h2>
+                <p class="archive-card__excerpt">
+                  在 AI 降低实现门槛之后，重新思考开发者的价值：问题判断、审美、沟通、系统设计和责任承担。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2026</span>
+                    <span class="archive-card__day">01.02</span>
+                  </div>
+                  <span class="archive-card__tag">#AI</span>
+                  
+                    <span class="archive-card__tag">#成长</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="https://mp.weixin.qq.com/s/k9UvHZeMENpYGD51Zgi_vQ"
+              aria-label="查看文章：代码小白也能做！用Gemini3做出偶像级炫酷网页"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">代码小白也能做！用Gemini3做出偶像级炫酷网页</h2>
+                <p class="archive-card__excerpt">
+                  记录用 Gemini3 辅助制作炫酷网页的过程，展示 AI 编程如何降低前端创作门槛并放大视觉表达。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2025</span>
+                    <span class="archive-card__day">12.28</span>
+                  </div>
+                  <span class="archive-card__tag">#AI</span>
+                  
+                    <span class="archive-card__tag">#前端</span>
                   
                 </div>
               </div>
@@ -424,7 +522,7 @@
               
 
               <div class="archive-nav__status">
-                第 2 页，共 6 页
+                第 2 页，共 9 页
               </div>
 
               
@@ -443,13 +541,16 @@
     </svg>
   </section>
 
-  <section class="post-about" aria-label="关于年糕">
+  
+<section class="post-about" aria-label="关于年糕">
   <div class="post-about__figure">
     <div class="post-about__figure-card">
       <img
         class="post-about__image"
-        src="/images/mochi_real.png"
+        src="/images/mochi_real.webp"
         alt="年糕的个人形象照"
+        loading="lazy"
+        decoding="async"
       />
     </div>
   </div>
@@ -460,11 +561,26 @@
       <h2 class="post-about__name">年糕</h2>
       <div class="post-about__channels" aria-label="社交平台">
         
-          <a href="/#about">小红书</a>
+          
+          
+            <a
+              href="https://www.xiaohongshu.com/user/profile/659266b2000000002001f48e"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >小红书</a>
+          
         
-          <a href="/#about">B站</a>
+          
+          
+            <a
+              href="https://space.bilibili.com/3494369971669945"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >B站</a>
+          
         
-          <a href="/#about">微信公众号</a>
+          
+          
+            <button type="button" data-wechat-modal-trigger>微信公众号</button>
+          
         
       </div>
     </div>
@@ -474,6 +590,23 @@
 
 </main>
 
+    <dialog class="wechat-modal" aria-labelledby="wechat-modal-title">
+      <button class="wechat-modal__close" type="button" aria-label="关闭微信公众号二维码弹窗" data-wechat-modal-close>
+        ×
+      </button>
+      <div class="wechat-modal__content">
+        <p class="wechat-modal__eyebrow">WECHAT OFFICIAL ACCOUNT</p>
+        <h2 id="wechat-modal-title" class="wechat-modal__title">微信公众号</h2>
+        <img
+          class="wechat-modal__qrcode"
+          src="/images/wx_qrcode.webp"
+          alt="微信公众号二维码"
+          loading="lazy"
+          decoding="async"
+        />
+        <p class="wechat-modal__hint">扫码或搜索“年糕的编程花园”关注年糕的公众号</p>
+      </div>
+    </dialog>
     <footer class="site-footer">
   <div class="site-footer__inner">
     <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
@@ -481,10 +614,10 @@
   </div>
 </footer>
 
-    <script src="/vendor/gsap/gsap.min.js"></script>
-<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+    <script defer src="/vendor/gsap/gsap.min.js"></script>
+<script defer src="/vendor/gsap/ScrollTrigger.min.js"></script>
 
-<script src="/js/main.js"></script>
+<script defer src="/js/main.js"></script>
 
   </body>
 </html>

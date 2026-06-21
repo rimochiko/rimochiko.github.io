@@ -14,7 +14,6 @@
   href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
   rel="stylesheet"
 />
-<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
 <link rel="stylesheet" href="/css/style.css" />
 
 
@@ -24,17 +23,128 @@
       class="site-loading"
       aria-live="polite"
       aria-label="页面加载中"
-      data-sprite-src="/images/tech/girl_read_sprite.png"
-      data-frame-count="2"
     >
       <div class="site-loading__inner">
-        <div class="site-loading__girl" aria-hidden="true"></div>
+        <img
+          class="site-loading__symbol"
+          src="/images/logo_small.webp"
+          alt=""
+          aria-hidden="true"
+          decoding="async"
+          fetchpriority="high"
+        />
         <p class="site-loading__text">LOADING...</p>
         <div class="site-loading__progress" aria-hidden="true">
           <span class="site-loading__progress-bar"></span>
         </div>
+        <p class="site-loading__percent" aria-hidden="true">0%</p>
       </div>
     </div>
+    <script>
+      (() => {
+        const loading = document.querySelector(".site-loading");
+        const loadingProgressBar = document.querySelector(".site-loading__progress-bar");
+        const loadingPercent = document.querySelector(".site-loading__percent");
+        const MAX_LOADING_MS = 9000;
+        const MIN_LOADING_MS = 450;
+        const TRANSITION_MS = 540;
+
+        if (!loading || !loadingProgressBar) return;
+
+        window.__mochiLoadingStarted = true;
+        document.body.classList.add("is-loading");
+
+        const startTime = Date.now();
+        let progressTimer = null;
+        let forceHideTimer = null;
+        let minimumDelayTimer = null;
+        let finishTimer = null;
+        let hidden = false;
+        let pageReady = document.readyState === "complete";
+        let currentProgress = 0;
+        let minimumDurationReached = false;
+
+        const setProgress = (value) => {
+          currentProgress = Math.max(currentProgress, Math.min(value, 100));
+          const progressValue = `${currentProgress}%`;
+          loading.style.setProperty("--loading-progress", progressValue);
+          loadingProgressBar.style.width = progressValue;
+
+          if (loadingPercent) {
+            loadingPercent.textContent = `${Math.floor(currentProgress)}%`;
+          }
+        };
+
+        const canHideNow = () => pageReady && minimumDurationReached;
+
+        const hideLoading = () => {
+          if (hidden) return;
+          hidden = true;
+
+          if (progressTimer) window.clearInterval(progressTimer);
+          if (forceHideTimer) window.clearTimeout(forceHideTimer);
+          if (minimumDelayTimer) window.clearTimeout(minimumDelayTimer);
+          if (finishTimer) window.clearTimeout(finishTimer);
+
+          setProgress(100);
+          loading.classList.add("is-hidden");
+          document.body.classList.remove("is-loading");
+
+          window.setTimeout(() => {
+            loading.remove();
+          }, TRANSITION_MS);
+        };
+
+        const scheduleHide = () => {
+          if (!canHideNow() || finishTimer || hidden) return;
+
+          setProgress(Math.max(currentProgress, 96));
+          finishTimer = window.setTimeout(hideLoading, 260);
+        };
+
+        const requestHide = () => {
+          pageReady = true;
+          scheduleHide();
+        };
+
+        setProgress(3);
+
+        progressTimer = window.setInterval(() => {
+          const elapsed = Date.now() - startTime;
+          const warmupRatio = Math.min(elapsed / 3600, 1);
+
+          if (pageReady) {
+            setProgress(currentProgress + Math.max((99 - currentProgress) * 0.18, 1.1));
+            return;
+          }
+
+          if (currentProgress < 90) {
+            const targetProgress = 3 + (1 - Math.pow(1 - warmupRatio, 1.35)) * 87;
+            setProgress(targetProgress);
+            return;
+          }
+
+          setProgress(currentProgress + Math.max((94 - currentProgress) * 0.035, 0.04));
+        }, 140);
+
+        minimumDelayTimer = window.setTimeout(() => {
+          minimumDurationReached = true;
+          scheduleHide();
+        }, MIN_LOADING_MS);
+
+        forceHideTimer = window.setTimeout(() => {
+          pageReady = true;
+          minimumDurationReached = true;
+          hideLoading();
+        }, MAX_LOADING_MS);
+
+        if (document.readyState === "complete") {
+          requestHide();
+        } else {
+          window.addEventListener("load", requestHide, { once: true });
+        }
+      })();
+    </script>
     <svg class="visual-defs" aria-hidden="true" width="0" height="0">
       <defs>
         <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
@@ -61,10 +171,15 @@
     class="site-logo is-small"
     href="/"
     aria-label="返回年糕的编程花园首页"
-    data-default-logo="/images/logo.png"
-    data-small-logo="/images/logo_small.png"
+    data-default-logo="/images/logo.webp"
+    data-small-logo="/images/logo_small.webp"
   >
-    <img src="/images/logo_small.png" alt="年糕的编程花园" />
+    <img
+      src="/images/logo_small.webp"
+      alt="年糕的编程花园"
+      decoding="async"
+      fetchpriority="high"
+    />
   </a>
 
   <button
@@ -105,15 +220,18 @@
       <div class="post-hero__content archive-hero__content">
         <span class="post-hero__eyebrow">ARCHIVE</span>
         <span class="post-hero__date">
-          56 篇文章
+          88 篇文章
         </span>
         <h1 id="post-title" class="post-title">花园归档</h1>
         <div class="post-meta" aria-label="归档信息">
           <span>按时间浏览全部文章</span>
           
-            <span>第 1 / 4 页</span>
+            <span>第 1 / 6 页</span>
           
         </div>
+      </div>
+      <div class="archive-hero__decor" aria-hidden="true">
+        <span class="archive-hero__reader"></span>
       </div>
     </div>
   </section>
@@ -125,239 +243,26 @@
           
             
             <a
-              class="archive-card archive-card--with-cover"
-              href="https://mp.weixin.qq.com/s/n5YiJjY7XO90tZ1s8m5S9g"
-              aria-label="查看文章：前端小小报-多码合一问题排查"
+              class="archive-card archive-card--no-cover"
+              href="https://mp.weixin.qq.com/s/TDDU1kgyg8IgYjHVqI9jwg"
+              aria-label="查看文章：大厂观察日记：投入了大量资源，却还是做不好 AI 产品"
               target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
             >
               
-                <div class="archive-card__cover-wrap">
-                  <div class="archive-card__cover" style="background-image: url('https://www.mochiko.cn/wimgs/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20240727161132.jpg')"></div>
-                </div>
-              
 
               <div class="archive-card__content">
-                <h2 class="archive-card__title">前端小小报-多码合一问题排查</h2>
+                <h2 class="archive-card__title">大厂观察日记：投入了大量资源，却还是做不好 AI 产品</h2>
                 <p class="archive-card__excerpt">
-                  种下一篇新的记录，留给以后慢慢回看。
+                  围绕大厂 AI 产品落地展开观察，讨论资源投入、组织协作、产品判断与真实用户体验之间的落差。
                 </p>
                 <div class="archive-card__meta">
                   <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2024</span>
-                    <span class="archive-card__day">07.21</span>
+                    <span class="archive-card__year">2026</span>
+                    <span class="archive-card__day">06.21</span>
                   </div>
-                  <span class="archive-card__tag">#JavaScript</span>
+                  <span class="archive-card__tag">#AI</span>
                   
-                </div>
-              </div>
-            </a>
-          
-            
-            <a
-              class="archive-card archive-card--with-cover"
-              href="https://mp.weixin.qq.com/s/pJ6eROoIQq8ZAmZVqYB_kw"
-              aria-label="查看文章：240421 - 前端吃瓜小报"
-              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
-            >
-              
-                <div class="archive-card__cover-wrap">
-                  <div class="archive-card__cover" style="background-image: url('/wimgs/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20240714162211.jpg')"></div>
-                </div>
-              
-
-              <div class="archive-card__content">
-                <h2 class="archive-card__title">240421 - 前端吃瓜小报</h2>
-                <p class="archive-card__excerpt">
-                  种下一篇新的记录，留给以后慢慢回看。
-                </p>
-                <div class="archive-card__meta">
-                  <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2024</span>
-                    <span class="archive-card__day">04.21</span>
-                  </div>
-                  <span class="archive-card__tag">#JavaScript</span>
-                  
-                </div>
-              </div>
-            </a>
-          
-            
-            <a
-              class="archive-card archive-card--with-cover"
-              href="https://mp.weixin.qq.com/s/S4ftTIuyz53DNAXB2YK04w"
-              aria-label="查看文章：240414 - 前端吃瓜小报"
-              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
-            >
-              
-                <div class="archive-card__cover-wrap">
-                  <div class="archive-card__cover" style="background-image: url('/wimgs/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20240714162223.jpg')"></div>
-                </div>
-              
-
-              <div class="archive-card__content">
-                <h2 class="archive-card__title">240414 - 前端吃瓜小报</h2>
-                <p class="archive-card__excerpt">
-                  种下一篇新的记录，留给以后慢慢回看。
-                </p>
-                <div class="archive-card__meta">
-                  <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2024</span>
-                    <span class="archive-card__day">04.14</span>
-                  </div>
-                  <span class="archive-card__tag">#JavaScript</span>
-                  
-                </div>
-              </div>
-            </a>
-          
-            
-            <a
-              class="archive-card archive-card--with-cover"
-              href="https://mp.weixin.qq.com/s/lKYcQ6aOiVnuzl6Vp3EQXg"
-              aria-label="查看文章：艺术编程学习 Day 14 春节烟花"
-              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
-            >
-              
-                <div class="archive-card__cover-wrap">
-                  <div class="archive-card__cover" style="background-image: url('/wimgs/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20240714135543.png')"></div>
-                </div>
-              
-
-              <div class="archive-card__content">
-                <h2 class="archive-card__title">艺术编程学习 Day 14 春节烟花</h2>
-                <p class="archive-card__excerpt">
-                  种下一篇新的记录，留给以后慢慢回看。
-                </p>
-                <div class="archive-card__meta">
-                  <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2024</span>
-                    <span class="archive-card__day">02.11</span>
-                  </div>
-                  <span class="archive-card__tag">#p5.js</span>
-                  
-                    <span class="archive-card__tag">#艺术编程</span>
-                  
-                </div>
-              </div>
-            </a>
-          
-            
-            <a
-              class="archive-card archive-card--with-cover"
-              href="https://mp.weixin.qq.com/s/PMQqNSp-CtZ64IxxH8mvsA"
-              aria-label="查看文章：Rhizomatiks 和他们的编程艺术"
-              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
-            >
-              
-                <div class="archive-card__cover-wrap">
-                  <div class="archive-card__cover" style="background-image: url('/wimgs/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20240714165023.png')"></div>
-                </div>
-              
-
-              <div class="archive-card__content">
-                <h2 class="archive-card__title">Rhizomatiks 和他们的编程艺术</h2>
-                <p class="archive-card__excerpt">
-                  种下一篇新的记录，留给以后慢慢回看。
-                </p>
-                <div class="archive-card__meta">
-                  <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2023</span>
-                    <span class="archive-card__day">12.23</span>
-                  </div>
-                  <span class="archive-card__tag">#艺术编程</span>
-                  
-                </div>
-              </div>
-            </a>
-          
-            
-            <a
-              class="archive-card archive-card--with-cover"
-              href="https://mp.weixin.qq.com/s/5oR91jS2Cs3r92-2gVv3Fg"
-              aria-label="查看文章：复刻狗花系列之《猜价游戏》"
-              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
-            >
-              
-                <div class="archive-card__cover-wrap">
-                  <div class="archive-card__cover" style="background-image: url('/wimgs/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20240714134835.png')"></div>
-                </div>
-              
-
-              <div class="archive-card__content">
-                <h2 class="archive-card__title">复刻狗花系列之《猜价游戏》</h2>
-                <p class="archive-card__excerpt">
-                  种下一篇新的记录，留给以后慢慢回看。
-                </p>
-                <div class="archive-card__meta">
-                  <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2023</span>
-                    <span class="archive-card__day">11.19</span>
-                  </div>
-                  <span class="archive-card__tag">#JavaScript</span>
-                  
-                    <span class="archive-card__tag">#cocos</span>
-                  
-                </div>
-              </div>
-            </a>
-          
-            
-            <a
-              class="archive-card archive-card--with-cover"
-              href="https://mp.weixin.qq.com/s/7xyVwTVXqAVyYQY3na01_g"
-              aria-label="查看文章：前端跨端开发入门-揭秘跨端的奥秘"
-              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
-            >
-              
-                <div class="archive-card__cover-wrap">
-                  <div class="archive-card__cover" style="background-image: url('/wimgs/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20240714135240.png')"></div>
-                </div>
-              
-
-              <div class="archive-card__content">
-                <h2 class="archive-card__title">前端跨端开发入门-揭秘跨端的奥秘</h2>
-                <p class="archive-card__excerpt">
-                  种下一篇新的记录，留给以后慢慢回看。
-                </p>
-                <div class="archive-card__meta">
-                  <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2023</span>
-                    <span class="archive-card__day">11.13</span>
-                  </div>
-                  <span class="archive-card__tag">#JavaScript</span>
-                  
-                    <span class="archive-card__tag">#React Native</span>
-                  
-                </div>
-              </div>
-            </a>
-          
-            
-            <a
-              class="archive-card archive-card--with-cover"
-              href="https://mp.weixin.qq.com/s/MD9cD4YNOJz5aBKm-tkTmQ"
-              aria-label="查看文章：利用AI辅助做一个简单的对话游戏"
-              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
-            >
-              
-                <div class="archive-card__cover-wrap">
-                  <div class="archive-card__cover" style="background-image: url('/wimgs/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20240714165431.png')"></div>
-                </div>
-              
-
-              <div class="archive-card__content">
-                <h2 class="archive-card__title">利用AI辅助做一个简单的对话游戏</h2>
-                <p class="archive-card__excerpt">
-                  种下一篇新的记录，留给以后慢慢回看。
-                </p>
-                <div class="archive-card__meta">
-                  <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2023</span>
-                    <span class="archive-card__day">09.03</span>
-                  </div>
-                  <span class="archive-card__tag">#cocos</span>
-                  
-                    <span class="archive-card__tag">#AI</span>
+                    <span class="archive-card__tag">#组织观察</span>
                   
                 </div>
               </div>
@@ -366,23 +271,25 @@
             
             <a
               class="archive-card archive-card--no-cover"
-              href="/posts/tech-20220822-unity/"
-              aria-label="查看文章：Unity跨平台原理"
-              
+              href="https://mp.weixin.qq.com/s/m4qkRK37HPyBEcxHmohHHA"
+              aria-label="查看文章：AI 也会有 MBTI 吗？"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
             >
               
 
               <div class="archive-card__content">
-                <h2 class="archive-card__title">Unity跨平台原理</h2>
+                <h2 class="archive-card__title">AI 也会有 MBTI 吗？</h2>
                 <p class="archive-card__excerpt">
-                  众所周知，Unity可以产出兼容各个平台的游戏软件，这里咱虽然还是一个Unity入门者，可以先从底层来了解一下Unity为何能做到这种能力，这背后其实还挺有意思，因为它可能会涵盖很多计算机的基础知识。本文的一些信息主要是
+                  从 MBTI 这个轻松入口切入，观察不同 AI 模型在表达、推理、陪伴感与任务偏好上的人格化差异。
                 </p>
                 <div class="archive-card__meta">
                   <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2022</span>
-                    <span class="archive-card__day">08.22</span>
+                    <span class="archive-card__year">2026</span>
+                    <span class="archive-card__day">05.29</span>
                   </div>
-                  <span class="archive-card__tag">#Unity</span>
+                  <span class="archive-card__tag">#AI</span>
+                  
+                    <span class="archive-card__tag">#Prompt</span>
                   
                 </div>
               </div>
@@ -391,23 +298,214 @@
             
             <a
               class="archive-card archive-card--no-cover"
-              href="/posts/tech-20230422-ws/"
-              aria-label="查看文章：WebSocket那些事"
-              
+              href="https://mp.weixin.qq.com/s/zU4sNv_bFJuFH7qGjhdxVw"
+              aria-label="查看文章：最近vibe coding的一些小玩意"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
             >
               
 
               <div class="archive-card__content">
-                <h2 class="archive-card__title">WebSocket那些事</h2>
+                <h2 class="archive-card__title">最近vibe coding的一些小玩意</h2>
                 <p class="archive-card__excerpt">
-                  我对WebSocket的了解与阐述。 它出现の背景 我们知道HTTP 1.0一个请求建立，就需要经历一次TCP连接，这样会导致三次握手和四次挥手的重复成本较多。 所以在HTTP 1.1的时候出现了keep-alive这个
+                  记录近期用 vibe coding 做出的小工具和实验，梳理 AI 辅助开发带来的速度、灵感与工程取舍。
                 </p>
                 <div class="archive-card__meta">
                   <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2022</span>
-                    <span class="archive-card__day">08.22</span>
+                    <span class="archive-card__year">2026</span>
+                    <span class="archive-card__day">05.10</span>
                   </div>
-                  <span class="archive-card__tag">#计算机网络</span>
+                  <span class="archive-card__tag">#AI</span>
+                  
+                    <span class="archive-card__tag">#编程项目</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="https://mp.weixin.qq.com/s/QbRI0y4WU8HASnX4EsLjfw"
+              aria-label="查看文章：复杂前端重构中的 AI 协作实践与工程反思"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">复杂前端重构中的 AI 协作实践与工程反思</h2>
+                <p class="archive-card__excerpt">
+                  复盘复杂前端重构中如何与 AI 协作，关注上下文拆解、代码边界、验证方式以及工程判断的保留。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2026</span>
+                    <span class="archive-card__day">04.20</span>
+                  </div>
+                  <span class="archive-card__tag">#AI</span>
+                  
+                    <span class="archive-card__tag">#前端</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="https://mp.weixin.qq.com/s/7n1mzf75Mce4gUZvEtvvGw"
+              aria-label="查看文章：研究了 4 个热门设计 Skill，它们如何让 AI 写出更好看的页面？"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">研究了 4 个热门设计 Skill，它们如何让 AI 写出更好看的页面？</h2>
+                <p class="archive-card__excerpt">
+                  分析多个设计 Skill 的提示策略和审美约束，观察它们如何改善 AI 生成页面的结构、风格和完成度。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2026</span>
+                    <span class="archive-card__day">04.13</span>
+                  </div>
+                  <span class="archive-card__tag">#AI</span>
+                  
+                    <span class="archive-card__tag">#设计</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="https://mp.weixin.qq.com/s/zVwUdv4BzLevkdPiM2qf3Q"
+              aria-label="查看文章：一口气让 AI 一次写出 9 种网页风格"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">一口气让 AI 一次写出 9 种网页风格</h2>
+                <p class="archive-card__excerpt">
+                  记录一次让 AI 批量生成多种网页风格的实验，比较不同视觉方向下的提示、实现和设计稳定性。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2026</span>
+                    <span class="archive-card__day">03.23</span>
+                  </div>
+                  <span class="archive-card__tag">#AI</span>
+                  
+                    <span class="archive-card__tag">#前端</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="https://mp.weixin.qq.com/s/iBANkxprbhG8oB3WrOJY3g"
+              aria-label="查看文章：告别“玄学”指令：六个有科学依据的Prompt技巧"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">告别“玄学”指令：六个有科学依据的Prompt技巧</h2>
+                <p class="archive-card__excerpt">
+                  整理六个更有依据的 Prompt 方法，尝试把“凭感觉调指令”变成更可解释、可复用的 AI 协作技巧。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2026</span>
+                    <span class="archive-card__day">03.08</span>
+                  </div>
+                  <span class="archive-card__tag">#AI</span>
+                  
+                    <span class="archive-card__tag">#学习</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="https://mp.weixin.qq.com/s/yx2gY1uJMA4_63c0jDXKpg"
+              aria-label="查看文章：AI写完了一半的代码，我们却感觉更忙了"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">AI写完了一半的代码，我们却感觉更忙了</h2>
+                <p class="archive-card__excerpt">
+                  讨论 AI 帮忙写代码之后，开发者为何仍然感到更忙：需求理解、审查、整合和责任并没有消失。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2026</span>
+                    <span class="archive-card__day">03.01</span>
+                  </div>
+                  <span class="archive-card__tag">#AI</span>
+                  
+                    <span class="archive-card__tag">#编程</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="https://mp.weixin.qq.com/s/XdGJihdAaH54r6G-JfPTCQ"
+              aria-label="查看文章：和年糕一起啃技术：AI 总是“忘掉设定”怎么办？用写小说的场景带你秒懂 Skills"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">和年糕一起啃技术：AI 总是“忘掉设定”怎么办？用写小说的场景带你秒懂 Skills</h2>
+                <p class="archive-card__excerpt">
+                  用写小说的场景解释 Skills 的作用，帮助理解如何让 AI 更稳定地记住规则、背景和任务设定。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2026</span>
+                    <span class="archive-card__day">02.01</span>
+                  </div>
+                  <span class="archive-card__tag">#AI</span>
+                  
+                    <span class="archive-card__tag">#Skill</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="https://mp.weixin.qq.com/s/rbgC6kxHOnzc1FHvylCHNg"
+              aria-label="查看文章：规律的深夜告警：接口超时异常背后的故事"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">规律的深夜告警：接口超时异常背后的故事</h2>
+                <p class="archive-card__excerpt">
+                  围绕一次规律性深夜告警展开排查记录，复盘接口超时背后的系统行为、定位过程和工程经验。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2026</span>
+                    <span class="archive-card__day">01.17</span>
+                  </div>
+                  <span class="archive-card__tag">#后端</span>
+                  
+                    <span class="archive-card__tag">#故障排查</span>
                   
                 </div>
               </div>
@@ -424,7 +522,7 @@
               
 
               <div class="archive-nav__status">
-                第 1 页，共 4 页
+                第 1 页，共 6 页
               </div>
 
               
@@ -443,13 +541,16 @@
     </svg>
   </section>
 
-  <section class="post-about" aria-label="关于年糕">
+  
+<section class="post-about" aria-label="关于年糕">
   <div class="post-about__figure">
     <div class="post-about__figure-card">
       <img
         class="post-about__image"
-        src="/images/mochi_real.png"
+        src="/images/mochi_real.webp"
         alt="年糕的个人形象照"
+        loading="lazy"
+        decoding="async"
       />
     </div>
   </div>
@@ -460,11 +561,26 @@
       <h2 class="post-about__name">年糕</h2>
       <div class="post-about__channels" aria-label="社交平台">
         
-          <a href="/#about">小红书</a>
+          
+          
+            <a
+              href="https://www.xiaohongshu.com/user/profile/659266b2000000002001f48e"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >小红书</a>
+          
         
-          <a href="/#about">B站</a>
+          
+          
+            <a
+              href="https://space.bilibili.com/3494369971669945"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >B站</a>
+          
         
-          <a href="/#about">微信公众号</a>
+          
+          
+            <button type="button" data-wechat-modal-trigger>微信公众号</button>
+          
         
       </div>
     </div>
@@ -474,6 +590,23 @@
 
 </main>
 
+    <dialog class="wechat-modal" aria-labelledby="wechat-modal-title">
+      <button class="wechat-modal__close" type="button" aria-label="关闭微信公众号二维码弹窗" data-wechat-modal-close>
+        ×
+      </button>
+      <div class="wechat-modal__content">
+        <p class="wechat-modal__eyebrow">WECHAT OFFICIAL ACCOUNT</p>
+        <h2 id="wechat-modal-title" class="wechat-modal__title">微信公众号</h2>
+        <img
+          class="wechat-modal__qrcode"
+          src="/images/wx_qrcode.webp"
+          alt="微信公众号二维码"
+          loading="lazy"
+          decoding="async"
+        />
+        <p class="wechat-modal__hint">扫码或搜索“年糕的编程花园”关注年糕的公众号</p>
+      </div>
+    </dialog>
     <footer class="site-footer">
   <div class="site-footer__inner">
     <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
@@ -481,10 +614,10 @@
   </div>
 </footer>
 
-    <script src="/vendor/gsap/gsap.min.js"></script>
-<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+    <script defer src="/vendor/gsap/gsap.min.js"></script>
+<script defer src="/vendor/gsap/ScrollTrigger.min.js"></script>
 
-<script src="/js/main.js"></script>
+<script defer src="/js/main.js"></script>
 
   </body>
 </html>

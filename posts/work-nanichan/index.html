@@ -1,79 +1,148 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   <head>
-    <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta
-  name="description"
-  content="&lt;p&gt;大三下学期的实训项目，选题是一个在线日语单词的记忆网站，想着出来可以帮自己坚持学日语呢。因为只有三周时间，所以这次我觉得自己能完成核心的记忆、测试，以及查词的功能就足够了。另外自己选择主要技术是vue.js + koa2+mysql+redis。因为还没有学过koa和redis，也所以这次正好可以练练，反正让我用JAVA写后台我是不愿意啦&amp;gt;_&amp;lt;。&lt;/p&gt;"
-/>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="&lt;p&gt;大三下学期的实训项目，选题是一个在线日语单词的记忆网站，想着出来可以帮自己坚持学日语呢。因为只有三周时间，所以这次我觉得自己能完成核心的记忆、测试，以及查词的功能就足够了。另外自己选择主要技术是vue.js + koa2+mysql+redis。因为还没有学过koa和redis，也所以这次正好可以练练，反正让我用JAVA写后台我是不愿意啦&amp;gt;_&amp;lt;。&lt;/p&gt;">
 <title>2018-纳尼酱 | 年糕的编程花园</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link
-  href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
-  rel="stylesheet"
-/>
-<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
-<link rel="stylesheet" href="/css/style.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
 
 
   <meta name="generator" content="Hexo 7.3.0"></head>
   <body class="post-page">
-    <div
-      class="site-loading"
-      aria-live="polite"
-      aria-label="页面加载中"
-      data-sprite-src="/images/tech/girl_read_sprite.png"
-      data-frame-count="2"
-    >
+    <div class="site-loading" aria-live="polite" aria-label="页面加载中">
       <div class="site-loading__inner">
-        <div class="site-loading__girl" aria-hidden="true"></div>
+        <img class="site-loading__symbol" src="/images/logo_small.webp" alt aria-hidden="true" decoding="async" fetchpriority="high">
         <p class="site-loading__text">LOADING...</p>
         <div class="site-loading__progress" aria-hidden="true">
           <span class="site-loading__progress-bar"></span>
         </div>
+        <p class="site-loading__percent" aria-hidden="true">0%</p>
       </div>
     </div>
+    <script>
+      (() => {
+        const loading = document.querySelector(".site-loading");
+        const loadingProgressBar = document.querySelector(".site-loading__progress-bar");
+        const loadingPercent = document.querySelector(".site-loading__percent");
+        const MAX_LOADING_MS = 9000;
+        const MIN_LOADING_MS = 450;
+        const TRANSITION_MS = 540;
+
+        if (!loading || !loadingProgressBar) return;
+
+        window.__mochiLoadingStarted = true;
+        document.body.classList.add("is-loading");
+
+        const startTime = Date.now();
+        let progressTimer = null;
+        let forceHideTimer = null;
+        let minimumDelayTimer = null;
+        let finishTimer = null;
+        let hidden = false;
+        let pageReady = document.readyState === "complete";
+        let currentProgress = 0;
+        let minimumDurationReached = false;
+
+        const setProgress = (value) => {
+          currentProgress = Math.max(currentProgress, Math.min(value, 100));
+          const progressValue = `${currentProgress}%`;
+          loading.style.setProperty("--loading-progress", progressValue);
+          loadingProgressBar.style.width = progressValue;
+
+          if (loadingPercent) {
+            loadingPercent.textContent = `${Math.floor(currentProgress)}%`;
+          }
+        };
+
+        const canHideNow = () => pageReady && minimumDurationReached;
+
+        const hideLoading = () => {
+          if (hidden) return;
+          hidden = true;
+
+          if (progressTimer) window.clearInterval(progressTimer);
+          if (forceHideTimer) window.clearTimeout(forceHideTimer);
+          if (minimumDelayTimer) window.clearTimeout(minimumDelayTimer);
+          if (finishTimer) window.clearTimeout(finishTimer);
+
+          setProgress(100);
+          loading.classList.add("is-hidden");
+          document.body.classList.remove("is-loading");
+
+          window.setTimeout(() => {
+            loading.remove();
+          }, TRANSITION_MS);
+        };
+
+        const scheduleHide = () => {
+          if (!canHideNow() || finishTimer || hidden) return;
+
+          setProgress(Math.max(currentProgress, 96));
+          finishTimer = window.setTimeout(hideLoading, 260);
+        };
+
+        const requestHide = () => {
+          pageReady = true;
+          scheduleHide();
+        };
+
+        setProgress(3);
+
+        progressTimer = window.setInterval(() => {
+          const elapsed = Date.now() - startTime;
+          const warmupRatio = Math.min(elapsed / 3600, 1);
+
+          if (pageReady) {
+            setProgress(currentProgress + Math.max((99 - currentProgress) * 0.18, 1.1));
+            return;
+          }
+
+          if (currentProgress < 90) {
+            const targetProgress = 3 + (1 - Math.pow(1 - warmupRatio, 1.35)) * 87;
+            setProgress(targetProgress);
+            return;
+          }
+
+          setProgress(currentProgress + Math.max((94 - currentProgress) * 0.035, 0.04));
+        }, 140);
+
+        minimumDelayTimer = window.setTimeout(() => {
+          minimumDurationReached = true;
+          scheduleHide();
+        }, MIN_LOADING_MS);
+
+        forceHideTimer = window.setTimeout(() => {
+          pageReady = true;
+          minimumDurationReached = true;
+          hideLoading();
+        }, MAX_LOADING_MS);
+
+        if (document.readyState === "complete") {
+          requestHide();
+        } else {
+          window.addEventListener("load", requestHide, { once: true });
+        }
+      })();
+    </script>
     <svg class="visual-defs" aria-hidden="true" width="0" height="0">
       <defs>
         <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency="0.018"
-            numOctaves="2"
-            seed="8"
-            result="noise"
-          />
-          <feDisplacementMap
-            in="SourceGraphic"
-            in2="noise"
-            scale="18"
-            xChannelSelector="R"
-            yChannelSelector="G"
-          />
+          <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="8" result="noise"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="18" xChannelSelector="R" yChannelSelector="G"/>
         </filter>
       </defs>
     </svg>
     
 <header class="site-header">
-  <a
-    class="site-logo is-small"
-    href="/"
-    aria-label="返回年糕的编程花园首页"
-    data-default-logo="/images/logo.png"
-    data-small-logo="/images/logo_small.png"
-  >
-    <img src="/images/logo_small.png" alt="年糕的编程花园" />
+  <a class="site-logo is-small" href="/" aria-label="返回年糕的编程花园首页" data-default-logo="/images/logo.webp" data-small-logo="/images/logo_small.webp">
+    <img src="/images/logo_small.webp" alt="年糕的编程花园" decoding="async" fetchpriority="high">
   </a>
 
-  <button
-    class="menu-toggle"
-    type="button"
-    aria-label="打开菜单"
-    aria-expanded="false"
-    aria-controls="site-menu"
-  >
+  <button class="menu-toggle" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="site-menu">
     <span></span>
     <span></span>
     <span></span>
@@ -107,11 +176,9 @@
           
           <div class="post-hero__visual">
             <div class="post-hero__photo-frame">
-              <img
-                class="post-hero__image"
-                src="/mcimages/work_nanichan/detail.png"
-                alt="2018-纳尼酱头图"
-              />
+              <span class="post-hero__image-wrap lazy-media">
+                <img class="post-hero__image" data-lazy-src="/mcimages/work_nanichan/detail.png" alt="2018-纳尼酱头图" loading="eager" decoding="async" fetchpriority="high">
+              </span>
             </div>
           </div>
           
@@ -120,12 +187,7 @@
             <span class="post-hero__eyebrow">DIARY LOG</span>
             <span class="post-hero__date">2018.07.21</span>
             <h1 id="post-title" class="post-title post-title--decorated">
-              <img
-                class="post-title__decor"
-                src="/images/decorates/flower2.png"
-                alt=""
-                aria-hidden="true"
-              />
+              <img class="post-title__decor" src="/images/decorates/flower2.webp" alt aria-hidden="true" decoding="async">
               <span>2018-纳尼酱</span>
             </h1>
             <div class="post-meta" aria-label="文章信息">
@@ -142,13 +204,13 @@
           <div class="post-body-shell">
             <div class="post-body post-body--entry"><p>大三下学期的实训项目，选题是一个在线日语单词的记忆网站，想着出来可以帮自己坚持学日语呢。因为只有三周时间，所以这次我觉得自己能完成核心的记忆、测试，以及查词的功能就足够了。另外自己选择主要技术是vue.js + koa2+mysql+redis。因为还没有学过koa和redis，也所以这次正好可以练练，反正让我用JAVA写后台我是不愿意啦&gt;_&lt;。</p>
 <span id="more"></span>
-<h1 id="功能设计"><a href="#功能设计" class="headerlink" title="功能设计"></a>功能设计</h1><p>请看这张图：<br><img src="/mcimages/work_nanichan/func.png" alt="功能结构图"><br>其实一开始的时候，我的功能设置并不是这样的，但是在自己的能力内，然后边思考边修改，最终呈现的就是这样一个效果了。主要的导航其实就是“单词本”和“查单词”两个按钮。<br>登录之后的个人控制版面，就拥有和自己有关系的单词呀，计划呀，单词本和学习计划之类的管理。</p>
-<p><img src="/mcimages/work_nanichan/dataflow.png" alt="顶层数据流图"><br>这是顶层的数据流图，其实还有一些操作没有写出来。<br><img src="/mcimages/work_nanichan/dataflow2.png" alt="一级数据流图"><br>然后再介绍一下，我的实体，和实体之间的关系:<br><img src="/mcimages/work_nanichan/er.png" alt="E-R图"><br>这里有几个比较容易让人感觉迷惑的点：</p>
+<h1 id="功能设计"><a href="#功能设计" class="headerlink" title="功能设计"></a>功能设计</h1><p>请看这张图：<br><img alt="功能结构图" data-lazy-src="/mcimages/work_nanichan/func.png" loading="lazy" decoding="async"><br>其实一开始的时候，我的功能设置并不是这样的，但是在自己的能力内，然后边思考边修改，最终呈现的就是这样一个效果了。主要的导航其实就是“单词本”和“查单词”两个按钮。<br>登录之后的个人控制版面，就拥有和自己有关系的单词呀，计划呀，单词本和学习计划之类的管理。</p>
+<p><img alt="顶层数据流图" data-lazy-src="/mcimages/work_nanichan/dataflow.png" loading="lazy" decoding="async"><br>这是顶层的数据流图，其实还有一些操作没有写出来。<br><img alt="一级数据流图" data-lazy-src="/mcimages/work_nanichan/dataflow2.png" loading="lazy" decoding="async"><br>然后再介绍一下，我的实体，和实体之间的关系:<br><img alt="E-R图" data-lazy-src="/mcimages/work_nanichan/er.png" loading="lazy" decoding="async"><br>这里有几个比较容易让人感觉迷惑的点：</p>
 <ol>
 <li>一般来说，一个单词会有多种意思（1:n），一种意思又对应多个例句（1:n）。我实际上是把每种意思重新插了一条进去，因为都放在一条的话，对例句的处理和显示会比较麻烦。如果拿单词+意思两个做主键的话，又容易产生很多数据杂糅，所以选择了这样一种折中的方法。</li>
 <li>关于计划，其实计划美名其曰是这样，但是实际上它主要就是一个桥梁，建立起用户和单词书之间的关系，不过其实也包含了几个字段，比如创建日期还有每日记忆的数量。</li>
 </ol>
-<h1 id="页面预览"><a href="#页面预览" class="headerlink" title="页面预览"></a>页面预览</h1><p>页面的设计自然是摆在最前面的，思考了好久才确定好了设计的风格，脑海里就是希望能简洁+可爱+扁平化，因为想要给人是一种比较有“活力”的网站，所以最后选了蓝绿色来做主题色，展示部分静态页面：<br><img src="/mcimages/work_nanichan/detail.png" alt="测试页面"><br><img src="/mcimages/work_nanichan/login.png" alt="登录页面"><br><img src="/mcimages/work_nanichan/query_detail.png" alt="查单词页面"><br><img src="/mcimages/work_nanichan/query.png" alt="单词结果页面"><br>再来摆一下自己设计的LOGO（字体用的是现成的）和默认头像，还是第一次自用Adobe Illustrator按自己的想法画出了正经的东西，虽然还是有很多不足（总感觉还是有点违和），但是不能在这上面花太多精力了，噗：<br><img src="/mcimages/work_nanichan/logo.png" alt="LOGO"><br><img src="/mcimages/work_nanichan/avatar.png" alt="默认头像"><br>对于这个界面的设计，自己其实还是纠结了很久的，不过后面经过慢慢的修改和调整，算是确定了一个自己想要的风格，也就是现在这个感觉。但是我觉得还可以使用更丰富可爱的插图来代替一些地方，不过那是长远的计划了。包括这个记单词的系统也是的，也还有很多日语学习的功能想要扩充。</p>
+<h1 id="页面预览"><a href="#页面预览" class="headerlink" title="页面预览"></a>页面预览</h1><p>页面的设计自然是摆在最前面的，思考了好久才确定好了设计的风格，脑海里就是希望能简洁+可爱+扁平化，因为想要给人是一种比较有“活力”的网站，所以最后选了蓝绿色来做主题色，展示部分静态页面：<br><img alt="测试页面" data-lazy-src="/mcimages/work_nanichan/detail.png" loading="lazy" decoding="async"><br><img alt="登录页面" data-lazy-src="/mcimages/work_nanichan/login.png" loading="lazy" decoding="async"><br><img alt="查单词页面" data-lazy-src="/mcimages/work_nanichan/query_detail.png" loading="lazy" decoding="async"><br><img alt="单词结果页面" data-lazy-src="/mcimages/work_nanichan/query.png" loading="lazy" decoding="async"><br>再来摆一下自己设计的LOGO（字体用的是现成的）和默认头像，还是第一次自用Adobe Illustrator按自己的想法画出了正经的东西，虽然还是有很多不足（总感觉还是有点违和），但是不能在这上面花太多精力了，噗：<br><img alt="LOGO" data-lazy-src="/mcimages/work_nanichan/logo.png" loading="lazy" decoding="async"><br><img alt="默认头像" data-lazy-src="/mcimages/work_nanichan/avatar.png" loading="lazy" decoding="async"><br>对于这个界面的设计，自己其实还是纠结了很久的，不过后面经过慢慢的修改和调整，算是确定了一个自己想要的风格，也就是现在这个感觉。但是我觉得还可以使用更丰富可爱的插图来代替一些地方，不过那是长远的计划了。包括这个记单词的系统也是的，也还有很多日语学习的功能想要扩充。</p>
 <h1 id="技术相关"><a href="#技术相关" class="headerlink" title="技术相关"></a>技术相关</h1><p>其实做到后面之后，很多问题都是比较雷同的，所以这里我就讲几个比较频繁的问题吧</p>
 <h2 id="前端相关问题"><a href="#前端相关问题" class="headerlink" title="前端相关问题"></a>前端相关问题</h2><p><strong>Q:音频加载异步问题</strong><br>很明显的一个异步问题就是在载入音频的时候，因为要不停地切换音频的地址来播放单词的发音，用v-if对DOM进行删除和添加显示也好，用v-show来直接对source进行更换也好，它都会出现载入中断的错误。后面查询了一下百度后发现，需要在每次更换source的时候，先load一次，这样就能安全的进行更改了。但是还有一种情况是，可能单词的发音还没来得及发音，用户就已经切换成了下一个单词，最后的时候，我就把切换的间隔时间加长了，也正好可以利用这个时间显示一下正确答案。</p>
 <p><strong>Q:浮点问题</strong><br>这个超级有意思哈哈哈，就是我在统计我的正确率的时候，需要做一个百分号计算，然后我刚开始的做法就是<code>Math.floor(正确回答次数/总回答次数)*100</code>，结果后面发现，出现了一串小数点，然后就用.toFixed(2)来设置为2个小数点，但是算出来的还是有的情况是无数个小数。这样我马上意识到了JS的浮点精度之类的问题，最后就是一定要在结果都算完了后再进行.toFixed的计算。</p>
@@ -256,19 +318,13 @@ module.exports = function (mail) &#123;
           
             <nav class="post-nav" aria-label="文章切换">
               
-                <a
-                  href="/posts/life-20180808-res/"
-                  
-                >
+                <a href="/posts/life-20180808-res/">
                   <span class="post-nav__label">上一篇</span>
                   <span class="post-nav__title">北京实习小记</span>
                 </a>
               
               
-                <a
-                  href="/posts/tech-20180605-multientry/"
-                  
-                >
+                <a href="/posts/tech-20180605-multientry/">
                   <span class="post-nav__label">下一篇</span>
                   <span class="post-nav__title">vue-cli项目打包为多页面</span>
                 </a>
@@ -282,17 +338,14 @@ module.exports = function (mail) &#123;
 
   <section class="post-about-band">
     <svg class="post-divider post-divider--content" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"></path>
+      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"/>
     </svg>
     <div class="post-about-band__inner">
-      <section class="post-about" aria-label="关于年糕">
+      
+<section class="post-about" aria-label="关于年糕">
   <div class="post-about__figure">
     <div class="post-about__figure-card">
-      <img
-        class="post-about__image"
-        src="/images/mochi_real.png"
-        alt="年糕的个人形象照"
-      />
+      <img class="post-about__image" src="/images/mochi_real.webp" alt="年糕的个人形象照" loading="lazy" decoding="async">
     </div>
   </div>
 
@@ -302,11 +355,20 @@ module.exports = function (mail) &#123;
       <h2 class="post-about__name">年糕</h2>
       <div class="post-about__channels" aria-label="社交平台">
         
-          <a href="/#about">小红书</a>
+          
+          
+            <a href="https://www.xiaohongshu.com/user/profile/659266b2000000002001f48e" target="&#34;_blank&#34;" rel="&#34;noopener" noreferrer&#34;>小红书</a>
+          
         
-          <a href="/#about">B站</a>
+          
+          
+            <a href="https://space.bilibili.com/3494369971669945" target="&#34;_blank&#34;" rel="&#34;noopener" noreferrer&#34;>B站</a>
+          
         
-          <a href="/#about">微信公众号</a>
+          
+          
+            <button type="button" data-wechat-modal-trigger>微信公众号</button>
+          
         
       </div>
     </div>
@@ -319,6 +381,17 @@ module.exports = function (mail) &#123;
 </main>
 
 
+    <dialog class="wechat-modal" aria-labelledby="wechat-modal-title">
+      <button class="wechat-modal__close" type="button" aria-label="关闭微信公众号二维码弹窗" data-wechat-modal-close>
+        ×
+      </button>
+      <div class="wechat-modal__content">
+        <p class="wechat-modal__eyebrow">WECHAT OFFICIAL ACCOUNT</p>
+        <h2 id="wechat-modal-title" class="wechat-modal__title">微信公众号</h2>
+        <img class="wechat-modal__qrcode" src="/images/wx_qrcode.webp" alt="微信公众号二维码" loading="lazy" decoding="async">
+        <p class="wechat-modal__hint">扫码或搜索“年糕的编程花园”关注年糕的公众号</p>
+      </div>
+    </dialog>
     <footer class="site-footer site-footer--post">
   <div class="site-footer__inner">
     <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
@@ -326,10 +399,10 @@ module.exports = function (mail) &#123;
   </div>
 </footer>
 
-    <script src="/vendor/gsap/gsap.min.js"></script>
-<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+    <script defer src="/vendor/gsap/gsap.min.js"></script>
+<script defer src="/vendor/gsap/ScrollTrigger.min.js"></script>
 
-<script src="/js/main.js"></script>
+<script defer src="/js/main.js"></script>
 
   </body>
 </html>

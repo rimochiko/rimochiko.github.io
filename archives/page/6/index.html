@@ -14,7 +14,6 @@
   href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
   rel="stylesheet"
 />
-<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
 <link rel="stylesheet" href="/css/style.css" />
 
 
@@ -24,17 +23,128 @@
       class="site-loading"
       aria-live="polite"
       aria-label="页面加载中"
-      data-sprite-src="/images/tech/girl_read_sprite.png"
-      data-frame-count="2"
     >
       <div class="site-loading__inner">
-        <div class="site-loading__girl" aria-hidden="true"></div>
+        <img
+          class="site-loading__symbol"
+          src="/images/logo_small.webp"
+          alt=""
+          aria-hidden="true"
+          decoding="async"
+          fetchpriority="high"
+        />
         <p class="site-loading__text">LOADING...</p>
         <div class="site-loading__progress" aria-hidden="true">
           <span class="site-loading__progress-bar"></span>
         </div>
+        <p class="site-loading__percent" aria-hidden="true">0%</p>
       </div>
     </div>
+    <script>
+      (() => {
+        const loading = document.querySelector(".site-loading");
+        const loadingProgressBar = document.querySelector(".site-loading__progress-bar");
+        const loadingPercent = document.querySelector(".site-loading__percent");
+        const MAX_LOADING_MS = 9000;
+        const MIN_LOADING_MS = 450;
+        const TRANSITION_MS = 540;
+
+        if (!loading || !loadingProgressBar) return;
+
+        window.__mochiLoadingStarted = true;
+        document.body.classList.add("is-loading");
+
+        const startTime = Date.now();
+        let progressTimer = null;
+        let forceHideTimer = null;
+        let minimumDelayTimer = null;
+        let finishTimer = null;
+        let hidden = false;
+        let pageReady = document.readyState === "complete";
+        let currentProgress = 0;
+        let minimumDurationReached = false;
+
+        const setProgress = (value) => {
+          currentProgress = Math.max(currentProgress, Math.min(value, 100));
+          const progressValue = `${currentProgress}%`;
+          loading.style.setProperty("--loading-progress", progressValue);
+          loadingProgressBar.style.width = progressValue;
+
+          if (loadingPercent) {
+            loadingPercent.textContent = `${Math.floor(currentProgress)}%`;
+          }
+        };
+
+        const canHideNow = () => pageReady && minimumDurationReached;
+
+        const hideLoading = () => {
+          if (hidden) return;
+          hidden = true;
+
+          if (progressTimer) window.clearInterval(progressTimer);
+          if (forceHideTimer) window.clearTimeout(forceHideTimer);
+          if (minimumDelayTimer) window.clearTimeout(minimumDelayTimer);
+          if (finishTimer) window.clearTimeout(finishTimer);
+
+          setProgress(100);
+          loading.classList.add("is-hidden");
+          document.body.classList.remove("is-loading");
+
+          window.setTimeout(() => {
+            loading.remove();
+          }, TRANSITION_MS);
+        };
+
+        const scheduleHide = () => {
+          if (!canHideNow() || finishTimer || hidden) return;
+
+          setProgress(Math.max(currentProgress, 96));
+          finishTimer = window.setTimeout(hideLoading, 260);
+        };
+
+        const requestHide = () => {
+          pageReady = true;
+          scheduleHide();
+        };
+
+        setProgress(3);
+
+        progressTimer = window.setInterval(() => {
+          const elapsed = Date.now() - startTime;
+          const warmupRatio = Math.min(elapsed / 3600, 1);
+
+          if (pageReady) {
+            setProgress(currentProgress + Math.max((99 - currentProgress) * 0.18, 1.1));
+            return;
+          }
+
+          if (currentProgress < 90) {
+            const targetProgress = 3 + (1 - Math.pow(1 - warmupRatio, 1.35)) * 87;
+            setProgress(targetProgress);
+            return;
+          }
+
+          setProgress(currentProgress + Math.max((94 - currentProgress) * 0.035, 0.04));
+        }, 140);
+
+        minimumDelayTimer = window.setTimeout(() => {
+          minimumDurationReached = true;
+          scheduleHide();
+        }, MIN_LOADING_MS);
+
+        forceHideTimer = window.setTimeout(() => {
+          pageReady = true;
+          minimumDurationReached = true;
+          hideLoading();
+        }, MAX_LOADING_MS);
+
+        if (document.readyState === "complete") {
+          requestHide();
+        } else {
+          window.addEventListener("load", requestHide, { once: true });
+        }
+      })();
+    </script>
     <svg class="visual-defs" aria-hidden="true" width="0" height="0">
       <defs>
         <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
@@ -61,10 +171,15 @@
     class="site-logo is-small"
     href="/"
     aria-label="返回年糕的编程花园首页"
-    data-default-logo="/images/logo.png"
-    data-small-logo="/images/logo_small.png"
+    data-default-logo="/images/logo.webp"
+    data-small-logo="/images/logo_small.webp"
   >
-    <img src="/images/logo_small.png" alt="年糕的编程花园" />
+    <img
+      src="/images/logo_small.webp"
+      alt="年糕的编程花园"
+      decoding="async"
+      fetchpriority="high"
+    />
   </a>
 
   <button
@@ -105,15 +220,18 @@
       <div class="post-hero__content archive-hero__content">
         <span class="post-hero__eyebrow">ARCHIVE</span>
         <span class="post-hero__date">
-          6 篇文章
+          10 篇文章
         </span>
         <h1 id="post-title" class="post-title">花园归档</h1>
         <div class="post-meta" aria-label="归档信息">
           <span>按时间浏览全部文章</span>
           
-            <span>第 6 / 6 页</span>
+            <span>第 6 / 9 页</span>
           
         </div>
+      </div>
+      <div class="archive-hero__decor" aria-hidden="true">
+        <span class="archive-hero__reader"></span>
       </div>
     </div>
   </section>
@@ -126,23 +244,23 @@
             
             <a
               class="archive-card archive-card--no-cover"
-              href="/posts/tech-20170816-about-lorem/"
-              aria-label="查看文章：网页模板中经常出现的Lorem Ipsum"
+              href="/posts/tech-20220822-unity/"
+              aria-label="查看文章：Unity跨平台原理"
               
             >
               
 
               <div class="archive-card__content">
-                <h2 class="archive-card__title">网页模板中经常出现的Lorem Ipsum</h2>
+                <h2 class="archive-card__title">Unity跨平台原理</h2>
                 <p class="archive-card__excerpt">
-                  我经常在网页模板中看到一段拉丁文？？不知道是什么意思QAQ，结果今天有幸发现它是占位符。
+                  众所周知，Unity可以产出兼容各个平台的游戏软件，这里咱虽然还是一个Unity入门者，可以先从底层来了解一下Unity为何能做到这种能力，这背后其实还挺有意思，因为它可能会涵盖很多计算机的基础知识。本文的一些信息主要是
                 </p>
                 <div class="archive-card__meta">
                   <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2017</span>
-                    <span class="archive-card__day">08.16</span>
+                    <span class="archive-card__year">2022</span>
+                    <span class="archive-card__day">08.22</span>
                   </div>
-                  <span class="archive-card__tag">#HTML</span>
+                  <span class="archive-card__tag">#Unity</span>
                   
                 </div>
               </div>
@@ -151,23 +269,23 @@
             
             <a
               class="archive-card archive-card--no-cover"
-              href="/posts/tech-20170728-event/"
-              aria-label="查看文章：JS高级程序设计·事件"
+              href="/posts/tech-20230422-ws/"
+              aria-label="查看文章：WebSocket那些事"
               
             >
               
 
               <div class="archive-card__content">
-                <h2 class="archive-card__title">JS高级程序设计·事件</h2>
+                <h2 class="archive-card__title">WebSocket那些事</h2>
                 <p class="archive-card__excerpt">
-                  1 事件流 在我们点击某个按钮的时候，其实也点击了包含它的容器，以及整个页面。假使我们给按钮的点击添加了某个事件的触发，但我们也给对包含它的容器的点击添加了事件的触发，那一般情况下我们肯定不能舍去其中某个事件的发生，这就
+                  我对WebSocket的了解与阐述。 它出现の背景 我们知道HTTP 1.0一个请求建立，就需要经历一次TCP连接，这样会导致三次握手和四次挥手的重复成本较多。 所以在HTTP 1.1的时候出现了keep-alive这个
                 </p>
                 <div class="archive-card__meta">
                   <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2017</span>
-                    <span class="archive-card__day">07.28</span>
+                    <span class="archive-card__year">2022</span>
+                    <span class="archive-card__day">08.22</span>
                   </div>
-                  <span class="archive-card__tag">#JavaScript</span>
+                  <span class="archive-card__tag">#计算机网络</span>
                   
                 </div>
               </div>
@@ -176,27 +294,128 @@
             
             <a
               class="archive-card archive-card--with-cover"
-              href="/posts/work-meituce/"
-              aria-label="查看文章：2017-美图册"
+              href="/posts/work-drawlife-2022/"
+              aria-label="查看文章：2022~2023-年糕の生活漫画集合"
               
             >
               
                 <div class="archive-card__cover-wrap">
-                  <div class="archive-card__cover" style="background-image: url('/mcimages/work_meituce/meituce_1.jpg')"></div>
+                  <div
+                    class="archive-card__cover lazy-media lazy-media--bg"
+                    data-lazy-bg="/mcimages/manga/spy1.png"
+                  ></div>
                 </div>
               
 
               <div class="archive-card__content">
-                <h2 class="archive-card__title">2017-美图册</h2>
+                <h2 class="archive-card__title">2022~2023-年糕の生活漫画集合</h2>
                 <p class="archive-card__excerpt">
-                  大二下学期实训的作品，是一个分享图片的平台，选题灵感来源于花瓣网和500PX，大约两个礼拜完成。当时拿到了90分的高分o( ￣▽￣ )ブ，也是我第一次写一个完整的前后端系统。老师夸赞界面在一群大老爷们的作品里真滴很好看，
+                  2022年5月我开始尝试正经画画了！！！这part里面放的主要是日常生活和工作的一些产出。
                 </p>
                 <div class="archive-card__meta">
                   <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2017</span>
+                    <span class="archive-card__year">2022</span>
+                    <span class="archive-card__day">08.21</span>
+                  </div>
+                  <span class="archive-card__tag">#画画</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--with-cover"
+              href="/posts/tech-20220801-unity/"
+              aria-label="查看文章：初识Unity"
+              
+            >
+              
+                <div class="archive-card__cover-wrap">
+                  <div
+                    class="archive-card__cover lazy-media lazy-media--bg"
+                    data-lazy-bg="/pimgs/unity/%E5%9B%BE%E7%89%873.png"
+                  ></div>
+                </div>
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">初识Unity</h2>
+                <p class="archive-card__excerpt">
+                  前言 游戏像是一个异次元时空的存在，它有自己的世界观，人物和生存规则。作为一个普通的前端开发，我们可能对游戏编程概念没有很系统化的认识，虽然可能会接触一些轻量级的H5游戏，但它可能很难承载一个大型复杂的游戏世界。前辈们早
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2022</span>
+                    <span class="archive-card__day">05.22</span>
+                  </div>
+                  <span class="archive-card__tag">#Unity</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--with-cover"
+              href="/posts/life-20211115-luxun/"
+              aria-label="查看文章：追随迅哥的脚步"
+              
+            >
+              
+                <div class="archive-card__cover-wrap">
+                  <div
+                    class="archive-card__cover lazy-media lazy-media--bg"
+                    data-lazy-bg="/timgs/2011luxun/3.png"
+                  ></div>
+                </div>
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">追随迅哥的脚步</h2>
+                <p class="archive-card__excerpt">
+                  这次游玩应该算是我“盖章”之旅和好奇心探险的开始。出行的路线是：阜成门地铁站——鲁迅博物馆——天安门东地铁站——中山公园。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2021</span>
+                    <span class="archive-card__day">11.15</span>
+                  </div>
+                  <span class="archive-card__tag">#北京印象</span>
+                  
+                    <span class="archive-card__tag">#游记</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--with-cover"
+              href="/posts/work-cuttlenotes/"
+              aria-label="查看文章：2019-墨鱼笔记"
+              
+            >
+              
+                <div class="archive-card__cover-wrap">
+                  <div
+                    class="archive-card__cover lazy-media lazy-media--bg"
+                    data-lazy-bg="/mcimages/work_cuttle/moji1.png"
+                  ></div>
+                </div>
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">2019-墨鱼笔记</h2>
+                <p class="archive-card__excerpt">
+                  大四的毕业设计作品，是一款文档协作平台。因为基本上没啥事了，所以来了一个很大胆的技术选择，全都选的自己不熟悉或者没用过的框架。我在实习的时候对公司的文档工具执念很深（当时觉得很好用），所以毕业设计就选了这样的主题。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2019</span>
                     <span class="archive-card__day">07.21</span>
                   </div>
-                  <span class="archive-card__tag">#编程项目</span>
+                  <span class="archive-card__tag">#博客</span>
                   
                 </div>
               </div>
@@ -205,23 +424,23 @@
             
             <a
               class="archive-card archive-card--no-cover"
-              href="/posts/life-20170710-res/"
-              aria-label="查看文章：2017年上半年的小总结"
+              href="/posts/tech-20190507-tcp/"
+              aria-label="查看文章：传输层的小结"
               
             >
               
 
               <div class="archive-card__content">
-                <h2 class="archive-card__title">2017年上半年的小总结</h2>
+                <h2 class="archive-card__title">传输层的小结</h2>
                 <p class="archive-card__excerpt">
-                  2017年已经过去一半了（其实早就过去一半了），觉得还是应该回顾回顾这半年以及我这个学期的生活，重拾一些温馨的时光、发现自己的不足，希望下个学期要更加进步。
+                  前言 本文是复习原来的课本《计算机网络（第6版）》而总结出来的梳理思维的小笔记，因为内容也比较多，一次是整理不完了，所以又是慢慢补坑。若有错误欢迎提出(ง •_•)ง。
                 </p>
                 <div class="archive-card__meta">
                   <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2017</span>
-                    <span class="archive-card__day">07.10</span>
+                    <span class="archive-card__year">2019</span>
+                    <span class="archive-card__day">05.07</span>
                   </div>
-                  <span class="archive-card__tag">#碎碎念</span>
+                  <span class="archive-card__tag">#计算机网络</span>
                   
                 </div>
               </div>
@@ -230,23 +449,23 @@
             
             <a
               class="archive-card archive-card--no-cover"
-              href="/posts/life-20170605-res/"
-              aria-label="查看文章：第一次做项目大概完工后的感想"
+              href="/posts/tech-20190407-webgl/"
+              aria-label="查看文章：初识WEBGL"
               
             >
               
 
               <div class="archive-card__content">
-                <h2 class="archive-card__title">第一次做项目大概完工后的感想</h2>
+                <h2 class="archive-card__title">初识WEBGL</h2>
                 <p class="archive-card__excerpt">
-                  晶网点这个项目大概是完工了，这是自己第一次做项目，回顾整个过程，还是有很多不好的地方。 可能是我自己生性做事较真，又有点急性子，所以对自己的团队伙伴的进度逼的很急，伙伴们也挺努力的，虽然作业很多，但是还是按时完成了任务。
+                  我们希望3D图像也能在网页中实现，这样我们可以利用网页这个快捷的传播途径，进行更多可能的创作。随着HTML5的到来，WebGL的出现使得其成为可能，WebGL使得JS支持硬件3D加速渲染（同样的CSS3也得到了硬件3D加
                 </p>
                 <div class="archive-card__meta">
                   <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2017</span>
-                    <span class="archive-card__day">06.05</span>
+                    <span class="archive-card__year">2019</span>
+                    <span class="archive-card__day">04.07</span>
                   </div>
-                  <span class="archive-card__tag">#碎碎念</span>
+                  <span class="archive-card__tag">#WEBGL</span>
                   
                 </div>
               </div>
@@ -255,23 +474,48 @@
             
             <a
               class="archive-card archive-card--no-cover"
-              href="/posts/life-20170404-res/"
-              aria-label="查看文章：大二下学期小结"
+              href="/posts/tech-20190401-three-material/"
+              aria-label="查看文章：Three.js材料篇"
               
             >
               
 
               <div class="archive-card__content">
-                <h2 class="archive-card__title">大二下学期小结</h2>
+                <h2 class="archive-card__title">Three.js材料篇</h2>
                 <p class="archive-card__excerpt">
-                  这个学期，成长了很多，也留下了一些遗憾。 刚开始让我加入学生会我是拒绝的，因为自己有一些想做的事情，但是因为自己优柔寡断，然后也很相信自己可以挤出时间升任这些人物，所以还是没有拒绝来自学长和老师的邀请，当起了人员缺损的补
+                  这次小糕来总结一下Three.js中的Material们，也就是物体所使用的材质，通俗的说，材质决定了物体给人看起来的感觉，比如现实生活中，有的东西会反光。 但是在3D世界里，还是稍微有些不同，所以我们来看看Three.
                 </p>
                 <div class="archive-card__meta">
                   <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2017</span>
-                    <span class="archive-card__day">04.04</span>
+                    <span class="archive-card__year">2019</span>
+                    <span class="archive-card__day">04.01</span>
                   </div>
-                  <span class="archive-card__tag">#碎碎念</span>
+                  <span class="archive-card__tag">#Three.js</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="/posts/tech-20190312-huisufa/"
+              aria-label="查看文章：回溯法小结"
+              
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">回溯法小结</h2>
+                <p class="archive-card__excerpt">
+                  回溯法の定义 回溯法（探索与回溯法）是一种选优搜索法，又称为试探法，按选优条件向前搜索，以达到目标。但当探索到某一步时，发现原先选择并不优或达不到目标，就退回一步重新选择，这种走不通就退回再走的技术为回溯法。 以上来自百
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2019</span>
+                    <span class="archive-card__day">03.12</span>
+                  </div>
+                  <span class="archive-card__tag">#算法</span>
                   
                 </div>
               </div>
@@ -288,14 +532,14 @@
               
 
               <div class="archive-nav__status">
-                第 6 页，共 6 页
+                第 6 页，共 9 页
               </div>
 
               
-                <span class="archive-nav__link archive-nav__link--placeholder" aria-hidden="true">
+                <a class="archive-nav__link" href="/archives/page/7/">
                   <span class="archive-nav__label">下一页</span>
-                  <span class="archive-nav__title">没有下一页</span>
-                </span>
+                  <span class="archive-nav__title">更早的文章</span>
+                </a>
               
             </nav>
           
@@ -307,13 +551,16 @@
     </svg>
   </section>
 
-  <section class="post-about" aria-label="关于年糕">
+  
+<section class="post-about" aria-label="关于年糕">
   <div class="post-about__figure">
     <div class="post-about__figure-card">
       <img
         class="post-about__image"
-        src="/images/mochi_real.png"
+        src="/images/mochi_real.webp"
         alt="年糕的个人形象照"
+        loading="lazy"
+        decoding="async"
       />
     </div>
   </div>
@@ -324,11 +571,26 @@
       <h2 class="post-about__name">年糕</h2>
       <div class="post-about__channels" aria-label="社交平台">
         
-          <a href="/#about">小红书</a>
+          
+          
+            <a
+              href="https://www.xiaohongshu.com/user/profile/659266b2000000002001f48e"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >小红书</a>
+          
         
-          <a href="/#about">B站</a>
+          
+          
+            <a
+              href="https://space.bilibili.com/3494369971669945"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >B站</a>
+          
         
-          <a href="/#about">微信公众号</a>
+          
+          
+            <button type="button" data-wechat-modal-trigger>微信公众号</button>
+          
         
       </div>
     </div>
@@ -338,6 +600,23 @@
 
 </main>
 
+    <dialog class="wechat-modal" aria-labelledby="wechat-modal-title">
+      <button class="wechat-modal__close" type="button" aria-label="关闭微信公众号二维码弹窗" data-wechat-modal-close>
+        ×
+      </button>
+      <div class="wechat-modal__content">
+        <p class="wechat-modal__eyebrow">WECHAT OFFICIAL ACCOUNT</p>
+        <h2 id="wechat-modal-title" class="wechat-modal__title">微信公众号</h2>
+        <img
+          class="wechat-modal__qrcode"
+          src="/images/wx_qrcode.webp"
+          alt="微信公众号二维码"
+          loading="lazy"
+          decoding="async"
+        />
+        <p class="wechat-modal__hint">扫码或搜索“年糕的编程花园”关注年糕的公众号</p>
+      </div>
+    </dialog>
     <footer class="site-footer">
   <div class="site-footer__inner">
     <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
@@ -345,10 +624,10 @@
   </div>
 </footer>
 
-    <script src="/vendor/gsap/gsap.min.js"></script>
-<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+    <script defer src="/vendor/gsap/gsap.min.js"></script>
+<script defer src="/vendor/gsap/ScrollTrigger.min.js"></script>
 
-<script src="/js/main.js"></script>
+<script defer src="/js/main.js"></script>
 
   </body>
 </html>

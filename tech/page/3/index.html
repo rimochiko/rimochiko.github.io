@@ -14,7 +14,6 @@
   href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
   rel="stylesheet"
 />
-<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
 <link rel="stylesheet" href="/css/style.css" />
 
 
@@ -24,17 +23,128 @@
       class="site-loading"
       aria-live="polite"
       aria-label="页面加载中"
-      data-sprite-src="/images/tech/girl_read_sprite.png"
-      data-frame-count="2"
     >
       <div class="site-loading__inner">
-        <div class="site-loading__girl" aria-hidden="true"></div>
+        <img
+          class="site-loading__symbol"
+          src="/images/logo_small.webp"
+          alt=""
+          aria-hidden="true"
+          decoding="async"
+          fetchpriority="high"
+        />
         <p class="site-loading__text">LOADING...</p>
         <div class="site-loading__progress" aria-hidden="true">
           <span class="site-loading__progress-bar"></span>
         </div>
+        <p class="site-loading__percent" aria-hidden="true">0%</p>
       </div>
     </div>
+    <script>
+      (() => {
+        const loading = document.querySelector(".site-loading");
+        const loadingProgressBar = document.querySelector(".site-loading__progress-bar");
+        const loadingPercent = document.querySelector(".site-loading__percent");
+        const MAX_LOADING_MS = 9000;
+        const MIN_LOADING_MS = 450;
+        const TRANSITION_MS = 540;
+
+        if (!loading || !loadingProgressBar) return;
+
+        window.__mochiLoadingStarted = true;
+        document.body.classList.add("is-loading");
+
+        const startTime = Date.now();
+        let progressTimer = null;
+        let forceHideTimer = null;
+        let minimumDelayTimer = null;
+        let finishTimer = null;
+        let hidden = false;
+        let pageReady = document.readyState === "complete";
+        let currentProgress = 0;
+        let minimumDurationReached = false;
+
+        const setProgress = (value) => {
+          currentProgress = Math.max(currentProgress, Math.min(value, 100));
+          const progressValue = `${currentProgress}%`;
+          loading.style.setProperty("--loading-progress", progressValue);
+          loadingProgressBar.style.width = progressValue;
+
+          if (loadingPercent) {
+            loadingPercent.textContent = `${Math.floor(currentProgress)}%`;
+          }
+        };
+
+        const canHideNow = () => pageReady && minimumDurationReached;
+
+        const hideLoading = () => {
+          if (hidden) return;
+          hidden = true;
+
+          if (progressTimer) window.clearInterval(progressTimer);
+          if (forceHideTimer) window.clearTimeout(forceHideTimer);
+          if (minimumDelayTimer) window.clearTimeout(minimumDelayTimer);
+          if (finishTimer) window.clearTimeout(finishTimer);
+
+          setProgress(100);
+          loading.classList.add("is-hidden");
+          document.body.classList.remove("is-loading");
+
+          window.setTimeout(() => {
+            loading.remove();
+          }, TRANSITION_MS);
+        };
+
+        const scheduleHide = () => {
+          if (!canHideNow() || finishTimer || hidden) return;
+
+          setProgress(Math.max(currentProgress, 96));
+          finishTimer = window.setTimeout(hideLoading, 260);
+        };
+
+        const requestHide = () => {
+          pageReady = true;
+          scheduleHide();
+        };
+
+        setProgress(3);
+
+        progressTimer = window.setInterval(() => {
+          const elapsed = Date.now() - startTime;
+          const warmupRatio = Math.min(elapsed / 3600, 1);
+
+          if (pageReady) {
+            setProgress(currentProgress + Math.max((99 - currentProgress) * 0.18, 1.1));
+            return;
+          }
+
+          if (currentProgress < 90) {
+            const targetProgress = 3 + (1 - Math.pow(1 - warmupRatio, 1.35)) * 87;
+            setProgress(targetProgress);
+            return;
+          }
+
+          setProgress(currentProgress + Math.max((94 - currentProgress) * 0.035, 0.04));
+        }, 140);
+
+        minimumDelayTimer = window.setTimeout(() => {
+          minimumDurationReached = true;
+          scheduleHide();
+        }, MIN_LOADING_MS);
+
+        forceHideTimer = window.setTimeout(() => {
+          pageReady = true;
+          minimumDurationReached = true;
+          hideLoading();
+        }, MAX_LOADING_MS);
+
+        if (document.readyState === "complete") {
+          requestHide();
+        } else {
+          window.addEventListener("load", requestHide, { once: true });
+        }
+      })();
+    </script>
     <svg class="visual-defs" aria-hidden="true" width="0" height="0">
       <defs>
         <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
@@ -61,10 +171,15 @@
     class="site-logo is-small"
     href="/"
     aria-label="返回年糕的编程花园首页"
-    data-default-logo="/images/logo.png"
-    data-small-logo="/images/logo_small.png"
+    data-default-logo="/images/logo.webp"
+    data-small-logo="/images/logo_small.webp"
   >
-    <img src="/images/logo_small.png" alt="年糕的编程花园" />
+    <img
+      src="/images/logo_small.webp"
+      alt="年糕的编程花园"
+      decoding="async"
+      fetchpriority="high"
+    />
   </a>
 
   <button
@@ -105,15 +220,18 @@
       <div class="post-hero__content archive-hero__content">
         <span class="post-hero__eyebrow">TECH ARCHIVE</span>
         <span class="post-hero__date">
-          32 篇文章
+          50 篇文章
         </span>
         <h1 id="post-title" class="post-title">TECH</h1>
         <div class="post-meta" aria-label="归档信息">
           <span>按 tech layout 浏览文章</span>
           
-            <span>第 3 / 4 页</span>
+            <span>第 3 / 5 页</span>
           
         </div>
+      </div>
+      <div class="archive-hero__decor" aria-hidden="true">
+        <span class="archive-hero__reader"></span>
       </div>
     </div>
   </section>
@@ -125,97 +243,29 @@
           
             
             <a
-              class="archive-card archive-card--no-cover"
-              href="/posts/tech-20180605-multientry/"
-              aria-label="查看文章：vue-cli项目打包为多页面"
-              
+              class="archive-card archive-card--with-cover"
+              href="https://mp.weixin.qq.com/s/S4ftTIuyz53DNAXB2YK04w"
+              aria-label="查看文章：240414 - 前端吃瓜小报"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
             >
               
-
-              <div class="archive-card__content">
-                <h2 class="archive-card__title">vue-cli项目打包为多页面</h2>
-                <p class="archive-card__excerpt">
-                  老师布置了一个用JAVA四个框架写系统的作业，然后想趁这个机会把前端框架也用上吧，但是因为是开发传统的网页应用，所以还是多页面更适用，于是就想着怎么来改造一下可以让webpack打包结果成多页面形式，去网上搜索一下其实已
-                </p>
-                <div class="archive-card__meta">
-                  <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2018</span>
-                    <span class="archive-card__day">06.05</span>
-                  </div>
-                  <span class="archive-card__tag">#vue.js</span>
-                  
+                <div class="archive-card__cover-wrap">
+                  <div
+                    class="archive-card__cover lazy-media lazy-media--bg"
+                    data-lazy-bg="/wimgs/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20240714162223.jpg"
+                  ></div>
                 </div>
-              </div>
-            </a>
-          
-            
-            <a
-              class="archive-card archive-card--no-cover"
-              href="/posts/tech-20180523-cache/"
-              aria-label="查看文章：浏览器の缓存机制"
-              
-            >
               
 
               <div class="archive-card__content">
-                <h2 class="archive-card__title">浏览器の缓存机制</h2>
+                <h2 class="archive-card__title">240414 - 前端吃瓜小报</h2>
                 <p class="archive-card__excerpt">
-                  前言 继续挖坑啦，这个也是上次面试和面试官说了很多的一个问题来着，然后我来好好重新研究研究，试着来了解一下浏览器以及和它相关的一些的缓存机制。因为是坑，所以也是缓慢更新的，如果有错误欢迎提出哦！ 文章部分是小结于《 We
+                  种下一篇新的记录，留给以后慢慢回看。
                 </p>
                 <div class="archive-card__meta">
                   <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2018</span>
-                    <span class="archive-card__day">05.23</span>
-                  </div>
-                  <span class="archive-card__tag">#浏览器</span>
-                  
-                </div>
-              </div>
-            </a>
-          
-            
-            <a
-              class="archive-card archive-card--no-cover"
-              href="/posts/tech-20180404-cross/"
-              aria-label="查看文章：跨域问题"
-              
-            >
-              
-
-              <div class="archive-card__content">
-                <h2 class="archive-card__title">跨域问题</h2>
-                <p class="archive-card__excerpt">
-                  前言 唔，面试的时候被问到了，然后把之前自己知道的情况都说了一下，但是后面还是感觉这其中还是有很多细节可以继续扒，所以这里来小结一下，为什么是挖坑系列，因为我一次性肯定写不完，算是经历了此次几轮面试后的一个学习小结的开始
-                </p>
-                <div class="archive-card__meta">
-                  <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2018</span>
-                    <span class="archive-card__day">04.04</span>
-                  </div>
-                  <span class="archive-card__tag">#浏览器</span>
-                  
-                </div>
-              </div>
-            </a>
-          
-            
-            <a
-              class="archive-card archive-card--no-cover"
-              href="/posts/tech-20180305-eventloop/"
-              aria-label="查看文章：JavaScript的事件循环"
-              
-            >
-              
-
-              <div class="archive-card__content">
-                <h2 class="archive-card__title">JavaScript的事件循环</h2>
-                <p class="archive-card__excerpt">
-                  JavaScript的单线程意思是JS引擎在执行和解释JS代码的时候，都是在一个线程里完成的，而这个线程也就是所谓的“主线程”，但是实际上在处理其他的一些特殊操作的时候，是会为其开辟新的线程来专门执行，比如： 处理Aja
-                </p>
-                <div class="archive-card__meta">
-                  <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2018</span>
-                    <span class="archive-card__day">03.05</span>
+                    <span class="archive-card__year">2024</span>
+                    <span class="archive-card__day">04.14</span>
                   </div>
                   <span class="archive-card__tag">#JavaScript</span>
                   
@@ -225,24 +275,167 @@
           
             
             <a
-              class="archive-card archive-card--no-cover"
-              href="/posts/tech-20180304-extend/"
-              aria-label="查看文章：JavaScript常见的继承方式"
-              
+              class="archive-card archive-card--with-cover"
+              href="https://mp.weixin.qq.com/s/lKYcQ6aOiVnuzl6Vp3EQXg"
+              aria-label="查看文章：艺术编程学习 Day 14 春节烟花"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
             >
+              
+                <div class="archive-card__cover-wrap">
+                  <div
+                    class="archive-card__cover lazy-media lazy-media--bg"
+                    data-lazy-bg="/wimgs/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20240714135543.png"
+                  ></div>
+                </div>
               
 
               <div class="archive-card__content">
-                <h2 class="archive-card__title">JavaScript常见的继承方式</h2>
+                <h2 class="archive-card__title">艺术编程学习 Day 14 春节烟花</h2>
                 <p class="archive-card__excerpt">
-                  最近在看《JavaScript设计模式》，然后开篇复习了JavaScript中的几种继承方式，自己似乎也没有怎么仔细探究过，目前自己没怎么碰到过应用的场景（噗），所以借这次机会好好来屡屡思路。
+                  种下一篇新的记录，留给以后慢慢回看。
                 </p>
                 <div class="archive-card__meta">
                   <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2018</span>
-                    <span class="archive-card__day">03.04</span>
+                    <span class="archive-card__year">2024</span>
+                    <span class="archive-card__day">02.11</span>
+                  </div>
+                  <span class="archive-card__tag">#艺术编程</span>
+                  
+                    <span class="archive-card__tag">#p5.js</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--with-cover"
+              href="https://mp.weixin.qq.com/s/PMQqNSp-CtZ64IxxH8mvsA"
+              aria-label="查看文章：Rhizomatiks 和他们的编程艺术"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >
+              
+                <div class="archive-card__cover-wrap">
+                  <div
+                    class="archive-card__cover lazy-media lazy-media--bg"
+                    data-lazy-bg="/wimgs/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20240714165023.png"
+                  ></div>
+                </div>
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">Rhizomatiks 和他们的编程艺术</h2>
+                <p class="archive-card__excerpt">
+                  种下一篇新的记录，留给以后慢慢回看。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2023</span>
+                    <span class="archive-card__day">12.23</span>
+                  </div>
+                  <span class="archive-card__tag">#艺术编程</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--with-cover"
+              href="https://mp.weixin.qq.com/s/5oR91jS2Cs3r92-2gVv3Fg"
+              aria-label="查看文章：复刻狗花系列之《猜价游戏》"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >
+              
+                <div class="archive-card__cover-wrap">
+                  <div
+                    class="archive-card__cover lazy-media lazy-media--bg"
+                    data-lazy-bg="/wimgs/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20240714134835.png"
+                  ></div>
+                </div>
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">复刻狗花系列之《猜价游戏》</h2>
+                <p class="archive-card__excerpt">
+                  种下一篇新的记录，留给以后慢慢回看。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2023</span>
+                    <span class="archive-card__day">11.19</span>
                   </div>
                   <span class="archive-card__tag">#JavaScript</span>
+                  
+                    <span class="archive-card__tag">#cocos</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--with-cover"
+              href="https://mp.weixin.qq.com/s/7xyVwTVXqAVyYQY3na01_g"
+              aria-label="查看文章：前端跨端开发入门-揭秘跨端的奥秘"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >
+              
+                <div class="archive-card__cover-wrap">
+                  <div
+                    class="archive-card__cover lazy-media lazy-media--bg"
+                    data-lazy-bg="/wimgs/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20240714135240.png"
+                  ></div>
+                </div>
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">前端跨端开发入门-揭秘跨端的奥秘</h2>
+                <p class="archive-card__excerpt">
+                  种下一篇新的记录，留给以后慢慢回看。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2023</span>
+                    <span class="archive-card__day">11.13</span>
+                  </div>
+                  <span class="archive-card__tag">#JavaScript</span>
+                  
+                    <span class="archive-card__tag">#React Native</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--with-cover"
+              href="https://mp.weixin.qq.com/s/MD9cD4YNOJz5aBKm-tkTmQ"
+              aria-label="查看文章：利用AI辅助做一个简单的对话游戏"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >
+              
+                <div class="archive-card__cover-wrap">
+                  <div
+                    class="archive-card__cover lazy-media lazy-media--bg"
+                    data-lazy-bg="/wimgs/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20240714165431.png"
+                  ></div>
+                </div>
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">利用AI辅助做一个简单的对话游戏</h2>
+                <p class="archive-card__excerpt">
+                  种下一篇新的记录，留给以后慢慢回看。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2023</span>
+                    <span class="archive-card__day">09.03</span>
+                  </div>
+                  <span class="archive-card__tag">#游戏</span>
+                  
+                    <span class="archive-card__tag">#cocos</span>
                   
                 </div>
               </div>
@@ -251,21 +444,46 @@
             
             <a
               class="archive-card archive-card--no-cover"
-              href="/posts/tech-20180301-post/"
-              aria-label="查看文章：一个由POST和URL引发的一系列提问"
+              href="/posts/tech-20220822-unity/"
+              aria-label="查看文章：Unity跨平台原理"
               
             >
               
 
               <div class="archive-card__content">
-                <h2 class="archive-card__title">一个由POST和URL引发的一系列提问</h2>
+                <h2 class="archive-card__title">Unity跨平台原理</h2>
                 <p class="archive-card__excerpt">
-                  我带着心中的“愤怒”，终于写完JAVA WEB作业。终于可以学点想学的只是啦，然后突然碰到了一个童鞋问的问题，结果发生了这是一个连锁反应。
+                  众所周知，Unity可以产出兼容各个平台的游戏软件，这里咱虽然还是一个Unity入门者，可以先从底层来了解一下Unity为何能做到这种能力，这背后其实还挺有意思，因为它可能会涵盖很多计算机的基础知识。本文的一些信息主要是
                 </p>
                 <div class="archive-card__meta">
                   <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2018</span>
-                    <span class="archive-card__day">03.01</span>
+                    <span class="archive-card__year">2022</span>
+                    <span class="archive-card__day">08.22</span>
+                  </div>
+                  <span class="archive-card__tag">#Unity</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--no-cover"
+              href="/posts/tech-20230422-ws/"
+              aria-label="查看文章：WebSocket那些事"
+              
+            >
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">WebSocket那些事</h2>
+                <p class="archive-card__excerpt">
+                  我对WebSocket的了解与阐述。 它出现の背景 我们知道HTTP 1.0一个请求建立，就需要经历一次TCP连接，这样会导致三次握手和四次挥手的重复成本较多。 所以在HTTP 1.1的时候出现了keep-alive这个
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2022</span>
+                    <span class="archive-card__day">08.22</span>
                   </div>
                   <span class="archive-card__tag">#计算机网络</span>
                   
@@ -275,24 +493,31 @@
           
             
             <a
-              class="archive-card archive-card--no-cover"
-              href="/posts/tech-20180202-closure/"
-              aria-label="查看文章：JavaScriptの闭包"
+              class="archive-card archive-card--with-cover"
+              href="/posts/tech-20220801-unity/"
+              aria-label="查看文章：初识Unity"
               
             >
               
+                <div class="archive-card__cover-wrap">
+                  <div
+                    class="archive-card__cover lazy-media lazy-media--bg"
+                    data-lazy-bg="/pimgs/unity/%E5%9B%BE%E7%89%873.png"
+                  ></div>
+                </div>
+              
 
               <div class="archive-card__content">
-                <h2 class="archive-card__title">JavaScriptの闭包</h2>
+                <h2 class="archive-card__title">初识Unity</h2>
                 <p class="archive-card__excerpt">
-                  前言 此文的内容主要是来自看书的总结+小小的实践哦~会不断更新总结。
+                  前言 游戏像是一个异次元时空的存在，它有自己的世界观，人物和生存规则。作为一个普通的前端开发，我们可能对游戏编程概念没有很系统化的认识，虽然可能会接触一些轻量级的H5游戏，但它可能很难承载一个大型复杂的游戏世界。前辈们早
                 </p>
                 <div class="archive-card__meta">
                   <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2018</span>
-                    <span class="archive-card__day">02.22</span>
+                    <span class="archive-card__year">2022</span>
+                    <span class="archive-card__day">05.22</span>
                   </div>
-                  <span class="archive-card__tag">#JavaScript</span>
+                  <span class="archive-card__tag">#Unity</span>
                   
                 </div>
               </div>
@@ -301,73 +526,23 @@
             
             <a
               class="archive-card archive-card--no-cover"
-              href="/posts/tech-20180212-type/"
-              aria-label="查看文章：JavaScriptの类型"
+              href="/posts/tech-20190507-tcp/"
+              aria-label="查看文章：传输层的小结"
               
             >
               
 
               <div class="archive-card__content">
-                <h2 class="archive-card__title">JavaScriptの类型</h2>
+                <h2 class="archive-card__title">传输层的小结</h2>
                 <p class="archive-card__excerpt">
-                  前言 此篇小结来源与《你不知道的JavaScript》和《JavaScript高级程序设计》的结合？？或许是的，龟速总结中…
+                  前言 本文是复习原来的课本《计算机网络（第6版）》而总结出来的梳理思维的小笔记，因为内容也比较多，一次是整理不完了，所以又是慢慢补坑。若有错误欢迎提出(ง •_•)ง。
                 </p>
                 <div class="archive-card__meta">
                   <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2018</span>
-                    <span class="archive-card__day">02.12</span>
-                  </div>
-                  <span class="archive-card__tag">#JavaScript</span>
-                  
-                </div>
-              </div>
-            </a>
-          
-            
-            <a
-              class="archive-card archive-card--no-cover"
-              href="/posts/tech-20180209-http/"
-              aria-label="查看文章：《图解HTTP》小结+实践理解"
-              
-            >
-              
-
-              <div class="archive-card__content">
-                <h2 class="archive-card__title">《图解HTTP》小结+实践理解</h2>
-                <p class="archive-card__excerpt">
-                  前言 计算机网络课程的学习已经是在大二下学期的时候了，过去了半年多，有很多东西似乎都忘记了QAQ。况且当时上课的时候就感觉专业术语多，很多知识也难以理解，但是还是硬着头皮学了下来，如今阅读《HTTP图解》这本书发现很好理
-                </p>
-                <div class="archive-card__meta">
-                  <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2018</span>
-                    <span class="archive-card__day">02.09</span>
+                    <span class="archive-card__year">2019</span>
+                    <span class="archive-card__day">05.07</span>
                   </div>
                   <span class="archive-card__tag">#计算机网络</span>
-                  
-                </div>
-              </div>
-            </a>
-          
-            
-            <a
-              class="archive-card archive-card--no-cover"
-              href="/posts/tech-20171130-margin/"
-              aria-label="查看文章：圣杯布局引发对margin负值的研究"
-              
-            >
-              
-
-              <div class="archive-card__content">
-                <h2 class="archive-card__title">圣杯布局引发对margin负值的研究</h2>
-                <p class="archive-card__excerpt">
-                  问题の起源 以前一直就听说圣杯布局，但是没有怎么去用过，然后这次偶然接触到了，就学习了一下。 这是一个我从别人写的文章中复制过来的，关于圣杯布局的比较简单的说明 通过缩放页面就可以发现，随着页面的宽度的变化，这三栏布局是
-                </p>
-                <div class="archive-card__meta">
-                  <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2017</span>
-                    <span class="archive-card__day">11.30</span>
-                  </div>
-                  <span class="archive-card__tag">#CSS</span>
                   
                 </div>
               </div>
@@ -384,7 +559,7 @@
               
 
               <div class="archive-nav__status">
-                第 3 页，共 4 页
+                第 3 页，共 5 页
               </div>
 
               
@@ -403,13 +578,16 @@
     </svg>
   </section>
 
-  <section class="post-about" aria-label="关于年糕">
+  
+<section class="post-about" aria-label="关于年糕">
   <div class="post-about__figure">
     <div class="post-about__figure-card">
       <img
         class="post-about__image"
-        src="/images/mochi_real.png"
+        src="/images/mochi_real.webp"
         alt="年糕的个人形象照"
+        loading="lazy"
+        decoding="async"
       />
     </div>
   </div>
@@ -420,11 +598,26 @@
       <h2 class="post-about__name">年糕</h2>
       <div class="post-about__channels" aria-label="社交平台">
         
-          <a href="/#about">小红书</a>
+          
+          
+            <a
+              href="https://www.xiaohongshu.com/user/profile/659266b2000000002001f48e"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >小红书</a>
+          
         
-          <a href="/#about">B站</a>
+          
+          
+            <a
+              href="https://space.bilibili.com/3494369971669945"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >B站</a>
+          
         
-          <a href="/#about">微信公众号</a>
+          
+          
+            <button type="button" data-wechat-modal-trigger>微信公众号</button>
+          
         
       </div>
     </div>
@@ -434,6 +627,23 @@
 
 </main>
 
+    <dialog class="wechat-modal" aria-labelledby="wechat-modal-title">
+      <button class="wechat-modal__close" type="button" aria-label="关闭微信公众号二维码弹窗" data-wechat-modal-close>
+        ×
+      </button>
+      <div class="wechat-modal__content">
+        <p class="wechat-modal__eyebrow">WECHAT OFFICIAL ACCOUNT</p>
+        <h2 id="wechat-modal-title" class="wechat-modal__title">微信公众号</h2>
+        <img
+          class="wechat-modal__qrcode"
+          src="/images/wx_qrcode.webp"
+          alt="微信公众号二维码"
+          loading="lazy"
+          decoding="async"
+        />
+        <p class="wechat-modal__hint">扫码或搜索“年糕的编程花园”关注年糕的公众号</p>
+      </div>
+    </dialog>
     <footer class="site-footer">
   <div class="site-footer__inner">
     <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
@@ -441,10 +651,10 @@
   </div>
 </footer>
 
-    <script src="/vendor/gsap/gsap.min.js"></script>
-<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+    <script defer src="/vendor/gsap/gsap.min.js"></script>
+<script defer src="/vendor/gsap/ScrollTrigger.min.js"></script>
 
-<script src="/js/main.js"></script>
+<script defer src="/js/main.js"></script>
 
   </body>
 </html>

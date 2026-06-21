@@ -14,7 +14,6 @@
   href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
   rel="stylesheet"
 />
-<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
 <link rel="stylesheet" href="/css/style.css" />
 
 
@@ -24,17 +23,128 @@
       class="site-loading"
       aria-live="polite"
       aria-label="页面加载中"
-      data-sprite-src="/images/tech/girl_read_sprite.png"
-      data-frame-count="2"
     >
       <div class="site-loading__inner">
-        <div class="site-loading__girl" aria-hidden="true"></div>
+        <img
+          class="site-loading__symbol"
+          src="/images/logo_small.webp"
+          alt=""
+          aria-hidden="true"
+          decoding="async"
+          fetchpriority="high"
+        />
         <p class="site-loading__text">LOADING...</p>
         <div class="site-loading__progress" aria-hidden="true">
           <span class="site-loading__progress-bar"></span>
         </div>
+        <p class="site-loading__percent" aria-hidden="true">0%</p>
       </div>
     </div>
+    <script>
+      (() => {
+        const loading = document.querySelector(".site-loading");
+        const loadingProgressBar = document.querySelector(".site-loading__progress-bar");
+        const loadingPercent = document.querySelector(".site-loading__percent");
+        const MAX_LOADING_MS = 9000;
+        const MIN_LOADING_MS = 450;
+        const TRANSITION_MS = 540;
+
+        if (!loading || !loadingProgressBar) return;
+
+        window.__mochiLoadingStarted = true;
+        document.body.classList.add("is-loading");
+
+        const startTime = Date.now();
+        let progressTimer = null;
+        let forceHideTimer = null;
+        let minimumDelayTimer = null;
+        let finishTimer = null;
+        let hidden = false;
+        let pageReady = document.readyState === "complete";
+        let currentProgress = 0;
+        let minimumDurationReached = false;
+
+        const setProgress = (value) => {
+          currentProgress = Math.max(currentProgress, Math.min(value, 100));
+          const progressValue = `${currentProgress}%`;
+          loading.style.setProperty("--loading-progress", progressValue);
+          loadingProgressBar.style.width = progressValue;
+
+          if (loadingPercent) {
+            loadingPercent.textContent = `${Math.floor(currentProgress)}%`;
+          }
+        };
+
+        const canHideNow = () => pageReady && minimumDurationReached;
+
+        const hideLoading = () => {
+          if (hidden) return;
+          hidden = true;
+
+          if (progressTimer) window.clearInterval(progressTimer);
+          if (forceHideTimer) window.clearTimeout(forceHideTimer);
+          if (minimumDelayTimer) window.clearTimeout(minimumDelayTimer);
+          if (finishTimer) window.clearTimeout(finishTimer);
+
+          setProgress(100);
+          loading.classList.add("is-hidden");
+          document.body.classList.remove("is-loading");
+
+          window.setTimeout(() => {
+            loading.remove();
+          }, TRANSITION_MS);
+        };
+
+        const scheduleHide = () => {
+          if (!canHideNow() || finishTimer || hidden) return;
+
+          setProgress(Math.max(currentProgress, 96));
+          finishTimer = window.setTimeout(hideLoading, 260);
+        };
+
+        const requestHide = () => {
+          pageReady = true;
+          scheduleHide();
+        };
+
+        setProgress(3);
+
+        progressTimer = window.setInterval(() => {
+          const elapsed = Date.now() - startTime;
+          const warmupRatio = Math.min(elapsed / 3600, 1);
+
+          if (pageReady) {
+            setProgress(currentProgress + Math.max((99 - currentProgress) * 0.18, 1.1));
+            return;
+          }
+
+          if (currentProgress < 90) {
+            const targetProgress = 3 + (1 - Math.pow(1 - warmupRatio, 1.35)) * 87;
+            setProgress(targetProgress);
+            return;
+          }
+
+          setProgress(currentProgress + Math.max((94 - currentProgress) * 0.035, 0.04));
+        }, 140);
+
+        minimumDelayTimer = window.setTimeout(() => {
+          minimumDurationReached = true;
+          scheduleHide();
+        }, MIN_LOADING_MS);
+
+        forceHideTimer = window.setTimeout(() => {
+          pageReady = true;
+          minimumDurationReached = true;
+          hideLoading();
+        }, MAX_LOADING_MS);
+
+        if (document.readyState === "complete") {
+          requestHide();
+        } else {
+          window.addEventListener("load", requestHide, { once: true });
+        }
+      })();
+    </script>
     <svg class="visual-defs" aria-hidden="true" width="0" height="0">
       <defs>
         <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
@@ -61,10 +171,15 @@
     class="site-logo is-small"
     href="/"
     aria-label="返回年糕的编程花园首页"
-    data-default-logo="/images/logo.png"
-    data-small-logo="/images/logo_small.png"
+    data-default-logo="/images/logo.webp"
+    data-small-logo="/images/logo_small.webp"
   >
-    <img src="/images/logo_small.png" alt="年糕的编程花园" />
+    <img
+      src="/images/logo_small.webp"
+      alt="年糕的编程花园"
+      decoding="async"
+      fetchpriority="high"
+    />
   </a>
 
   <button
@@ -111,9 +226,12 @@
         <div class="post-meta" aria-label="归档信息">
           <span>按时间浏览全部文章</span>
           
-            <span>第 4 / 6 页</span>
+            <span>第 4 / 9 页</span>
           
         </div>
+      </div>
+      <div class="archive-hero__decor" aria-hidden="true">
+        <span class="archive-hero__reader"></span>
       </div>
     </div>
   </section>
@@ -126,23 +244,25 @@
             
             <a
               class="archive-card archive-card--no-cover"
-              href="/posts/life-20190210-perfume/"
-              aria-label="查看文章：给Perfume写的信"
-              
+              href="https://mp.weixin.qq.com/s/Le-qt0tZ8b5IRrWuvoEywg"
+              aria-label="查看文章：沉浸式vibe coding后的感想"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
             >
               
 
               <div class="archive-card__content">
-                <h2 class="archive-card__title">给Perfume写的信</h2>
+                <h2 class="archive-card__title">沉浸式vibe coding后的感想</h2>
                 <p class="archive-card__excerpt">
-                  我去上海看了Perfume的演唱会！超级开心o( ￣▽￣ )ブ，然后我听说现场有礼物箱，然后我就在去上海的前一天，很快速地写了一封信，用的都是超级基础的语法。不知道Perfume能不能看到，总之心意确实是送出去了，嘻嘻。
+                  复盘一次沉浸式 vibe coding 体验，记录 AI 编程带来的爽感、边界、疲惫以及对开发方式的影响。
                 </p>
                 <div class="archive-card__meta">
                   <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2019</span>
-                    <span class="archive-card__day">02.10</span>
+                    <span class="archive-card__year">2025</span>
+                    <span class="archive-card__day">08.26</span>
                   </div>
-                  <span class="archive-card__tag">#碎碎念</span>
+                  <span class="archive-card__tag">#AI</span>
+                  
+                    <span class="archive-card__tag">#vibe coding</span>
                   
                 </div>
               </div>
@@ -151,23 +271,25 @@
             
             <a
               class="archive-card archive-card--no-cover"
-              href="/posts/tech-20190203-gradient/"
-              aria-label="查看文章：CSS渐变小结"
-              
+              href="https://mp.weixin.qq.com/s/RH5b3KckxDtyoTex_ACufQ"
+              aria-label="查看文章：小需求背后的大智慧：思考“为什么”，少走冤枉路"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
             >
               
 
               <div class="archive-card__content">
-                <h2 class="archive-card__title">CSS渐变小结</h2>
+                <h2 class="archive-card__title">小需求背后的大智慧：思考“为什么”，少走冤枉路</h2>
                 <p class="archive-card__excerpt">
-                  因为我不喜欢背公式，希望自己能找到比较容易理解和推理的记忆方式吧，很早就感觉CSS3渐变的属性组成不太好记忆，所以今天终于挖了这个坑，其实也没什么很特别的，嘻嘻，如果有错误欢迎提出。
+                  从小需求出发讨论需求背后的真实目的，强调先理解“为什么”，才能避免盲目执行和反复返工。
                 </p>
                 <div class="archive-card__meta">
                   <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2019</span>
-                    <span class="archive-card__day">02.03</span>
+                    <span class="archive-card__year">2025</span>
+                    <span class="archive-card__day">08.12</span>
                   </div>
-                  <span class="archive-card__tag">#CSS</span>
+                  <span class="archive-card__tag">#职场</span>
+                  
+                    <span class="archive-card__tag">#产品思考</span>
                   
                 </div>
               </div>
@@ -176,25 +298,25 @@
             
             <a
               class="archive-card archive-card--no-cover"
-              href="/posts/life-20181227-music/"
-              aria-label="查看文章：音乐 | 2018年令我印象深刻的J-POP"
-              
+              href="https://mp.weixin.qq.com/s/sJJmJiC2CSQnnBWw3YG8lg"
+              aria-label="查看文章：即梦AI制图入门学习总结"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
             >
               
 
               <div class="archive-card__content">
-                <h2 class="archive-card__title">音乐 | 2018年令我印象深刻的J-POP</h2>
+                <h2 class="archive-card__title">即梦AI制图入门学习总结</h2>
                 <p class="archive-card__excerpt">
-                  不知不觉2018年马上就要接近尾声了，我就想来回顾一下自己在2018年收获的令我印象深刻的日本流行音乐。
+                  整理即梦 AI 制图的入门学习经验，记录提示词、风格控制、出图效果和实际使用中的注意点。
                 </p>
                 <div class="archive-card__meta">
                   <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2018</span>
-                    <span class="archive-card__day">12.27</span>
+                    <span class="archive-card__year">2025</span>
+                    <span class="archive-card__day">06.26</span>
                   </div>
-                  <span class="archive-card__tag">#J-POP</span>
+                  <span class="archive-card__tag">#AI</span>
                   
-                    <span class="archive-card__tag">#音乐</span>
+                    <span class="archive-card__tag">#学习</span>
                   
                 </div>
               </div>
@@ -202,72 +324,29 @@
           
             
             <a
-              class="archive-card archive-card--no-cover"
-              href="/posts/tech-20181121-https/"
-              aria-label="查看文章：初识HTTPS"
-              
+              class="archive-card archive-card--with-cover"
+              href="https://mp.weixin.qq.com/s/n5YiJjY7XO90tZ1s8m5S9g"
+              aria-label="查看文章：前端小小报-多码合一问题排查"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
             >
               
-
-              <div class="archive-card__content">
-                <h2 class="archive-card__title">初识HTTPS</h2>
-                <p class="archive-card__excerpt">
-                  前言 我就是那块迟钝の糕同学，我一直都只知道HTTPS是HTTP+SSL&amp;#x2F;TLS两种协议共同构成的，但是对于其中的机制，可以说是很多环节都充满了各种疑问。这个学期我们开了信息安全课，可惜老师只是讲了一些加密的算
-                </p>
-                <div class="archive-card__meta">
-                  <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2018</span>
-                    <span class="archive-card__day">11.21</span>
-                  </div>
-                  <span class="archive-card__tag">#计算机网络</span>
-                  
+                <div class="archive-card__cover-wrap">
+                  <div
+                    class="archive-card__cover lazy-media lazy-media--bg"
+                    data-lazy-bg="https://www.mochiko.cn/wimgs/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20240727161132.jpg"
+                  ></div>
                 </div>
-              </div>
-            </a>
-          
-            
-            <a
-              class="archive-card archive-card--no-cover"
-              href="/posts/tech-20181027-cubizer/"
-              aria-label="查看文章：初识贝塞尔曲线"
-              
-            >
               
 
               <div class="archive-card__content">
-                <h2 class="archive-card__title">初识贝塞尔曲线</h2>
+                <h2 class="archive-card__title">前端小小报-多码合一问题排查</h2>
                 <p class="archive-card__excerpt">
-                  贝塞尔曲线在CSS动画中和canvas、svg绘图中都是比较重要的一个东西！所以我来好好的小结一下关于它的一些东西。
+                  种下一篇新的记录，留给以后慢慢回看。
                 </p>
                 <div class="archive-card__meta">
                   <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2018</span>
-                    <span class="archive-card__day">10.27</span>
-                  </div>
-                  <span class="archive-card__tag">#CSS</span>
-                  
-                </div>
-              </div>
-            </a>
-          
-            
-            <a
-              class="archive-card archive-card--no-cover"
-              href="/posts/tech-20180927-promise/"
-              aria-label="查看文章：Promise的相关小结"
-              
-            >
-              
-
-              <div class="archive-card__content">
-                <h2 class="archive-card__title">Promise的相关小结</h2>
-                <p class="archive-card__excerpt">
-                  前言 网上关于Promise的文章确实是非常多了，但是自己实践的并不多，这里是针对自己的一个知识点小结和梳理，而且由Promise延伸出的关于事件循环的机制也是可以挖出很多东西的，不过这个总结可能就是涉及到一些皮毛，当然
-                </p>
-                <div class="archive-card__meta">
-                  <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2018</span>
-                    <span class="archive-card__day">09.27</span>
+                    <span class="archive-card__year">2024</span>
+                    <span class="archive-card__day">07.21</span>
                   </div>
                   <span class="archive-card__tag">#JavaScript</span>
                   
@@ -277,51 +356,29 @@
           
             
             <a
-              class="archive-card archive-card--no-cover"
-              href="/posts/life-20180808-res/"
-              aria-label="查看文章：北京实习小记"
-              
-            >
-              
-
-              <div class="archive-card__content">
-                <h2 class="archive-card__title">北京实习小记</h2>
-                <p class="archive-card__excerpt">
-                  自从上次实训完后，我一刻也没停歇的就坐车到了北京，来到了租的房子，然后等待着实习生活的开始。北京和长沙比起来真的凉快太多，晚上虽然也有30度，但是我却冷的要盖被子睡觉。
-                </p>
-                <div class="archive-card__meta">
-                  <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2018</span>
-                    <span class="archive-card__day">08.08</span>
-                  </div>
-                  <span class="archive-card__tag">#碎碎念</span>
-                  
-                </div>
-              </div>
-            </a>
-          
-            
-            <a
               class="archive-card archive-card--with-cover"
-              href="/posts/work-nanichan/"
-              aria-label="查看文章：2018-纳尼酱"
+              href="/posts/work-codeofperfume/"
+              aria-label="查看文章：2024-CodeOfPerfume"
               
             >
               
                 <div class="archive-card__cover-wrap">
-                  <div class="archive-card__cover" style="background-image: url('/mcimages/work_nanichan/detail.png')"></div>
+                  <div
+                    class="archive-card__cover lazy-media lazy-media--bg"
+                    data-lazy-bg="/wimgs/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20240714162144.png"
+                  ></div>
                 </div>
               
 
               <div class="archive-card__content">
-                <h2 class="archive-card__title">2018-纳尼酱</h2>
+                <h2 class="archive-card__title">2024-CodeOfPerfume</h2>
                 <p class="archive-card__excerpt">
-                  大三下学期的实训项目，选题是一个在线日语单词的记忆网站，想着出来可以帮自己坚持学日语呢。因为只有三周时间，所以这次我觉得自己能完成核心的记忆、测试，以及查词的功能就足够了。另外自己选择主要技术是vue.js + koa2
+                  专门为Perfume上海演出准备的特别企划，从策划到开发执行均是我一个人承担。
                 </p>
                 <div class="archive-card__meta">
                   <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2018</span>
-                    <span class="archive-card__day">07.21</span>
+                    <span class="archive-card__year">2024</span>
+                    <span class="archive-card__day">07.14</span>
                   </div>
                   <span class="archive-card__tag">#编程项目</span>
                   
@@ -331,24 +388,33 @@
           
             
             <a
-              class="archive-card archive-card--no-cover"
-              href="/posts/tech-20180605-multientry/"
-              aria-label="查看文章：vue-cli项目打包为多页面"
-              
+              class="archive-card archive-card--with-cover"
+              href="https://www.bilibili.com/video/BV1Tr42177eK/"
+              aria-label="查看文章：看了今泉爱夏的LIVE..."
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
             >
+              
+                <div class="archive-card__cover-wrap">
+                  <div
+                    class="archive-card__cover lazy-media lazy-media--bg"
+                    data-lazy-bg="/wimgs/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20240714170632.png"
+                  ></div>
+                </div>
               
 
               <div class="archive-card__content">
-                <h2 class="archive-card__title">vue-cli项目打包为多页面</h2>
+                <h2 class="archive-card__title">看了今泉爱夏的LIVE...</h2>
                 <p class="archive-card__excerpt">
-                  老师布置了一个用JAVA四个框架写系统的作业，然后想趁这个机会把前端框架也用上吧，但是因为是开发传统的网页应用，所以还是多页面更适用，于是就想着怎么来改造一下可以让webpack打包结果成多页面形式，去网上搜索一下其实已
+                  有幸观看了今泉爱夏北京场的演出，虽然已经是半个月前的体验了，但还是忍不住回忆了一下QAQ，爱夏真的太好了！！！！
                 </p>
                 <div class="archive-card__meta">
                   <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2018</span>
-                    <span class="archive-card__day">06.05</span>
+                    <span class="archive-card__year">2024</span>
+                    <span class="archive-card__day">05.12</span>
                   </div>
-                  <span class="archive-card__tag">#vue.js</span>
+                  <span class="archive-card__tag">#碎碎念</span>
+                  
+                    <span class="archive-card__tag">#音乐</span>
                   
                 </div>
               </div>
@@ -356,24 +422,129 @@
           
             
             <a
-              class="archive-card archive-card--no-cover"
-              href="/posts/tech-20180523-cache/"
-              aria-label="查看文章：浏览器の缓存机制"
-              
+              class="archive-card archive-card--with-cover"
+              href="https://mp.weixin.qq.com/s/pJ6eROoIQq8ZAmZVqYB_kw"
+              aria-label="查看文章：240421 - 前端吃瓜小报"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
             >
+              
+                <div class="archive-card__cover-wrap">
+                  <div
+                    class="archive-card__cover lazy-media lazy-media--bg"
+                    data-lazy-bg="/wimgs/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20240714162211.jpg"
+                  ></div>
+                </div>
               
 
               <div class="archive-card__content">
-                <h2 class="archive-card__title">浏览器の缓存机制</h2>
+                <h2 class="archive-card__title">240421 - 前端吃瓜小报</h2>
                 <p class="archive-card__excerpt">
-                  前言 继续挖坑啦，这个也是上次面试和面试官说了很多的一个问题来着，然后我来好好重新研究研究，试着来了解一下浏览器以及和它相关的一些的缓存机制。因为是坑，所以也是缓慢更新的，如果有错误欢迎提出哦！ 文章部分是小结于《 We
+                  种下一篇新的记录，留给以后慢慢回看。
                 </p>
                 <div class="archive-card__meta">
                   <div class="archive-card__meta-date">
-                    <span class="archive-card__year">2018</span>
-                    <span class="archive-card__day">05.23</span>
+                    <span class="archive-card__year">2024</span>
+                    <span class="archive-card__day">04.21</span>
                   </div>
-                  <span class="archive-card__tag">#浏览器</span>
+                  <span class="archive-card__tag">#JavaScript</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--with-cover"
+              href="https://mp.weixin.qq.com/s/S4ftTIuyz53DNAXB2YK04w"
+              aria-label="查看文章：240414 - 前端吃瓜小报"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >
+              
+                <div class="archive-card__cover-wrap">
+                  <div
+                    class="archive-card__cover lazy-media lazy-media--bg"
+                    data-lazy-bg="/wimgs/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20240714162223.jpg"
+                  ></div>
+                </div>
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">240414 - 前端吃瓜小报</h2>
+                <p class="archive-card__excerpt">
+                  种下一篇新的记录，留给以后慢慢回看。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2024</span>
+                    <span class="archive-card__day">04.14</span>
+                  </div>
+                  <span class="archive-card__tag">#JavaScript</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--with-cover"
+              href="https://mp.weixin.qq.com/s/lKYcQ6aOiVnuzl6Vp3EQXg"
+              aria-label="查看文章：艺术编程学习 Day 14 春节烟花"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >
+              
+                <div class="archive-card__cover-wrap">
+                  <div
+                    class="archive-card__cover lazy-media lazy-media--bg"
+                    data-lazy-bg="/wimgs/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20240714135543.png"
+                  ></div>
+                </div>
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">艺术编程学习 Day 14 春节烟花</h2>
+                <p class="archive-card__excerpt">
+                  种下一篇新的记录，留给以后慢慢回看。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2024</span>
+                    <span class="archive-card__day">02.11</span>
+                  </div>
+                  <span class="archive-card__tag">#艺术编程</span>
+                  
+                    <span class="archive-card__tag">#p5.js</span>
+                  
+                </div>
+              </div>
+            </a>
+          
+            
+            <a
+              class="archive-card archive-card--with-cover"
+              href="https://mp.weixin.qq.com/s/PMQqNSp-CtZ64IxxH8mvsA"
+              aria-label="查看文章：Rhizomatiks 和他们的编程艺术"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >
+              
+                <div class="archive-card__cover-wrap">
+                  <div
+                    class="archive-card__cover lazy-media lazy-media--bg"
+                    data-lazy-bg="/wimgs/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20240714165023.png"
+                  ></div>
+                </div>
+              
+
+              <div class="archive-card__content">
+                <h2 class="archive-card__title">Rhizomatiks 和他们的编程艺术</h2>
+                <p class="archive-card__excerpt">
+                  种下一篇新的记录，留给以后慢慢回看。
+                </p>
+                <div class="archive-card__meta">
+                  <div class="archive-card__meta-date">
+                    <span class="archive-card__year">2023</span>
+                    <span class="archive-card__day">12.23</span>
+                  </div>
+                  <span class="archive-card__tag">#艺术编程</span>
                   
                 </div>
               </div>
@@ -390,7 +561,7 @@
               
 
               <div class="archive-nav__status">
-                第 4 页，共 6 页
+                第 4 页，共 9 页
               </div>
 
               
@@ -409,13 +580,16 @@
     </svg>
   </section>
 
-  <section class="post-about" aria-label="关于年糕">
+  
+<section class="post-about" aria-label="关于年糕">
   <div class="post-about__figure">
     <div class="post-about__figure-card">
       <img
         class="post-about__image"
-        src="/images/mochi_real.png"
+        src="/images/mochi_real.webp"
         alt="年糕的个人形象照"
+        loading="lazy"
+        decoding="async"
       />
     </div>
   </div>
@@ -426,11 +600,26 @@
       <h2 class="post-about__name">年糕</h2>
       <div class="post-about__channels" aria-label="社交平台">
         
-          <a href="/#about">小红书</a>
+          
+          
+            <a
+              href="https://www.xiaohongshu.com/user/profile/659266b2000000002001f48e"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >小红书</a>
+          
         
-          <a href="/#about">B站</a>
+          
+          
+            <a
+              href="https://space.bilibili.com/3494369971669945"
+              target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;
+            >B站</a>
+          
         
-          <a href="/#about">微信公众号</a>
+          
+          
+            <button type="button" data-wechat-modal-trigger>微信公众号</button>
+          
         
       </div>
     </div>
@@ -440,6 +629,23 @@
 
 </main>
 
+    <dialog class="wechat-modal" aria-labelledby="wechat-modal-title">
+      <button class="wechat-modal__close" type="button" aria-label="关闭微信公众号二维码弹窗" data-wechat-modal-close>
+        ×
+      </button>
+      <div class="wechat-modal__content">
+        <p class="wechat-modal__eyebrow">WECHAT OFFICIAL ACCOUNT</p>
+        <h2 id="wechat-modal-title" class="wechat-modal__title">微信公众号</h2>
+        <img
+          class="wechat-modal__qrcode"
+          src="/images/wx_qrcode.webp"
+          alt="微信公众号二维码"
+          loading="lazy"
+          decoding="async"
+        />
+        <p class="wechat-modal__hint">扫码或搜索“年糕的编程花园”关注年糕的公众号</p>
+      </div>
+    </dialog>
     <footer class="site-footer">
   <div class="site-footer__inner">
     <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
@@ -447,10 +653,10 @@
   </div>
 </footer>
 
-    <script src="/vendor/gsap/gsap.min.js"></script>
-<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+    <script defer src="/vendor/gsap/gsap.min.js"></script>
+<script defer src="/vendor/gsap/ScrollTrigger.min.js"></script>
 
-<script src="/js/main.js"></script>
+<script defer src="/js/main.js"></script>
 
   </body>
 </html>

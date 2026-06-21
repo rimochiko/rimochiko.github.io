@@ -1,79 +1,148 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   <head>
-    <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta
-  name="description"
-  content="&lt;h1 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;计算机网络课程的学习已经是在大二下学期的时候了，过去了半年多，有很多东西似乎都忘记了QAQ。况且当时上课的时候就感觉专业术语多，很多知识也难以理解，但是还是硬着头皮学了下来，如今阅读《HTTP图解》这本书发现很好理解，但是需要加强印象还得自己总结与实践，所以写了这篇文章。&lt;/p&gt;"
-/>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="&lt;h1 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;计算机网络课程的学习已经是在大二下学期的时候了，过去了半年多，有很多东西似乎都忘记了QAQ。况且当时上课的时候就感觉专业术语多，很多知识也难以理解，但是还是硬着头皮学了下来，如今阅读《HTTP图解》这本书发现很好理解，但是需要加强印象还得自己总结与实践，所以写了这篇文章。&lt;/p&gt;">
 <title>《图解HTTP》小结+实践理解 | 年糕的编程花园</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link
-  href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap"
-  rel="stylesheet"
-/>
-<link rel="preload" as="image" href="/images/tech/girl_read_sprite.png" />
-<link rel="stylesheet" href="/css/style.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
 
 
   <meta name="generator" content="Hexo 7.3.0"></head>
   <body class="post-page">
-    <div
-      class="site-loading"
-      aria-live="polite"
-      aria-label="页面加载中"
-      data-sprite-src="/images/tech/girl_read_sprite.png"
-      data-frame-count="2"
-    >
+    <div class="site-loading" aria-live="polite" aria-label="页面加载中">
       <div class="site-loading__inner">
-        <div class="site-loading__girl" aria-hidden="true"></div>
+        <img class="site-loading__symbol" src="/images/logo_small.webp" alt aria-hidden="true" decoding="async" fetchpriority="high">
         <p class="site-loading__text">LOADING...</p>
         <div class="site-loading__progress" aria-hidden="true">
           <span class="site-loading__progress-bar"></span>
         </div>
+        <p class="site-loading__percent" aria-hidden="true">0%</p>
       </div>
     </div>
+    <script>
+      (() => {
+        const loading = document.querySelector(".site-loading");
+        const loadingProgressBar = document.querySelector(".site-loading__progress-bar");
+        const loadingPercent = document.querySelector(".site-loading__percent");
+        const MAX_LOADING_MS = 9000;
+        const MIN_LOADING_MS = 450;
+        const TRANSITION_MS = 540;
+
+        if (!loading || !loadingProgressBar) return;
+
+        window.__mochiLoadingStarted = true;
+        document.body.classList.add("is-loading");
+
+        const startTime = Date.now();
+        let progressTimer = null;
+        let forceHideTimer = null;
+        let minimumDelayTimer = null;
+        let finishTimer = null;
+        let hidden = false;
+        let pageReady = document.readyState === "complete";
+        let currentProgress = 0;
+        let minimumDurationReached = false;
+
+        const setProgress = (value) => {
+          currentProgress = Math.max(currentProgress, Math.min(value, 100));
+          const progressValue = `${currentProgress}%`;
+          loading.style.setProperty("--loading-progress", progressValue);
+          loadingProgressBar.style.width = progressValue;
+
+          if (loadingPercent) {
+            loadingPercent.textContent = `${Math.floor(currentProgress)}%`;
+          }
+        };
+
+        const canHideNow = () => pageReady && minimumDurationReached;
+
+        const hideLoading = () => {
+          if (hidden) return;
+          hidden = true;
+
+          if (progressTimer) window.clearInterval(progressTimer);
+          if (forceHideTimer) window.clearTimeout(forceHideTimer);
+          if (minimumDelayTimer) window.clearTimeout(minimumDelayTimer);
+          if (finishTimer) window.clearTimeout(finishTimer);
+
+          setProgress(100);
+          loading.classList.add("is-hidden");
+          document.body.classList.remove("is-loading");
+
+          window.setTimeout(() => {
+            loading.remove();
+          }, TRANSITION_MS);
+        };
+
+        const scheduleHide = () => {
+          if (!canHideNow() || finishTimer || hidden) return;
+
+          setProgress(Math.max(currentProgress, 96));
+          finishTimer = window.setTimeout(hideLoading, 260);
+        };
+
+        const requestHide = () => {
+          pageReady = true;
+          scheduleHide();
+        };
+
+        setProgress(3);
+
+        progressTimer = window.setInterval(() => {
+          const elapsed = Date.now() - startTime;
+          const warmupRatio = Math.min(elapsed / 3600, 1);
+
+          if (pageReady) {
+            setProgress(currentProgress + Math.max((99 - currentProgress) * 0.18, 1.1));
+            return;
+          }
+
+          if (currentProgress < 90) {
+            const targetProgress = 3 + (1 - Math.pow(1 - warmupRatio, 1.35)) * 87;
+            setProgress(targetProgress);
+            return;
+          }
+
+          setProgress(currentProgress + Math.max((94 - currentProgress) * 0.035, 0.04));
+        }, 140);
+
+        minimumDelayTimer = window.setTimeout(() => {
+          minimumDurationReached = true;
+          scheduleHide();
+        }, MIN_LOADING_MS);
+
+        forceHideTimer = window.setTimeout(() => {
+          pageReady = true;
+          minimumDurationReached = true;
+          hideLoading();
+        }, MAX_LOADING_MS);
+
+        if (document.readyState === "complete") {
+          requestHide();
+        } else {
+          window.addEventListener("load", requestHide, { once: true });
+        }
+      })();
+    </script>
     <svg class="visual-defs" aria-hidden="true" width="0" height="0">
       <defs>
         <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency="0.018"
-            numOctaves="2"
-            seed="8"
-            result="noise"
-          />
-          <feDisplacementMap
-            in="SourceGraphic"
-            in2="noise"
-            scale="18"
-            xChannelSelector="R"
-            yChannelSelector="G"
-          />
+          <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="8" result="noise"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="18" xChannelSelector="R" yChannelSelector="G"/>
         </filter>
       </defs>
     </svg>
     
 <header class="site-header">
-  <a
-    class="site-logo is-small"
-    href="/"
-    aria-label="返回年糕的编程花园首页"
-    data-default-logo="/images/logo.png"
-    data-small-logo="/images/logo_small.png"
-  >
-    <img src="/images/logo_small.png" alt="年糕的编程花园" />
+  <a class="site-logo is-small" href="/" aria-label="返回年糕的编程花园首页" data-default-logo="/images/logo.webp" data-small-logo="/images/logo_small.webp">
+    <img src="/images/logo_small.webp" alt="年糕的编程花园" decoding="async" fetchpriority="high">
   </a>
 
-  <button
-    class="menu-toggle"
-    type="button"
-    aria-label="打开菜单"
-    aria-expanded="false"
-    aria-controls="site-menu"
-  >
+  <button class="menu-toggle" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="site-menu">
     <span></span>
     <span></span>
     <span></span>
@@ -110,12 +179,7 @@
             <span class="post-hero__eyebrow">DIARY LOG</span>
             <span class="post-hero__date">2018.02.09</span>
             <h1 id="post-title" class="post-title post-title--decorated">
-              <img
-                class="post-title__decor"
-                src="/images/decorates/flower2.png"
-                alt=""
-                aria-hidden="true"
-              />
+              <img class="post-title__decor" src="/images/decorates/flower2.webp" alt aria-hidden="true" decoding="async">
               <span>《图解HTTP》小结+实践理解</span>
             </h1>
             <div class="post-meta" aria-label="文章信息">
@@ -141,9 +205,9 @@
 <li>指定文档所在地址的URL</li>
 </ol>
 <p><strong>HTTP（超文本传输协议，书上说称为超文本转移协议更严谨）</strong><br>破壳日：1989年3月<br>客户端到服务器通信的流程是建立在HTTP协议之上的。</p>
-<p><strong>TCP&#x2F;IP的协议模型</strong><br><img src="/pimgs/20180209http/1.png" alt="图片描述"><br>在每次进行信息传输的时候，信息都要从高层传到底层，会经过不断的“包装”。再从对方的底层传到高层，这时会不断的“拆包装”。<br>在这之中也会用到各个层的一些很重要的协议，在一次HTTP请求发送中：<br>应用层（应用层、表示层、会话层）：HTTP、DNS<br>传输层：TCP<br>网络层：IP、ARP<br>其中DNS协议用于解析域名，TCP协议用于确定目标计算机资源端口，IP协议用于确定目标计算机的IP地址，ARP协议用于把IP地址转换为真正的物理地址MAC。</p>
+<p><strong>TCP&#x2F;IP的协议模型</strong><br><img alt="图片描述" data-lazy-src="/pimgs/20180209http/1.png" loading="lazy" decoding="async"><br>在每次进行信息传输的时候，信息都要从高层传到底层，会经过不断的“包装”。再从对方的底层传到高层，这时会不断的“拆包装”。<br>在这之中也会用到各个层的一些很重要的协议，在一次HTTP请求发送中：<br>应用层（应用层、表示层、会话层）：HTTP、DNS<br>传输层：TCP<br>网络层：IP、ARP<br>其中DNS协议用于解析域名，TCP协议用于确定目标计算机资源端口，IP协议用于确定目标计算机的IP地址，ARP协议用于把IP地址转换为真正的物理地址MAC。</p>
 <p><strong>TCP协议</strong><br>TCP提供可靠的字节流服务，会把数据分割成报文段进行发送。<br>TCP用SYN和ACK标志来确认对方是否成功送达：<br>1.发送端发送：SYN。<br>2.接收端接收后，发送SYN和ACK。<br>3.发送端接收后，再次发送ACK，握手结束。</p>
-<p><strong>综上，当我们从浏览器输入一个URL后，发生了这些事：</strong><br>客户端想浏览URL为 <a target="_blank" rel="noopener" href="http://www.mochiko.cn/">http://www.mochiko.cn</a> 的页面，HTTP协议生成请求页面资源报文，TCP协议把HTTP请求报文分割为多个文段，把文段可靠的传给对方。随后IP协议搜索对方的地址，一遍中转，一遍传送。（省略了网络层以下的了）随后TCP协议把收到的报文段重新组合成原来的顺序，然后HTTP协议把WEB服务器请求的内容进行处理，并返回请求的结果和内容。<br><img src="/pimgs/20180209http/2.png" alt="图片描述"><br>wireshark抓包结果可看到，首先发生了三次握手，建立起了TCP链接。随后发出HTTP请求，TCP再把报文分成了四段发送，其中收到了三个数据接收回复，最后HTTP返回200 OK表示成功发送完了主页的HTML文件。<br><img src="/pimgs/20180209http/3.png" alt="图片描述"><br>在此次抓包中，这里的x&#x3D;0,y&#x3D;0,第二次x&#x3D;1，第三次，x&#x3D;y&#x3D;1，符合图中的规则。</p>
+<p><strong>综上，当我们从浏览器输入一个URL后，发生了这些事：</strong><br>客户端想浏览URL为 <a target="_blank" rel="noopener" href="http://www.mochiko.cn/">http://www.mochiko.cn</a> 的页面，HTTP协议生成请求页面资源报文，TCP协议把HTTP请求报文分割为多个文段，把文段可靠的传给对方。随后IP协议搜索对方的地址，一遍中转，一遍传送。（省略了网络层以下的了）随后TCP协议把收到的报文段重新组合成原来的顺序，然后HTTP协议把WEB服务器请求的内容进行处理，并返回请求的结果和内容。<br><img alt="图片描述" data-lazy-src="/pimgs/20180209http/2.png" loading="lazy" decoding="async"><br>wireshark抓包结果可看到，首先发生了三次握手，建立起了TCP链接。随后发出HTTP请求，TCP再把报文分成了四段发送，其中收到了三个数据接收回复，最后HTTP返回200 OK表示成功发送完了主页的HTML文件。<br><img alt="图片描述" data-lazy-src="/pimgs/20180209http/3.png" loading="lazy" decoding="async"><br>在此次抓包中，这里的x&#x3D;0,y&#x3D;0,第二次x&#x3D;1，第三次，x&#x3D;y&#x3D;1，符合图中的规则。</p>
 <p><strong>URL</strong><br>URI 统一资源标识符（在《HTTP权威指南》里面对URI的解释更充分一点）</p>
 <blockquote>
 <p>协议方案名:&#x2F;&#x2F;登录信息@服务器地址:端口号&#x2F;带层次的文件路径?查询字符串#片段标识符</p>
@@ -153,12 +217,12 @@
 <li>HTTP协议不保存状态，是无状态协议。</li>
 <li>HTTP协议使用URI定位互联网资源。</li>
 </ul>
-<h2 id="请求报文"><a href="#请求报文" class="headerlink" title="请求报文"></a>请求报文</h2><p><img src="/pimgs/20180209http/4.png" alt="图片描述"></p>
+<h2 id="请求报文"><a href="#请求报文" class="headerlink" title="请求报文"></a>请求报文</h2><p><img alt="图片描述" data-lazy-src="/pimgs/20180209http/4.png" loading="lazy" decoding="async"></p>
 <p>开头GET是请求服务器的类型，即方法，随后的“&#x2F;”表示请求访问的资源对象。最后的HTTP1.1是版本号。</p>
-<p><strong>请求报文结构</strong>：<br><img src="/pimgs/20180209http/5.png" alt="0069luTRgy1fn5k0z12mpj30nd0ak3z1.jpg"></p>
-<h2 id="响应报文"><a href="#响应报文" class="headerlink" title="响应报文"></a>响应报文</h2><p><img src="/pimgs/20180209http/6.png" alt="图片描述"></p>
+<p><strong>请求报文结构</strong>：<br><img alt="0069luTRgy1fn5k0z12mpj30nd0ak3z1.jpg" data-lazy-src="/pimgs/20180209http/5.png" loading="lazy" decoding="async"></p>
+<h2 id="响应报文"><a href="#响应报文" class="headerlink" title="响应报文"></a>响应报文</h2><p><img alt="图片描述" data-lazy-src="/pimgs/20180209http/6.png" loading="lazy" decoding="async"></p>
 <p>开头是HTTP的版本，200是状态码，OK是短语。下面（没截）还带有HTML的主体代码。</p>
-<p><strong>响应报文结构</strong>：<br><img src="/pimgs/20180209http/7.png" alt="0069luTRgy1fn5k11fm9pj30n70at3z3.jpg"></p>
+<p><strong>响应报文结构</strong>：<br><img alt="0069luTRgy1fn5k11fm9pj30n70at3z3.jpg" data-lazy-src="/pimgs/20180209http/7.png" loading="lazy" decoding="async"></p>
 <h2 id="HTTP方法"><a href="#HTTP方法" class="headerlink" title="HTTP方法"></a>HTTP方法</h2><p><strong>GET：获取资源</strong><br>指定的资源经过服务器解析后返回相应内容，即文本直接返回，CGI返回经过执行后的结果。</p>
 <p><strong>POST: 传输实体主题</strong><br>PUT和GET功能相似，但是POST的主要目的不是获取响应的主题内容</p>
 <p><strong>PUT：传输文件</strong><br>像FTP文件上传一样，要把请求报文主题包含在文件内容，保存在请求URI的指定位置上。<br>HTTP&#x2F;1.1的PUT自身不带验证，任何人都可以上传，存在安全性问题，一般不使用。若配合WEB应用程序的验证机制或架构设计采用REST标准则可能开放使用。</p>
@@ -167,7 +231,7 @@
 <p><strong>OPTIONS：询问支持的方法</strong><br>查询针对请求URI指定的资源支持方法。<br>1.1版本才支持。</p>
 <p><strong>TRACE：追踪路径</strong><br>让WEB服务器端将之前的请求通信环回给客户端，发送请求把Max-Forwards首部字段填入数值，每经过一个服务器端就把该数字减1，是0时停止传输。容易引发XST攻击，通常不会用到。<br>1.1版本才支持。</p>
 <p><strong>CONNECT：用隧道协议连接代理</strong><br>主要用SSL和TSL协议把通信内容加密经网络隧道传输。<br>1.1版本才支持。</p>
-<h2 id="其他特性"><a href="#其他特性" class="headerlink" title="其他特性"></a>其他特性</h2><p><strong>持久链接节省通信量</strong><br>HTTP 1.1和部分HTTP 1.0提供持久链接，只要任意一段没有提出断开链接，就保持TCP链接状态。<br><img src="/pimgs/20180209http/8.png" alt="图片描述"></p>
+<h2 id="其他特性"><a href="#其他特性" class="headerlink" title="其他特性"></a>其他特性</h2><p><strong>持久链接节省通信量</strong><br>HTTP 1.1和部分HTTP 1.0提供持久链接，只要任意一段没有提出断开链接，就保持TCP链接状态。<br><img alt="图片描述" data-lazy-src="/pimgs/20180209http/8.png" loading="lazy" decoding="async"></p>
 <p>可以查看抓包数据，发送成功一个请求后没有断开TCP连接，此图也适用于管线化的说明，同时发送几个HTTP请求。</p>
 <p><strong>管线化</strong><br>从前必须要收到响应才发送新的请求，而管线化技术不需要等待，可以同时发送多个请求。</p>
 <p><strong>Cookie管理状态</strong><br>因为HTTP是无状态的协议，所以需要Cookie来管理状态：<br>1.客户端发送请求。<br>2.服务器对这个客户端生成一个Cookie，保存下来，并发送回去。<br>3.客户端保存这个Cookie。<br>4.客户端第二次发送请求，带着Cookie一起发送。<br>5.服务器坚持Cookie，分析出是刚才那个客户端。</p>
@@ -181,10 +245,10 @@
 </ol>
 <p><strong>报文主体和实体主体</strong><br>报文主体用于传输请求或者响应实体主体。</p>
 <p><strong>分块传输编码</strong><br>把实体主体分成多个部分，每一块用十六进制标记块大小，最后一块用“0（CR+LF）”标记。</p>
-<p><strong>发送多种数据多对象集合</strong><br>MINE机制允许多个不同类型的二进制数据以ASCII码指明。<br>多部分对象集合包含：<br>1.multipart&#x2F;form-data<br>2.multipart&#x2F;byteranges<br>3.multipart&#x2F;form-data<br>用boundary字符串（指定各个实体开始和结束加入–）划分多部分对象集合类型。<br><img src="/pimgs/20180209http/9.png" alt="图片描述"></p>
-<p><strong>range获取指定范围数据</strong><br><img src="/pimgs/20180209http/10.png" alt="图片描述"></p>
+<p><strong>发送多种数据多对象集合</strong><br>MINE机制允许多个不同类型的二进制数据以ASCII码指明。<br>多部分对象集合包含：<br>1.multipart&#x2F;form-data<br>2.multipart&#x2F;byteranges<br>3.multipart&#x2F;form-data<br>用boundary字符串（指定各个实体开始和结束加入–）划分多部分对象集合类型。<br><img alt="图片描述" data-lazy-src="/pimgs/20180209http/9.png" loading="lazy" decoding="async"></p>
+<p><strong>range获取指定范围数据</strong><br><img alt="图片描述" data-lazy-src="/pimgs/20180209http/10.png" loading="lazy" decoding="async"></p>
 <p>图为一个大图的GET请求，Range表示请求933343~2151819之间的字节</p>
-<p><img src="/pimgs/20180209http/12.png" alt="图片描述"></p>
+<p><img alt="图片描述" data-lazy-src="/pimgs/20180209http/12.png" loading="lazy" decoding="async"></p>
 <p>针对范围请求，会有206状态码返回。若服务器无法响应，就是返回200状态码。</p>
 <p><strong>Accept内容协商</strong><br>包括服务器驱动协商，客户端驱动协商和透明协商<br>Accept<br>Accept-Charset<br>Accept-Encoding<br>Accept-Language<br>Content-Language</p>
 <h1 id="状态码和短语"><a href="#状态码和短语" class="headerlink" title="状态码和短语"></a>状态码和短语</h1><h2 id="1XX-Information"><a href="#1XX-Information" class="headerlink" title="1XX Information"></a>1XX Information</h2><p>接受的请求正在处理</p>
@@ -193,7 +257,7 @@
 <p><strong>204 No Content</strong><br>客户端发来的请求被正常处理了，但不包含实体的主体部分。</p>
 <p><strong>206 Partial Content</strong><br>客户端进行了范围请求，且服务器正确执行了请求，响应报文中包含由Content-Range指定范围的主体。</p>
 <h2 id="3XX-Redirection"><a href="#3XX-Redirection" class="headerlink" title="3XX Redirection"></a>3XX Redirection</h2><p>重定向，需要进行附加操作</p>
-<p><strong>301 Move Permanently</strong><br>永久性重定位，状态码表示请求的资源已经被分配了新的URI，以后应用现在指定的URI。如果URI保存书签了，也应该按照Location首部字段提示保存。<br><img src="https://www.mochiko.cn/pimgs/20180209http/13.png" alt="图片描述"><br>输入URL最后不加&#x2F;会产生301状态码</p>
+<p><strong>301 Move Permanently</strong><br>永久性重定位，状态码表示请求的资源已经被分配了新的URI，以后应用现在指定的URI。如果URI保存书签了，也应该按照Location首部字段提示保存。<br><img alt="图片描述" data-lazy-src="https://www.mochiko.cn/pimgs/20180209http/13.png" loading="lazy" decoding="async"><br>输入URL最后不加&#x2F;会产生301状态码</p>
 <p><strong>302 Found</strong><br>临时性重定向，请求的资源被分配了新的URI，希望用户用新的URI访问。推荐仅在响应GET或 HEAD 方法时采用302状态码，而在其他时候使用 307 Temporary Redirect 来替代，因为在这些场景下方法变换是明确禁止的</p>
 <p><strong>303 See Other</strong><br>与302有相同的功能，但是303明确表示客户端用GET方法获取资源。在确实需要将重定向请求的方法转换为 GET的场景下，可以使用303。</p>
 <p><strong>304 Not Modified</strong><br>客户端发送附带条件的GET请求：If-Match、If-Modified-Since、If-None-Match、If-Range、If-Unmodified-Since，服务器允许请求资源，但因发生请求不满足条件而返回。</p>
@@ -231,19 +295,13 @@
           
             <nav class="post-nav" aria-label="文章切换">
               
-                <a
-                  href="/posts/life-20180210-res/"
-                  
-                >
+                <a href="/posts/life-20180210-res/">
                   <span class="post-nav__label">上一篇</span>
                   <span class="post-nav__title">大三上学期小结</span>
                 </a>
               
               
-                <a
-                  href="/posts/tech-20171130-margin/"
-                  
-                >
+                <a href="/posts/tech-20171130-margin/">
                   <span class="post-nav__label">下一篇</span>
                   <span class="post-nav__title">圣杯布局引发对margin负值的研究</span>
                 </a>
@@ -257,17 +315,14 @@
 
   <section class="post-about-band">
     <svg class="post-divider post-divider--content" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"></path>
+      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"/>
     </svg>
     <div class="post-about-band__inner">
-      <section class="post-about" aria-label="关于年糕">
+      
+<section class="post-about" aria-label="关于年糕">
   <div class="post-about__figure">
     <div class="post-about__figure-card">
-      <img
-        class="post-about__image"
-        src="/images/mochi_real.png"
-        alt="年糕的个人形象照"
-      />
+      <img class="post-about__image" src="/images/mochi_real.webp" alt="年糕的个人形象照" loading="lazy" decoding="async">
     </div>
   </div>
 
@@ -277,11 +332,20 @@
       <h2 class="post-about__name">年糕</h2>
       <div class="post-about__channels" aria-label="社交平台">
         
-          <a href="/#about">小红书</a>
+          
+          
+            <a href="https://www.xiaohongshu.com/user/profile/659266b2000000002001f48e" target="&#34;_blank&#34;" rel="&#34;noopener" noreferrer&#34;>小红书</a>
+          
         
-          <a href="/#about">B站</a>
+          
+          
+            <a href="https://space.bilibili.com/3494369971669945" target="&#34;_blank&#34;" rel="&#34;noopener" noreferrer&#34;>B站</a>
+          
         
-          <a href="/#about">微信公众号</a>
+          
+          
+            <button type="button" data-wechat-modal-trigger>微信公众号</button>
+          
         
       </div>
     </div>
@@ -294,6 +358,17 @@
 </main>
 
 
+    <dialog class="wechat-modal" aria-labelledby="wechat-modal-title">
+      <button class="wechat-modal__close" type="button" aria-label="关闭微信公众号二维码弹窗" data-wechat-modal-close>
+        ×
+      </button>
+      <div class="wechat-modal__content">
+        <p class="wechat-modal__eyebrow">WECHAT OFFICIAL ACCOUNT</p>
+        <h2 id="wechat-modal-title" class="wechat-modal__title">微信公众号</h2>
+        <img class="wechat-modal__qrcode" src="/images/wx_qrcode.webp" alt="微信公众号二维码" loading="lazy" decoding="async">
+        <p class="wechat-modal__hint">扫码或搜索“年糕的编程花园”关注年糕的公众号</p>
+      </div>
+    </dialog>
     <footer class="site-footer site-footer--post">
   <div class="site-footer__inner">
     <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
@@ -301,10 +376,10 @@
   </div>
 </footer>
 
-    <script src="/vendor/gsap/gsap.min.js"></script>
-<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+    <script defer src="/vendor/gsap/gsap.min.js"></script>
+<script defer src="/vendor/gsap/ScrollTrigger.min.js"></script>
 
-<script src="/js/main.js"></script>
+<script defer src="/js/main.js"></script>
 
   </body>
 </html>
