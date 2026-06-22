@@ -899,18 +899,23 @@ a {
   font-weight: 700;
   line-height: 1.4;
   color: #3a3735;
+  line-clamp: 2;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }
 
-.work-bubble__excerpt {
-  display: -webkit-box;
-  overflow: hidden;
-  font-size: 0.98rem;
-  line-height: 1.62;
-  color: rgba(58, 55, 53, 0.78);
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
+.work-bubble__tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem 0.55rem;
+}
+
+.work-bubble__tag {
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: rgba(58, 55, 53, 0.58);
 }
 
 .scroll-mochi {
@@ -1662,6 +1667,7 @@ a {
 
 .diary-patch {
   position: relative;
+  --diary-title-lines: 2;
   aspect-ratio: 1 / 1;
   min-height: 0;
   display: flex;
@@ -1715,8 +1721,13 @@ a {
   margin: 0 0 1.5rem;
   padding-right: 1.2rem;
   font-size: 1.62rem;
-  line-height: 1.28;
+  line-height: 1.36;
   color: #343434;
+  display: -webkit-box;
+  line-clamp: var(--diary-title-lines);
+  -webkit-line-clamp: var(--diary-title-lines);
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .diary-patch__excerpt {
@@ -1936,7 +1947,9 @@ a {
 
 .post-hero--no-cover {
   grid-template-columns: 1fr;
-}
+  width: min(100%, 56rem);
+  padding-top: clamp(1.4rem, 3vw, 2.4rem);
+  padding-bottom: clamp(3.4rem, 5vw, 4.6rem);
 }
 
 .post-hero::before,
@@ -2054,6 +2067,7 @@ a {
   height: calc(129 * var(--image-ratio));
   background-image: url("../images/decorates/photo_sticker_long.webp");
   transform: rotate(-8deg);
+  z-index: 1;
 }
 
 .post-hero__photo-frame::after {
@@ -2086,6 +2100,10 @@ a {
   flex-direction: column;
   gap: 1.1rem;
   padding-top: 0;
+}
+
+.post-hero--no-cover .post-hero__content {
+  padding: 0 1.9rem 0 3.1rem;
 }
 
 .post-main {
@@ -3437,12 +3455,20 @@ a {
 
 @media (min-width: 61.251rem) and (max-width: 80rem) {
   .diary-patch {
+    --diary-title-lines: 3;
     aspect-ratio: 3 / 4;
   }
 
   .diary-patch__title {
     font-size: 1.42rem;
-    line-height: 1.3;
+    line-height: 1.36;
+  }
+}
+
+@media (min-width: 80rem) and (max-width: 86.25rem) {
+  .diary-patch {
+    --diary-title-lines: 3;
+    aspect-ratio: 3 / 4;
   }
 }
 
@@ -3454,6 +3480,7 @@ a {
 
 @media (min-width: 53.75rem) and (max-width: 61.25rem) {
   .diary-patch {
+    --diary-title-lines: 3;
     aspect-ratio: 4 / 3;
   }
 }
@@ -3536,11 +3563,6 @@ a {
     font-size: 1.02rem;
   }
 
-  .work-bubble__excerpt {
-    font-size: 0.86rem;
-    line-height: 1.55;
-  }
-
   .work-more__button,
   .works-more__button,
   .tech-more__button,
@@ -3581,10 +3603,6 @@ a {
 
   .work-bubble__title {
     font-size: 1.02rem;
-  }
-
-  .work-bubble__excerpt {
-    font-size: 0.76rem;
   }
 
   .flower-a {
@@ -3698,6 +3716,11 @@ a {
     gap: 2.2rem;
   }
 
+  .post-hero--no-cover {
+    padding-top: 1.8rem;
+    padding-bottom: 3.8rem;
+  }
+
   .post-hero::after {
     right: 0.4rem;
     top: 0.2rem;
@@ -3711,6 +3734,10 @@ a {
 
   .post-hero__content {
     padding: 0 5%;
+  }
+
+  .post-hero--no-cover .post-hero__content {
+    padding: 0 1.9rem 0 3.1rem;
   }
 
   .post-main {
@@ -4095,6 +4122,7 @@ a {
   }
 
   .diary-patch {
+    --diary-title-lines: 3;
     aspect-ratio: 5 / 6;
     min-height: 0;
     padding: 2.1rem 1.6rem 1.8rem;
@@ -4199,6 +4227,11 @@ a {
     padding-bottom: 2rem;
   }
 
+  .post-hero--no-cover {
+    padding-top: 1.5rem;
+    padding-bottom: 3.1rem;
+  }
+
   .post-hero__visual {
     width: 90%;
     max-width: 30rem;
@@ -4225,6 +4258,10 @@ a {
 
   .post-hero__content {
     padding: 0 5%;
+  }
+
+  .post-hero--no-cover .post-hero__content {
+    padding: 0 0.5rem 0 1.6rem;
   }
 
   .post-title {
@@ -4405,7 +4442,7 @@ a {
 }
 
 .post-shell--archive .post-about {
-  width: 100%;
+  width: var(--archive-container-width);
 }
 
 .post-shell--archive .post-about {
@@ -4473,11 +4510,6 @@ a {
   .tech-more__button,
   .diary-more__button {
     font-size: 0.92rem;
-  }
-
-  .work-bubble__excerpt {
-    font-size: 0.78rem;
-    line-height: 1.5;
   }
 
   .work-bubble__content {
