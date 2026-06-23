@@ -2878,8 +2878,8 @@ a {
 .post-image-frame {
   position: relative;
   display: block;
-  width: min(100%, 52rem);
-  max-width: min(100%, 52rem);
+  width: min(100%, var(--post-image-width, 52rem));
+  max-width: min(100%, var(--post-image-width, 52rem));
   margin: 1.55rem auto 1.95rem;
   padding: 1rem;
   border: 0.08rem solid rgba(120, 88, 47, 0.18);
@@ -2932,7 +2932,10 @@ a {
 }
 
 .post-body p > img:only-child {
+  display: block;
+  width: min(100%, var(--post-image-width, 52rem));
   margin: 0;
+  margin-inline: auto;
 }
 
 .post-note {
@@ -4353,7 +4356,7 @@ a {
   }
 
   .post-body p > img:only-child {
-    width: 100%;
+    width: min(100%, var(--post-image-width, 52rem));
     padding: 0.8rem 0.8rem 3.6rem;
   }
 
@@ -4472,6 +4475,12 @@ a {
 .post-shell--archive .post-about,
 .post-shell--page .post-about {
   padding: 1.4rem 0 0;
+}
+
+@media (max-width: 31.25rem) {
+  .diary-patch {
+    --diary-title-lines: 2;
+  }
 }
 
 @media (max-width: 30.625rem) {
