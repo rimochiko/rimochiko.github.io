@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="复盘一次和 Codex 重构手绘场景化博客的完整经历：个人博客的价值变化、场景化设计的约束、响应式空间模型、视觉微调的边界，以及 AI 协作开发中的权限与规则。">
+<title>我和 Codex 重构一个场景化博客的复盘 | 年糕的编程花园</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+
+
+  <meta name="generator" content="Hexo 7.3.0"></head>
+  <body class="post-page">
+    <div class="site-loading" aria-live="polite" aria-label="页面加载中">
+      <div class="site-loading__inner">
+        <img class="site-loading__symbol" src="/images/logo_small.webp" alt aria-hidden="true" decoding="async" fetchpriority="high">
+        <p class="site-loading__text">LOADING...</p>
+        <div class="site-loading__progress" aria-hidden="true">
+          <span class="site-loading__progress-bar"></span>
+        </div>
+        <p class="site-loading__percent" aria-hidden="true">0%</p>
+      </div>
+    </div>
+    <script>
+      (() => {
+        const loading = document.querySelector(".site-loading");
+        const loadingProgressBar = document.querySelector(".site-loading__progress-bar");
+        const loadingPercent = document.querySelector(".site-loading__percent");
+        const MAX_LOADING_MS = 9000;
+        const MIN_LOADING_MS = 450;
+        const TRANSITION_MS = 540;
+
+        if (!loading || !loadingProgressBar) return;
+
+        window.__mochiLoadingStarted = true;
+        document.body.classList.add("is-loading");
+
+        const startTime = Date.now();
+        let progressTimer = null;
+        let forceHideTimer = null;
+        let minimumDelayTimer = null;
+        let finishTimer = null;
+        let hidden = false;
+        let pageReady = document.readyState === "complete";
+        let currentProgress = 0;
+        let minimumDurationReached = false;
+
+        const setProgress = (value) => {
+          currentProgress = Math.max(currentProgress, Math.min(value, 100));
+          const progressValue = `${currentProgress}%`;
+          loading.style.setProperty("--loading-progress", progressValue);
+          loadingProgressBar.style.width = progressValue;
+
+          if (loadingPercent) {
+            loadingPercent.textContent = `${Math.floor(currentProgress)}%`;
+          }
+        };
+
+        const canHideNow = () => pageReady && minimumDurationReached;
+
+        const hideLoading = () => {
+          if (hidden) return;
+          hidden = true;
+
+          if (progressTimer) window.clearInterval(progressTimer);
+          if (forceHideTimer) window.clearTimeout(forceHideTimer);
+          if (minimumDelayTimer) window.clearTimeout(minimumDelayTimer);
+          if (finishTimer) window.clearTimeout(finishTimer);
+
+          setProgress(100);
+          loading.classList.add("is-hidden");
+          document.body.classList.remove("is-loading");
+
+          window.setTimeout(() => {
+            loading.remove();
+          }, TRANSITION_MS);
+        };
+
+        const scheduleHide = () => {
+          if (!canHideNow() || finishTimer || hidden) return;
+
+          setProgress(Math.max(currentProgress, 96));
+          finishTimer = window.setTimeout(hideLoading, 260);
+        };
+
+        const requestHide = () => {
+          pageReady = true;
+          scheduleHide();
+        };
+
+        setProgress(3);
+
+        progressTimer = window.setInterval(() => {
+          const elapsed = Date.now() - startTime;
+          const warmupRatio = Math.min(elapsed / 3600, 1);
+
+          if (pageReady) {
+            setProgress(currentProgress + Math.max((99 - currentProgress) * 0.18, 1.1));
+            return;
+          }
+
+          if (currentProgress < 90) {
+            const targetProgress = 3 + (1 - Math.pow(1 - warmupRatio, 1.35)) * 87;
+            setProgress(targetProgress);
+            return;
+          }
+
+          setProgress(currentProgress + Math.max((94 - currentProgress) * 0.035, 0.04));
+        }, 140);
+
+        minimumDelayTimer = window.setTimeout(() => {
+          minimumDurationReached = true;
+          scheduleHide();
+        }, MIN_LOADING_MS);
+
+        forceHideTimer = window.setTimeout(() => {
+          pageReady = true;
+          minimumDurationReached = true;
+          hideLoading();
+        }, MAX_LOADING_MS);
+
+        if (document.readyState === "complete") {
+          requestHide();
+        } else {
+          window.addEventListener("load", requestHide, { once: true });
+        }
+      })();
+    </script>
+    <svg class="visual-defs" aria-hidden="true" width="0" height="0">
+      <defs>
+        <filter id="soil-edge-filter" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="8" result="noise"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="18" xChannelSelector="R" yChannelSelector="G"/>
+        </filter>
+      </defs>
+    </svg>
+    
+<header class="site-header">
+  <a class="site-logo is-small" href="/" aria-label="返回年糕的编程花园首页" data-default-logo="/images/logo.webp" data-small-logo="/images/logo_small.webp">
+    <img src="/images/logo_small.webp" alt="年糕的编程花园" decoding="async" fetchpriority="high">
+  </a>
+
+  <button class="menu-toggle" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="site-menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <div class="site-menu-overlay" hidden>
+    <div class="site-menu-page">
+      <nav id="site-menu" class="site-menu" aria-label="主菜单">
+        
+          <a href="/#home">HOME</a>
+        
+          <a href="/#work">WORK</a>
+        
+          <a href="/#tech">TECH</a>
+        
+          <a href="/#diary">DIARY</a>
+        
+          <a href="/#about">ABOUT</a>
+        
+      </nav>
+    </div>
+  </div>
+</header>
+
+    
+<main class="post-shell post-shell--detail">
+  <section class="post-journal-band">
+    <div class="post-journal">
+      <section class="post-hero-band">
+        <div class="post-hero post-hero--no-cover" aria-labelledby="post-title">
+          
+
+          <div class="post-hero__content">
+            <span class="post-hero__eyebrow">DIARY LOG</span>
+            <span class="post-hero__date">2026.06.30</span>
+            <h1 id="post-title" class="post-title post-title--decorated">
+              <img class="post-title__decor" src="/images/decorates/flower2.webp" alt aria-hidden="true" decoding="async">
+              <span>我和 Codex 重构一个场景化博客的复盘</span>
+            </h1>
+            <div class="post-meta" aria-label="文章信息">
+              <span>阅读约 29 分钟</span>
+              <span>#AI</span>
+              <span>#vibe coding</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="post-content-band">
+        <article class="post-main">
+          <div class="post-body-shell">
+            <div class="post-body post-body--entry"><p>最近，我重新设计了个人博客的主题。</p>
+<p>这是一个偏手绘、偏场景化的个人主页，以“年糕的花园”为主题，包含小房子、草地、花园和小路。所有插图都是我在 Procreate 上一笔一笔画出来的，前端和动画部分则主要与 Codex 协作完成。</p>
+<p>原本以为只是换个主题，很快就能搞定，结果断断续续花了两个多星期的下班时间。</p>
+<p>这篇文章想复盘的，不只是“我做了个新博客主题”，更是这次完整项目中，我对个人博客、场景化设计以及与 AI 协作开发的一些真实体会。</p>
+<!--more-->
+
+<h2 id="一、重启博客：AI-带来的新意义"><a href="#一、重启博客：AI-带来的新意义" class="headerlink" title="一、重启博客：AI 带来的新意义"></a>一、重启博客：AI 带来的新意义</h2><p>直接原因很简单：AI 让我重新看到了个人博客的价值。</p>
+<p>早些年我用 Typecho，有数据库有后台，听起来很完整，但维护起来相当累人。后来转为静态博客，本地文件管理、图片 CDN、部署流程，同样耗费不少精力。</p>
+<p>最终，看博客的人越来越少，我也转向了公众号。但公众号始终不同于个人博客，多少带着些商业意味。时间一长，人会不自觉地迎合平台和读者，表达渐渐被修剪。</p>
+<p>不过，我依然觉得生活有记录的必要。去年参加黑客松时，我的选题仍然是“日记应用”。也有人评论：“这年头了，谁还会写日记。”</p>
+<p>但 AI 出现后，情况变了。</p>
+<p>同样的行为，会因为技术环境的不同，而被赋予截然不同的价值。前几年，本地 Markdown、写博客、写日记，常常被视为麻烦、低效、过时。那时候大家追求的是发布和分享，平台已经解决了这些问题，自己维护内容显得多余。</p>
+<p>可 AI 出现后，记录突然重新变得重要。因为这些记录不再是“写完就放着”的历史档案，而是 AI 可以理解、检索、重组、持续利用的个人资产。</p>
+<p>与此同时，互联网这些年不断降低内容发布的门槛，也让越来越多的人习惯把内容交给平台保存。而 AI 的到来，又促使人们重新思考：真正值得长期积累的内容，是不是应该掌握在自己手里？</p>
+<p>所以这次重启博客，不只是换主题或折腾系统。更准确地说，我是想把属于自己的内容、数据和表达空间拿回来。</p>
+<h2 id="二、这次做了一个怎样的博客"><a href="#二、这次做了一个怎样的博客" class="headerlink" title="二、这次做了一个怎样的博客"></a>二、这次做了一个怎样的博客</h2><p>动手之前，我浏览了许多优秀设计网站。在这种灵感趋势下，最初我想要的方向是“文艺”搭配“稚嫩”。但做着做着，它自然长成了一个更有童趣感、更手绘、更场景化的小花园。</p>
+<p>用户进入后，不会马上看到文章列表，而是先看到房子和草地，顺着小路往下走，路过由“盆景”承载的作品区、由土地承载的生活记录，最后停在湖边。它不是一个普通的文章索引，而是一个略带故事背景的个人场景。</p>
+<h3 id="设计过程中的几个关键决策"><a href="#设计过程中的几个关键决策" class="headerlink" title="设计过程中的几个关键决策"></a>设计过程中的几个关键决策</h3><p>关于视觉素材：我没有直接使用 AI 生成的图片。</p>
+<p>不是因为 AI 画不了，而是 AI 生成图有一种明显的趋同性。它或许好看，但很容易让人一眼认出“这是 AI 风格”。也可能是我目前的手绘资产沉淀还不够，总之它的输出不符合我的预期。</p>
+<p>有趣的是，我发现正因为画技不算精湛，反而多了一些“活人感”，而这正是我希望保留的东西。</p>
+<p>所以我的做法是：让 AI 生成图片作为参考和草图打底，帮我快速获取造型、配色上的启发，但最终素材还是在 Procreate 里一笔一笔画出来。</p>
+<p>关于工作流：我一直习惯边设计边编码。</p>
+<p>过去这种方式常被认为不够专业，似乎标准流程应该是先画完整设计稿，再交给开发实现。但我的体验恰恰相反：这样速度更快，而且如果没有视觉的直接呈现，有时反而缺乏灵感。换句话说，静态的不如动态的感受直观。</p>
+<p>但这种方式的弊端在于，一些前期设计问题容易被忽视。大的框架必须提前想清楚：一是可能过度沉浸于视觉创作，短暂忽略了产品功能的前提；二是视野局限于当前，忽略了整体的设计体系。</p>
+<p>具体体现在以下几个方面。</p>
+<h3 id="1-场景化设计踩过的坑"><a href="#1-场景化设计踩过的坑" class="headerlink" title="1. 场景化设计踩过的坑"></a>1. 场景化设计踩过的坑</h3><p>当一个页面开始拥有“世界观”后，人很容易沉迷其中。每个区域都想讲故事，每个元素都想保持统一，最后反而忘记了这片区域真正要完成的任务。</p>
+<p>作品区就经历了两次大改。</p>
+<p>起初，我希望每个作品都用一朵花来表现。从故事设定来看很合理：花园里盛开的每一朵花，都代表一个作品。从房子门口走出去就是花朵，十分自然。</p>
+<p>但真正上线后，我很快发现了问题：花朵的信息密度太低了。作品需要突出封面和内容的差异性，花朵能承载的信息远远不够。而且交互也不太适合展示作品，重点应该是作品本身，花朵的可展示区域太小了。</p>
+<p>于是我又大改了一次。经过反复思考，我找到了“盆景区”这个概念：在盆景区展示作品，作品以轮播图的形式浮现，仿佛从脑海中跳出来。这个方案既保留了场景的统一感，又能充分展示作品内容。</p>
+<p>“关于我”钓鱼区也有类似的问题。</p>
+<p>把一些信息“钓起来”的交互，我觉得很有意思。但进一步设想，理论上详情页也应该延续这个故事。可真要做完整，我却发现思路卡住了，好像有更好的交互故事形态，但一时想不出来。最终只能放弃特殊化，回归常规的呈现方式。</p>
+<p>这让我意识到：场景化设计不是把所有东西都塞进一个故事里，而是要判断每个区域究竟负责氛围、信息还是操作。视觉设定应该服务于功能，而不是反过来。</p>
+<h3 id="2-关于设计思维的反思"><a href="#2-关于设计思维的反思" class="headerlink" title="2. 关于设计思维的反思"></a>2. 关于设计思维的反思</h3><p>我不是专业设计师，更多是从前端视角凭感觉做事。这次做完后，我发现自己欠缺一套设计系统思维，没有从一开始就定好字体、字号、颜色变量、间距标准等规范。</p>
+<p>结果做到后面，CSS 里冒出了很多 <code>18px</code>、<code>22px</code>、<code>37px</code> 这样的“魔法数字”。每一个数值在当时看来都有道理，但放到整个项目中，却成了一堆难以维护的临时补丁。</p>
+<p>如果是专业设计师来做，他们可能也会犯偏重视觉表达的错误；而我这种非专业的，犯的则是另一类错误：缺乏一套整体的设计语言系统。</p>
+<p>所以，边设计边编码没有问题，但不能只顾着改画面，而不去沉淀规则。</p>
+<h2 id="三、和-Codex-一起开发时踩到的坑"><a href="#三、和-Codex-一起开发时踩到的坑" class="headerlink" title="三、和 Codex 一起开发时踩到的坑"></a>三、和 Codex 一起开发时踩到的坑</h2><p>回顾整个项目，我与 Codex 的协作远非一帆风顺。表面上看，这些坑都是“AI 写错了代码”；但深入反思后会发现，每一个坑背后，都折射出人与 AI 协作中某些更本质的问题。</p>
+<h3 id="坑一：响应式与空间建模，AI-擅长布局，却不理解世界"><a href="#坑一：响应式与空间建模，AI-擅长布局，却不理解世界" class="headerlink" title="坑一：响应式与空间建模，AI 擅长布局，却不理解世界"></a>坑一：响应式与空间建模，AI 擅长布局，却不理解世界</h3><p>这是本次项目最大的坑，也是最有启发意义的。</p>
+<p>一开始，Codex 给我写了一版页面，在大屏幕上看起来非常棒。我当时产生了一种虚假的安全感，觉得只要对它说一句“适配一下手机端”，它就能自动处理好。</p>
+<p>后来才发现，我最大的失误不是 AI 写不好响应式，而是我把响应式当成了一个“局部问题”，以为它只是“让页面在不同屏幕下正常显示”的技术细节。</p>
+<p>但实际上，响应式是这个页面整个世界观的一部分。</p>
+<p>普通的后台页面，响应式意味着：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">卡片 | 卡片 | 卡片   →   卡片</span><br><span class="line">                        卡片</span><br><span class="line">                        卡片</span><br></pre></td></tr></table></figure>
+
+<p>只是排列方式的变化。元素之间没有空间关系，只有布局关系。</p>
+<p>但我的页面完全不同：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">房子</span><br><span class="line"></span><br><span class="line">    树            人</span><br><span class="line"></span><br><span class="line">         草地</span><br><span class="line"></span><br><span class="line">           湖</span><br></pre></td></tr></table></figure>
+
+<p>这些元素之间存在的是空间关系。房子和草地的相对位置、树和人的远近、小女孩站在路上的坐标，这些不是通过 Flexbox 或 Grid 就能简单处理的“排列”，而是需要一套完整的世界坐标系。</p>
+<p>AI 默认写出的代码，先是使用了 <code>vw</code>、<code>vh</code> 和百分比单位。对普通页面来说，这未必是错的。但放到这个场景化页面中，就变成了灾难。因为 <code>top: 20vh</code> 在小屏和大屏上对应的绝对位置完全不同，小女孩可能从路上飘到了半空中。</p>
+<p>更麻烦的是，AI 会写 <code>position: absolute</code>，但它其实看不见页面真实渲染的结果。它不知道设置某个数值后，元素是否已经脱离了应有的位置。它只是在根据代码猜测画面，而不是像人一样真正看着画面来判断。</p>
+<p>这个坑暴露的本质问题是：AI 很擅长处理“布局”，却不会主动建立“空间模型”。</p>
+<p>布局来自 HTML 的结构，空间来自设计者脑子里的世界。AI 可以理解“把这三个卡片排成一行”，但它不会主动意识到“房子和草地的相对位置应该保持不变，因为它们属于同一个场景”。它没有“世界”的概念，只有“DOM 树”的概念。</p>
+<p>这其实也不是我第一次遇到类似问题。之前写图文排版 Skill 时，我就已经明显感受到：很多看起来是 CSS 问题的东西，本质上不是 CSS 问题，而是思维模型错了。图文排版表面上也是 HTML 和 CSS，但它真正接近的是画布：元素有固定位置、有层级、有留白比例、有视觉重心。可 AI 很容易按文档流的方式去理解它，把一张卡片当成一篇网页来写。</p>
+<p>所以这次博客不是让我第一次意识到“信息流”和“画布”的差异，而是同一个问题换了一种形式再次出现。图文排版里，要保持的是标题、插图、装饰、正文之间的视觉关系；这个博客里，要保持的是房子、道路、花园、人物之间的空间关系。前者输出的是一张卡片，后者输出的是一个场景，但底层困难很像：你不能只让元素自动流动，还要定义它们在一个坐标系统里的相对位置。</p>
+<p>与此紧密相关的，是素材缩放变量的设计困境。</p>
+<p>我为整个场景定义了一个全局缩放变量 <code>scale = 0.8</code>，希望所有元素等比缩放。但结果却是：有些元素放大后位置跑偏了，又需要单独调整。</p>
+<p>表面上看，这只是变量设计得不够好。但深层问题是：我定义的是一个参数，而 AI 只是机械地应用了这个参数。但人脑真正拥有的，是一套关系规则：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">房子属于 HOME 区域</span><br><span class="line">树也属于 HOME 区域</span><br><span class="line">HOME 区域跟随草地定位</span><br><span class="line">人物跟随 HOME 区域定位</span><br></pre></td></tr></table></figure>
+
+<p>人脑保存的是关系，而 AI 保存的是参数。这是两种完全不同的描述方式。我后来才意识到，所有元素其实都是围绕草地建立参照系的，而不是围绕屏幕。但 AI 并不知道这套参照系，它只知道“把 scale 设为 0.8”，然后元素的位置就乱了。</p>
+<p>这个坑进一步揭示的本质是：向 AI 描述一个世界，需要的是关系规则，而不是数值参数。</p>
+<p>参数是静态的，规则是动态的。AI 可以很好地执行参数，但它不会自动推导出规则。规则需要人来定义。</p>
+<p>如果换个项目，这个规律依然成立：只要你的页面中存在元素之间的空间关系，而非单纯的排列关系，AI 就很难自动处理好响应式和联动缩放。因为它不是在处理一个“场景”，而是在处理一堆“标签”。</p>
+<p>可迁移的经验：</p>
+<ul>
+<li>如果页面具有空间关系，不要指望 AI 自动理解。人类必须先定义好“世界坐标”：整个场景是等比缩放还是有最大宽度？哪些元素必须保持相对位置？动画角色在 resize 后坐标是否需要重新计算？这些问题如果不先想清楚，AI 就只能猜测，越补越乱。</li>
+<li>在涉及多个元素联动关系的场景中，不要只告诉 AI“缩放比例是多少”，而要告诉它“这些元素之间的相对关系是什么”。先定义关系，再定义参数，顺序不能颠倒。</li>
+</ul>
+<h3 id="坑二：样式调整，不是-Prompt-不够精确，而是视觉知识无法完全语言化"><a href="#坑二：样式调整，不是-Prompt-不够精确，而是视觉知识无法完全语言化" class="headerlink" title="坑二：样式调整，不是 Prompt 不够精确，而是视觉知识无法完全语言化"></a>坑二：样式调整，不是 Prompt 不够精确，而是视觉知识无法完全语言化</h3><p>因为没有完整设计稿，许多尺寸和间距都是在浏览器中一点点试出来的。这也暴露了一个问题：自然语言在 UI 微调方面确实不够精确。</p>
+<p>我经常这样说：“往右一点。”“这里留白太大了。”“再贴近草地一点。”</p>
+<p>这些话对人来说很直观，因为我们看着画面说话。但对 AI 而言，“一点”究竟是多少？参照物是什么？是相对于当前元素，还是相对于整个场景？它无从知晓。</p>
+<p>但更深层的问题是：很多视觉判断，人自己也说不清楚。</p>
+<p>为什么这个按钮看起来舒服？为什么这里空一点更好看？为什么这个绿色不协调？很多时候，你只是“知道”它不对，但你很难把它翻译成一条精确的 Prompt。</p>
+<p>UI 调整，本质上依赖的是即时视觉反馈。人看着画面，做出判断，再调整。这是一个闭环。而 AI 只有代码层面的反馈，没有画面层面的反馈。它对代码有反应，对画面没有感知，只能根据你的文字描述去猜测画面的样子。</p>
+<p>这个坑暴露的本质问题是：AI 没有和人共享同一个视觉上下文。</p>
+<p>它看不到你看到的画面，不知道你说的“往右一点”是基于什么参照系。它只能盲猜。</p>
+<p>因为这个问题太频繁，我后来还顺手做了一个浏览器插件原型。</p>
+<p>它的思路很简单：记录我在浏览器面板里调试过的参数，尽量把“我刚刚把这个元素往右挪了一点”翻译成更明确的 CSS 变化，再交给 AI 去同步到项目代码里。</p>
+<p>这个方向是有效的，但要真正做好并不简单。</p>
+<p>因为它不是简单记录几个 CSS 值就够了。它还需要知道我改的是哪个选择器、这个值来自哪条规则、是否被媒体查询覆盖、是不是只在当前视口有效、写回源码时应该改原规则还是新增变量。更麻烦的是，很多时候我在浏览器里调出来的只是一个结果，但项目里真正应该沉淀的是一条更稳定的规则。</p>
+<p>所以这个插件我暂时没有继续完善。它验证了方向，但也暴露了成本。</p>
+<p>这件事让我更确定：人与 AI 之间真正缺少的，也许不是更复杂的 Prompt，而是一层“视觉状态到参数修改”的翻译器。</p>
+<p>如果未来的 IDE 或浏览器工具能直接理解实时渲染画面，让 AI 知道我正在看哪个元素、刚刚拖动了什么、哪些 CSS 值发生了变化、这些变化应该如何写回项目，这个问题或许会得到极大改善。</p>
+<p>但在那之前，人类开发者的眼力仍然不可替代。AI 可以执行调整，但“现在这样对不对”，终究要靠人来判断。</p>
+<p>可迁移的经验：在做视觉微调时，最高效的方式是自己先在浏览器中调好数值，再让 AI 照着改。不要试图完全用自然语言描述视觉感受，因为感受无法稳定量化，而 AI 更擅长执行量化后的指令。</p>
+<h3 id="坑三：组件沉淀，AI-不会主动抽象"><a href="#坑三：组件沉淀，AI-不会主动抽象" class="headerlink" title="坑三：组件沉淀，AI 不会主动抽象"></a>坑三：组件沉淀，AI 不会主动抽象</h3><p>这个网站的样式定制化程度很高，带有很强的故事性。我经常说“请把房子部分怎样怎样、花园部分怎样怎样”，此时 AI 不一定能迅速理解。</p>
+<p>而且我发现，无论页面多小，都应该养成沉淀组件的习惯。按钮、面板、对话框等，如果一开始不收敛，后面很容易散掉。</p>
+<p>因为 AI 不会主动做这件事，它倾向于每次都重新编写。</p>
+<p>结果就是，我不得不在后期统一调整一致性：不同区域的对话框、装饰面板、按钮状态，写法各不相同。有的圆角大，有的圆角小，有的有阴影，有的没有。</p>
+<p>但这里真正值得追问的是：为什么 AI 不会主动抽象？</p>
+<p>因为 AI 的优化目标是完成这一次任务，而不是降低未来的维护成本。</p>
+<p>人写组件，是因为人在思考：“以后还会不会改？这段代码会不会在其他地方复用？”但 AI 没有“以后”的概念，没有项目的生命周期意识。它只关注当下这个 Prompt 的要求。</p>
+<p>这个坑暴露的本质问题是：AI 天然是一次性交付思维，而组件设计属于长期演化思维。</p>
+<p>这两者是不同的目标函数。不是模型能力不足，而是它根本不被要求去考虑“未来”。如果你不给它明确的指令去抽象组件，它就很少主动去做。</p>
+<p>可迁移的经验：在与 AI 协作时，人类必须承担起“架构师”的角色，提前定义好组件体系，明确告诉 AI 哪些应该复用、哪些应该抽象。不要把抽象的期望寄托在 AI 的“自觉性”上，因为它没有自觉性。</p>
+<h3 id="坑四：Git-安全，不是-AI-太笨，而是我们给了太多权限"><a href="#坑四：Git-安全，不是-AI-太笨，而是我们给了太多权限" class="headerlink" title="坑四：Git 安全，不是 AI 太笨，而是我们给了太多权限"></a>坑四：Git 安全，不是 AI 太笨，而是我们给了太多权限</h3><p>假期回来后，距离完工只剩一点点了。由于每次都是回家抽空做，一天只推进一点，也没有进行 commit 提交。</p>
+<p>结果有一次我对 Claude + DeepSeek 说：“退回这次样式的改动。”然后它直接把我暂存区的代码都删除了，用的是 <code>git checkout --</code> 这个命令。</p>
+<p>我当时真的直接哭了，非常崩溃。幸好发现 Claude Code 具备文件快照的功能，最终找了回来。</p>
+<p>但事后反思，真正值得追问的不是“AI 怎么会用这么危险的命令”，而是：为什么我会允许它这样做？</p>
+<p>很多人第一次用 Claude Code、Codex 都会经历这个阶段：AI 写代码越来越厉害，于是你慢慢放松警惕。</p>
+<p>“你直接改吧。”</p>
+<p>“你直接运行吧。”</p>
+<p>“你直接处理 Git 吧。”</p>
+<p>权限越来越大，但能力增强不等于风险降低。</p>
+<p>人类新员工入职时，不会第一天就被授予服务器 root 权限。但 AI 却经常第一天就拥有整个仓库的读写权限，甚至能执行破坏性的 Git 命令。</p>
+<p>这个坑暴露的本质问题是：AI 越强，越需要建立权限边界。</p>
+<p>它能力强，不代表它不会犯错。而一旦犯错，后果可能远比人类新手更严重。因为它犯错的速度更快、范围更广。</p>
+<p>可迁移的经验：在与 AI 协作时，要像管理人类团队成员一样，设定明确的权限边界。尤其是在 Git 操作、文件删除、数据库变更等高风险操作上，宁可手动执行，也不要轻易授权 AI 代劳。</p>
+<p>回头看，这几个坑虽然表现各不相同，却有一个共同点：AI 很快给出了“可以工作的答案”，而我也很快接受了这个答案。</p>
+<p>它让我省去了大量编码时间，却也让我更容易跳过本该属于自己的设计思考。真正的问题不是 AI 写得不好，而是我太早进入了修改阶段，却没有先完成建模阶段。很多后来难以收拾的样式债、组件债、响应式问题，其实都源于最开始那几个没有认真想清楚的设计决策。</p>
+<p>AI 的“高效率”可能成为思考的敌人。</p>
+<p>在与 AI 协作时，要有意识地保留一段“无 AI 时间”：在让 AI 写代码之前，先用纸笔或思维导图把设计框架想清楚。不要让 AI 的快速输出取代你自己的思考过程。AI 可以加速执行，但不能替代决策。</p>
+<h2 id="四、哪些经验可以沉淀和复用"><a href="#四、哪些经验可以沉淀和复用" class="headerlink" title="四、哪些经验可以沉淀和复用"></a>四、哪些经验可以沉淀和复用</h2><p>尽管 AI 在模糊的视觉判断上容易出错，但在边界明确、规则清晰的任务中，Codex 表现得相当出色。</p>
+<h3 id="1-建立项目专属的知识库"><a href="#1-建立项目专属的知识库" class="headerlink" title="1. 建立项目专属的知识库"></a>1. 建立项目专属的知识库</h3><p>无论项目大小，都可以准备一个 Skill 或小型知识库，引导 AI 编写代码。这有助于减少后续沟通中的摩擦。</p>
+<p>我认为不仅小众页面需要这样做，一般的公司项目也可以尝试。你会发现，效率最高的往往不是安装一些通用的 Skill，而是为自己的项目量身定制一套 Skill 或知识库。</p>
+<p>由于我的网站样式定制化程度极高，整体带有故事性，我经常说“请把房子部分怎样怎样、花园部分怎样怎样”，这时 AI 不一定能迅速理解。因此，最好建立一个项目专属的小知识库。</p>
+<p>举个例子：我的网站整体是奶油画风，但 Codex 默认的习惯是，虽然会选择黄色、边框这类风格，但总喜欢添加虚化阴影效果，这与我的风格并不匹配。这类风格禁令最好直接写入知识库，避免它反复犯错。</p>
+<p>项目规则比 Prompt 更重要。</p>
+<p>在长期项目中，最重要的不是“今天如何让 AI 听懂我”，而是“如何把今天的纠偏变成明天的默认规则”。每次发现 Codex 做错了什么，如果只是当场纠正，下次可能还会再犯。但如果我将它写入项目规则，这个错误就有可能转化为长期收益。</p>
+<p>通用模型能告诉 AI“网页一般怎么写”，而项目知识库则告诉它：“这个项目应该怎么写。”</p>
+<h3 id="2-确定性的优化任务"><a href="#2-确定性的优化任务" class="headerlink" title="2. 确定性的优化任务"></a>2. 确定性的优化任务</h3><p>手绘场景面临一个问题：图片资源较多，DOM 节点也容易增多。到了项目中后期，我将许多确定性的优化任务交给了 AI：</p>
+<ul>
+<li>批量将图片转换为 WebP 格式</li>
+<li>整理图片懒加载</li>
+<li>配置首屏资源优先级</li>
+<li>提取重复样式</li>
+<li>统一组件中的边框、圆角、阴影规则</li>
+</ul>
+<p>这些任务有一个共同点：目标明确，结果易于验证。它们不像“这里好不好看”那样主观，而是非常清楚要做什么。图片是否转换成功，样式是否得到复用，资源是否变小，这些都可以进行检查。</p>
+<p>此外，并非所有素材都需要用图片实现，简单的图形也可以用 SVG 来完成。</p>
+<h3 id="3-动画素材的处理"><a href="#3-动画素材的处理" class="headerlink" title="3. 动画素材的处理"></a>3. 动画素材的处理</h3><p>这是我第一次自己制作小动画。在 Procreate 上绘制内容，然后用小工具直接导出雪碧图。这类工具也可以让 AI 直接编写。</p>
+<p>原本以为 Procreate 处理动画会像 PS 一样具有更高的自由度，后来发现它更像是逐帧的完整画面。这个限制一开始有些不适应，但后来我意识到，网页中的动画其实不需要多么复杂。两三帧的小动作，就足以让页面瞬间生动起来。</p>
+<h3 id="4-旧文章的整理"><a href="#4-旧文章的整理" class="headerlink" title="4. 旧文章的整理"></a>4. 旧文章的整理</h3><p>这次重构中，还有一个让我感到惊喜的部分：旧文章重新变得有用了。</p>
+<p>以前文章越写越多后，博客很容易变成一个历史仓库。分类不一定准确，标签也不一定统一。许多旧文章放在那里，连我自己都不太会回去翻阅。</p>
+<p>但 AI 让这件事发生了变化。我可以让 Codex 帮我整理旧文章，补充摘要、重新打标签、梳理主题脉络，甚至分析我这些年的写作变化。</p>
+<p>这时，博客就不再只是一个展示页面了。它逐渐演变为一个“输入、沉淀、表达、再整理”的个人认知系统。</p>
+<p>那些散落在不同年份的碎片想法，经过重新组织后，反而能看出一些长期的线索：我曾经关心过什么，反复思考过什么，技术兴趣如何变化，表达方式又如何演变。</p>
+<p>这里还有一个很有趣的点。当我回看过去的文字时，能明显感觉到自己的变化。以前的表达更稚嫩，也更活泼；现在的文字更沉稳，话题也更深一些，好像也比以前更敢于表达了。</p>
+<p>但这让我有些恍惚：到底哪一个才是真正的我？</p>
+<p>后来想了想，也许都是。只是人在不同阶段，会用不同的方式来表达自己。</p>
+<p>AI 不仅在帮助我创作新内容，也在帮助我重新理解旧内容。</p>
+<h2 id="五、结语：先把它做出来"><a href="#五、结语：先把它做出来" class="headerlink" title="五、结语：先把它做出来"></a>五、结语：先把它做出来</h2><p>说实话，一开始本来以为这只是一个小作品，所以没有特别认真走一般的完整研发流程，但后面发现也没有想象中那么简单呢。</p>
+<p>但至少，我觉得最大的进步是，我去做了，也尽量做完整了，并且最后也上线了。这会是我后续继续产出更多作品的一环，今年的第四个正式作品，完工啦！</p>
+<p>希望我的一些经验对你有一些微小的帮助。</p>
+</div>
+          </div>
+
+          
+            <nav class="post-nav" aria-label="文章切换">
+              
+              
+                <a href="https://mp.weixin.qq.com/s/TDDU1kgyg8IgYjHVqI9jwg" target="&#34;_blank&#34;" rel="&#34;noopener" noreferrer&#34;>
+                  <span class="post-nav__label">下一篇</span>
+                  <span class="post-nav__title">大厂观察日记：投入了大量资源，却还是做不好 AI 产品</span>
+                </a>
+              
+            </nav>
+          
+        </article>
+      </section>
+    </div>
+  </section>
+
+  <section class="post-about-band">
+    <svg class="post-divider post-divider--content" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,96 C170,54 314,12 498,24 C684,38 820,116 994,116 C1174,116 1298,54 1440,28 L1440,140 L0,140 Z"/>
+    </svg>
+    <div class="post-about-band__inner">
+      
+<section class="post-about" aria-label="关于年糕">
+  <div class="post-about__figure">
+    <div class="post-about__figure-card">
+      <img class="post-about__image" src="/images/mochi_real.webp" alt="年糕的个人形象照" loading="lazy" decoding="async">
+    </div>
+  </div>
+
+  <div class="post-about__content">
+    <p class="post-about__eyebrow">ABOUT THE GARDENER</p>
+    <div class="post-about__header">
+      <h2 class="post-about__name">年糕</h2>
+      <div class="post-about__channels" aria-label="社交平台">
+        
+          
+          
+            <a href="https://www.xiaohongshu.com/user/profile/659266b2000000002001f48e" target="&#34;_blank&#34;" rel="&#34;noopener" noreferrer&#34;>小红书</a>
+          
+        
+          
+          
+            <a href="https://space.bilibili.com/3494369971669945" target="&#34;_blank&#34;" rel="&#34;noopener" noreferrer&#34;>B站</a>
+          
+        
+          
+          
+            <button type="button" data-wechat-modal-trigger>微信公众号</button>
+          
+        
+      </div>
+    </div>
+    <p class="post-about__bio">年糕是一个喜欢把代码、灵感和日常心情慢慢种进花园里的人。会写点前端，做点设计，也认真记录那些看起来不盛大、但会在以后发芽的小事。</p>
+  </div>
+</section>
+
+    </div>
+  </section>
+</main>
+
+
+    <dialog class="wechat-modal" aria-labelledby="wechat-modal-title">
+      <button class="wechat-modal__close" type="button" aria-label="关闭微信公众号二维码弹窗" data-wechat-modal-close>
+        ×
+      </button>
+      <div class="wechat-modal__content">
+        <p class="wechat-modal__eyebrow">WECHAT OFFICIAL ACCOUNT</p>
+        <h2 id="wechat-modal-title" class="wechat-modal__title">微信公众号</h2>
+        <img class="wechat-modal__qrcode" src="/images/wx_qrcode.webp" alt="微信公众号二维码" loading="lazy" decoding="async">
+        <p class="wechat-modal__hint">扫码或搜索“年糕的编程花园”关注年糕的公众号</p>
+      </div>
+    </dialog>
+    <footer class="site-footer site-footer--post">
+  <div class="site-footer__inner">
+    <p class="site-footer__text">愿每一篇文字都像种下的小苗，慢慢发芽。</p>
+    <p class="site-footer__copy">© 2026 Mochi Garden. All rights reserved.</p>
+  </div>
+</footer>
+
+    <script defer src="/vendor/gsap/gsap.min.js"></script>
+<script defer src="/vendor/gsap/ScrollTrigger.min.js"></script>
+
+<script defer src="/js/main.js"></script>
+
+  </body>
+</html>
